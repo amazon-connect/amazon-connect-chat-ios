@@ -6,27 +6,43 @@
 //
 
 import Foundation
-import AWSCore
+import Combine
 
-class ChatSession {
-    static let shared = ChatSession()   // creates a single, static instance of ChatSession
-    private var globalConfig: GlobalConfig?
-    private var currentSession: CustomerChatSession?
+class ChatSession: ObservableObject {
+    static let shared = ChatSession()
     
-    private init() {}  //prevents external instantiation
+    @Published var isConnected: Bool = false
+    @Published var messages: [String] = [] // Example message type, adjust as needed
+    private var chatService: ChatService?
+    private var cancellables = Set<AnyCancellable>()
     
-    func setGlobalConfig(_ config: GlobalConfig) {
-        self.globalConfig = config
+    private init() {}
+    
+    func configure(with config: GlobalConfig, chatDetails: ChatDetails) {
         AWSClient.shared.configure(with: config)
+        self.chatService = ChatService()
+        // Additional configuration...
     }
     
-    func createSession(chatDetails: ChatDetails, options: ChatSessionOptions? = nil, type: String) -> CustomerChatSession {
-        // Initialize and return a CustomerChatSession
-        let sessionOptions = options ?? ChatSessionOptions(region: AWSRegionType(rawValue: (globalConfig?.region)!.rawValue) ?? .USWest2)
-        let session = CustomerChatSession(chatDetails: chatDetails, options: sessionOptions, type: type)
-        self.currentSession = session
-        return session
+    func connect(chatDetails: ChatDetails) {
+        chatService?.createChatSession(chatDetails: chatDetails) { [weak self] success, error in
+            DispatchQueue.main.async {
+                self?.isConnected = success
+                if success {
+                    print("Chat session successfully created.")
+                } else {
+                    print("Error creating chat session: \(error?.localizedDescription ?? "Unknown error")")
+                }
+            }
+        }
     }
     
-    // Additional utility methods...
+    // Example method to simulate receiving a new message
+    func receiveMessage(message: String) {
+        DispatchQueue.main.async {
+            self.messages.append(message)
+        }
+    }
+    
+    // Further methods for sending messages, handling chat events, etc.
 }
