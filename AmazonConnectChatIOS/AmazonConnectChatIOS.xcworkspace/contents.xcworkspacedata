@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:../../../workplace/amazon-connect-chat-ui-examples/mobileChatExamples/iOSChatExample/iOSChatExample.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:AmazonConnectChatIOS.xcodeproj">
    </FileRef>
    <FileRef

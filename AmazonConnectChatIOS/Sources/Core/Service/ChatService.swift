@@ -7,8 +7,16 @@
 
 import Foundation
 
-class ChatService {
-    private var awsClient = AWSClient.shared
+protocol ChatServiceProtocol {
+    func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void)
+}
+
+class ChatService : ChatServiceProtocol {
+    private var awsClient: AWSClientProtocol
+
+    init(awsClient: AWSClientProtocol = AWSClient.shared) {
+           self.awsClient = awsClient
+       }
     
     func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void) {
         awsClient.createParticipantConnection(participantToken: chatDetails.participantToken) { success, websocketUrl, connectionToken, error in

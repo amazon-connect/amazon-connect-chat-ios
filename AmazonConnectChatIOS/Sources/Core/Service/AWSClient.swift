@@ -10,9 +10,13 @@ import AWSConnectParticipant
 
 import Foundation
 import AWSConnectParticipant
-import AWSCore // Ensure this import for AWS service configurations
+import AWSCore
 
-class AWSClient {
+protocol AWSClientProtocol {
+    func createParticipantConnection(participantToken: String, completion: @escaping (Bool, String?, String?, Error?) -> Void)
+}
+
+class AWSClient : AWSClientProtocol {
     static let shared = AWSClient()
     
     private var connectParticipantClient: AWSConnectParticipant?

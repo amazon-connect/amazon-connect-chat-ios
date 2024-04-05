@@ -8,15 +8,20 @@
 import Foundation
 import Combine
 
-class ChatSession: ObservableObject {
+protocol ChatSessionProtocol: ObservableObject {
+    var isConnected: Bool { get set }
+    func connect(chatDetails: ChatDetails)
+}
+
+class ChatSession: ChatSessionProtocol {
     static let shared = ChatSession()
-    
     @Published var isConnected: Bool = false
-    @Published var messages: [String] = [] // Example message type, adjust as needed
-    private var chatService: ChatService?
-    private var cancellables = Set<AnyCancellable>()
+    @Published var messages: [Message] = []
+    private var chatService: ChatServiceProtocol?
     
-    private init() {}
+    init(chatService: ChatServiceProtocol = ChatService()) {
+        self.chatService = chatService
+    }
     
     func configure(with config: GlobalConfig, chatDetails: ChatDetails) {
         AWSClient.shared.configure(with: config)
@@ -39,9 +44,6 @@ class ChatSession: ObservableObject {
     
     // Example method to simulate receiving a new message
     func receiveMessage(message: String) {
-        DispatchQueue.main.async {
-            self.messages.append(message)
-        }
     }
     
     // Further methods for sending messages, handling chat events, etc.
