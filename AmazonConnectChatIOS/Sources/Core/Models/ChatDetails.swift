@@ -15,5 +15,5 @@ struct ChatDetails {
 }
 
 struct ChatSessionOptions {
-    var region: AWSRegionType = .USEast1
+    var region: AWSRegionType = Constants.DEFAULT_REGION
 }

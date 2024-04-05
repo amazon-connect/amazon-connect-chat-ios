@@ -7,7 +7,6 @@
 
 import Foundation
 import AWSConnectParticipant
-
 import Foundation
 import AWSConnectParticipant
 import AWSCore
@@ -33,8 +32,8 @@ class AWSClient : AWSClientProtocol {
 
         let participantService = AWSServiceConfiguration(region: region, credentialsProvider: credentials)
         
-        AWSConnectParticipant.register(with: participantService!, forKey: "AWSConnectParticipant")
-        self.connectParticipantClient = AWSConnectParticipant(forKey: "AWSConnectParticipant")
+        AWSConnectParticipant.register(with: participantService!, forKey: Constants.AWSConnectParticipantKey)
+        self.connectParticipantClient = AWSConnectParticipant(forKey: Constants.AWSConnectParticipantKey)
     }
     
     func createParticipantConnection(participantToken: String, completion: @escaping (Bool, String?, String?, Error?) -> Void) {
@@ -43,7 +42,7 @@ class AWSClient : AWSClientProtocol {
             return
         }
         request.participantToken = participantToken
-        request.types = ["WEBSOCKET", "CONNECTION_CREDENTIALS"]
+        request.types = Constants.ACPSRequestTypes
         
         self.connectParticipantClient?.createParticipantConnection(request).continueWith { (task: AWSTask<AWSConnectParticipantCreateParticipantConnectionResponse>) -> AnyObject? in
             DispatchQueue.main.async {

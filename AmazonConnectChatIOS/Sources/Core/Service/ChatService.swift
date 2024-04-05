@@ -23,6 +23,7 @@ class ChatService : ChatServiceProtocol {
             if success {
                 // Assume further setup with websocketUrl and connectionToken for real chat session
                 print("Participant connection created: WebSocket URL - \(websocketUrl ?? "N/A")")
+                
             }
             completion(success, error)
         }

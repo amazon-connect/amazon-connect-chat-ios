@@ -50,7 +50,7 @@ struct QuickReplyTemplate: Codable {
 }
 
 struct QuickReplyContent: InteractiveContent {
-    static let templateType = "QuickReply" // This should match the templateType value for Quick Replies in the JSON
+    static let templateType = Constants.QUICK_REPLY // This should match the templateType value for Quick Replies in the JSON
 
     let title: String
     let subtitle: String?
@@ -99,7 +99,7 @@ struct ListPickerTemplate: Codable {
 }
 
 struct ListPickerContent: InteractiveContent {
-    static let templateType = "ListPicker" // This should match the templateType value for List Pickers in the JSON
+    static let templateType = Constants.LIST_PICKER // This should match the templateType value for List Pickers in the JSON
 
     let title: String
     let subtitle: String?

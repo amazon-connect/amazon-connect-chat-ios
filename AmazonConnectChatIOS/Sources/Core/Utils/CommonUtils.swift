@@ -30,24 +30,24 @@ struct CommonUtils {
     func convertParticipantRoleToString(_ roleValue: Int) -> String {
         switch roleValue {
         case AWSConnectParticipantParticipantRole.agent.rawValue:
-            return "AGENT"
+            return Constants.AGENT
         case AWSConnectParticipantParticipantRole.customer.rawValue:
-            return "CUSTOMER"
+            return Constants.CUSTOMER
         case AWSConnectParticipantParticipantRole.system.rawValue:
-            return "SYSTEM"
+            return Constants.SYSTEM
         default:
-            return "UNKNOWN"
+            return Constants.UNKNOWN
         }
     }
 
     func convertParticipantTypeToString(_ roleValue: Int) -> String {
         switch roleValue {
         case AWSConnectParticipantChatItemType.message.rawValue:
-            return "MESSAGE"
+            return Constants.MESSAGE
         case AWSConnectParticipantChatItemType.event.rawValue:
-            return "EVENT"
+            return Constants.EVENT
         default:
-            return "UNKNOWN"
+            return Constants.UNKNOWN
         }
     }
 

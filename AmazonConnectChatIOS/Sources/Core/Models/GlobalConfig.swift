@@ -19,5 +19,5 @@ struct Features {
 
 struct MessageReceipts {
     var shouldSendMessageReceipts: Bool = true
-    var throttleTime: Int = 5000
+    var throttleTime: Int = Constants.MESSAGE_RECEIPT_THROTTLE_TIME
 }
