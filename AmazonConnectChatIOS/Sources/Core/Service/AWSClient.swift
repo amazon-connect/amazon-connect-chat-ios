@@ -19,7 +19,7 @@ class AWSClient : AWSClientProtocol {
     static let shared = AWSClient()
     
     private var connectParticipantClient: AWSConnectParticipant?
-    private var region: AWSRegionType = .USWest2 // Default value
+    private var region: AWSRegionType = Constants.DEFAULT_REGION
 
     private init() {}
     
@@ -28,7 +28,7 @@ class AWSClient : AWSClientProtocol {
         // AWS service initialization with empty credentials as placeholders
         let credentials = AWSStaticCredentialsProvider(accessKey: "", secretKey: "")
         
-        self.region = AWSRegionType(rawValue: config.region.rawValue) ?? .USWest2
+        self.region = AWSRegionType(rawValue: config.region.rawValue) ?? Constants.DEFAULT_REGION
 
         let participantService = AWSServiceConfiguration(region: region, credentialsProvider: credentials)
         

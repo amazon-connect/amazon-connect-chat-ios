@@ -9,7 +9,7 @@ import Foundation
 import AWSCore
 
 struct GlobalConfig {
-    var region: AWSRegionType = .USEast1
+    var region: AWSRegionType = Constants.DEFAULT_REGION
     var features: Features = Features()
 }
 
