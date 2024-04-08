@@ -13,6 +13,6 @@ FOUNDATION_EXPORT double AmazonConnectChatIOSVersionNumber;
 //! Project version string for AmazonConnectChatIOS.
 FOUNDATION_EXPORT const unsigned char AmazonConnectChatIOSVersionString[];
 
-// In this header, you should import all the public headers of your framework using statements like #import <AmazonConnectChatIOS/PublicHeader.h>
+// In this header, you should import all the public headers of your framework using statements like #import <AmazonConnectChatIOS/PublicHeader.h "AWS_ACCOUNT_ID": "1234-5678-9012" >
 
 
