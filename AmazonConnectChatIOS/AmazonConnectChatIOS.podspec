@@ -1,5 +1,5 @@
 Pod::Spec.new do |spec|
-  spec.name          = 'AmazonConnectChatSDK'
+  spec.name          = 'AmazonConnectChatIOS'
   spec.version       = '1.0.0'
   spec.license       = { :type => 'Apache License, Version 2.0', :file => "LICENSE" }
   spec.homepage      = 'https://github.com/amazon-connect/amazon-connect-chat-ios'
