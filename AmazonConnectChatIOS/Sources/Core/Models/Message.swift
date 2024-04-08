@@ -9,10 +9,10 @@ enum MessageType {
     case Common
 }
 
-struct Message: Identifiable, Equatable, Hashable {
+public struct Message: Identifiable, Equatable, Hashable {
     var participant: String?
     var text: String
-    var id = UUID()
+    public var id = UUID()
     var contentType: String
     var messageType: MessageType
     var timeStamp: String

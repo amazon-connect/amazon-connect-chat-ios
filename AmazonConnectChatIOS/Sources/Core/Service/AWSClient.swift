@@ -30,7 +30,7 @@ class AWSClient : AWSClientProtocol {
         
         self.region = AWSRegionType(rawValue: config.region.rawValue) ?? Constants.DEFAULT_REGION
 
-        let participantService = AWSServiceConfiguration(region: region, credentialsProvider: credentials)
+        let participantService = AWSServiceConfiguration(region: self.region, credentialsProvider: credentials)
         
         AWSConnectParticipant.register(with: participantService!, forKey: Constants.AWSConnectParticipantKey)
         self.connectParticipantClient = AWSConnectParticipant(forKey: Constants.AWSConnectParticipantKey)
