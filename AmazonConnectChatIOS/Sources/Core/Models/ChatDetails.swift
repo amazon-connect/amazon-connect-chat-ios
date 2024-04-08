@@ -8,10 +8,16 @@
 import Foundation
 import AWSCore
 
-struct ChatDetails {
+public struct ChatDetails {
     var contactId: String
     var participantId: String
     var participantToken: String
+    
+    public init(contactId: String, participantId: String, participantToken: String) {
+        self.contactId = contactId
+        self.participantId = participantId
+        self.participantToken = participantToken
+    }
 }
 
 struct ChatSessionOptions {

@@ -1,9 +1,7 @@
 //
 //  AmazonConnectChatIOS.h
 //  AmazonConnectChatIOS
-//
-//  Created by Mittal, Rajat on 3/28/24.
-//
+
 
 #import <Foundation/Foundation.h>
 

@@ -1,35 +1,33 @@
 //
 //  ChatSession.swift
 //  AmazonConnectChatIOS
-//
-//  Created by Mittal, Rajat on 4/3/24.
-//
 
 import Foundation
 import Combine
 
-protocol ChatSessionProtocol: ObservableObject {
-    var isConnected: Bool { get set }
+public protocol ChatSessionProtocol: ObservableObject {
+    var isConnected: Bool { get }
+    var messages: [Message] { get }
     func connect(chatDetails: ChatDetails)
 }
 
-class ChatSession: ChatSessionProtocol {
-    static let shared = ChatSession()
-    @Published var isConnected: Bool = false
-    @Published var messages: [Message] = []
+public class ChatSession: ChatSessionProtocol {
+    public static let shared = ChatSession()
+    @Published public private(set) var isConnected: Bool = false
+    @Published public private(set) var messages: [Message] = []
     private var chatService: ChatServiceProtocol?
     
     init(chatService: ChatServiceProtocol = ChatService()) {
         self.chatService = chatService
     }
     
-    func configure(with config: GlobalConfig, chatDetails: ChatDetails) {
+    public func configure(with config: GlobalConfig) {
         AWSClient.shared.configure(with: config)
         self.chatService = ChatService()
         // Additional configuration...
     }
     
-    func connect(chatDetails: ChatDetails) {
+    public func connect(chatDetails: ChatDetails) {
         chatService?.createChatSession(chatDetails: chatDetails) { [weak self] success, error in
             DispatchQueue.main.async {
                 self?.isConnected = success
