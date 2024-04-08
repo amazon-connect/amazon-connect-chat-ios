@@ -1,0 +1,717 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7E58A5D92BB5F3DA00965327 /* AmazonConnectChatIOS.docc in Sources */ = {isa = PBXBuildFile; fileRef = 7E58A5D82BB5F3DA00965327 /* AmazonConnectChatIOS.docc */; };
+		7E58A5DF2BB5F3DA00965327 /* AmazonConnectChatIOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E58A5D42BB5F3DA00965327 /* AmazonConnectChatIOS.framework */; };
+		7E58A5E42BB5F3DA00965327 /* AmazonConnectChatIOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E58A5E32BB5F3DA00965327 /* AmazonConnectChatIOSTests.swift */; };
+		7E58A5E52BB5F3DA00965327 /* AmazonConnectChatIOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E58A5D72BB5F3DA00965327 /* AmazonConnectChatIOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7E58A5F92BB605F300965327 /* TranscriptResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E58A5F42BB605F300965327 /* TranscriptResponse.swift */; };
+		7E58A5FC2BB605F300965327 /* MessageContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E58A5F72BB605F300965327 /* MessageContent.swift */; };
+		7E58A5FD2BB605F300965327 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E58A5F82BB605F300965327 /* Message.swift */; };
+		7E58A5FF2BB6062300965327 /* ChatEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E58A5FE2BB6062300965327 /* ChatEvent.swift */; };
+		7E58A6092BBB460A00965327 /* DefaultHttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E58A6032BBB460900965327 /* DefaultHttpClient.swift */; };
+		7E58A60A2BBB460A00965327 /* HttpMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E58A6042BBB460900965327 /* HttpMethod.swift */; };
+		7E58A60B2BBB460A00965327 /* HttpHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E58A6052BBB460900965327 /* HttpHeader.swift */; };
+		7E58A60C2BBB460A00965327 /* HttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E58A6062BBB460900965327 /* HttpClient.swift */; };
+		7E58A60E2BBB460A00965327 /* CommonUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E58A6082BBB460900965327 /* CommonUtils.swift */; };
+		7E58A6112BBB484D00965327 /* SDKLoggerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E58A6102BBB484D00965327 /* SDKLoggerProtocol.swift */; };
+		7E58A6132BBB4B0200965327 /* SDKLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E58A6122BBB4B0200965327 /* SDKLogger.swift */; };
+		7E58A61E2BBDDADB00965327 /* ChatDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E58A61D2BBDDADB00965327 /* ChatDetails.swift */; };
+		7E58A6202BBDDB0900965327 /* GlobalConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E58A61F2BBDDB0900965327 /* GlobalConfig.swift */; };
+		7E58A6232BBDDBF900965327 /* ChatSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E58A6222BBDDBF900965327 /* ChatSession.swift */; };
+		7E58A6272BBDDE4A00965327 /* AWSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E58A6262BBDDE4A00965327 /* AWSClient.swift */; };
+		7E58A6292BBE415700965327 /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E58A6282BBE415700965327 /* ChatService.swift */; };
+		7E91597B2BC0A92E00821C05 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E91597A2BC0A92E00821C05 /* Constants.swift */; };
+		8E707533CF4D462148DA797D /* Pods_AmazonConnectChatIOS_AmazonConnectChatIOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49398D9125DCBBD394D971FE /* Pods_AmazonConnectChatIOS_AmazonConnectChatIOSTests.framework */; };
+		CD381512D9332C2CE8DF5489 /* Pods_AmazonConnectChatIOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3765814AC8510BA5F1CFD238 /* Pods_AmazonConnectChatIOS.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7E58A5E02BB5F3DA00965327 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7E58A5CB2BB5F3DA00965327 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7E58A5D32BB5F3DA00965327;
+			remoteInfo = AmazonConnectChatIOS;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		11EE73D713DFF2FDBEC73AE7 /* Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests.release.xcconfig"; path = "Target Support Files/Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests/Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		3765814AC8510BA5F1CFD238 /* Pods_AmazonConnectChatIOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AmazonConnectChatIOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		49398D9125DCBBD394D971FE /* Pods_AmazonConnectChatIOS_AmazonConnectChatIOSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AmazonConnectChatIOS_AmazonConnectChatIOSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7E58A5D42BB5F3DA00965327 /* AmazonConnectChatIOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AmazonConnectChatIOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7E58A5D72BB5F3DA00965327 /* AmazonConnectChatIOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AmazonConnectChatIOS.h; sourceTree = "<group>"; };
+		7E58A5D82BB5F3DA00965327 /* AmazonConnectChatIOS.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = AmazonConnectChatIOS.docc; sourceTree = "<group>"; };
+		7E58A5DE2BB5F3DA00965327 /* AmazonConnectChatIOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AmazonConnectChatIOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7E58A5E32BB5F3DA00965327 /* AmazonConnectChatIOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmazonConnectChatIOSTests.swift; sourceTree = "<group>"; };
+		7E58A5F42BB605F300965327 /* TranscriptResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TranscriptResponse.swift; sourceTree = "<group>"; };
+		7E58A5F72BB605F300965327 /* MessageContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageContent.swift; sourceTree = "<group>"; };
+		7E58A5F82BB605F300965327 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		7E58A5FE2BB6062300965327 /* ChatEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatEvent.swift; sourceTree = "<group>"; };
+		7E58A6032BBB460900965327 /* DefaultHttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultHttpClient.swift; sourceTree = "<group>"; };
+		7E58A6042BBB460900965327 /* HttpMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpMethod.swift; sourceTree = "<group>"; };
+		7E58A6052BBB460900965327 /* HttpHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpHeader.swift; sourceTree = "<group>"; };
+		7E58A6062BBB460900965327 /* HttpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpClient.swift; sourceTree = "<group>"; };
+		7E58A6082BBB460900965327 /* CommonUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonUtils.swift; sourceTree = "<group>"; };
+		7E58A6102BBB484D00965327 /* SDKLoggerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKLoggerProtocol.swift; sourceTree = "<group>"; };
+		7E58A6122BBB4B0200965327 /* SDKLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDKLogger.swift; sourceTree = "<group>"; };
+		7E58A61D2BBDDADB00965327 /* ChatDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDetails.swift; sourceTree = "<group>"; };
+		7E58A61F2BBDDB0900965327 /* GlobalConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalConfig.swift; sourceTree = "<group>"; };
+		7E58A6222BBDDBF900965327 /* ChatSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSession.swift; sourceTree = "<group>"; };
+		7E58A6262BBDDE4A00965327 /* AWSClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWSClient.swift; sourceTree = "<group>"; };
+		7E58A6282BBE415700965327 /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
+		7E91597A2BC0A92E00821C05 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		E266CCF647ADAA5FBE9C4CFA /* Pods-AmazonConnectChatIOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AmazonConnectChatIOS.debug.xcconfig"; path = "Target Support Files/Pods-AmazonConnectChatIOS/Pods-AmazonConnectChatIOS.debug.xcconfig"; sourceTree = "<group>"; };
+		FA5FA5BCFCE22047DCA91060 /* Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests.debug.xcconfig"; path = "Target Support Files/Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests/Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		FCB565490D66D6F8C4BB3C09 /* Pods-AmazonConnectChatIOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AmazonConnectChatIOS.release.xcconfig"; path = "Target Support Files/Pods-AmazonConnectChatIOS/Pods-AmazonConnectChatIOS.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7E58A5D12BB5F3DA00965327 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD381512D9332C2CE8DF5489 /* Pods_AmazonConnectChatIOS.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7E58A5DB2BB5F3DA00965327 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E58A5DF2BB5F3DA00965327 /* AmazonConnectChatIOS.framework in Frameworks */,
+				8E707533CF4D462148DA797D /* Pods_AmazonConnectChatIOS_AmazonConnectChatIOSTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		7E58A5CA2BB5F3DA00965327 = {
+			isa = PBXGroup;
+			children = (
+				7E58A5EE2BB5F71500965327 /* Sources */,
+				7E58A5D62BB5F3DA00965327 /* AmazonConnectChatIOS */,
+				7E58A5E22BB5F3DA00965327 /* AmazonConnectChatIOSTests */,
+				7E58A5D52BB5F3DA00965327 /* Products */,
+				CEF3CE9601EA9949A24C2DCD /* Pods */,
+				93067FFD20E434157B7197A6 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		7E58A5D52BB5F3DA00965327 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7E58A5D42BB5F3DA00965327 /* AmazonConnectChatIOS.framework */,
+				7E58A5DE2BB5F3DA00965327 /* AmazonConnectChatIOSTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7E58A5D62BB5F3DA00965327 /* AmazonConnectChatIOS */ = {
+			isa = PBXGroup;
+			children = (
+				7E58A5D72BB5F3DA00965327 /* AmazonConnectChatIOS.h */,
+				7E58A5D82BB5F3DA00965327 /* AmazonConnectChatIOS.docc */,
+			);
+			path = AmazonConnectChatIOS;
+			sourceTree = "<group>";
+		};
+		7E58A5E22BB5F3DA00965327 /* AmazonConnectChatIOSTests */ = {
+			isa = PBXGroup;
+			children = (
+				7E58A5E32BB5F3DA00965327 /* AmazonConnectChatIOSTests.swift */,
+			);
+			path = AmazonConnectChatIOSTests;
+			sourceTree = "<group>";
+		};
+		7E58A5EE2BB5F71500965327 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				7E58A5EF2BB5F71E00965327 /* Core */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		7E58A5EF2BB5F71E00965327 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				7E58A6212BBDDBE800965327 /* Service */,
+				7E58A5F32BB604B700965327 /* Utils */,
+				7E58A5F22BB604B200965327 /* Network */,
+				7E58A5F12BB604A900965327 /* ViewModels */,
+				7E58A5F02BB604A200965327 /* Models */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		7E58A5F02BB604A200965327 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				7E58A5F82BB605F300965327 /* Message.swift */,
+				7E58A5FE2BB6062300965327 /* ChatEvent.swift */,
+				7E58A5F72BB605F300965327 /* MessageContent.swift */,
+				7E58A5F42BB605F300965327 /* TranscriptResponse.swift */,
+				7E58A61D2BBDDADB00965327 /* ChatDetails.swift */,
+				7E58A61F2BBDDB0900965327 /* GlobalConfig.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		7E58A5F12BB604A900965327 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		7E58A5F22BB604B200965327 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		7E58A5F32BB604B700965327 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				7E58A6152BBB6D6300965327 /* HttpClient */,
+				7E58A60F2BBB483C00965327 /* Logger */,
+				7E58A6082BBB460900965327 /* CommonUtils.swift */,
+				7E91597A2BC0A92E00821C05 /* Constants.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		7E58A60F2BBB483C00965327 /* Logger */ = {
+			isa = PBXGroup;
+			children = (
+				7E58A6102BBB484D00965327 /* SDKLoggerProtocol.swift */,
+				7E58A6122BBB4B0200965327 /* SDKLogger.swift */,
+			);
+			path = Logger;
+			sourceTree = "<group>";
+		};
+		7E58A6152BBB6D6300965327 /* HttpClient */ = {
+			isa = PBXGroup;
+			children = (
+				7E58A6032BBB460900965327 /* DefaultHttpClient.swift */,
+				7E58A6042BBB460900965327 /* HttpMethod.swift */,
+				7E58A6052BBB460900965327 /* HttpHeader.swift */,
+				7E58A6062BBB460900965327 /* HttpClient.swift */,
+			);
+			path = HttpClient;
+			sourceTree = "<group>";
+		};
+		7E58A6212BBDDBE800965327 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				7E58A6222BBDDBF900965327 /* ChatSession.swift */,
+				7E58A6262BBDDE4A00965327 /* AWSClient.swift */,
+				7E58A6282BBE415700965327 /* ChatService.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		93067FFD20E434157B7197A6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3765814AC8510BA5F1CFD238 /* Pods_AmazonConnectChatIOS.framework */,
+				49398D9125DCBBD394D971FE /* Pods_AmazonConnectChatIOS_AmazonConnectChatIOSTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CEF3CE9601EA9949A24C2DCD /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				E266CCF647ADAA5FBE9C4CFA /* Pods-AmazonConnectChatIOS.debug.xcconfig */,
+				FCB565490D66D6F8C4BB3C09 /* Pods-AmazonConnectChatIOS.release.xcconfig */,
+				FA5FA5BCFCE22047DCA91060 /* Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests.debug.xcconfig */,
+				11EE73D713DFF2FDBEC73AE7 /* Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		7E58A5CF2BB5F3DA00965327 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E58A5E52BB5F3DA00965327 /* AmazonConnectChatIOS.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		7E58A5D32BB5F3DA00965327 /* AmazonConnectChatIOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7E58A5E82BB5F3DA00965327 /* Build configuration list for PBXNativeTarget "AmazonConnectChatIOS" */;
+			buildPhases = (
+				5DD739C5F694BA7AC2C41598 /* [CP] Check Pods Manifest.lock */,
+				7E58A5CF2BB5F3DA00965327 /* Headers */,
+				7E58A5D02BB5F3DA00965327 /* Sources */,
+				7E58A5D12BB5F3DA00965327 /* Frameworks */,
+				7E58A5D22BB5F3DA00965327 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AmazonConnectChatIOS;
+			productName = AmazonConnectChatIOS;
+			productReference = 7E58A5D42BB5F3DA00965327 /* AmazonConnectChatIOS.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		7E58A5DD2BB5F3DA00965327 /* AmazonConnectChatIOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7E58A5EB2BB5F3DA00965327 /* Build configuration list for PBXNativeTarget "AmazonConnectChatIOSTests" */;
+			buildPhases = (
+				4965DB31B15A6881141F6939 /* [CP] Check Pods Manifest.lock */,
+				7E58A5DA2BB5F3DA00965327 /* Sources */,
+				7E58A5DB2BB5F3DA00965327 /* Frameworks */,
+				7E58A5DC2BB5F3DA00965327 /* Resources */,
+				441FDF3CF1B62F7C996CE9BB /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7E58A5E12BB5F3DA00965327 /* PBXTargetDependency */,
+			);
+			name = AmazonConnectChatIOSTests;
+			productName = AmazonConnectChatIOSTests;
+			productReference = 7E58A5DE2BB5F3DA00965327 /* AmazonConnectChatIOSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7E58A5CB2BB5F3DA00965327 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1510;
+				LastUpgradeCheck = 1510;
+				TargetAttributes = {
+					7E58A5D32BB5F3DA00965327 = {
+						CreatedOnToolsVersion = 15.1;
+					};
+					7E58A5DD2BB5F3DA00965327 = {
+						CreatedOnToolsVersion = 15.1;
+					};
+				};
+			};
+			buildConfigurationList = 7E58A5CE2BB5F3DA00965327 /* Build configuration list for PBXProject "AmazonConnectChatIOS" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 7E58A5CA2BB5F3DA00965327;
+			productRefGroup = 7E58A5D52BB5F3DA00965327 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7E58A5D32BB5F3DA00965327 /* AmazonConnectChatIOS */,
+				7E58A5DD2BB5F3DA00965327 /* AmazonConnectChatIOSTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7E58A5D22BB5F3DA00965327 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7E58A5DC2BB5F3DA00965327 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		441FDF3CF1B62F7C996CE9BB /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests/Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests/Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests/Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4965DB31B15A6881141F6939 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5DD739C5F694BA7AC2C41598 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AmazonConnectChatIOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7E58A5D02BB5F3DA00965327 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E58A6092BBB460A00965327 /* DefaultHttpClient.swift in Sources */,
+				7E91597B2BC0A92E00821C05 /* Constants.swift in Sources */,
+				7E58A5F92BB605F300965327 /* TranscriptResponse.swift in Sources */,
+				7E58A6232BBDDBF900965327 /* ChatSession.swift in Sources */,
+				7E58A6272BBDDE4A00965327 /* AWSClient.swift in Sources */,
+				7E58A5FC2BB605F300965327 /* MessageContent.swift in Sources */,
+				7E58A6292BBE415700965327 /* ChatService.swift in Sources */,
+				7E58A60E2BBB460A00965327 /* CommonUtils.swift in Sources */,
+				7E58A60A2BBB460A00965327 /* HttpMethod.swift in Sources */,
+				7E58A6112BBB484D00965327 /* SDKLoggerProtocol.swift in Sources */,
+				7E58A60C2BBB460A00965327 /* HttpClient.swift in Sources */,
+				7E58A60B2BBB460A00965327 /* HttpHeader.swift in Sources */,
+				7E58A5FD2BB605F300965327 /* Message.swift in Sources */,
+				7E58A5D92BB5F3DA00965327 /* AmazonConnectChatIOS.docc in Sources */,
+				7E58A6202BBDDB0900965327 /* GlobalConfig.swift in Sources */,
+				7E58A6132BBB4B0200965327 /* SDKLogger.swift in Sources */,
+				7E58A61E2BBDDADB00965327 /* ChatDetails.swift in Sources */,
+				7E58A5FF2BB6062300965327 /* ChatEvent.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7E58A5DA2BB5F3DA00965327 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E58A5E42BB5F3DA00965327 /* AmazonConnectChatIOSTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7E58A5E12BB5F3DA00965327 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7E58A5D32BB5F3DA00965327 /* AmazonConnectChatIOS */;
+			targetProxy = 7E58A5E02BB5F3DA00965327 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		7E58A5E62BB5F3DA00965327 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		7E58A5E72BB5F3DA00965327 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		7E58A5E92BB5F3DA00965327 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E266CCF647ADAA5FBE9C4CFA /* Pods-AmazonConnectChatIOS.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 94KV3E626L;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = connect.AmazonConnectChatIOS;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7E58A5EA2BB5F3DA00965327 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FCB565490D66D6F8C4BB3C09 /* Pods-AmazonConnectChatIOS.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 94KV3E626L;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = connect.AmazonConnectChatIOS;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		7E58A5EC2BB5F3DA00965327 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FA5FA5BCFCE22047DCA91060 /* Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 94KV3E626L;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = connect.AmazonConnectChatIOSTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7E58A5ED2BB5F3DA00965327 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 11EE73D713DFF2FDBEC73AE7 /* Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 94KV3E626L;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = connect.AmazonConnectChatIOSTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7E58A5CE2BB5F3DA00965327 /* Build configuration list for PBXProject "AmazonConnectChatIOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7E58A5E62BB5F3DA00965327 /* Debug */,
+				7E58A5E72BB5F3DA00965327 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7E58A5E82BB5F3DA00965327 /* Build configuration list for PBXNativeTarget "AmazonConnectChatIOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7E58A5E92BB5F3DA00965327 /* Debug */,
+				7E58A5EA2BB5F3DA00965327 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7E58A5EB2BB5F3DA00965327 /* Build configuration list for PBXNativeTarget "AmazonConnectChatIOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7E58A5EC2BB5F3DA00965327 /* Debug */,
+				7E58A5ED2BB5F3DA00965327 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 7E58A5CB2BB5F3DA00965327 /* Project object */;
+}
