@@ -27,16 +27,15 @@ public class ChatSession: ChatSessionProtocol {
     
     init(chatService: ChatServiceProtocol = ChatService()) {
         self.chatService = chatService
+        setupEventCallbacks()
     }
     
     public func configure(with config: GlobalConfig) {
         AWSClient.shared.configure(with: config)
-        self.chatService = ChatService()
-        // Additional configuration...
     }
     
     public func connect(chatDetails: ChatDetails) {
-        chatService?.createChatSession(chatDetails: chatDetails) { [weak self] success, error in
+        self.chatService?.createChatSession(chatDetails: chatDetails) { [weak self] success, error in
             DispatchQueue.main.async {
                 self?.isConnected = success
                 if success {
@@ -50,7 +49,7 @@ public class ChatSession: ChatSessionProtocol {
     }
     
     public func disconnect() {
-        chatService?.disconnectChatSession { success, error in
+        self.chatService?.disconnectChatSession { success, error in
             DispatchQueue.main.async {
                 self.isConnected = !success
                 if !success {
@@ -62,9 +61,29 @@ public class ChatSession: ChatSessionProtocol {
         }
     }
     
-    
-    // Example method to simulate receiving a new message
-    func receiveMessage(message: String) {
+    private func setupEventCallbacks() {
+        self.chatService?.onMessageReceived { [weak self] message in
+            DispatchQueue.main.async {
+                self?.messages.append(message)
+                self?.onMessageReceived?(message)
+            }
+        }
+        self.chatService?.onConnected {
+            DispatchQueue.main.async {
+                self.isConnected = true
+                self.onConnectionEstablished?()
+            }
+        }
+        self.chatService?.onDisconnected {
+            DispatchQueue.main.async {
+                self.isConnected = false
+                self.onConnectionBroken?()
+            }
+        }
+        self.chatService?.onError { error in
+            print("Error: \(error?.localizedDescription ?? "Unknown error")")
+        }
+        
     }
     
     // Further methods for sending messages, handling chat events, etc.

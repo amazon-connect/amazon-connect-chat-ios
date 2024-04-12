@@ -7,70 +7,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "F10A636C-CF89-4AA6-94A2-07B9AD4DC16B"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../../../workplace/amazon-connect-chat-ui-examples/mobileChatExamples/iOSChatExample/iOSChatExample/Models/ChatManagerDemo.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "101"
-            endingLineNumber = "101"
-            landmarkName = "disconnectChat()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "C43A05A4-6F36-46C2-AB11-55C870B685C9"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Sources/Core/Service/ChatService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "37"
-            endingLineNumber = "37"
-            landmarkName = "disconnectChatSession(completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "B0710D87-4E3A-4566-912E-969752D09EF6"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Sources/Core/Service/ChatService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "44"
-            endingLineNumber = "44"
-            landmarkName = "disconnectChatSession(completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "0780E872-DC24-4C0E-80BE-788482BB3A2A"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Sources/Core/Service/ChatService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "47"
-            endingLineNumber = "47"
-            landmarkName = "disconnectChatSession(completion:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "84A4511F-35A5-49B6-8DD8-08EE4B330048"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -208,6 +144,70 @@
             startingLineNumber = "71"
             endingLineNumber = "71"
             landmarkName = "disconnectParticipantConnection(connectionToken:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "482B140F-6A40-462E-AE6E-5F8ED0C6A455"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Sources/Core/Service/ChatSession.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "68"
+            endingLineNumber = "68"
+            landmarkName = "setupEventCallbacks()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "482B140F-6A40-462E-AE6E-5F8ED0C6A455 - 45daea476e633af7"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #1 (AmazonConnectChatIOS.Message) -&gt; () in AmazonConnectChatIOS.ChatSession.setupEventCallbacks() -&gt; ()"
+                  moduleName = "AmazonConnectChatIOS"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rajatttt/Mobile/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Service/ChatSession.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "68"
+                  endingLineNumber = "68"
+                  offsetFromSymbolStart = "140">
+               </Location>
+               <Location
+                  uuid = "482B140F-6A40-462E-AE6E-5F8ED0C6A455 - 45daea476e633af7"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #1 (AmazonConnectChatIOS.Message) -&gt; () in AmazonConnectChatIOS.ChatSession.setupEventCallbacks() -&gt; ()"
+                  moduleName = "AmazonConnectChatIOS"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rajatttt/Mobile/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Service/ChatSession.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "68"
+                  endingLineNumber = "68"
+                  offsetFromSymbolStart = "344">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F51C956F-1A69-4F9E-BAE0-F2BC639C62CB"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../workplace/amazon-connect-chat-ui-examples/mobileChatExamples/iOSChatExample/iOSChatExample/Models/ChatManagerDemo.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "31"
+            endingLineNumber = "31"
+            landmarkName = "init()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
