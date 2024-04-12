@@ -1,20 +1,27 @@
 //
 //  ChatService.swift
 //  AmazonConnectChatIOS
-//
-//  Created by Mittal, Rajat on 4/3/24.
-//
 
 import Foundation
 
 protocol ChatServiceProtocol {
     func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void)
     func disconnectChatSession(completion: @escaping (Bool, Error?) -> Void)
+    func onMessageReceived(_ callback: @escaping (Message) -> Void)
+    func onConnected(_ callback: @escaping () -> Void)
+    func onDisconnected(_ callback: @escaping () -> Void)
+    func onError(_ callback: @escaping (Error?) -> Void)
 }
 
 class ChatService : ChatServiceProtocol {
     private let connectionDetailsProvider = ConnectionDetailsProvider.shared
     private var awsClient: AWSClientProtocol
+    private var websocketManager: WebsocketManager?
+    
+    private var messageReceivedCallback: ((Message) -> Void)?
+    private var onConnectedCallback: (() -> Void)?
+    private var onDisconnectedCallback: (() -> Void)?
+    private var onErrorCallback: ((Error?) -> Void)?
     
     init(awsClient: AWSClientProtocol = AWSClient.shared) {
         self.awsClient = awsClient
@@ -26,11 +33,46 @@ class ChatService : ChatServiceProtocol {
             case .success(let connectionDetails):
                 print("Participant connection created: WebSocket URL - \(connectionDetails.websocketUrl ?? "N/A")")
                 self.connectionDetailsProvider.updateConnectionDetails(newDetails: connectionDetails)
+                if let wsUrl = URL(string: connectionDetails.websocketUrl ?? "") {
+                    self.setupWebSocket(url: wsUrl)
+                }
                 completion(true, nil)
             case .failure(let error):
                 completion(false, error)
             }
         }
+    }
+    
+    private func setupWebSocket(url: URL) {
+        websocketManager = WebsocketManager(wsUrl: url, onRecievedMessage: { [weak self] message in
+            self?.messageReceivedCallback?(message)
+        })
+        
+        websocketManager?.onConnected = {
+            self.onConnectedCallback?()
+        }
+        websocketManager?.onDisconnected = {
+            self.onDisconnectedCallback?()
+        }
+        websocketManager?.onError = { error in
+            self.onErrorCallback?(error)
+        }
+    }
+    
+    func onMessageReceived(_ callback: @escaping (Message) -> Void) {
+        messageReceivedCallback = callback
+    }
+    
+    func onConnected(_ callback: @escaping () -> Void) {
+        onConnectedCallback = callback
+    }
+    
+    func onDisconnected(_ callback: @escaping () -> Void) {
+        onDisconnectedCallback = callback
+    }
+    
+    func onError(_ callback: @escaping (Error?) -> Void) {
+        onErrorCallback = callback
     }
     
     func disconnectChatSession(completion: @escaping (Bool, Error?) -> Void) {
@@ -49,7 +91,4 @@ class ChatService : ChatServiceProtocol {
             }
         }
     }
-    
-    
-    // Additional functionalities as needed, e.g., sendMessage, endChatSession, etc.
 }

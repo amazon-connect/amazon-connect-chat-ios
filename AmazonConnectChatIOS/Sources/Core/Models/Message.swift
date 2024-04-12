@@ -10,15 +10,15 @@ enum MessageType {
 }
 
 public struct Message: Identifiable, Equatable, Hashable {
-    var participant: String?
-    var text: String
+    public var participant: String?
+    public var text: String
     public var id = UUID()
-    var contentType: String
+    public var contentType: String
     var messageType: MessageType
-    var timeStamp: String
-    var messageID: String?
-    var status: String?
-    var isRead: Bool = false
+    public var timeStamp: String
+    public var messageID: String?
+    public var status: String?
+    public var isRead: Bool = false
 
     var content: MessageContent? {
         switch contentType {
