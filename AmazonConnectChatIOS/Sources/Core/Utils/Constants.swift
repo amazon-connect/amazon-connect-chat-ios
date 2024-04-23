@@ -19,8 +19,8 @@ struct Constants {
     static let EVENT = "EVENT"
     static let MESSAGE_RECEIPT_THROTTLE_TIME = 5000
     static let DEFAULT_REGION : AWSRegionType  = .USWest2
-    static let QUICK_REPLY = "QuickReply"
-    static let LIST_PICKER = "ListPicker"
+    public static let QUICK_REPLY = "QuickReply"
+    public static let LIST_PICKER = "ListPicker"
     
     // For future reference
     struct Error {

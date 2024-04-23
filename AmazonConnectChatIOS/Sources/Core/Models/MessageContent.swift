@@ -4,59 +4,63 @@
 import Foundation
 
 // MARK: - MessageContent Protocol
-protocol MessageContent {
+public protocol MessageContent {
     static func decode(from text: String) -> MessageContent?
 }
 
 // MARK: - Plain Text Content
-struct PlainTextContent: MessageContent {
-    let text: String
+public struct PlainTextContent: MessageContent {
+    public let text: String
 
-    static func decode(from text: String) -> MessageContent? {
-        PlainTextContent(text: text)
+    public init(text: String) {
+        self.text = text
+    }
+
+    public static func decode(from text: String) -> MessageContent? {
+        return PlainTextContent(text: text)
     }
 }
 
 // MARK: - Generic Interactive Template
-struct GenericInteractiveTemplate: Decodable {
-    let templateType: String
+public struct GenericInteractiveTemplate: Decodable {
+    public let templateType: String
     // Other properties common to all interactive message types, if any
 }
 
 // MARK: - Interactive Content Protocol
-protocol InteractiveContent: MessageContent {
+public protocol InteractiveContent: MessageContent {
     static var templateType: String { get }
 }
 
 // MARK: - Quick Reply Content
-struct QuickReplyElement: Codable {
-    let title: String
+public struct QuickReplyElement: Codable {
+    public let title: String
 }
 
-struct QuickReplyContentData: Codable {
-    let title: String
-    let subtitle: String?
-    let elements: [QuickReplyElement]
+public struct QuickReplyContentData: Codable {
+    public let title: String
+    public let subtitle: String?
+    public let elements: [QuickReplyElement]
 }
 
-struct QuickReplyData: Codable {
-    let content: QuickReplyContentData
+public struct QuickReplyData: Codable {
+    public let content: QuickReplyContentData
 }
 
-struct QuickReplyTemplate: Codable {
-    let templateType: String
-    let version: String
-    let data: QuickReplyData
+public struct QuickReplyTemplate: Codable {
+    public let templateType: String
+    public let version: String
+    public let data: QuickReplyData
 }
 
-struct QuickReplyContent: InteractiveContent {
-    static let templateType = Constants.QUICK_REPLY // This should match the templateType value for Quick Replies in the JSON
+public struct QuickReplyContent: InteractiveContent {
+    public static let templateType = Constants.QUICK_REPLY // This should match the templateType value for Quick Replies in the JSON
 
-    let title: String
-    let subtitle: String?
-    let options: [String]
+    public let title: String
+    public let subtitle: String?
+    public let options: [String]
 
-    static func decode(from text: String) -> MessageContent? {
+    public static func decode(from text: String) -> MessageContent? {
         guard let jsonData = text.data(using: .utf8) else { return nil }
         do {
             let quickReply = try JSONDecoder().decode(QuickReplyTemplate.self, from: jsonData)
@@ -72,41 +76,40 @@ struct QuickReplyContent: InteractiveContent {
 }
 
 // MARK: - List Picker Content
-
-struct ListPickerElement: Codable, Hashable, Equatable {    
-    let title: String
-    let subtitle: String?
-    let imageType: String?
-    let imageData: String?
+public struct ListPickerElement: Codable, Hashable, Equatable {
+    public let title: String
+    public let subtitle: String?
+    public let imageType: String?
+    public let imageData: String?
 }
 
-struct ListPickerContentData: Codable {
-    let title: String
-    let subtitle: String?
-    let imageType: String?
-    let imageData: String?
-    let elements: [ListPickerElement]
+public struct ListPickerContentData: Codable {
+    public let title: String
+    public let subtitle: String?
+    public let imageType: String?
+    public let imageData: String?
+    public let elements: [ListPickerElement]
 }
 
-struct ListPickerData: Codable {
-    let content: ListPickerContentData
+public struct ListPickerData: Codable {
+    public let content: ListPickerContentData
 }
 
-struct ListPickerTemplate: Codable {
-    let templateType: String
-    let version: String
-    let data: ListPickerData
+public struct ListPickerTemplate: Codable {
+    public let templateType: String
+    public let version: String
+    public let data: ListPickerData
 }
 
-struct ListPickerContent: InteractiveContent {
-    static let templateType = Constants.LIST_PICKER // This should match the templateType value for List Pickers in the JSON
+public struct ListPickerContent: InteractiveContent {
+    public static let templateType = Constants.LIST_PICKER // This should match the templateType value for List Pickers in the JSON
 
-    let title: String
-    let subtitle: String?
-    let imageUrl: String?
-    let options: [ListPickerElement]
+    public let title: String
+    public let subtitle: String?
+    public let imageUrl: String?
+    public let options: [ListPickerElement]
 
-    static func decode(from text: String) -> MessageContent? {
+    public static func decode(from text: String) -> MessageContent? {
         guard let jsonData = text.data(using: .utf8) else { return nil }
         do {
             let listPicker = try JSONDecoder().decode(ListPickerTemplate.self, from: jsonData)
@@ -121,7 +124,6 @@ struct ListPickerContent: InteractiveContent {
         }
     }
 }
-
 
 // MARK: - Additional Interactive Content Types
 // Add additional structs here following the pattern of QuickReplyContent for each new type of interactive content.

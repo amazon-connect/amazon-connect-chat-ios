@@ -150,47 +150,63 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "482B140F-6A40-462E-AE6E-5F8ED0C6A455"
+            uuid = "0ECBD1A6-222C-4D7E-B2C0-03D42FACC183"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Sources/Core/Service/ChatSession.swift"
+            filePath = "../../../workplace/amazon-connect-chat-ui-examples/mobileChatExamples/iOSChatExample/iOSChatExample/Views/ContentView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "68"
-            endingLineNumber = "68"
-            landmarkName = "setupEventCallbacks()"
+            startingLineNumber = "33"
+            endingLineNumber = "33"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "13D0F0D0-817A-4903-A96D-960D27E3C57D"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../workplace/amazon-connect-chat-ui-examples/mobileChatExamples/iOSChatExample/iOSChatExample/Views/ContentView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "143"
+            endingLineNumber = "143"
+            landmarkName = "startChatSession()"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "482B140F-6A40-462E-AE6E-5F8ED0C6A455 - 45daea476e633af7"
+                  uuid = "13D0F0D0-817A-4903-A96D-960D27E3C57D - 2f83e193e207b630"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #1 (AmazonConnectChatIOS.Message) -&gt; () in AmazonConnectChatIOS.ChatSession.setupEventCallbacks() -&gt; ()"
-                  moduleName = "AmazonConnectChatIOS"
+                  symbolName = "iOSChatExample.ContentView.startChatSession() -&gt; ()"
+                  moduleName = "iOSChatExample"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/rajatttt/Mobile/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Service/ChatSession.swift"
+                  urlString = "file:///Users/rajatttt/workplace/amazon-connect-chat-ui-examples/mobileChatExamples/iOSChatExample/iOSChatExample/Views/ContentView.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "68"
-                  endingLineNumber = "68"
-                  offsetFromSymbolStart = "140">
+                  startingLineNumber = "143"
+                  endingLineNumber = "143"
+                  offsetFromSymbolStart = "48">
                </Location>
                <Location
-                  uuid = "482B140F-6A40-462E-AE6E-5F8ED0C6A455 - 45daea476e633af7"
+                  uuid = "13D0F0D0-817A-4903-A96D-960D27E3C57D - 9916d879955aff76"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #1 (AmazonConnectChatIOS.Message) -&gt; () in AmazonConnectChatIOS.ChatSession.setupEventCallbacks() -&gt; ()"
-                  moduleName = "AmazonConnectChatIOS"
+                  symbolName = "implicit closure #2 (Swift.Bool) -&gt; () in implicit closure #1 (iOSChatExample.ContentView) -&gt; (Swift.Bool) -&gt; () in iOSChatExample.ContentView.startChatSession() -&gt; ()"
+                  moduleName = "iOSChatExample"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/rajatttt/Mobile/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Service/ChatSession.swift"
+                  urlString = "file:///Users/rajatttt/workplace/amazon-connect-chat-ui-examples/mobileChatExamples/iOSChatExample/iOSChatExample/Views/ContentView.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "68"
-                  endingLineNumber = "68"
-                  offsetFromSymbolStart = "344">
+                  startingLineNumber = "143"
+                  endingLineNumber = "143"
+                  offsetFromSymbolStart = "64">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -198,16 +214,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "F51C956F-1A69-4F9E-BAE0-F2BC639C62CB"
+            uuid = "05293344-D7E6-4933-8E93-B9C1565BB8E9"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "../../../workplace/amazon-connect-chat-ui-examples/mobileChatExamples/iOSChatExample/iOSChatExample/Models/ChatManagerDemo.swift"
+            filePath = "../../../workplace/amazon-connect-chat-ui-examples/mobileChatExamples/iOSChatExample/iOSChatExample/Views/ContentView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "31"
-            endingLineNumber = "31"
-            landmarkName = "init()"
+            startingLineNumber = "150"
+            endingLineNumber = "150"
+            landmarkName = "handleChatInitiation(success:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -7,6 +7,8 @@ import Foundation
 protocol ChatServiceProtocol {
     func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void)
     func disconnectChatSession(completion: @escaping (Bool, Error?) -> Void)
+    func sendMessage(message: String, completion: @escaping (Bool, Error?) -> Void)
+    func sendEvent(event: ContentType, content: String?, completion: @escaping (Bool, Error?) -> Void)
     func onMessageReceived(_ callback: @escaping (Message) -> Void)
     func onConnected(_ callback: @escaping () -> Void)
     func onDisconnected(_ callback: @escaping () -> Void)
@@ -14,6 +16,7 @@ protocol ChatServiceProtocol {
 }
 
 class ChatService : ChatServiceProtocol {
+    
     private let connectionDetailsProvider = ConnectionDetailsProvider.shared
     private var awsClient: AWSClientProtocol
     private var websocketManager: WebsocketManager?
@@ -91,4 +94,37 @@ class ChatService : ChatServiceProtocol {
             }
         }
     }
+    
+    func sendMessage(message: String, completion: @escaping (Bool, Error?) -> Void) {
+        guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
+            completion(false, NSError())
+            return
+        }
+        
+        awsClient.sendMessage(connectionToken: connectionDetails.connectionToken!, message: message) { result in
+            switch result {
+            case .success(_):
+                completion(true, nil)
+            case .failure(let error):
+                completion(false, error)
+            }
+        }
+    }
+    
+    func sendEvent(event: ContentType, content: String?, completion: @escaping (Bool, Error?) -> Void) {
+        guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
+            completion(false, NSError())
+            return
+        }
+        
+        awsClient.sendEvent(connectionToken: connectionDetails.connectionToken!,contentType: event, content: content!) { result in
+            switch result {
+            case .success(_):
+                completion(true, nil)
+            case .failure(let error):
+                completion(false, error)
+            }
+        }
+    }
+    
 }

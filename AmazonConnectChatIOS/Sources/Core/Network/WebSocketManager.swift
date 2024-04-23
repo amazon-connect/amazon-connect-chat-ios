@@ -128,7 +128,7 @@ class WebsocketManager : WebSocketDelegate {
             messageID: messageId
         )
         messageCallback(message)
-        print("Received message: \(message)")
+        //print("Received message: \(message)")
     }
     
     func handleParticipantJoined(_ innerJson: [String: Any], _ time: String) {

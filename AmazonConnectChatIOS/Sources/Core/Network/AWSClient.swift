@@ -12,6 +12,8 @@ import AWSCore
 protocol AWSClientProtocol {
     func createParticipantConnection(participantToken: String, completion: @escaping (Result<ConnectionDetails, Error>) -> Void)
     func disconnectParticipantConnection(connectionToken: String, completion: @escaping (Result<Bool, Error>) -> Void)
+    func sendMessage(connectionToken: String, message: String, completion: @escaping (Result<Bool, Error>) -> Void)
+    func sendEvent(connectionToken: String, contentType: ContentType,content: String, completion: @escaping (Result<Bool, Error>) -> Void)
 }
 
 class AWSClient : AWSClientProtocol {
@@ -74,7 +76,45 @@ class AWSClient : AWSClientProtocol {
         })
     }
     
-    // Potential additional AWS SDK interactions...
+    func sendMessage(connectionToken: String, message: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+        guard let request = AWSConnectParticipantSendMessageRequest() else {
+            completion(.failure(AWSClientError.requestCreationFailed))
+            return
+        }
+        request.connectionToken = connectionToken
+        request.content = message
+        request.contentType = "text/plain"
+        
+        connectParticipantClient?.sendMessage(request).continueWith(executor: AWSExecutor.mainThread(), block: { (task: AWSTask) -> AnyObject? in
+            if let error = task.error {
+                completion(.failure(error))
+            } else {
+                completion(.success(true))
+            }
+            return nil
+        })
+    }
+    
+    func sendEvent(connectionToken: String, contentType: ContentType, content: String = "", completion: @escaping (Result<Bool, Error>) -> Void) {
+        guard let request = AWSConnectParticipantSendEventRequest() else {
+            completion(.failure(AWSClientError.requestCreationFailed))
+            return
+        }
+
+        request.connectionToken = connectionToken
+        request.contentType = contentType.rawValue
+        request.content = content
+        
+        connectParticipantClient?.sendEvent(request).continueWith(executor: AWSExecutor.mainThread(), block: { (task: AWSTask) -> AnyObject? in
+            if let error = task.error {
+                completion(.failure(error))
+            } else {
+                completion(.success(true))
+            }
+            return nil
+        })
+    }
+    
     
     enum AWSClientError: Error {
         case requestCreationFailed

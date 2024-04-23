@@ -3,7 +3,7 @@
 
 import Foundation
 
-enum MessageType {
+public enum MessageType {
     case Sender
     case Receiver
     case Common
@@ -14,18 +14,29 @@ public struct Message: Identifiable, Equatable, Hashable {
     public var text: String
     public var id = UUID()
     public var contentType: String
-    var messageType: MessageType
+    public var messageType: MessageType
     public var timeStamp: String
     public var messageID: String?
     public var status: String?
     public var isRead: Bool = false
 
-    var content: MessageContent? {
+    public init(participant: String?, text: String, contentType: String, messageType: MessageType, timeStamp: String, messageID: String? = nil, status: String? = nil, isRead: Bool = false) {
+        self.participant = participant
+        self.text = text
+        self.contentType = contentType
+        self.messageType = messageType
+        self.timeStamp = timeStamp
+        self.messageID = messageID
+        self.status = status
+        self.isRead = isRead
+    }
+
+    public var content: MessageContent? {
         switch contentType {
         case ContentType.plainText.rawValue:
             return PlainTextContent.decode(from: text)
         case ContentType.richText.rawValue:
-            // A rich text content class could be created later as complexity increse
+            // A rich text content class could be created later as complexity increases
             return PlainTextContent.decode(from: text)
         case ContentType.interactiveText.rawValue:
             return decodeInteractiveContent(from: text)
