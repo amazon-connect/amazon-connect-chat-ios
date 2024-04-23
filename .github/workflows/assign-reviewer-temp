@@ -1,0 +1,22 @@
+name: Assign Reviewer Temp
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  assign-reviewers:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Assign reviewer
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const prAuthor = context.payload.pull_request.user.login;
+            const reviewer = (prAuthor === 'mrajatttt') ? 'mliao95' : 'mrajatttt';
+            github.rest.pulls.requestReviewers({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_request_number: context.payload.pull_request.number,
+              reviewers: [reviewer],
+            });
