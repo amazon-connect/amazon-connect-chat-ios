@@ -61,6 +61,32 @@ public class ChatSession: ChatSessionProtocol {
         }
     }
     
+    public func sendMessage(message: String) {
+        self.chatService?.sendMessage(message: message) { success, error in
+            DispatchQueue.main.async {
+                self.isConnected = !success
+                if !success {
+                    print("Error disconnecting chat session")
+                } else {
+                    self.onChatEnded?()
+                }
+            }
+        }
+    }
+    
+    public func sendEvent(event: ContentType, content: String) {
+        self.chatService?.sendEvent(event: event, content: content) { success, error in
+            DispatchQueue.main.async {
+                self.isConnected = !success
+                if !success {
+                    print("Error disconnecting chat session")
+                } else {
+                    self.onChatEnded?()
+                }
+            }
+        }
+    }
+    
     private func setupEventCallbacks() {
         self.chatService?.onMessageReceived { [weak self] message in
             DispatchQueue.main.async {

@@ -4,7 +4,7 @@
 
 import Foundation
 
-enum ContentType: String {
+public enum ContentType: String {
     case typing = "application/vnd.amazonaws.connect.event.typing"
     case connectionAcknowledged = "application/vnd.amazonaws.connect.event.connection.acknowledged"
     case messageDelivered = "application/vnd.amazonaws.connect.event.message.delivered"
