@@ -20,6 +20,7 @@ class ChatService : ChatServiceProtocol {
     private let connectionDetailsProvider = ConnectionDetailsProvider.shared
     private var awsClient: AWSClientProtocol
     private var websocketManager: WebsocketManager?
+    private var chatDetails: ChatDetails?
     
     private var messageReceivedCallback: ((Message) -> Void)?
     private var onConnectedCallback: (() -> Void)?
@@ -28,6 +29,7 @@ class ChatService : ChatServiceProtocol {
     
     init(awsClient: AWSClientProtocol = AWSClient.shared) {
         self.awsClient = awsClient
+        self.registerNotificationListeners()
     }
     
     func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void) {
@@ -39,6 +41,7 @@ class ChatService : ChatServiceProtocol {
                 if let wsUrl = URL(string: connectionDetails.websocketUrl ?? "") {
                     self.setupWebSocket(url: wsUrl)
                 }
+                self.chatDetails = chatDetails
                 completion(true, nil)
             case .failure(let error):
                 completion(false, error)
@@ -88,6 +91,7 @@ class ChatService : ChatServiceProtocol {
             switch result {
             case .success(_):
                 print("Participant Disconnected")
+                self.websocketManager?.disconnect()
                 completion(true, nil)
             case .failure(let error):
                 completion(false, error)
@@ -127,4 +131,22 @@ class ChatService : ChatServiceProtocol {
         }
     }
     
+    func registerNotificationListeners() {
+        NotificationCenter.default.addObserver(forName: .requestNewWsUrl, object: nil, queue: .main) { [weak self] _ in
+            if let pToken = self?.chatDetails?.participantToken {
+                self?.awsClient.createParticipantConnection(participantToken: pToken) { result in
+                    switch result {
+                    case .success(let connectionDetails):
+                        print("Participant connection created: WebSocket URL - \(connectionDetails.websocketUrl ?? "N/A")")
+                        self?.connectionDetailsProvider.updateConnectionDetails(newDetails: connectionDetails)
+                        if let wsUrl = URL(string: connectionDetails.websocketUrl ?? "") {
+                            self?.websocketManager?.connect(wsUrl: wsUrl)
+                        }
+                    case .failure(let error):
+                        print("CreateParticipantConnection failed")
+                    }
+                }
+            }
+        }
+    }
 }
