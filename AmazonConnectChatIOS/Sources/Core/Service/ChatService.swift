@@ -28,9 +28,11 @@ class ChatService : ChatServiceProtocol {
     
     init(awsClient: AWSClientProtocol = AWSClient.shared) {
         self.awsClient = awsClient
+        self.registerNotificationListeners()
     }
     
     func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void) {
+        self.connectionDetailsProvider.updateChatDetails(newDetails: chatDetails)
         awsClient.createParticipantConnection(participantToken: chatDetails.participantToken) { result in
             switch result {
             case .success(let connectionDetails):
@@ -88,6 +90,7 @@ class ChatService : ChatServiceProtocol {
             switch result {
             case .success(_):
                 print("Participant Disconnected")
+                self.websocketManager?.disconnect()
                 completion(true, nil)
             case .failure(let error):
                 completion(false, error)
@@ -127,4 +130,22 @@ class ChatService : ChatServiceProtocol {
         }
     }
     
+    func registerNotificationListeners() {
+        NotificationCenter.default.addObserver(forName: .requestNewWsUrl, object: nil, queue: .main) { [weak self] _ in
+            if let pToken = self?.connectionDetailsProvider.getChatDetails()?.participantToken {
+                self?.awsClient.createParticipantConnection(participantToken: pToken) { result in
+                    switch result {
+                    case .success(let connectionDetails):
+                        print("Participant connection created: WebSocket URL - \(connectionDetails.websocketUrl ?? "N/A")")
+                        self?.connectionDetailsProvider.updateConnectionDetails(newDetails: connectionDetails)
+                        if let wsUrl = URL(string: connectionDetails.websocketUrl ?? "") {
+                            self?.websocketManager?.connect(wsUrl: wsUrl)
+                        }
+                    case .failure(let error):
+                        print("CreateParticipantConnection failed")
+                    }
+                }
+            }
+        }
+    }
 }
