@@ -20,7 +20,6 @@ class ChatService : ChatServiceProtocol {
     private let connectionDetailsProvider = ConnectionDetailsProvider.shared
     private var awsClient: AWSClientProtocol
     private var websocketManager: WebsocketManager?
-    private var chatDetails: ChatDetails?
     
     private var messageReceivedCallback: ((Message) -> Void)?
     private var onConnectedCallback: (() -> Void)?
@@ -33,6 +32,7 @@ class ChatService : ChatServiceProtocol {
     }
     
     func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void) {
+        self.connectionDetailsProvider.updateChatDetails(newDetails: chatDetails)
         awsClient.createParticipantConnection(participantToken: chatDetails.participantToken) { result in
             switch result {
             case .success(let connectionDetails):
@@ -41,7 +41,6 @@ class ChatService : ChatServiceProtocol {
                 if let wsUrl = URL(string: connectionDetails.websocketUrl ?? "") {
                     self.setupWebSocket(url: wsUrl)
                 }
-                self.chatDetails = chatDetails
                 completion(true, nil)
             case .failure(let error):
                 completion(false, error)
@@ -133,7 +132,7 @@ class ChatService : ChatServiceProtocol {
     
     func registerNotificationListeners() {
         NotificationCenter.default.addObserver(forName: .requestNewWsUrl, object: nil, queue: .main) { [weak self] _ in
-            if let pToken = self?.chatDetails?.participantToken {
+            if let pToken = self?.connectionDetailsProvider.getChatDetails()?.participantToken {
                 self?.awsClient.createParticipantConnection(participantToken: pToken) { result in
                     switch result {
                     case .success(let connectionDetails):
