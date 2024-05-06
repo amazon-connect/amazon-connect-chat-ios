@@ -5,21 +5,25 @@
 import Foundation
 import Combine
 
-public protocol ChatSessionProtocol: ObservableObject, ChatEventHandlers {
-    var isConnected: Bool { get }
-    var messages: [Message] { get }
-    func connect(chatDetails: ChatDetails)
-    func disconnect()
+public protocol ChatSessionProtocol {
+    func configure(config: GlobalConfig)
+    func connect(chatDetails: ChatDetails, onError: @escaping (Error?) -> Void)
+    func disconnect(onError: @escaping (Error) -> Void)
+    func sendMessage(contentType: ContentType, message: String, onError: @escaping (Error) -> Void)
+    func sendEvent(event: ContentType, content: String, onError: @escaping (Error) -> Void)
+    
+    var onConnectionEstablished: (() -> Void)? { get set }
+    var onConnectionBroken: (() -> Void)? { get set }
+    var onMessageReceived: ((Message) -> Void)? { get set }
+    var onChatEnded: (() -> Void)? { get set }
 }
 
 public class ChatSession: ChatSessionProtocol {
+    public static let shared : ChatSessionProtocol = ChatSession()
+    private var chatService: ChatServiceProtocol
+    private var eventSubscription: AnyCancellable?
+    private var messageSubscription: AnyCancellable?
     
-    public static let shared = ChatSession()
-    @Published public private(set) var isConnected: Bool = false
-    @Published public private(set) var messages: [Message] = []
-    private var chatService: ChatServiceProtocol?
-    
-    // Event Handlers
     public var onConnectionEstablished: (() -> Void)?
     public var onConnectionBroken: (() -> Void)?
     public var onMessageReceived: ((Message) -> Void)?
@@ -27,90 +31,92 @@ public class ChatSession: ChatSessionProtocol {
     
     init(chatService: ChatServiceProtocol = ChatService()) {
         self.chatService = chatService
-        setupEventCallbacks()
+        setupEventSubscriptions()
     }
     
-    public func configure(with config: GlobalConfig) {
-        AWSClient.shared.configure(with: config)
-    }
-    
-    public func connect(chatDetails: ChatDetails) {
-        self.chatService?.createChatSession(chatDetails: chatDetails) { [weak self] success, error in
+    private func setupEventSubscriptions() {
+        eventSubscription = chatService.subscribeToEvents { [weak self] event in
             DispatchQueue.main.async {
-                self?.isConnected = success
-                if success {
-                    print("Chat session successfully created.")
+                switch event {
+                case .connectionEstablished:
                     self?.onConnectionEstablished?()
-                } else {
-                    print("Error creating chat session: \(error?.localizedDescription ?? "Unknown error")")
+                case .connectionBroken:
+                    self?.onConnectionBroken?()
+                default:
+                    break
                 }
             }
         }
-    }
-    
-    public func disconnect() {
-        self.chatService?.disconnectChatSession { success, error in
+        
+        messageSubscription = chatService.subscribeToMessages { [weak self] message in
             DispatchQueue.main.async {
-                self.isConnected = !success
-                if !success {
-                    print("Error disconnecting chat session")
-                } else {
-                    self.onChatEnded?()
-                }
-            }
-        }
-    }
-    
-    public func sendMessage(message: String) {
-        self.chatService?.sendMessage(message: message) { success, error in
-            DispatchQueue.main.async {
-                self.isConnected = !success
-                if !success {
-                    print("Error disconnecting chat session")
-                } else {
-                    self.onChatEnded?()
-                }
-            }
-        }
-    }
-    
-    public func sendEvent(event: ContentType, content: String) {
-        self.chatService?.sendEvent(event: event, content: content) { success, error in
-            DispatchQueue.main.async {
-                self.isConnected = !success
-                if !success {
-                    print("Error disconnecting chat session")
-                } else {
-                    self.onChatEnded?()
-                }
-            }
-        }
-    }
-    
-    private func setupEventCallbacks() {
-        self.chatService?.onMessageReceived { [weak self] message in
-            DispatchQueue.main.async {
-                self?.messages.append(message)
                 self?.onMessageReceived?(message)
             }
         }
-        self.chatService?.onConnected {
-            DispatchQueue.main.async {
-                self.isConnected = true
-                self.onConnectionEstablished?()
-            }
-        }
-        self.chatService?.onDisconnected {
-            DispatchQueue.main.async {
-                self.isConnected = false
-                self.onConnectionBroken?()
-            }
-        }
-        self.chatService?.onError { error in
-            print("Error: \(error?.localizedDescription ?? "Unknown error")")
-        }
-        
     }
     
-    // Further methods for sending messages, handling chat events, etc.
+    public func configure(config: GlobalConfig) {
+        AWSClient.shared.configure(with: config)
+    }
+    
+    public func connect(chatDetails: ChatDetails, onError: @escaping (Error?) -> Void) {
+        chatService.createChatSession(chatDetails: chatDetails) { [weak self] success, error in
+            DispatchQueue.main.async {
+                if success {
+                    print("Chat session successfully created.")
+                } else if let error = error {
+                    print("Error creating chat session: \(error.localizedDescription )")
+                    onError(error)
+                }
+            }
+        }
+    }
+    
+    
+    public func disconnect(onError: @escaping (Error) -> Void) {
+        chatService.disconnectChatSession { [weak self] success, error in
+            DispatchQueue.main.async {
+                if success {
+                    self?.onChatEnded?()
+                    self?.cleanupSubscriptions()
+                } else if let error = error {
+                    print("Error disconnecting chat session: \(error.localizedDescription )")
+                    onError(error)
+                }
+            }
+        }
+    }
+    
+    public func sendMessage(contentType: ContentType, message: String, onError: @escaping (Error) -> Void) {
+        chatService.sendMessage(contentType: contentType, message: message) { success, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    print("Error sending message: \(error.localizedDescription )")
+                    onError(error)
+                }
+            }
+        }
+    }
+    
+    public func sendEvent(event: ContentType, content: String, onError: @escaping (Error) -> Void) {
+        chatService.sendEvent(event: event, content: content) { success, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    print("Error sending event: \(error.localizedDescription )")
+                }
+            }
+        }
+    }
+    
+    deinit {
+        eventSubscription?.cancel()
+        messageSubscription?.cancel()
+    }
+    
+    
+    private func cleanupSubscriptions() {
+        eventSubscription?.cancel()
+        messageSubscription?.cancel()
+    }
 }
+

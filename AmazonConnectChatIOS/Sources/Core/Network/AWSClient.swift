@@ -1,29 +1,57 @@
 //
 //  AWSClient.swift
 //  AmazonConnectChatIOS
-//
-//  Created by Mittal, Rajat on 4/3/24.
-//
+
 
 import Foundation
 import AWSConnectParticipant
 import AWSCore
 
+/// Protocol defining the AWS client operations.
 protocol AWSClientProtocol {
+    /// Creates a new participant connection.
+    /// - Parameters:
+    ///   - participantToken: The token for the participant to identify.
+    ///   - completion: Completion handler to handle the connection details or error.
     func createParticipantConnection(participantToken: String, completion: @escaping (Result<ConnectionDetails, Error>) -> Void)
+    
+    /// Disconnects an existing participant connection.
+    /// - Parameters:
+    ///   - connectionToken: The token for the connection to be disconnected.
+    ///   - completion: Completion handler to handle the success status or error.
     func disconnectParticipantConnection(connectionToken: String, completion: @escaping (Result<Bool, Error>) -> Void)
-    func sendMessage(connectionToken: String, message: String, completion: @escaping (Result<Bool, Error>) -> Void)
-    func sendEvent(connectionToken: String, contentType: ContentType,content: String, completion: @escaping (Result<Bool, Error>) -> Void)
+    
+    /// Sends a message.
+    /// - Parameters:
+    ///   - connectionToken: The token for the connection through which the message is sent.
+    ///   - message: The message text to be sent.
+    ///   - completion: Completion handler to handle the success status or error.
+    func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<Bool, Error>) -> Void)
+    
+    /// Sends an event..
+    /// - Parameters:
+    ///   - connectionToken: The token for the connection through which the event is sent.
+    ///   - contentType: The type of content being sent.
+    ///   - content: The content string to be sent.
+    ///   - completion: Completion handler to handle the success status or error.
+    func sendEvent(connectionToken: String, contentType: ContentType, content: String, completion: @escaping (Result<Bool, Error>) -> Void)
 }
 
-class AWSClient : AWSClientProtocol {
+/// AWSClient manages the interactions with AWS Connect Participant service.
+class AWSClient: AWSClientProtocol {
+    /// Shared instance of AWSClient.
     static let shared = AWSClient()
     
+    /// AWS Connect Participant Client
     private var connectParticipantClient: AWSConnectParticipant?
+    
+    /// AWS region for the service configuration.
     private var region: AWSRegionType = Constants.DEFAULT_REGION
     
     private init() {}
-
+    
+    /// Configures the client with global configuration settings.
+    /// - Parameter config: Global configuration settings.
     func configure(with config: GlobalConfig) {
         
         // AWS service initialization with empty credentials as placeholders
@@ -37,6 +65,7 @@ class AWSClient : AWSClientProtocol {
         self.connectParticipantClient = AWSConnectParticipant(forKey: Constants.AWSConnectParticipantKey)
     }
     
+    /// Creates a connection for a participant identified by a token.
     func createParticipantConnection(participantToken: String, completion: @escaping (Result<ConnectionDetails, Error>) -> Void) {
         guard let request = AWSConnectParticipantCreateParticipantConnectionRequest() else {
             completion(.failure(AWSClientError.requestCreationFailed))
@@ -59,6 +88,7 @@ class AWSClient : AWSClientProtocol {
         })
     }
     
+    /// Disconnects a participant connection using a connection token.
     func disconnectParticipantConnection(connectionToken: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         guard let request = AWSConnectParticipantDisconnectParticipantRequest() else {
             completion(.failure(AWSClientError.requestCreationFailed))
@@ -76,14 +106,15 @@ class AWSClient : AWSClientProtocol {
         })
     }
     
-    func sendMessage(connectionToken: String, message: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+    /// Sends a message using a connection token.
+    func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         guard let request = AWSConnectParticipantSendMessageRequest() else {
             completion(.failure(AWSClientError.requestCreationFailed))
             return
         }
         request.connectionToken = connectionToken
         request.content = message
-        request.contentType = "text/plain"
+        request.contentType = contentType.rawValue
         
         connectParticipantClient?.sendMessage(request).continueWith(executor: AWSExecutor.mainThread(), block: { (task: AWSTask) -> AnyObject? in
             if let error = task.error {
@@ -95,12 +126,13 @@ class AWSClient : AWSClientProtocol {
         })
     }
     
+    /// Sends an event using a connection token.
     func sendEvent(connectionToken: String, contentType: ContentType, content: String = "", completion: @escaping (Result<Bool, Error>) -> Void) {
         guard let request = AWSConnectParticipantSendEventRequest() else {
             completion(.failure(AWSClientError.requestCreationFailed))
             return
         }
-
+        
         request.connectionToken = connectionToken
         request.contentType = contentType.rawValue
         request.content = content
@@ -116,6 +148,7 @@ class AWSClient : AWSClientProtocol {
     }
     
     
+    /// Enum for client-specific errors.
     enum AWSClientError: Error {
         case requestCreationFailed
         case unknownError

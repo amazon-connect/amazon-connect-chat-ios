@@ -3,9 +3,9 @@
 
 import Foundation
 
-public enum MessageType {
-    case Sender
-    case Receiver
+public enum MessageDirection {
+    case Outgoing
+    case Incoming
     case Common
 }
 
@@ -14,17 +14,17 @@ public struct Message: Identifiable, Equatable, Hashable {
     public var text: String
     public var id = UUID()
     public var contentType: String
-    public var messageType: MessageType
+    public var messageDirection: MessageDirection?
     public var timeStamp: String
     public var messageID: String?
     public var status: String?
     public var isRead: Bool = false
 
-    public init(participant: String?, text: String, contentType: String, messageType: MessageType, timeStamp: String, messageID: String? = nil, status: String? = nil, isRead: Bool = false) {
+    public init(participant: String?, text: String, contentType: String, messageDirection: MessageDirection? = nil, timeStamp: String, messageID: String? = nil, status: String? = nil, isRead: Bool = false) {
         self.participant = participant
         self.text = text
         self.contentType = contentType
-        self.messageType = messageType
+        self.messageDirection = messageDirection
         self.timeStamp = timeStamp
         self.messageID = messageID
         self.status = status

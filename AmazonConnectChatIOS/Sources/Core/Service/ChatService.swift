@@ -3,28 +3,26 @@
 //  AmazonConnectChatIOS
 
 import Foundation
+import Combine
 
 protocol ChatServiceProtocol {
     func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void)
     func disconnectChatSession(completion: @escaping (Bool, Error?) -> Void)
-    func sendMessage(message: String, completion: @escaping (Bool, Error?) -> Void)
+    func sendMessage(contentType: ContentType, message: String, completion: @escaping (Bool, Error?) -> Void)
     func sendEvent(event: ContentType, content: String?, completion: @escaping (Bool, Error?) -> Void)
-    func onMessageReceived(_ callback: @escaping (Message) -> Void)
-    func onConnected(_ callback: @escaping () -> Void)
-    func onDisconnected(_ callback: @escaping () -> Void)
-    func onError(_ callback: @escaping (Error?) -> Void)
+    func subscribeToEvents(handleEvent: @escaping (ChatEvent) -> Void) -> AnyCancellable
+    func subscribeToMessages(handleMessage: @escaping (Message) -> Void) -> AnyCancellable
 }
 
 class ChatService : ChatServiceProtocol {
-    
+    var eventPublisher = PassthroughSubject<ChatEvent, Never>()
+    var messagePublisher = PassthroughSubject<Message, Never>()
+    private var eventCancellables = Set<AnyCancellable>()
+    private var messageCancellables = Set<AnyCancellable>()
     private let connectionDetailsProvider = ConnectionDetailsProvider.shared
     private var awsClient: AWSClientProtocol
     private var websocketManager: WebsocketManager?
-    
-    private var messageReceivedCallback: ((Message) -> Void)?
-    private var onConnectedCallback: (() -> Void)?
-    private var onDisconnectedCallback: (() -> Void)?
-    private var onErrorCallback: ((Error?) -> Void)?
+
     
     init(awsClient: AWSClientProtocol = AWSClient.shared) {
         self.awsClient = awsClient
@@ -49,37 +47,47 @@ class ChatService : ChatServiceProtocol {
     }
     
     private func setupWebSocket(url: URL) {
-        websocketManager = WebsocketManager(wsUrl: url, onRecievedMessage: { [weak self] message in
-            self?.messageReceivedCallback?(message)
-        })
+        self.websocketManager = WebsocketManager(wsUrl: url)
         
-        websocketManager?.onConnected = {
-            self.onConnectedCallback?()
-        }
-        websocketManager?.onDisconnected = {
-            self.onDisconnectedCallback?()
-        }
-        websocketManager?.onError = { error in
-            self.onErrorCallback?(error)
-        }
+        self.websocketManager?.eventPublisher
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { [weak self] event in
+                print("Received event from WebsocketManager: \(event)")
+                self?.eventPublisher.send(event)
+            })
+            .store(in: &eventCancellables)
+        
+        self.websocketManager?.messagePublisher
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { [weak self] message in
+                print("Received event from WebsocketManager: \(message)")
+                self?.messagePublisher.send(message)
+            })
+            .store(in: &messageCancellables)
     }
     
-    func onMessageReceived(_ callback: @escaping (Message) -> Void) {
-        messageReceivedCallback = callback
+    func subscribeToEvents(handleEvent: @escaping (ChatEvent) -> Void) -> AnyCancellable {
+        let subscription = eventPublisher
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { event in
+                print("Event received in ChatService: \(event)")
+                handleEvent(event)
+            })
+        eventCancellables.insert(subscription)
+        return subscription
     }
     
-    func onConnected(_ callback: @escaping () -> Void) {
-        onConnectedCallback = callback
+    func subscribeToMessages(handleMessage: @escaping (Message) -> Void) -> AnyCancellable {
+        let subscription = messagePublisher
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { message in
+                print("Message received in ChatService: \(message)")
+                handleMessage(message)
+            })
+        messageCancellables.insert(subscription)
+        return subscription
     }
-    
-    func onDisconnected(_ callback: @escaping () -> Void) {
-        onDisconnectedCallback = callback
-    }
-    
-    func onError(_ callback: @escaping (Error?) -> Void) {
-        onErrorCallback = callback
-    }
-    
+
     func disconnectChatSession(completion: @escaping (Bool, Error?) -> Void) {
         guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
             completion(false, NSError())
@@ -90,6 +98,7 @@ class ChatService : ChatServiceProtocol {
             switch result {
             case .success(_):
                 print("Participant Disconnected")
+                self.eventPublisher.send(.chatEnded)
                 self.websocketManager?.disconnect()
                 completion(true, nil)
             case .failure(let error):
@@ -98,13 +107,13 @@ class ChatService : ChatServiceProtocol {
         }
     }
     
-    func sendMessage(message: String, completion: @escaping (Bool, Error?) -> Void) {
+    func sendMessage(contentType: ContentType, message: String, completion: @escaping (Bool, Error?) -> Void) {
         guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
             completion(false, NSError())
             return
         }
         
-        awsClient.sendMessage(connectionToken: connectionDetails.connectionToken!, message: message) { result in
+        awsClient.sendMessage(connectionToken: connectionDetails.connectionToken!, contentType: contentType, message: message) { result in
             switch result {
             case .success(_):
                 completion(true, nil)
@@ -131,21 +140,23 @@ class ChatService : ChatServiceProtocol {
     }
     
     func registerNotificationListeners() {
-        NotificationCenter.default.addObserver(forName: .requestNewWsUrl, object: nil, queue: .main) { [weak self] _ in
-            if let pToken = self?.connectionDetailsProvider.getChatDetails()?.participantToken {
-                self?.awsClient.createParticipantConnection(participantToken: pToken) { result in
-                    switch result {
-                    case .success(let connectionDetails):
-                        print("Participant connection created: WebSocket URL - \(connectionDetails.websocketUrl ?? "N/A")")
-                        self?.connectionDetailsProvider.updateConnectionDetails(newDetails: connectionDetails)
-                        if let wsUrl = URL(string: connectionDetails.websocketUrl ?? "") {
-                            self?.websocketManager?.connect(wsUrl: wsUrl)
+        NotificationCenter.default.publisher(for: .requestNewWsUrl, object: nil)
+            .sink { [weak self] _ in
+                if let pToken = self?.connectionDetailsProvider.getChatDetails()?.participantToken {
+                    self?.awsClient.createParticipantConnection(participantToken: pToken) { result in
+                        switch result {
+                        case .success(let connectionDetails):
+                            self?.connectionDetailsProvider.updateConnectionDetails(newDetails: connectionDetails)
+                            if let wsUrl = URL(string: connectionDetails.websocketUrl ?? "") {
+                                self?.websocketManager?.connect(wsUrl: wsUrl)
+                            }
+                        case .failure(let error):
+                            print("CreateParticipantConnection failed: \(error)")
                         }
-                    case .failure(let error):
-                        print("CreateParticipantConnection failed")
                     }
                 }
             }
-        }
+            .store(in: &eventCancellables)
     }
+    
 }
