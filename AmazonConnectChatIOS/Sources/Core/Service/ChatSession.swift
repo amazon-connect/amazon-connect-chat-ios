@@ -14,7 +14,8 @@ public protocol ChatSessionProtocol {
     
     var onConnectionEstablished: (() -> Void)? { get set }
     var onConnectionBroken: (() -> Void)? { get set }
-    var onMessageReceived: ((Message) -> Void)? { get set }
+    var onMessageReceived: ((TranscriptItem) -> Void)? { get set }
+    var onTranscriptUpdated: (([TranscriptItem]) -> Void)? { get set }
     var onChatEnded: (() -> Void)? { get set }
 }
 
@@ -23,10 +24,12 @@ public class ChatSession: ChatSessionProtocol {
     private var chatService: ChatServiceProtocol
     private var eventSubscription: AnyCancellable?
     private var messageSubscription: AnyCancellable?
+    private var transcriptSubscription: AnyCancellable?
     
     public var onConnectionEstablished: (() -> Void)?
     public var onConnectionBroken: (() -> Void)?
-    public var onMessageReceived: ((Message) -> Void)?
+    public var onMessageReceived: ((TranscriptItem) -> Void)?
+    public var onTranscriptUpdated: (([TranscriptItem]) -> Void)?
     public var onChatEnded: (() -> Void)?
     
     init(chatService: ChatServiceProtocol = ChatService()) {
@@ -48,9 +51,15 @@ public class ChatSession: ChatSessionProtocol {
             }
         }
         
-        messageSubscription = chatService.subscribeToMessages { [weak self] message in
+        messageSubscription = chatService.subscribeToTranscriptItem  { [weak self] handleTranscriptItem in
             DispatchQueue.main.async {
-                self?.onMessageReceived?(message)
+                self?.onMessageReceived?(handleTranscriptItem)
+            }
+        }
+        
+        transcriptSubscription = chatService.subscribeToTranscriptList { [weak self] handleTranscriptList in
+            DispatchQueue.main.async {
+                self?.onTranscriptUpdated?(handleTranscriptList)
             }
         }
     }
@@ -63,9 +72,10 @@ public class ChatSession: ChatSessionProtocol {
         chatService.createChatSession(chatDetails: chatDetails) { [weak self] success, error in
             DispatchQueue.main.async {
                 if success {
-                    print("Chat session successfully created.")
+                    SDKLogger.logger.logDebug("Chat session successfully created.")
                 } else if let error = error {
-                    print("Error creating chat session: \(error.localizedDescription )")
+                    print()
+                    SDKLogger.logger.logError("Error creating chat session: \(error.localizedDescription )")
                     onError(error)
                 }
             }
@@ -80,7 +90,7 @@ public class ChatSession: ChatSessionProtocol {
                     self?.onChatEnded?()
                     self?.cleanupSubscriptions()
                 } else if let error = error {
-                    print("Error disconnecting chat session: \(error.localizedDescription )")
+                    SDKLogger.logger.logError("Error disconnecting chat session: \(error.localizedDescription )")
                     onError(error)
                 }
             }
@@ -91,7 +101,7 @@ public class ChatSession: ChatSessionProtocol {
         chatService.sendMessage(contentType: contentType, message: message) { success, error in
             DispatchQueue.main.async {
                 if let error = error {
-                    print("Error sending message: \(error.localizedDescription )")
+                    SDKLogger.logger.logError("Error sending message: \(error.localizedDescription )")
                     onError(error)
                 }
             }
@@ -102,7 +112,7 @@ public class ChatSession: ChatSessionProtocol {
         chatService.sendEvent(event: event, content: content) { success, error in
             DispatchQueue.main.async {
                 if let error = error {
-                    print("Error sending event: \(error.localizedDescription )")
+                    SDKLogger.logger.logError("Error sending event: \(error.localizedDescription )")
                 }
             }
         }
@@ -112,7 +122,6 @@ public class ChatSession: ChatSessionProtocol {
         eventSubscription?.cancel()
         messageSubscription?.cancel()
     }
-    
     
     private func cleanupSubscriptions() {
         eventSubscription?.cancel()

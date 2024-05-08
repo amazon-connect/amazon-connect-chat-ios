@@ -4,7 +4,6 @@
 //
 
 import Foundation
-import AWSCore
 import OSLog
 
 
@@ -16,7 +15,6 @@ class SDKLogger: SDKLoggerProtocol {
     private init() {
         osLog = OSLog(subsystem: Bundle.main.bundleIdentifier ?? "SDK.DefaultSubsystem", category: "SDKLogging")
     }
-    
     
     func logVerbose(_ message: @autoclosure () -> String) {
         os_log("%{public}@", log: osLog, type: .default, message())

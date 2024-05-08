@@ -11,22 +11,29 @@ protocol ChatServiceProtocol {
     func sendMessage(contentType: ContentType, message: String, completion: @escaping (Bool, Error?) -> Void)
     func sendEvent(event: ContentType, content: String?, completion: @escaping (Bool, Error?) -> Void)
     func subscribeToEvents(handleEvent: @escaping (ChatEvent) -> Void) -> AnyCancellable
-    func subscribeToMessages(handleMessage: @escaping (Message) -> Void) -> AnyCancellable
+    func subscribeToTranscriptItem(handleTranscriptItem: @escaping (TranscriptItem) -> Void) -> AnyCancellable
+    func subscribeToTranscriptList(handleTranscriptList: @escaping ([TranscriptItem]) -> Void) -> AnyCancellable
 }
 
 class ChatService : ChatServiceProtocol {
     var eventPublisher = PassthroughSubject<ChatEvent, Never>()
-    var messagePublisher = PassthroughSubject<Message, Never>()
+    var transcriptItemPublisher = PassthroughSubject<TranscriptItem, Never>()
+    var transcriptListPublisher = CurrentValueSubject<[TranscriptItem], Never>([])
     private var eventCancellables = Set<AnyCancellable>()
-    private var messageCancellables = Set<AnyCancellable>()
+    private var transcriptItemCancellables = Set<AnyCancellable>()
+    private var transcriptListCancellables = Set<AnyCancellable>()
     private let connectionDetailsProvider = ConnectionDetailsProvider.shared
     private var awsClient: AWSClientProtocol
     private var websocketManager: WebsocketManager?
-
+    var customMessages: CustomMessages?
     
     init(awsClient: AWSClientProtocol = AWSClient.shared) {
         self.awsClient = awsClient
         self.registerNotificationListeners()
+    }
+    
+    func setCustomMessages(_ messages: CustomMessages) {
+        self.customMessages = messages
     }
     
     func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void) {
@@ -34,7 +41,7 @@ class ChatService : ChatServiceProtocol {
         awsClient.createParticipantConnection(participantToken: chatDetails.participantToken) { result in
             switch result {
             case .success(let connectionDetails):
-                print("Participant connection created: WebSocket URL - \(connectionDetails.websocketUrl ?? "N/A")")
+                SDKLogger.logger.logDebug("Participant connection created: WebSocket URL - \(connectionDetails.websocketUrl ?? "N/A")")
                 self.connectionDetailsProvider.updateConnectionDetails(newDetails: connectionDetails)
                 if let wsUrl = URL(string: connectionDetails.websocketUrl ?? "") {
                     self.setupWebSocket(url: wsUrl)
@@ -43,6 +50,19 @@ class ChatService : ChatServiceProtocol {
             case .failure(let error):
                 completion(false, error)
             }
+        }
+    }
+    
+    private func overrideMessageText(for message: Message) -> String {
+        switch message.contentType {
+        case ContentType.joined.rawValue:
+            return String(format: customMessages?.participantJoined ?? "%@ has joined the chat", message.participant)
+        case ContentType.ended.rawValue:
+            return customMessages?.chatEnded ?? "The chat has ended."
+        case ContentType.left.rawValue:
+            return String(format: customMessages?.participantLeft ?? "%@ has left the chat", message.participant)
+        default:
+            return message.text // Return original text if no customization is applicable
         }
     }
     
@@ -57,13 +77,15 @@ class ChatService : ChatServiceProtocol {
             })
             .store(in: &eventCancellables)
         
-        self.websocketManager?.messagePublisher
+        self.websocketManager?.transcriptPublisher
             .receive(on: RunLoop.main)
-            .sink(receiveValue: { [weak self] message in
-                print("Received event from WebsocketManager: \(message)")
-                self?.messagePublisher.send(message)
+            .sink(receiveValue: { [weak self] transcriptItem in
+                print("Received item from WebsocketManager: \(transcriptItem)")
+                self?.transcriptItemPublisher.send(transcriptItem)
+                self?.updateTranscriptList(with: transcriptItem)
             })
-            .store(in: &messageCancellables)
+            .store(in: &transcriptItemCancellables)
+        
     }
     
     func subscribeToEvents(handleEvent: @escaping (ChatEvent) -> Void) -> AnyCancellable {
@@ -77,17 +99,34 @@ class ChatService : ChatServiceProtocol {
         return subscription
     }
     
-    func subscribeToMessages(handleMessage: @escaping (Message) -> Void) -> AnyCancellable {
-        let subscription = messagePublisher
+    func subscribeToTranscriptItem(handleTranscriptItem: @escaping (TranscriptItem) -> Void) -> AnyCancellable {
+        let subscription = transcriptItemPublisher
             .receive(on: RunLoop.main)
-            .sink(receiveValue: { message in
-                print("Message received in ChatService: \(message)")
-                handleMessage(message)
+            .sink(receiveValue: { transcriptItem in
+                print("TranscriptItem received in ChatService: \(transcriptItem)")
+                handleTranscriptItem(transcriptItem)
             })
-        messageCancellables.insert(subscription)
+        transcriptItemCancellables.insert(subscription)
         return subscription
     }
-
+    
+    // Update transcript list and notify subscribers
+    private func updateTranscriptList(with item: TranscriptItem) {
+        var currentList = transcriptListPublisher.value
+        currentList.append(item)
+        transcriptListPublisher.send(currentList)  // Send updated list to all subscribers
+    }
+    
+    func subscribeToTranscriptList(handleTranscriptList: @escaping ([TranscriptItem]) -> Void) -> AnyCancellable {
+        let subscription = transcriptListPublisher
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { updatedTranscript in
+                handleTranscriptList(updatedTranscript)
+            })
+        transcriptListCancellables.insert(subscription)
+        return subscription
+    }
+    
     func disconnectChatSession(completion: @escaping (Bool, Error?) -> Void) {
         guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
             completion(false, NSError())

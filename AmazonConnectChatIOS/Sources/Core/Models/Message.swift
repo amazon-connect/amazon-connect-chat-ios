@@ -9,34 +9,48 @@ public enum MessageDirection {
     case Common
 }
 
-public struct Message: Identifiable, Equatable, Hashable {
-    public var participant: String?
-    public var text: String
-    public var id = UUID()
-    public var contentType: String
-    public var messageDirection: MessageDirection?
-    public var timeStamp: String
-    public var messageID: String?
-    public var status: String?
-    public var isRead: Bool = false
+protocol MessageProtocol: TranscriptItemProtocol {
+    var participant: String { get set }
+    var text: String { get set }
+    var contentType: String { get set }
+    var messageID: String? { get set }
+    var messageDirection: MessageDirection? { get set }
+}
 
-    public init(participant: String?, text: String, contentType: String, messageDirection: MessageDirection? = nil, timeStamp: String, messageID: String? = nil, status: String? = nil, isRead: Bool = false) {
+public class Message: TranscriptItem, MessageProtocol {
+    public var participant: String
+    public var text: String
+    public var messageDirection: MessageDirection?
+    public var messageID: String?
+
+//    public static func == (lhs: Message, rhs: Message) -> Bool {
+//        return lhs.id == rhs.id && lhs.timeStamp == rhs.timeStamp && lhs.text == rhs.text && lhs.participant == rhs.participant && lhs.contentType == rhs.contentType && lhs.messageID == rhs.messageID && lhs.messageDirection == rhs.messageDirection
+//    }
+//    
+//    public func hash(into hasher: inout Hasher) {
+//        hasher.combine(id)
+//        hasher.combine(timeStamp)
+//        hasher.combine(text)
+//        hasher.combine(participant)
+//        hasher.combine(contentType)
+//        hasher.combine(messageID)
+//        hasher.combine(messageDirection)
+//    }
+    
+    public init(participant: String, text: String, contentType: String, messageDirection: MessageDirection? = nil, timeStamp: String, messageID: String? = nil, status: String? = nil, isRead: Bool = false) {
         self.participant = participant
         self.text = text
-        self.contentType = contentType
         self.messageDirection = messageDirection
-        self.timeStamp = timeStamp
         self.messageID = messageID
-        self.status = status
-        self.isRead = isRead
+        super.init(timeStamp: timeStamp, contentType: contentType)
     }
-
+    
     public var content: MessageContent? {
         switch contentType {
         case ContentType.plainText.rawValue:
             return PlainTextContent.decode(from: text)
         case ContentType.richText.rawValue:
-            // A rich text content class could be created later as complexity increases
+            // Placeholder for a future rich text content class
             return PlainTextContent.decode(from: text)
         case ContentType.interactiveText.rawValue:
             return decodeInteractiveContent(from: text)
@@ -46,21 +60,19 @@ public struct Message: Identifiable, Equatable, Hashable {
         }
     }
     
-    // Helper method to decode interactive content
     private func decodeInteractiveContent(from text: String) -> MessageContent? {
         guard let jsonData = text.data(using: .utf8),
               let genericTemplate = try? JSONDecoder().decode(GenericInteractiveTemplate.self, from: jsonData) else {
             return nil
         }
         switch genericTemplate.templateType {
-            case QuickReplyContent.templateType:
-                return QuickReplyContent.decode(from: text)
-            case ListPickerContent.templateType:
-                return ListPickerContent.decode(from: text)
-            // Add cases for each interactive message type, decoding as appropriate.
-            default:
-                print("Unsupported interactive content type: \(genericTemplate.templateType)")
-                return nil
+        case QuickReplyContent.templateType:
+            return QuickReplyContent.decode(from: text)
+        case ListPickerContent.templateType:
+            return ListPickerContent.decode(from: text)
+        default:
+            print("Unsupported interactive content type: \(genericTemplate.templateType)")
+            return nil
         }
     }
 }

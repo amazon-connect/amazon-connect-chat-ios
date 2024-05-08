@@ -21,7 +21,6 @@ public enum ContentType: String {
 
 enum ChatEvent {
     case connectionEstablished
-    case connectionLost
     case chatEnded
     case connectionBroken
 }

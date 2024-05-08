@@ -13,7 +13,7 @@ enum EventTypes {
 
 class WebsocketManager: NSObject {
     var eventPublisher = PassthroughSubject<ChatEvent, Never>()
-    var messagePublisher = PassthroughSubject<Message, Never>()
+    var transcriptPublisher = PassthroughSubject<TranscriptItem, Never>()
     
     private var websocketTask: URLSessionWebSocketTask?
     private var session: URLSession?
@@ -379,54 +379,46 @@ extension WebsocketManager {
             timeStamp: time,
             messageID: messageId
         )
-        messagePublisher.send(message)
+        transcriptPublisher.send(message)
     }
     
     func handleParticipantJoined(_ innerJson: [String: Any], _ time: String) {
-        let participantRole = innerJson["ParticipantRole"] as! String
-        let messageText = "\(participantRole) has joined"
-        let message = Message(
-            participant: participantRole,
-            text: messageText,
+//        let participantRole = innerJson["ParticipantRole"] as! String
+//        let messageText = "\(participantRole) has joined"
+        let event = Event(
+            timeStamp: time,
             contentType: innerJson["ContentType"] as! String,
-            messageDirection: .Common,
-            timeStamp: time
+            eventDirection: .Common
         )
-        messagePublisher.send(message)
+        transcriptPublisher.send(event)
     }
     
     func handleParticipantLeft(_ innerJson: [String: Any], _ time: String) {
-        let participantRole = innerJson["ParticipantRole"] as! String
-        let messageText = "\(participantRole) has left"
-        let message = Message(
-            participant: participantRole,
-            text: messageText,
+//        let participantRole = innerJson["ParticipantRole"] as! String
+//        let messageText = "\(participantRole) has left"
+        let event = Event(
+            timeStamp: time,
             contentType: innerJson["ContentType"] as! String,
-            messageDirection: .Common,
-            timeStamp: time
+            eventDirection: .Common
         )
-        messagePublisher.send(message)
+        transcriptPublisher.send(event)
     }
     
     func handleTyping(_ innerJson: [String: Any], _ time: String) {
-        let participantRole = innerJson["ParticipantRole"] as! String
-        let message = Message(
-            participant: participantRole,
-            text: "...",
-            contentType: innerJson["ContentType"] as! String,
-            timeStamp: time
+//        let participantRole = innerJson["ParticipantRole"] as! String
+        let event = Event(
+            timeStamp: time,
+            contentType: innerJson["ContentType"] as! String
         )
-        messagePublisher.send(message)
+        transcriptPublisher.send(event)
     }
     
     func handleChatEnded(_ innerJson: [String: Any], _ time: String) {
-        let message = Message(
-            participant: "System Message",
-            text: "The chat has ended.",
+        let event = Event(
+            timeStamp: time,
             contentType: innerJson["ContentType"] as! String,
-            messageDirection: .Common,
-            timeStamp: time)
-        messagePublisher.send(message)
+            eventDirection: .Common)
+        transcriptPublisher.send(event)
     }
     
     func handleMetadata(_ innerJson: [String: Any], _ time: String) {
@@ -441,16 +433,14 @@ extension WebsocketManager {
                 }
             }
         }
-        let message = Message(
-            participant: "",
-            text: "",
-            contentType: innerJson["ContentType"] as! String,
-            messageDirection: .Outgoing,
+        let metadata = Metadata(
+            status: status,
+            messageId: messageId,
             timeStamp: time,
-            messageID: messageId,
-            status: status
+            contentType: innerJson["ContentType"] as! String,
+            eventDirection: .Outgoing
         )
-        messagePublisher.send(message)
+        transcriptPublisher.send(metadata)
     }
     
 }
