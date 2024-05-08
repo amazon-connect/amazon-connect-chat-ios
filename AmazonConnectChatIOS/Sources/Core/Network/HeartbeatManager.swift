@@ -24,7 +24,7 @@ class HeartbeatManager {
         self.timer?.invalidate()
         self.pendingResponse = false
         DispatchQueue.main.async {
-            self.timer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { _ in
+            self.timer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: true) { _ in
                 if !self.pendingResponse {
                     self.sendHeartbeatCallback()
                     self.pendingResponse = true
