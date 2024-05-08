@@ -14,6 +14,7 @@ protocol AWSClientProtocol {
     func disconnectParticipantConnection(connectionToken: String, completion: @escaping (Result<Bool, Error>) -> Void)
     func sendMessage(connectionToken: String, message: String, completion: @escaping (Result<Bool, Error>) -> Void)
     func sendEvent(connectionToken: String, contentType: ContentType,content: String, completion: @escaping (Result<Bool, Error>) -> Void)
+    func getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Result<[AWSConnectParticipantItem], Error>) -> Void)
 }
 
 class AWSClient : AWSClientProtocol {
@@ -115,6 +116,27 @@ class AWSClient : AWSClientProtocol {
         })
     }
     
+    func getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Result<[AWSConnectParticipantItem], Error>) -> Void) {
+        connectParticipantClient?.getTranscript(getTranscriptArgs).continueWith { (task) -> AnyObject? in
+            if let error = task.error {
+                print("Error in getting transcript: \(error.localizedDescription)")
+                completion(.failure(error))
+                return nil
+            }
+            
+            guard let result = task.result, let transcriptItems = result.transcript else {
+                print("No result or incorrect type from getTranscript")
+                let error = NSError(domain: "aws.amazon.com", code: 1001, userInfo: [
+                    NSLocalizedDescriptionKey: "Failed to obtain transcript: No result or incorrect type returned from getTranscript."
+                ])
+                completion(.failure(error))  // Call completion even if there's no result
+                return nil
+            }
+            completion(.success(transcriptItems))
+            
+            return nil
+        }
+    }
     
     enum AWSClientError: Error {
         case requestCreationFailed

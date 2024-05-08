@@ -3,12 +3,14 @@
 //  AmazonConnectChatIOS
 
 import Foundation
+import AWSConnectParticipant
 
 protocol ChatServiceProtocol {
     func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void)
     func disconnectChatSession(completion: @escaping (Bool, Error?) -> Void)
     func sendMessage(message: String, completion: @escaping (Bool, Error?) -> Void)
     func sendEvent(event: ContentType, content: String?, completion: @escaping (Bool, Error?) -> Void)
+    func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<[AWSConnectParticipantItem], Error>) -> Void)
     func onMessageReceived(_ callback: @escaping (Message) -> Void)
     func onConnected(_ callback: @escaping () -> Void)
     func onDisconnected(_ callback: @escaping () -> Void)
@@ -130,6 +132,27 @@ class ChatService : ChatServiceProtocol {
         }
     }
     
+    func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<[AWSConnectParticipantItem], Error>) -> Void) {
+        guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
+            return
+        }
+        let getTranscriptArgs = AWSConnectParticipantGetTranscriptRequest()
+        getTranscriptArgs?.connectionToken = connectionDetails.connectionToken
+        getTranscriptArgs?.scanDirection = scanDirection ?? .backward
+        getTranscriptArgs?.sortOrder = sortOrder ?? .ascending
+        getTranscriptArgs?.maxResults = maxResults ?? 15
+        getTranscriptArgs?.startPosition = startPosition
+        
+        awsClient.getTranscript(getTranscriptArgs: getTranscriptArgs!) { result in
+            switch result {
+            case .success(let items):
+                completion(.success(items))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
     func registerNotificationListeners() {
         NotificationCenter.default.addObserver(forName: .requestNewWsUrl, object: nil, queue: .main) { [weak self] _ in
             if let pToken = self?.connectionDetailsProvider.getChatDetails()?.participantToken {
@@ -142,7 +165,7 @@ class ChatService : ChatServiceProtocol {
                             self?.websocketManager?.connect(wsUrl: wsUrl)
                         }
                     case .failure(let error):
-                        print("CreateParticipantConnection failed")
+                        print("CreateParticipantConnection failed \(error)")
                     }
                 }
             }
