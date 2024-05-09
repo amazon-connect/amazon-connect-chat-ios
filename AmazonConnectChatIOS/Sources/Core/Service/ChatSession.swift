@@ -4,6 +4,7 @@
 
 import Foundation
 import Combine
+import AWSConnectParticipant
 
 public protocol ChatSessionProtocol: ObservableObject, ChatEventHandlers {
     var isConnected: Bool { get }
@@ -83,6 +84,23 @@ public class ChatSession: ChatSessionProtocol {
                 } else {
                     self.onChatEnded?()
                 }
+            }
+        }
+    }
+    
+    public func getTranscript(
+        scanDirection: AWSConnectParticipantScanDirection? = nil,
+        sortOrder: AWSConnectParticipantSortKey? = nil,
+        maxResults: NSNumber? = nil,
+        nextToken: String? = nil,
+        startPosition: AWSConnectParticipantStartPosition? = nil
+    ) {
+        self.chatService?.getTranscript(scanDirection: scanDirection, sortOrder: sortOrder, maxResults: maxResults, nextToken: nextToken, startPosition: startPosition) { result in
+            switch result {
+            case .success(let items):
+                print("Get transcript response: \(items)")
+            case .failure(let error):
+                print("Get transcript failure: \(error)")
             }
         }
     }
