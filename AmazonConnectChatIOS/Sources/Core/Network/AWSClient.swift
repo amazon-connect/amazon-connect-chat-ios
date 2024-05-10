@@ -35,6 +35,8 @@ protocol AWSClientProtocol {
     ///   - content: The content string to be sent.
     ///   - completion: Completion handler to handle the success status or error.
     func sendEvent(connectionToken: String, contentType: ContentType, content: String, completion: @escaping (Result<Bool, Error>) -> Void)
+  
+    func getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Result<[AWSConnectParticipantItem], Error>) -> Void)
 }
 
 /// AWSClient manages the interactions with AWS Connect Participant service.
@@ -147,6 +149,27 @@ class AWSClient: AWSClientProtocol {
         })
     }
     
+    func getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Result<[AWSConnectParticipantItem], Error>) -> Void) {
+        connectParticipantClient?.getTranscript(getTranscriptArgs).continueWith { (task) -> AnyObject? in
+            if let error = task.error {
+                print("Error in getting transcript: \(error.localizedDescription)")
+                completion(.failure(error))
+                return nil
+            }
+            
+            guard let result = task.result, let transcriptItems = result.transcript else {
+                print("No result or incorrect type from getTranscript")
+                let error = NSError(domain: "aws.amazon.com", code: 1001, userInfo: [
+                    NSLocalizedDescriptionKey: "Failed to obtain transcript: No result or incorrect type returned from getTranscript."
+                ])
+                completion(.failure(error))  // Call completion even if there's no result
+                return nil
+            }
+            completion(.success(transcriptItems))
+            
+            return nil
+        }
+    }
     
     /// Enum for client-specific errors.
     enum AWSClientError: Error {

@@ -4,6 +4,7 @@
 
 import Foundation
 import Combine
+import AWSConnectParticipant
 
 protocol ChatServiceProtocol {
     func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void)
@@ -13,6 +14,7 @@ protocol ChatServiceProtocol {
     func subscribeToEvents(handleEvent: @escaping (ChatEvent) -> Void) -> AnyCancellable
     func subscribeToTranscriptItem(handleTranscriptItem: @escaping (TranscriptItem) -> Void) -> AnyCancellable
     func subscribeToTranscriptList(handleTranscriptList: @escaping ([TranscriptItem]) -> Void) -> AnyCancellable
+    func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<[AWSConnectParticipantItem], Error>) -> Void)
 }
 
 class ChatService : ChatServiceProtocol {
@@ -178,6 +180,27 @@ class ChatService : ChatServiceProtocol {
         }
     }
     
+    func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<[AWSConnectParticipantItem], Error>) -> Void) {
+        guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
+            return
+        }
+        let getTranscriptArgs = AWSConnectParticipantGetTranscriptRequest()
+        getTranscriptArgs?.connectionToken = connectionDetails.connectionToken
+        getTranscriptArgs?.scanDirection = scanDirection ?? .backward
+        getTranscriptArgs?.sortOrder = sortOrder ?? .ascending
+        getTranscriptArgs?.maxResults = maxResults ?? 15
+        getTranscriptArgs?.startPosition = startPosition
+        
+        awsClient.getTranscript(getTranscriptArgs: getTranscriptArgs!) { result in
+            switch result {
+            case .success(let items):
+                completion(.success(items))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
     func registerNotificationListeners() {
         NotificationCenter.default.publisher(for: .requestNewWsUrl, object: nil)
             .sink { [weak self] _ in
@@ -192,6 +215,8 @@ class ChatService : ChatServiceProtocol {
                         case .failure(let error):
                             print("CreateParticipantConnection failed: \(error)")
                         }
+                    case .failure(let error):
+                        print("CreateParticipantConnection failed \(error)")
                     }
                 }
             }
