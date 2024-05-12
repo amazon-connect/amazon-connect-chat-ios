@@ -40,6 +40,6 @@ class SDKLogger: SDKLoggerProtocol {
 
 
 // How to use
-//Logger.shared.logInfo("Application started successfully.")
-//Logger.shared.logDebug("User data fetched from the database.")
-//Logger.shared.logError("Failed to process user request.")
+//SDKLogger.shared.logInfo("Application started successfully.")
+//SDKLogger.shared.logDebug("User data fetched from the database.")
+//SDKLogger.shared.logError("Failed to process user request.")

@@ -383,32 +383,33 @@ extension WebsocketManager {
     }
     
     func handleParticipantJoined(_ innerJson: [String: Any], _ time: String) {
-//        let participantRole = innerJson["ParticipantRole"] as! String
-//        let messageText = "\(participantRole) has joined"
+        let participantRole = innerJson["ParticipantRole"] as! String
         let event = Event(
             timeStamp: time,
             contentType: innerJson["ContentType"] as! String,
+            participant: participantRole,
             eventDirection: .Common
         )
         transcriptPublisher.send(event)
     }
     
     func handleParticipantLeft(_ innerJson: [String: Any], _ time: String) {
-//        let participantRole = innerJson["ParticipantRole"] as! String
-//        let messageText = "\(participantRole) has left"
+        let participantRole = innerJson["ParticipantRole"] as! String
         let event = Event(
             timeStamp: time,
             contentType: innerJson["ContentType"] as! String,
+            participant: participantRole,
             eventDirection: .Common
         )
         transcriptPublisher.send(event)
     }
     
     func handleTyping(_ innerJson: [String: Any], _ time: String) {
-//        let participantRole = innerJson["ParticipantRole"] as! String
+        let participantRole = innerJson["ParticipantRole"] as! String
         let event = Event(
             timeStamp: time,
-            contentType: innerJson["ContentType"] as! String
+            contentType: innerJson["ContentType"] as! String,
+            participant: participantRole
         )
         transcriptPublisher.send(event)
     }
@@ -425,11 +426,11 @@ extension WebsocketManager {
         let messageMetadata = innerJson["MessageMetadata"] as! [String: Any]
         let messageId = messageMetadata["MessageId"] as! String
         let receipts = messageMetadata["Receipts"] as? [[String: Any]]
-        var status: String = "Delivered" // Default status
+        var status: MessageStatus = .Delivered // Default status
         if let receipts = receipts {
             for receipt in receipts {
                 if receipt["ReadTimestamp"] is String {
-                    status = "Read"
+                    status = .Read
                 }
             }
         }

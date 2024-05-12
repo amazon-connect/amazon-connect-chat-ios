@@ -55,6 +55,9 @@ class ChatService : ChatServiceProtocol {
         }
     }
     
+    
+    // TODO: To be removed after testing the same changes from examples
+    
     private func overrideMessageText(for message: Message) -> String {
         switch message.contentType {
         case ContentType.joined.rawValue:
@@ -74,7 +77,7 @@ class ChatService : ChatServiceProtocol {
         self.websocketManager?.eventPublisher
             .receive(on: RunLoop.main)
             .sink(receiveValue: { [weak self] event in
-                print("Received event from WebsocketManager: \(event)")
+                SDKLogger.logger.logDebug("Received chat event: \(event)")
                 self?.eventPublisher.send(event)
             })
             .store(in: &eventCancellables)
@@ -82,7 +85,7 @@ class ChatService : ChatServiceProtocol {
         self.websocketManager?.transcriptPublisher
             .receive(on: RunLoop.main)
             .sink(receiveValue: { [weak self] transcriptItem in
-                print("Received item from WebsocketManager: \(transcriptItem)")
+                SDKLogger.logger.logDebug("Received message from WebsocketManager: \(transcriptItem)")
                 self?.transcriptItemPublisher.send(transcriptItem)
                 self?.updateTranscriptList(with: transcriptItem)
             })
@@ -94,7 +97,7 @@ class ChatService : ChatServiceProtocol {
         let subscription = eventPublisher
             .receive(on: RunLoop.main)
             .sink(receiveValue: { event in
-                print("Event received in ChatService: \(event)")
+                SDKLogger.logger.logDebug("Event received in ChatService: \(event)")
                 handleEvent(event)
             })
         eventCancellables.insert(subscription)
@@ -105,7 +108,7 @@ class ChatService : ChatServiceProtocol {
         let subscription = transcriptItemPublisher
             .receive(on: RunLoop.main)
             .sink(receiveValue: { transcriptItem in
-                print("TranscriptItem received in ChatService: \(transcriptItem)")
+                SDKLogger.logger.logDebug("TranscriptItem received in ChatService: \(transcriptItem)")
                 handleTranscriptItem(transcriptItem)
             })
         transcriptItemCancellables.insert(subscription)
@@ -138,7 +141,7 @@ class ChatService : ChatServiceProtocol {
         awsClient.disconnectParticipantConnection(connectionToken: connectionDetails.connectionToken!) { result in
             switch result {
             case .success(_):
-                print("Participant Disconnected")
+                SDKLogger.logger.logDebug("Participant Disconnected")
                 self.eventPublisher.send(.chatEnded)
                 self.websocketManager?.disconnect()
                 completion(true, nil)
@@ -202,25 +205,22 @@ class ChatService : ChatServiceProtocol {
     }
     
     func registerNotificationListeners() {
-        NotificationCenter.default.publisher(for: .requestNewWsUrl, object: nil)
-            .sink { [weak self] _ in
-                if let pToken = self?.connectionDetailsProvider.getChatDetails()?.participantToken {
-                    self?.awsClient.createParticipantConnection(participantToken: pToken) { result in
-                        switch result {
-                        case .success(let connectionDetails):
-                            self?.connectionDetailsProvider.updateConnectionDetails(newDetails: connectionDetails)
-                            if let wsUrl = URL(string: connectionDetails.websocketUrl ?? "") {
-                                self?.websocketManager?.connect(wsUrl: wsUrl)
-                            }
-                        case .failure(let error):
-                            print("CreateParticipantConnection failed: \(error)")
+        NotificationCenter.default.addObserver(forName: .requestNewWsUrl, object: nil, queue: .main) { [weak self] _ in
+            if let pToken = self?.connectionDetailsProvider.getChatDetails()?.participantToken {
+                self?.awsClient.createParticipantConnection(participantToken: pToken) { result in
+                    switch result {
+                    case .success(let connectionDetails):
+                        print("Participant connection created: WebSocket URL - \(connectionDetails.websocketUrl ?? "N/A")")
+                        self?.connectionDetailsProvider.updateConnectionDetails(newDetails: connectionDetails)
+                        if let wsUrl = URL(string: connectionDetails.websocketUrl ?? "") {
+                            self?.websocketManager?.connect(wsUrl: wsUrl)
                         }
                     case .failure(let error):
                         print("CreateParticipantConnection failed \(error)")
                     }
                 }
             }
-            .store(in: &eventCancellables)
+        }
     }
     
 }
