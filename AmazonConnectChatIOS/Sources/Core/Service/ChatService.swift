@@ -1,6 +1,5 @@
-//
-//  ChatService.swift
-//  AmazonConnectChatIOS
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: MIT-0
 
 import Foundation
 import Combine
@@ -27,16 +26,12 @@ class ChatService : ChatServiceProtocol {
     private let connectionDetailsProvider = ConnectionDetailsProvider.shared
     private var awsClient: AWSClientProtocol
     private var websocketManager: WebsocketManager?
-    var customMessages: CustomMessages?
     
     init(awsClient: AWSClientProtocol = AWSClient.shared) {
         self.awsClient = awsClient
         self.registerNotificationListeners()
     }
     
-    func setCustomMessages(_ messages: CustomMessages) {
-        self.customMessages = messages
-    }
     
     func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void) {
         self.connectionDetailsProvider.updateChatDetails(newDetails: chatDetails)
@@ -55,21 +50,6 @@ class ChatService : ChatServiceProtocol {
         }
     }
     
-    
-    // TODO: To be removed after testing the same changes from examples
-    
-    private func overrideMessageText(for message: Message) -> String {
-        switch message.contentType {
-        case ContentType.joined.rawValue:
-            return String(format: customMessages?.participantJoined ?? "%@ has joined the chat", message.participant)
-        case ContentType.ended.rawValue:
-            return customMessages?.chatEnded ?? "The chat has ended."
-        case ContentType.left.rawValue:
-            return String(format: customMessages?.participantLeft ?? "%@ has left the chat", message.participant)
-        default:
-            return message.text // Return original text if no customization is applicable
-        }
-    }
     
     private func setupWebSocket(url: URL) {
         self.websocketManager = WebsocketManager(wsUrl: url)
@@ -119,7 +99,10 @@ class ChatService : ChatServiceProtocol {
     private func updateTranscriptList(with item: TranscriptItem) {
         var currentList = transcriptListPublisher.value
         currentList.append(item)
-        transcriptListPublisher.send(currentList)  // Send updated list to all subscribers
+        // Avoid sending empty transcript update
+        if !currentList.isEmpty {
+            transcriptListPublisher.send(currentList)  // Send updated list to all subscribers
+        }
     }
     
     func subscribeToTranscriptList(handleTranscriptList: @escaping ([TranscriptItem]) -> Void) -> AnyCancellable {

@@ -1,6 +1,5 @@
-//
-//  ChatSession.swift
-//  AmazonConnectChatIOS
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: MIT-0
 
 import Foundation
 import Combine
@@ -64,7 +63,9 @@ public class ChatSession: ChatSessionProtocol {
         
         transcriptSubscription = chatService.subscribeToTranscriptList { [weak self] handleTranscriptList in
             DispatchQueue.main.async {
-                self?.onTranscriptUpdated?(handleTranscriptList)
+                if !handleTranscriptList.isEmpty {
+                    self?.onTranscriptUpdated?(handleTranscriptList)
+                }
             }
         }
     }
@@ -139,6 +140,7 @@ public class ChatSession: ChatSessionProtocol {
             DispatchQueue.main.async {
                 if let error = error {
                     SDKLogger.logger.logError("Error sending event: \(error.localizedDescription )")
+                    onError(error)
                 }
             }
         }

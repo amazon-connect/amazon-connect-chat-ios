@@ -115,13 +115,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		7E3F42A32BE6B8B700DC0ABA /* Websocket */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Websocket;
-			sourceTree = "<group>";
-		};
 		7E58A5CA2BB5F3DA00965327 = {
 			isa = PBXGroup;
 			children = (
@@ -200,7 +193,6 @@
 		7E58A5F22BB604B200965327 /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				7E3F42A32BE6B8B700DC0ABA /* Websocket */,
 				7EC0A21A2BC79D7A00DB47F4 /* WebSocketManager.swift */,
 				7E58A6262BBDDE4A00965327 /* AWSClient.swift */,
 				F7B0747B2BDB298400E8B805 /* HeartbeatManager.swift */,
