@@ -1,9 +1,5 @@
-//
-//  GlobalConfig.swift
-//  AmazonConnectChatIOS
-//
-//  Created by Mittal, Rajat on 4/3/24.
-//
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: MIT-0
 
 import Foundation
 import AWSCore

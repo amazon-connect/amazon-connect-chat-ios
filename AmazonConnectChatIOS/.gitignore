@@ -1,8 +1,24 @@
+# General
 .DS_Store
-/.build
-/Packages
-xcuserdata/
-DerivedData/
+.netrc
+
+# Swift Package Manager
+/.build/
+/Packages/
 .swiftpm/configuration/registries.json
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
-.netrc
+
+# Xcode files
+xcuserdata/
+DerivedData/
+*.xcuserstate
+
+# Workspace
+*.xcworkspace
+!default.xcworkspace/contents.xcworkspacedata
+xcshareddata/
+
+# Other files and directories
+.idea/
+*.swp
+*~

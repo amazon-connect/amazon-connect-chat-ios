@@ -1,10 +1,7 @@
-//
-//  SDKLogger.swift
-//  AmazonConnectChatIOS
-//
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: MIT-0
 
 import Foundation
-import AWSCore
 import OSLog
 
 
@@ -16,7 +13,6 @@ class SDKLogger: SDKLoggerProtocol {
     private init() {
         osLog = OSLog(subsystem: Bundle.main.bundleIdentifier ?? "SDK.DefaultSubsystem", category: "SDKLogging")
     }
-    
     
     func logVerbose(_ message: @autoclosure () -> String) {
         os_log("%{public}@", log: osLog, type: .default, message())
@@ -42,6 +38,6 @@ class SDKLogger: SDKLoggerProtocol {
 
 
 // How to use
-//Logger.shared.logInfo("Application started successfully.")
-//Logger.shared.logDebug("User data fetched from the database.")
-//Logger.shared.logError("Failed to process user request.")
+//SDKLogger.shared.logInfo("Application started successfully.")
+//SDKLogger.shared.logDebug("User data fetched from the database.")
+//SDKLogger.shared.logError("Failed to process user request.")

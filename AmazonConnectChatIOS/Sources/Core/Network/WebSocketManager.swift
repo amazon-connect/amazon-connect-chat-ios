@@ -3,7 +3,7 @@
 
 import Foundation
 import AWSConnectParticipant
-import Starscream
+import Combine
 
 enum EventTypes {
     static let subscribe = "{\"topic\": \"aws/subscribe\", \"content\": {\"topics\": [\"aws/chat\"]}})"
@@ -12,12 +12,12 @@ enum EventTypes {
 }
 
 class WebsocketManager: NSObject {
+    var eventPublisher = PassthroughSubject<ChatEvent, Never>()
+    var transcriptPublisher = PassthroughSubject<TranscriptItem, Never>()
     
     private var websocketTask: URLSessionWebSocketTask?
     private var session: URLSession?
-    private var messageCallback: (Message)-> Void
     var isConnected = false
-    var config = Config()
     private var heartbeatManager: HeartbeatManager?
     private var deepHeartbeatManager: HeartbeatManager?
     private var hasActiveReconnection = false
@@ -29,8 +29,7 @@ class WebsocketManager: NSObject {
     var onDisconnected: (() -> Void)?
     var onError: ((Error?) -> Void)?
     
-    init(wsUrl: URL, onRecievedMessage: @escaping (Message)-> Void) {
-        self.messageCallback = onRecievedMessage
+    init(wsUrl: URL) {
         self.wsUrl = wsUrl
         super.init()
         self.connect()
@@ -40,6 +39,8 @@ class WebsocketManager: NSObject {
     
     func connect(wsUrl: URL? = nil) {
         self.intentionalDisconnect = false
+        disconnect() // Ensure previous WebSocket tasks are properly closed
+        
         if let wsTask = self.websocketTask {
             wsTask.cancel(with: .goingAway, reason: nil)
         }
@@ -82,7 +83,7 @@ class WebsocketManager: NSObject {
                 case .data(let data):
                     print("Received data: \(data)")
                 @unknown default:
-                    fatalError()
+                    print("Received an unknown message type, which is not handled.")
                 }
                 self?.receiveMessage()
             }
@@ -92,9 +93,7 @@ class WebsocketManager: NSObject {
     // MARK: - WebSocketDelegate
     
     func handleError(_ error: Error?) {
-        if let e = error as? WSError {
-            print("websocket encountered an error: \(e.message)")
-        } else if let e = error {
+        if let e = error {
             print("websocket encountered an error: \(e.localizedDescription)")
         } else {
             print("websocket encountered an error")
@@ -105,6 +104,7 @@ class WebsocketManager: NSObject {
     func disconnect() {
         self.intentionalDisconnect = true
         websocketTask?.cancel(with: .goingAway, reason: nil)
+        websocketTask = nil
     }
     
     func addNetworkNotificationObserver() {
@@ -117,28 +117,37 @@ class WebsocketManager: NSObject {
     }
     
     func handleWebsocketTextEvent(text: String) {
-        if let jsonData = text.data(using: .utf8),
-           let json = try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
-            if let topic = json["topic"] as? String {
-                switch topic {
-                case "aws/ping":
-                    if (json["statusCode"] as? Int == 200 && json["statusContent"] as? String == "OK") {
-                        self.deepHeartbeatManager?.heartbeatReceived()
-                    } else {
-                        print("Deep heartbeat failed. Status: \(json["statusCode"] ?? "nil"), StatusContent: \(json["statusContent"] ?? "nil")")
-                    }
-                    break
-                case "aws/heartbeat":
-                    self.heartbeatManager?.heartbeatReceived()
-                    break
-                case "aws/chat":
-                    websocketDidReceiveMessage(json: json)
-                default:
-                    break
+        guard let jsonData = text.data(using: .utf8) else { return }
+        do {
+            if let json = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
+                processJsonContent(json)
+            }
+        } catch {
+            print("Error parsing JSON from WebSocket: \(error)")
+        }
+    }
+    
+    func processJsonContent(_ json: [String: Any]) {
+        if let topic = json["topic"] as? String {
+            switch topic {
+            case "aws/ping":
+                if (json["statusCode"] as? Int == 200 && json["statusContent"] as? String == "OK") {
+                    self.deepHeartbeatManager?.heartbeatReceived()
+                } else {
+                    print("Deep heartbeat failed. Status: \(json["statusCode"] ?? "nil"), StatusContent: \(json["statusContent"] ?? "nil")")
                 }
+                break
+            case "aws/heartbeat":
+                self.heartbeatManager?.heartbeatReceived()
+                break
+            case "aws/chat":
+                websocketDidReceiveMessage(json: json)
+            default:
+                break
             }
         }
     }
+    
     
     func websocketDidReceiveMessage(json: [String: Any]) {
         let content = json["content"] as? String
@@ -169,100 +178,6 @@ class WebsocketManager: NSObject {
         }
     }
     
-    // MARK: - Handle Events
-    func handleMessage(_ innerJson: [String: Any], _ time: String) {
-        let participantRole = innerJson["ParticipantRole"] as! String
-        let messageId = innerJson["Id"] as! String
-        var messageText = innerJson["Content"] as! String
-        let messageType: MessageType = (participantRole == config.customerName) ? .Sender : .Receiver
-        
-        // Workaround for Attributed string to enable newline
-        messageText = messageText.replacingOccurrences(of: "\n", with: "\\\n")
-        
-        let message = Message(
-            participant: participantRole,
-            text: messageText,
-            contentType: innerJson["ContentType"] as! String,
-            messageType: messageType,
-            timeStamp: time,
-            messageID: messageId
-        )
-        messageCallback(message)
-        print("Received message: \(message)")
-    }
-    
-    func handleParticipantJoined(_ innerJson: [String: Any], _ time: String) {
-        let participantRole = innerJson["ParticipantRole"] as! String
-        let messageText = "\(participantRole) has joined"
-        let message = Message(
-            participant: participantRole,
-            text: messageText,
-            contentType: innerJson["ContentType"] as! String,
-            messageType: .Common,
-            timeStamp: time
-        )
-        messageCallback(message)
-    }
-    
-    func handleParticipantLeft(_ innerJson: [String: Any], _ time: String) {
-        let participantRole = innerJson["ParticipantRole"] as! String
-        let messageText = "\(participantRole) has left"
-        let message = Message(
-            participant: participantRole,
-            text: messageText,
-            contentType: innerJson["ContentType"] as! String,
-            messageType: .Common,
-            timeStamp: time
-        )
-        messageCallback(message)
-    }
-    
-    func handleTyping(_ innerJson: [String: Any], _ time: String) {
-        let participantRole = innerJson["ParticipantRole"] as! String
-        let message = Message(
-            participant: participantRole,
-            text: "...",
-            contentType: innerJson["ContentType"] as! String,
-            messageType: (participantRole == config.customerName) ? .Sender : .Receiver,
-            timeStamp: time
-        )
-        messageCallback(message)
-    }
-    
-    func handleChatEnded(_ innerJson: [String: Any], _ time: String) {
-        let message = Message(
-            participant: "System Message",
-            text: "The chat has ended.",
-            contentType: innerJson["ContentType"] as! String,
-            messageType: .Common,
-            timeStamp: time)
-        messageCallback(message)
-    }
-    
-    func handleMetadata(_ innerJson: [String: Any], _ time: String) {
-        let messageMetadata = innerJson["MessageMetadata"] as! [String: Any]
-        let messageId = messageMetadata["MessageId"] as! String
-        let receipts = messageMetadata["Receipts"] as? [[String: Any]]
-        var status: String = "Delivered" // Default status
-        if let receipts = receipts {
-            for receipt in receipts {
-                if receipt["ReadTimestamp"] is String {
-                    status = "Read"
-                }
-            }
-        }
-        let message = Message(
-            participant: "",
-            text: "",
-            contentType: innerJson["ContentType"] as! String,
-            messageType: .Sender,
-            timeStamp: time,
-            messageID: messageId,
-            status: status
-        )
-        messageCallback(message)
-    }
-    
     // MARK: - Reconnection / State Management
     
     private func getRetryDelay(numAttempts: Double) -> Double {
@@ -276,7 +191,7 @@ class WebsocketManager: NSObject {
             var numAttempts = 0.0
             var numOfflineChecks = 0.0
             var timer: Timer?
-
+            
             func retry() {
                 if self.wsUrl == nil {
                     return
@@ -323,14 +238,14 @@ class WebsocketManager: NSObject {
     
     // MARK: - Heartbeat Logic
     
-    func resetHeartbeatManagers() {
-        self.heartbeatManager?.stopHeartbeat()
-        self.deepHeartbeatManager?.stopHeartbeat()
-    }
-    
     func initializeHeartbeatManagers() {
         self.heartbeatManager = HeartbeatManager(isDeepHeartbeat: false, sendHeartbeatCallback: sendHeartbeat, missedHeartbeatCallback: onHeartbeatMissed)
         self.deepHeartbeatManager = HeartbeatManager(isDeepHeartbeat: true, sendHeartbeatCallback: sendDeepHeartbeat, missedHeartbeatCallback: onDeepHeartbeatMissed)
+    }
+    
+    func resetHeartbeatManagers() {
+        self.heartbeatManager?.stopHeartbeat()
+        self.deepHeartbeatManager?.stopHeartbeat()
     }
     
     func startHeartbeats() {
@@ -367,13 +282,54 @@ class WebsocketManager: NSObject {
         } else {
             print("Device is not connected to the internet")
         }
+        self.eventPublisher.send(.connectionBroken)
         retryConnection()
     }
 }
 
-// MARK: - Delegate and Connect/Disconnect handlers
+
+// MARK: - URLSessionWebSocketDelegate
 
 extension WebsocketManager: URLSessionWebSocketDelegate {
+    
+    func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
+        print("Websocket connection successfully established")
+        self.onConnected?()
+        self.isConnected = true
+        self.eventPublisher.send(.connectionEstablished)
+        self.sendWebSocketMessage(string: EventTypes.subscribe)
+        self.startHeartbeats()
+    }
+    
+    func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
+        self.onDisconnected?()
+        self.isConnected = false
+        print("WebSocket connection closed")
+    }
+    
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        print("WebSocket connection completed with error.")
+        self.onDisconnected?()
+        self.isConnected = false
+        if error != nil {
+            handleError(error)
+        }
+        guard let response = task.response as? HTTPURLResponse else {
+            print("Failed to parse HTTPURLResponse")
+            return
+        }
+        if response.statusCode == 403 {
+            NotificationCenter.default.post(name: .requestNewWsUrl, object: nil)
+            self.wsUrl = nil
+        }
+        self.intentionalDisconnect = false
+    }
+}
+
+
+// MARK: - Formatting extension
+
+extension WebsocketManager {
     func formatAndProcessTranscriptItems(_ transcriptItems: [AWSConnectParticipantItem]) {
         transcriptItems.forEach { item in
             
@@ -404,37 +360,89 @@ extension WebsocketManager: URLSessionWebSocketDelegate {
                let json = try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
                 self.websocketDidReceiveMessage(json: json)
             }
-
         }
     }
     
-    func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
-        print("Websocket connection successfully established")
-        self.onConnected?()
-        self.isConnected = true
-        self.sendWebSocketMessage(string: EventTypes.subscribe)
-        self.startHeartbeats()
+    // MARK: - Handle Events
+    func handleMessage(_ innerJson: [String: Any], _ time: String) {
+        let participantRole = innerJson["ParticipantRole"] as! String
+        let messageId = innerJson["Id"] as! String
+        var messageText = innerJson["Content"] as! String
+        
+        // Workaround for Attributed string to enable newline
+        messageText = messageText.replacingOccurrences(of: "\n", with: "\\\n")
+        
+        let message = Message(
+            participant: participantRole,
+            text: messageText,
+            contentType: innerJson["ContentType"] as! String,
+            timeStamp: time,
+            messageID: messageId
+        )
+        transcriptPublisher.send(message)
     }
     
-    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        print("WebSocket connection closed.")
-        self.onDisconnected?()
-        self.isConnected = false
-        if error != nil {
-            handleError(error)
-        }
-        guard let response = task.response as? HTTPURLResponse else {
-            print("Failed to parse HTTPURLResponse")
-            return
-        }
-        switch response.statusCode {
-            case 403:
-                NotificationCenter.default.post(name: .requestNewWsUrl, object: nil)
-                self.wsUrl = nil
-                break
-            default:
-                retryConnection()
-        }
-        self.intentionalDisconnect = false
+    func handleParticipantJoined(_ innerJson: [String: Any], _ time: String) {
+        let participantRole = innerJson["ParticipantRole"] as! String
+        let event = Event(
+            timeStamp: time,
+            contentType: innerJson["ContentType"] as! String,
+            participant: participantRole,
+            eventDirection: .Common
+        )
+        transcriptPublisher.send(event)
     }
+    
+    func handleParticipantLeft(_ innerJson: [String: Any], _ time: String) {
+        let participantRole = innerJson["ParticipantRole"] as! String
+        let event = Event(
+            timeStamp: time,
+            contentType: innerJson["ContentType"] as! String,
+            participant: participantRole,
+            eventDirection: .Common
+        )
+        transcriptPublisher.send(event)
+    }
+    
+    func handleTyping(_ innerJson: [String: Any], _ time: String) {
+        let participantRole = innerJson["ParticipantRole"] as! String
+        let event = Event(
+            timeStamp: time,
+            contentType: innerJson["ContentType"] as! String,
+            participant: participantRole
+        )
+        transcriptPublisher.send(event)
+    }
+    
+    func handleChatEnded(_ innerJson: [String: Any], _ time: String) {
+        let event = Event(
+            timeStamp: time,
+            contentType: innerJson["ContentType"] as! String,
+            eventDirection: .Common)
+        transcriptPublisher.send(event)
+    }
+    
+    func handleMetadata(_ innerJson: [String: Any], _ time: String) {
+        let messageMetadata = innerJson["MessageMetadata"] as! [String: Any]
+        let messageId = messageMetadata["MessageId"] as! String
+        let receipts = messageMetadata["Receipts"] as? [[String: Any]]
+        var status: MessageStatus = .Delivered // Default status
+        if let receipts = receipts {
+            for receipt in receipts {
+                if receipt["ReadTimestamp"] is String {
+                    status = .Read
+                }
+            }
+        }
+        let metadata = Metadata(
+            status: status,
+            messageId: messageId,
+            timeStamp: time,
+            contentType: innerJson["ContentType"] as! String,
+            eventDirection: .Outgoing
+        )
+        transcriptPublisher.send(metadata)
+    }
+    
 }
+

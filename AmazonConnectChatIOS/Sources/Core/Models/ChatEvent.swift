@@ -17,3 +17,10 @@ public enum ContentType: String {
     case richText = "text/markdown"
     case interactiveText = "application/vnd.amazonaws.connect.message.interactive"
 }
+
+
+enum ChatEvent {
+    case connectionEstablished
+    case chatEnded
+    case connectionBroken
+}
