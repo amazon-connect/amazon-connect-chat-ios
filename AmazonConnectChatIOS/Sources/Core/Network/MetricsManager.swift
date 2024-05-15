@@ -50,6 +50,7 @@ class MetricsManager {
     private func getCountMetricDimensions() -> [Dimension] {
         let countMetricDimensions = [
                 Dimension(name: "WidgetType", value: "MobileChatSDK"),
+                Dimension(name: "SDKPlatform", value: "iOS"),
                 Dimension(name: "Category", value: "API"),
                 Dimension(name: "Metric", value: "Count"),
             ]
