@@ -43,6 +43,7 @@ class ChatService : ChatServiceProtocol {
                 if let wsUrl = URL(string: connectionDetails.websocketUrl ?? "") {
                     self.setupWebSocket(url: wsUrl)
                 }
+                MetricsClient.shared.triggerCountMetric(metricName: .CreateParticipantConnection)
                 completion(true, nil)
             case .failure(let error):
                 completion(false, error)
@@ -143,6 +144,7 @@ class ChatService : ChatServiceProtocol {
         awsClient.sendMessage(connectionToken: connectionDetails.connectionToken!, contentType: contentType, message: message) { result in
             switch result {
             case .success(_):
+                MetricsClient.shared.triggerCountMetric(metricName: .SendMessage)
                 completion(true, nil)
             case .failure(let error):
                 completion(false, error)
