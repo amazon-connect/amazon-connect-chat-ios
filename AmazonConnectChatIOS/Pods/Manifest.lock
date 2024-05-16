@@ -2,24 +2,20 @@ PODS:
   - AWSConnectParticipant (2.33.4):
     - AWSCore (= 2.33.4)
   - AWSCore (2.33.4)
-  - Starscream (4.0.6)
 
 DEPENDENCIES:
   - AWSConnectParticipant
   - AWSCore
-  - Starscream (~> 4.0)
 
 SPEC REPOS:
   trunk:
     - AWSConnectParticipant
     - AWSCore
-    - Starscream
 
 SPEC CHECKSUMS:
   AWSConnectParticipant: d016830fc2883d4b5a62dff6c7cc4d933f5f47b6
   AWSCore: 83e3416d2224ba98b61d8eadcfcb1f90f48fab82
-  Starscream: fb2c4510bebf908c62bd383bcf05e673720e91fd
 
-PODFILE CHECKSUM: 1f33570d8babe288ca366a65f33a507640131798
+PODFILE CHECKSUM: 8ce922eea6873625e870ccb0e15742075629a4f8
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.15.2
