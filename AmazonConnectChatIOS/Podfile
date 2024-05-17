@@ -6,7 +6,6 @@ target 'AmazonConnectChatIOS' do
   use_frameworks!
   pod 'AWSCore'
   pod 'AWSConnectParticipant'
-  pod 'Starscream', '~> 4.0'
 
   # Pods for AmazonConnectChatIOS
 
