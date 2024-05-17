@@ -36,6 +36,13 @@
 		7ED5DEC62BEB38B8001693FC /* Metadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED5DEC52BEB38B8001693FC /* Metadata.swift */; };
 		8E707533CF4D462148DA797D /* Pods_AmazonConnectChatIOS_AmazonConnectChatIOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49398D9125DCBBD394D971FE /* Pods_AmazonConnectChatIOS_AmazonConnectChatIOSTests.framework */; };
 		CD381512D9332C2CE8DF5489 /* Pods_AmazonConnectChatIOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3765814AC8510BA5F1CFD238 /* Pods_AmazonConnectChatIOS.framework */; };
+		F747263E2BF4143D002B278E /* MetricsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F747263D2BF4143D002B278E /* MetricsUtils.swift */; };
+		F747263F2BF4143D002B278E /* MetricsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F747263D2BF4143D002B278E /* MetricsUtils.swift */; };
+		F74726442BF418F0002B278E /* MetricsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74726432BF418F0002B278E /* MetricsClient.swift */; };
+		F74726452BF418F0002B278E /* MetricsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74726432BF418F0002B278E /* MetricsClient.swift */; };
+		F74726472BF41948002B278E /* MetricsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74726462BF41948002B278E /* MetricsManager.swift */; };
+		F74726482BF41948002B278E /* MetricsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74726462BF41948002B278E /* MetricsManager.swift */; };
+		F74726522BF6F018002B278E /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74726512BF6F018002B278E /* Config.swift */; };
 		F7B0747C2BDB298400E8B805 /* HeartbeatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B0747B2BDB298400E8B805 /* HeartbeatManager.swift */; };
 		F7B0747D2BDB298400E8B805 /* HeartbeatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B0747B2BDB298400E8B805 /* HeartbeatManager.swift */; };
 		F7B0747F2BDB2A0700E8B805 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B0747E2BDB2A0700E8B805 /* Notifications.swift */; };
@@ -87,6 +94,10 @@
 		7ED5DEC32BEAFD42001693FC /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		7ED5DEC52BEB38B8001693FC /* Metadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metadata.swift; sourceTree = "<group>"; };
 		E266CCF647ADAA5FBE9C4CFA /* Pods-AmazonConnectChatIOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AmazonConnectChatIOS.debug.xcconfig"; path = "Target Support Files/Pods-AmazonConnectChatIOS/Pods-AmazonConnectChatIOS.debug.xcconfig"; sourceTree = "<group>"; };
+		F747263D2BF4143D002B278E /* MetricsUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsUtils.swift; sourceTree = "<group>"; };
+		F74726432BF418F0002B278E /* MetricsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsClient.swift; sourceTree = "<group>"; };
+		F74726462BF41948002B278E /* MetricsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsManager.swift; sourceTree = "<group>"; };
+		F74726512BF6F018002B278E /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		F7B0747B2BDB298400E8B805 /* HeartbeatManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatManager.swift; sourceTree = "<group>"; };
 		F7B0747E2BDB2A0700E8B805 /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		F7B074812BDB2D3A00E8B805 /* NetworkConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkConnectionManager.swift; sourceTree = "<group>"; };
@@ -197,6 +208,8 @@
 				7E58A6262BBDDE4A00965327 /* AWSClient.swift */,
 				F7B0747B2BDB298400E8B805 /* HeartbeatManager.swift */,
 				F7B074812BDB2D3A00E8B805 /* NetworkConnectionManager.swift */,
+				F74726432BF418F0002B278E /* MetricsClient.swift */,
+				F74726462BF41948002B278E /* MetricsManager.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -209,6 +222,8 @@
 				7E58A60F2BBB483C00965327 /* Logger */,
 				7E58A6082BBB460900965327 /* CommonUtils.swift */,
 				7E91597A2BC0A92E00821C05 /* Constants.swift */,
+				F747263D2BF4143D002B278E /* MetricsUtils.swift */,
+				F74726512BF6F018002B278E /* Config.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -440,6 +455,7 @@
 			files = (
 				7E57F6522BC7758C00B25623 /* ConnectionDetails.swift in Sources */,
 				7E58A6092BBB460A00965327 /* DefaultHttpClient.swift in Sources */,
+				F74726522BF6F018002B278E /* Config.swift in Sources */,
 				7E91597B2BC0A92E00821C05 /* Constants.swift in Sources */,
 				7E58A5F92BB605F300965327 /* TranscriptResponse.swift in Sources */,
 				7E58A6232BBDDBF900965327 /* ChatSession.swift in Sources */,
@@ -463,7 +479,10 @@
 				7E58A6202BBDDB0900965327 /* GlobalConfig.swift in Sources */,
 				7E58A6132BBB4B0200965327 /* SDKLogger.swift in Sources */,
 				7EC0A21B2BC79D7B00DB47F4 /* WebSocketManager.swift in Sources */,
+				F747263E2BF4143D002B278E /* MetricsUtils.swift in Sources */,
 				7E58A61E2BBDDADB00965327 /* ChatDetails.swift in Sources */,
+				F74726472BF41948002B278E /* MetricsManager.swift in Sources */,
+				F74726442BF418F0002B278E /* MetricsClient.swift in Sources */,
 				7E58A5FF2BB6062300965327 /* ChatEvent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -473,9 +492,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				F7B074802BDB2A0700E8B805 /* Notifications.swift in Sources */,
+				F74726482BF41948002B278E /* MetricsManager.swift in Sources */,
 				F7B0747D2BDB298400E8B805 /* HeartbeatManager.swift in Sources */,
+				F74726452BF418F0002B278E /* MetricsClient.swift in Sources */,
 				F7B074832BDB2D3A00E8B805 /* NetworkConnectionManager.swift in Sources */,
 				7E58A5E42BB5F3DA00965327 /* AmazonConnectChatIOSTests.swift in Sources */,
+				F747263F2BF4143D002B278E /* MetricsUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
