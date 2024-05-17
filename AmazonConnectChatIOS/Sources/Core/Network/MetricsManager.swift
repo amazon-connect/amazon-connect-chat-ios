@@ -7,7 +7,9 @@ class MetricsManager {
     private let httpClient = DefaultHttpClient()
     private let endpointUrl: String
     private var timer: Timer?
-    private var metricList: [CountMetric]
+    private var metricList: [Metric]
+    private var isMonitoring: Bool = false
+    private var shouldRetry: Bool = true
 
     init(endpointUrl: String) {
         self.endpointUrl = endpointUrl
@@ -22,6 +24,10 @@ class MetricsManager {
     }
     
     private func monitorAndSendMetrics() {
+        if self.isMonitoring {
+            return
+        }
+        self.isMonitoring = true
         DispatchQueue.main.async {
             self.timer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: true) { _ in
                 if !self.metricList.isEmpty {
@@ -29,10 +35,22 @@ class MetricsManager {
                         switch result {
                         case .success:
                             self.metricList = []
+                            self.isMonitoring = false
+                            self.timer?.invalidate()
+                            print("Metrics sent")
                         case .failure(let error):
                             print("Error sending metrics:", error)
+                            if self.shouldRetry {
+                                self.shouldRetry = false
+                            } else {
+                                self.isMonitoring = false
+                                self.shouldRetry = true
+                                self.timer?.invalidate()
+                            }
                         }
                     }
+                } else {
+                    print("No metrics to send")
                 }
             }
         }
@@ -60,20 +78,29 @@ class MetricsManager {
     func addCountMetric(metricName: MetricName) -> Void {
         let currentTime = MetricsUtils().getCurrentMetricTimestamp()
         let countMetricDimensions = getCountMetricDimensions()
-        let countMetric = CountMetric(
+        let countMetric = Metric(
             dimensions: countMetricDimensions,
-            metricName: "\(metricName)",
+            metricName: metricName.rawValue,
             namespace: "chat-widget",
             optionalDimensions: [],
             timestamp: currentTime,
             unit: "Count",
             value: 1)
         
-        metricList.append(countMetric)
+        self.addMetric(metric: countMetric)
+    }
+    
+    func addMetric(metric: Metric) {
+        if MetricsUtils().isCsmDisabled() {
+            return
+        }
+        
+        self.metricList.append(metric)
+        self.monitorAndSendMetrics()
     }
 }
 
-struct CountMetric: Codable {
+struct Metric: Codable {
     let dimensions: [Dimension]
     let metricName: String
     let namespace: String
@@ -89,7 +116,7 @@ struct Dimension: Codable {
 }
 
 struct CreateMetricRequestBody: Codable {
-    let metricList: [CountMetric]
+    let metricList: [Metric]
     let metricNamespace: String
 }
 

@@ -4,14 +4,6 @@
 import Foundation
 import AWSCore
 
-enum MetricCategory: String {
-    case API
-}
-
-enum Metric: String {
-    case Count
-}
-
 enum MetricName: String {
     case CreateParticipantConnection
     case SendMessage

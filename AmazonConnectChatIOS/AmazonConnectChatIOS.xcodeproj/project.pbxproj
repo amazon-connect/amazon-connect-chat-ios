@@ -42,6 +42,7 @@
 		F74726452BF418F0002B278E /* MetricsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74726432BF418F0002B278E /* MetricsClient.swift */; };
 		F74726472BF41948002B278E /* MetricsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74726462BF41948002B278E /* MetricsManager.swift */; };
 		F74726482BF41948002B278E /* MetricsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74726462BF41948002B278E /* MetricsManager.swift */; };
+		F74726522BF6F018002B278E /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74726512BF6F018002B278E /* Config.swift */; };
 		F7B0747C2BDB298400E8B805 /* HeartbeatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B0747B2BDB298400E8B805 /* HeartbeatManager.swift */; };
 		F7B0747D2BDB298400E8B805 /* HeartbeatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B0747B2BDB298400E8B805 /* HeartbeatManager.swift */; };
 		F7B0747F2BDB2A0700E8B805 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B0747E2BDB2A0700E8B805 /* Notifications.swift */; };
@@ -96,6 +97,7 @@
 		F747263D2BF4143D002B278E /* MetricsUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsUtils.swift; sourceTree = "<group>"; };
 		F74726432BF418F0002B278E /* MetricsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsClient.swift; sourceTree = "<group>"; };
 		F74726462BF41948002B278E /* MetricsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsManager.swift; sourceTree = "<group>"; };
+		F74726512BF6F018002B278E /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		F7B0747B2BDB298400E8B805 /* HeartbeatManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatManager.swift; sourceTree = "<group>"; };
 		F7B0747E2BDB2A0700E8B805 /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		F7B074812BDB2D3A00E8B805 /* NetworkConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkConnectionManager.swift; sourceTree = "<group>"; };
@@ -221,6 +223,7 @@
 				7E58A6082BBB460900965327 /* CommonUtils.swift */,
 				7E91597A2BC0A92E00821C05 /* Constants.swift */,
 				F747263D2BF4143D002B278E /* MetricsUtils.swift */,
+				F74726512BF6F018002B278E /* Config.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -452,6 +455,7 @@
 			files = (
 				7E57F6522BC7758C00B25623 /* ConnectionDetails.swift in Sources */,
 				7E58A6092BBB460A00965327 /* DefaultHttpClient.swift in Sources */,
+				F74726522BF6F018002B278E /* Config.swift in Sources */,
 				7E91597B2BC0A92E00821C05 /* Constants.swift in Sources */,
 				7E58A5F92BB605F300965327 /* TranscriptResponse.swift in Sources */,
 				7E58A6232BBDDBF900965327 /* ChatSession.swift in Sources */,
