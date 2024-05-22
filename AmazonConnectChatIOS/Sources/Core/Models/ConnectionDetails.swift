@@ -3,7 +3,7 @@
 
 import Foundation
 
-struct ConnectionDetails {
+public struct ConnectionDetails {
     let websocketUrl: String?
     let connectionToken: String?
     let expiry: Date?

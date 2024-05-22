@@ -6,6 +6,14 @@ import Foundation
 import AWSConnectParticipant
 import AWSCore
 
+protocol AWSConnectParticipantProtocol {
+    func createParticipantConnection(_ request: AWSConnectParticipantCreateParticipantConnectionRequest?) -> AWSTask<AWSConnectParticipantCreateParticipantConnectionResponse>
+    func disconnectParticipant(_ request: AWSConnectParticipantDisconnectParticipantRequest?) -> AWSTask<AnyObject>
+    func sendMessage(_ request: AWSConnectParticipantSendMessageRequest?) -> AWSTask<AnyObject>
+    func sendEvent(_ request: AWSConnectParticipantSendEventRequest?) -> AWSTask<AnyObject>
+    func getTranscript(_ request: AWSConnectParticipantGetTranscriptRequest?) -> AWSTask<AWSConnectParticipantGetTranscriptResponse>
+}
+
 /// Protocol defining the AWS client operations.
 protocol AWSClientProtocol {
     /// Creates a new participant connection.
@@ -34,7 +42,7 @@ protocol AWSClientProtocol {
     ///   - content: The content string to be sent.
     ///   - completion: Completion handler to handle the success status or error.
     func sendEvent(connectionToken: String, contentType: ContentType, content: String, completion: @escaping (Result<Bool, Error>) -> Void)
-  
+    
     func getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Result<[AWSConnectParticipantItem], Error>) -> Void)
 }
 
@@ -44,17 +52,36 @@ class AWSClient: AWSClientProtocol {
     static let shared = AWSClient()
     
     /// AWS Connect Participant Client
-    private var connectParticipantClient: AWSConnectParticipant?
+    var connectParticipantClient: AWSConnectParticipantProtocol
+    
     
     /// AWS region for the service configuration.
-    private var region: AWSRegionType = Constants.DEFAULT_REGION
+    var region: AWSRegionType = Constants.DEFAULT_REGION
     
-    private init() {}
+    // Dependency injection for unit tests
+    var createParticipantConnectionRequest: () -> AWSConnectParticipantCreateParticipantConnectionRequest? = {
+        AWSConnectParticipantCreateParticipantConnectionRequest()
+    }
+    var disconnectParticipantRequest: () -> AWSConnectParticipantDisconnectParticipantRequest? = {
+        AWSConnectParticipantDisconnectParticipantRequest()
+    }
+    var sendMessageRequest: () -> AWSConnectParticipantSendMessageRequest? = {
+        AWSConnectParticipantSendMessageRequest()
+    }
+    var sendEventRequest: () -> AWSConnectParticipantSendEventRequest? = {
+        AWSConnectParticipantSendEventRequest()
+    }
+    var getTranscriptRequest: () -> AWSConnectParticipantGetTranscriptRequest? = {
+        AWSConnectParticipantGetTranscriptRequest()
+    }
+    
+    init(connectParticipantClient: AWSConnectParticipantProtocol = AWSConnectParticipant.default() as! AWSConnectParticipantProtocol) {
+        self.connectParticipantClient = connectParticipantClient
+    }
     
     /// Configures the client with global configuration settings.
     /// - Parameter config: Global configuration settings.
-    func configure(with config: GlobalConfig) {
-        
+    func configure(with config: GlobalConfig, participantClient: AWSConnectParticipantProtocol? = nil) {
         // AWS service initialization with empty credentials as placeholders
         let credentials = AWSStaticCredentialsProvider(accessKey: "", secretKey: "")
         
@@ -63,19 +90,29 @@ class AWSClient: AWSClientProtocol {
         let participantService = AWSServiceConfiguration(region: self.region, credentialsProvider: credentials)
         
         AWSConnectParticipant.register(with: participantService!, forKey: Constants.AWSConnectParticipantKey)
-        self.connectParticipantClient = AWSConnectParticipant(forKey: Constants.AWSConnectParticipantKey)
+        
+        if let participantClient = participantClient {
+            self.connectParticipantClient = participantClient
+        } else {
+            guard let participantClient = AWSConnectParticipant(forKey: Constants.AWSConnectParticipantKey) as? AWSConnectParticipantProtocol else {
+                print("Failed to initialize AWSConnectParticipant")
+                return
+            }
+            self.connectParticipantClient = participantClient
+        }
     }
     
     /// Creates a connection for a participant identified by a token.
     func createParticipantConnection(participantToken: String, completion: @escaping (Result<ConnectionDetails, Error>) -> Void) {
-        guard let request = AWSConnectParticipantCreateParticipantConnectionRequest() else {
+        guard let request = createParticipantConnectionRequest() else {
             completion(.failure(AWSClientError.requestCreationFailed))
             return
         }
+        
         request.participantToken = participantToken
         request.types = Constants.ACPSRequestTypes
         
-        connectParticipantClient?.createParticipantConnection(request).continueWith(executor: AWSExecutor.mainThread(), block: {
+        connectParticipantClient.createParticipantConnection(request).continueWith(executor: AWSExecutor.mainThread(), block: {
             (task: AWSTask<AWSConnectParticipantCreateParticipantConnectionResponse>) -> AnyObject? in
             if let error = task.error {
                 completion(.failure(error))
@@ -91,13 +128,13 @@ class AWSClient: AWSClientProtocol {
     
     /// Disconnects a participant connection using a connection token.
     func disconnectParticipantConnection(connectionToken: String, completion: @escaping (Result<Bool, Error>) -> Void) {
-        guard let request = AWSConnectParticipantDisconnectParticipantRequest() else {
+        guard let request = disconnectParticipantRequest() else {
             completion(.failure(AWSClientError.requestCreationFailed))
             return
         }
         request.connectionToken = connectionToken
         
-        connectParticipantClient?.disconnectParticipant(request).continueWith(executor: AWSExecutor.mainThread(), block: { (task: AWSTask) -> AnyObject? in
+        connectParticipantClient.disconnectParticipant(request).continueWith(executor: AWSExecutor.mainThread(), block: { (task: AWSTask) -> AnyObject? in
             if let error = task.error {
                 completion(.failure(error))
             } else {
@@ -109,7 +146,7 @@ class AWSClient: AWSClientProtocol {
     
     /// Sends a message using a connection token.
     func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<Bool, Error>) -> Void) {
-        guard let request = AWSConnectParticipantSendMessageRequest() else {
+        guard let request = sendMessageRequest() else {
             completion(.failure(AWSClientError.requestCreationFailed))
             return
         }
@@ -117,7 +154,7 @@ class AWSClient: AWSClientProtocol {
         request.content = message
         request.contentType = contentType.rawValue
         
-        connectParticipantClient?.sendMessage(request).continueWith(executor: AWSExecutor.mainThread(), block: { (task: AWSTask) -> AnyObject? in
+        connectParticipantClient.sendMessage(request).continueWith(executor: AWSExecutor.mainThread(), block: { (task: AWSTask) -> AnyObject? in
             if let error = task.error {
                 completion(.failure(error))
             } else {
@@ -129,7 +166,7 @@ class AWSClient: AWSClientProtocol {
     
     /// Sends an event using a connection token.
     func sendEvent(connectionToken: String, contentType: ContentType, content: String = "", completion: @escaping (Result<Bool, Error>) -> Void) {
-        guard let request = AWSConnectParticipantSendEventRequest() else {
+        guard let request = sendEventRequest() else {
             completion(.failure(AWSClientError.requestCreationFailed))
             return
         }
@@ -138,7 +175,7 @@ class AWSClient: AWSClientProtocol {
         request.contentType = contentType.rawValue
         request.content = content
         
-        connectParticipantClient?.sendEvent(request).continueWith(executor: AWSExecutor.mainThread(), block: { (task: AWSTask) -> AnyObject? in
+        connectParticipantClient.sendEvent(request).continueWith(executor: AWSExecutor.mainThread(), block: { (task: AWSTask) -> AnyObject? in
             if let error = task.error {
                 completion(.failure(error))
             } else {
@@ -149,7 +186,12 @@ class AWSClient: AWSClientProtocol {
     }
     
     func getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Result<[AWSConnectParticipantItem], Error>) -> Void) {
-        connectParticipantClient?.getTranscript(getTranscriptArgs).continueWith { (task) -> AnyObject? in
+        guard let request = getTranscriptRequest() else {
+            completion(.failure(AWSClientError.requestCreationFailed))
+            return
+        }
+        
+        connectParticipantClient.getTranscript(request).continueWith { (task) -> AnyObject? in
             if let error = task.error {
                 print("Error in getting transcript: \(error.localizedDescription)")
                 completion(.failure(error))
@@ -161,11 +203,10 @@ class AWSClient: AWSClientProtocol {
                 let error = NSError(domain: "aws.amazon.com", code: 1001, userInfo: [
                     NSLocalizedDescriptionKey: "Failed to obtain transcript: No result or incorrect type returned from getTranscript."
                 ])
-                completion(.failure(error))  // Call completion even if there's no result
+                completion(.failure(error))
                 return nil
             }
             completion(.success(transcriptItems))
-            
             return nil
         }
     }
@@ -174,6 +215,6 @@ class AWSClient: AWSClientProtocol {
     enum AWSClientError: Error {
         case requestCreationFailed
         case unknownError
-        // Define additional error cases as necessary
+        case failedToInitializeParticipantClient
     }
 }

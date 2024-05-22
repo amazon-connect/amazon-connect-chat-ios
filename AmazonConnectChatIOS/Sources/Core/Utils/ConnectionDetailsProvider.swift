@@ -3,7 +3,14 @@
 
 import Foundation
 
-class ConnectionDetailsProvider {
+protocol ConnectionDetailsProviderProtocol {
+    func updateChatDetails(newDetails: ChatDetails)
+    func getConnectionDetails() -> ConnectionDetails?
+    func updateConnectionDetails(newDetails: ConnectionDetails)
+    func getChatDetails() -> ChatDetails?
+}
+
+class ConnectionDetailsProvider: ConnectionDetailsProviderProtocol {
     static let shared = ConnectionDetailsProvider()
     private var connectionDetails: ConnectionDetails?
     private var chatDetails: ChatDetails?

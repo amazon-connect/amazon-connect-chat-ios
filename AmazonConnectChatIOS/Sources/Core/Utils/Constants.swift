@@ -4,7 +4,7 @@
 import Foundation
 import AWSCore
 
-struct Constants {
+public struct Constants {
     static let AWSConnectParticipantKey = "AWSConnectParticipant"
     static let ACPSRequestTypes = ["WEBSOCKET", "CONNECTION_CREDENTIALS"]
     static let AGENT = "AGENT"

@@ -11,7 +11,14 @@ enum EventTypes {
     static let deepHeartbeat = "{\"topic\": \"aws/ping\"}"
 }
 
-class WebsocketManager: NSObject {
+protocol WebsocketManagerProtocol {
+    var eventPublisher: PassthroughSubject<ChatEvent, Never> { get }
+    var transcriptPublisher: PassthroughSubject<TranscriptItem, Never> { get }
+    func connect(wsUrl: URL?)
+    func disconnect()
+}
+
+class WebsocketManager: NSObject, WebsocketManagerProtocol {
     var eventPublisher = PassthroughSubject<ChatEvent, Never>()
     var transcriptPublisher = PassthroughSubject<TranscriptItem, Never>()
     
@@ -155,26 +162,26 @@ class WebsocketManager: NSObject {
         if let stringContent = content,
            let innerJson = try? JSONSerialization.jsonObject(with: Data(stringContent.utf8), options: []) as? [String: Any] {
             let type = innerJson["Type"] as! String // MESSAGE, EVENT
-            let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
             if type == "MESSAGE" {
                 // Handle messages
-                handleMessage(innerJson, time)
+                handleMessage(innerJson, json)
             } else if innerJson["ContentType"] as! String == ContentType.joined.rawValue {
                 // Handle participant joined event
-                handleParticipantJoined(innerJson, time)
+                handleParticipantJoined(innerJson, json)
             } else if innerJson["ContentType"] as! String == ContentType.left.rawValue {
                 // Handle participant left event
-                handleParticipantLeft(innerJson, time)
+                handleParticipantLeft(innerJson, json)
             } else if innerJson["ContentType"] as! String == ContentType.typing.rawValue {
                 // Handle typing event
-                handleTyping(innerJson, time)
+                handleTyping(innerJson, json)
             } else if innerJson["ContentType"] as! String == ContentType.ended.rawValue {
                 // Handle chat ended event
-                handleChatEnded(innerJson, time)
+                handleChatEnded(innerJson, json)
             } else if innerJson["ContentType"] as! String == ContentType.metaData.rawValue {
                 // Handle message metadata
-                handleMetadata(innerJson, time)
+                handleMetadata(innerJson, json)
             }
+            
         }
     }
     
@@ -364,11 +371,12 @@ extension WebsocketManager {
     }
     
     // MARK: - Handle Events
-    func handleMessage(_ innerJson: [String: Any], _ time: String) {
+    func handleMessage(_ innerJson: [String: Any], _ rawData: [String: Any]) {
         let participantRole = innerJson["ParticipantRole"] as! String
         let messageId = innerJson["Id"] as! String
         var messageText = innerJson["Content"] as! String
-        
+        let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
+
         // Workaround for Attributed string to enable newline
         messageText = messageText.replacingOccurrences(of: "\n", with: "\\\n")
         
@@ -377,56 +385,71 @@ extension WebsocketManager {
             text: messageText,
             contentType: innerJson["ContentType"] as! String,
             timeStamp: time,
-            messageID: messageId
+            messageID: messageId,
+            rawData: rawData
         )
         transcriptPublisher.send(message)
     }
     
-    func handleParticipantJoined(_ innerJson: [String: Any], _ time: String) {
+    func handleParticipantJoined(_ innerJson: [String: Any], _ rawData: [String: Any]) {
         let participantRole = innerJson["ParticipantRole"] as! String
+        let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
+
         let event = Event(
             timeStamp: time,
             contentType: innerJson["ContentType"] as! String,
             participant: participantRole,
-            eventDirection: .Common
+            eventDirection: .Common,
+            rawData: rawData
         )
         transcriptPublisher.send(event)
     }
     
-    func handleParticipantLeft(_ innerJson: [String: Any], _ time: String) {
+    func handleParticipantLeft(_ innerJson: [String: Any], _ rawData: [String: Any]) {
         let participantRole = innerJson["ParticipantRole"] as! String
+        let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
+
         let event = Event(
             timeStamp: time,
             contentType: innerJson["ContentType"] as! String,
             participant: participantRole,
-            eventDirection: .Common
+            eventDirection: .Common,
+            rawData: rawData
         )
         transcriptPublisher.send(event)
     }
     
-    func handleTyping(_ innerJson: [String: Any], _ time: String) {
+    func handleTyping(_ innerJson: [String: Any], _ rawData: [String: Any]) {
         let participantRole = innerJson["ParticipantRole"] as! String
+        let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
+
         let event = Event(
             timeStamp: time,
             contentType: innerJson["ContentType"] as! String,
-            participant: participantRole
+            participant: participantRole,
+            rawData: rawData
         )
         transcriptPublisher.send(event)
     }
     
-    func handleChatEnded(_ innerJson: [String: Any], _ time: String) {
+    func handleChatEnded(_ innerJson: [String: Any], _ rawData: [String: Any]) {
+        let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
+
         let event = Event(
             timeStamp: time,
             contentType: innerJson["ContentType"] as! String,
-            eventDirection: .Common)
+            eventDirection: .Common,
+            rawData: rawData)
         transcriptPublisher.send(event)
     }
     
-    func handleMetadata(_ innerJson: [String: Any], _ time: String) {
+    func handleMetadata(_ innerJson: [String: Any], _ rawData: [String: Any]) {
         let messageMetadata = innerJson["MessageMetadata"] as! [String: Any]
         let messageId = messageMetadata["MessageId"] as! String
         let receipts = messageMetadata["Receipts"] as? [[String: Any]]
         var status: MessageStatus = .Delivered // Default status
+        let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
+
         if let receipts = receipts {
             for receipt in receipts {
                 if receipt["ReadTimestamp"] is String {
@@ -439,7 +462,8 @@ extension WebsocketManager {
             messageId: messageId,
             timeStamp: time,
             contentType: innerJson["ContentType"] as! String,
-            eventDirection: .Outgoing
+            eventDirection: .Outgoing,
+            rawData: rawData
         )
         transcriptPublisher.send(metadata)
     }

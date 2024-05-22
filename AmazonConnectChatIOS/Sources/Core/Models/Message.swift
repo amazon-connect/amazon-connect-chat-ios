@@ -23,26 +23,12 @@ public class Message: TranscriptItem, MessageProtocol {
     public var messageDirection: MessageDirection?
     public var messageID: String?
 
-//    public static func == (lhs: Message, rhs: Message) -> Bool {
-//        return lhs.id == rhs.id && lhs.timeStamp == rhs.timeStamp && lhs.text == rhs.text && lhs.participant == rhs.participant && lhs.contentType == rhs.contentType && lhs.messageID == rhs.messageID && lhs.messageDirection == rhs.messageDirection
-//    }
-//    
-//    public func hash(into hasher: inout Hasher) {
-//        hasher.combine(id)
-//        hasher.combine(timeStamp)
-//        hasher.combine(text)
-//        hasher.combine(participant)
-//        hasher.combine(contentType)
-//        hasher.combine(messageID)
-//        hasher.combine(messageDirection)
-//    }
-    
-    public init(participant: String, text: String, contentType: String, messageDirection: MessageDirection? = nil, timeStamp: String, messageID: String? = nil, status: String? = nil, isRead: Bool = false) {
+    public init(participant: String, text: String, contentType: String, messageDirection: MessageDirection? = nil, timeStamp: String, messageID: String? = nil, rawData: [String: Any]) {
         self.participant = participant
         self.text = text
         self.messageDirection = messageDirection
         self.messageID = messageID
-        super.init(timeStamp: timeStamp, contentType: contentType)
+        super.init(timeStamp: timeStamp, contentType: contentType, rawData: rawData)
     }
     
     public var content: MessageContent? {
@@ -55,8 +41,8 @@ public class Message: TranscriptItem, MessageProtocol {
         case ContentType.interactiveText.rawValue:
             return decodeInteractiveContent(from: text)
         default:
-            // Handle or log unsupported content types
-            return nil
+            // Handle or log unsupported content types - Sending as Plain Text for now.
+            return PlainTextContent.decode(from: text)
         }
     }
     
