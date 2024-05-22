@@ -23,12 +23,17 @@ class ChatService : ChatServiceProtocol {
     private var eventCancellables = Set<AnyCancellable>()
     private var transcriptItemCancellables = Set<AnyCancellable>()
     private var transcriptListCancellables = Set<AnyCancellable>()
-    private let connectionDetailsProvider = ConnectionDetailsProvider.shared
+    private let connectionDetailsProvider: ConnectionDetailsProviderProtocol
     private var awsClient: AWSClientProtocol
-    private var websocketManager: WebsocketManager?
+    private var websocketManager: WebsocketManagerProtocol?
+    private var websocketManagerFactory: (URL) -> WebsocketManagerProtocol
     
-    init(awsClient: AWSClientProtocol = AWSClient.shared) {
+    init(awsClient: AWSClientProtocol = AWSClient.shared,
+         connectionDetailsProvider: ConnectionDetailsProviderProtocol = ConnectionDetailsProvider.shared,
+         websocketManagerFactory: @escaping (URL) -> WebsocketManagerProtocol = { WebsocketManager(wsUrl: $0) }) {
         self.awsClient = awsClient
+        self.connectionDetailsProvider = connectionDetailsProvider
+        self.websocketManagerFactory = websocketManagerFactory
         self.registerNotificationListeners()
     }
     
@@ -51,9 +56,8 @@ class ChatService : ChatServiceProtocol {
         }
     }
     
-    
     private func setupWebSocket(url: URL) {
-        self.websocketManager = WebsocketManager(wsUrl: url)
+        self.websocketManager = websocketManagerFactory(url)
         
         self.websocketManager?.eventPublisher
             .receive(on: RunLoop.main)
@@ -71,7 +75,6 @@ class ChatService : ChatServiceProtocol {
                 self?.updateTranscriptList(with: transcriptItem)
             })
             .store(in: &transcriptItemCancellables)
-        
     }
     
     func subscribeToEvents(handleEvent: @escaping (ChatEvent) -> Void) -> AnyCancellable {
@@ -118,7 +121,8 @@ class ChatService : ChatServiceProtocol {
     
     func disconnectChatSession(completion: @escaping (Bool, Error?) -> Void) {
         guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
-            completion(false, NSError())
+            let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
+            completion(false, error)
             return
         }
         
@@ -137,7 +141,8 @@ class ChatService : ChatServiceProtocol {
     
     func sendMessage(contentType: ContentType, message: String, completion: @escaping (Bool, Error?) -> Void) {
         guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
-            completion(false, NSError())
+            let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
+            completion(false, error)
             return
         }
         
@@ -154,7 +159,8 @@ class ChatService : ChatServiceProtocol {
     
     func sendEvent(event: ContentType, content: String?, completion: @escaping (Bool, Error?) -> Void) {
         guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
-            completion(false, NSError())
+            let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
+            completion(false, error)
             return
         }
         
@@ -170,6 +176,8 @@ class ChatService : ChatServiceProtocol {
     
     func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<[AWSConnectParticipantItem], Error>) -> Void) {
         guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
+            let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
+            completion(.failure(error))
             return
         }
         let getTranscriptArgs = AWSConnectParticipantGetTranscriptRequest()

@@ -14,10 +14,10 @@ public class Event: TranscriptItem, EventProtocol {
     public var text: String?
     public var eventDirection: MessageDirection?
     
-    init(text: String? = nil, timeStamp: String, contentType: String, participant: String? = nil, eventDirection: MessageDirection? = .Common) {
+    init(text: String? = nil, timeStamp: String, contentType: String, participant: String? = nil, eventDirection: MessageDirection? = .Common, rawData: [String: Any]) {
         self.participant = participant
         self.text = text
         self.eventDirection = eventDirection
-        super.init(timeStamp: timeStamp, contentType: contentType)
+        super.init(timeStamp: timeStamp, contentType: contentType, rawData: rawData)
     }
 }

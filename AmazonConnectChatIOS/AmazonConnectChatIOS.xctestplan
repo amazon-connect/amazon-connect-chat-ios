@@ -1,0 +1,38 @@
+{
+  "configurations" : [
+    {
+      "id" : "E10417A7-1D4A-485C-9DE8-1F027FDC005B",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:AmazonConnectChatIOS.xcodeproj",
+          "identifier" : "7E58A5D32BB5F3DA00965327",
+          "name" : "AmazonConnectChatIOS"
+        },
+        {
+          "containerPath" : "container:AmazonConnectChatIOS.xcodeproj",
+          "identifier" : "7E58A5DD2BB5F3DA00965327",
+          "name" : "AmazonConnectChatIOSTests"
+        }
+      ]
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:AmazonConnectChatIOS.xcodeproj",
+        "identifier" : "7E58A5DD2BB5F3DA00965327",
+        "name" : "AmazonConnectChatIOSTests"
+      }
+    }
+  ],
+  "version" : 1
+}

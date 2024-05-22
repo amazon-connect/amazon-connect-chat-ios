@@ -20,10 +20,10 @@ public class Metadata: TranscriptItem, MetadataProtocol {
     public var messageId: String?
     public var eventDirection: MessageDirection?
     
-    init(status: MessageStatus? = nil, messageId: String? = nil, timeStamp: String, contentType: String, eventDirection: MessageDirection? = .Common) {
+    init(status: MessageStatus? = nil, messageId: String? = nil, timeStamp: String, contentType: String, eventDirection: MessageDirection? = .Common, rawData: [String: Any]) {
         self.status = status
         self.messageId = messageId
         self.eventDirection = eventDirection
-        super.init(timeStamp: timeStamp, contentType: contentType)
+        super.init(timeStamp: timeStamp, contentType: contentType, rawData: rawData)
     }
 }

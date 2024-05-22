@@ -124,11 +124,17 @@ public class ChatSession: ChatSessionProtocol {
     
     /// Sends a message within the chat session.
     public func sendMessage(contentType: ContentType, message: String, onError: @escaping (Error) -> Void) {
+        print("ChatSession: sendMessage called")
         chatService.sendMessage(contentType: contentType, message: message) { success, error in
             DispatchQueue.main.async {
+                print("ChatSession: sendMessage completion handler called with success: \(success), error: \(String(describing: error))")
                 if let error = error {
-                    SDKLogger.logger.logError("Error sending message: \(error.localizedDescription )")
+                    SDKLogger.logger.logError("Error sending message: \(error.localizedDescription)")
+                    print("ChatSession: onError called with error: \(error.localizedDescription)")
                     onError(error)
+                } else {
+                    print("ChatSession: onError not called, success: \(success)")
+                    // No action needed if there's no error
                 }
             }
         }
