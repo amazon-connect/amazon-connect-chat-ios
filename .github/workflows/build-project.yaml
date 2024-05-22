@@ -1,0 +1,32 @@
+name: Building Amazon Connect Chat SDK for iOS
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: 'latest'
+
+    - name: Install CocoaPods
+      run: sudo gem install cocoapods
+
+    - name: Install Pods
+      run: pod install
+
+    - name: Build
+      run: xcodebuild -workspace AmazonConnectChatIOS.xcworkspace -scheme AmazonConnectChatIOS
