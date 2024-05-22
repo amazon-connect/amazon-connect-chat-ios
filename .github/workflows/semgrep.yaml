@@ -21,7 +21,7 @@ jobs:
           pip install semgrep
 
       - name: Run Semgrep
-        run: semgrep --config p/ci --output semgrep.sarif --sarif --debug
+        run: semgrep --config p/ci --output semgrep.sarif --sarif --error
 
       - name: Upload Semgrep results
         if: always()
