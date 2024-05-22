@@ -12,6 +12,7 @@ jobs:
   build:
     name: Build
     runs-on: macos-latest
+    working-directory: ./AmazonConnectChatIOS
 
     steps:
     - name: Checkout code
