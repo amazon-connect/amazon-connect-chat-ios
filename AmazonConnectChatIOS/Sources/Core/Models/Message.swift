@@ -41,8 +41,9 @@ public class Message: TranscriptItem, MessageProtocol {
         case ContentType.interactiveText.rawValue:
             return decodeInteractiveContent(from: text)
         default:
-            // Handle or log unsupported content types - Sending as Plain Text for now.
-            return PlainTextContent.decode(from: text)
+            // Handle or log unsupported content types
+            print("Unsupported content type: \(contentType)")
+            return nil
         }
     }
     
