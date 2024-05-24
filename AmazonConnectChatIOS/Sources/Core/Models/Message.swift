@@ -23,12 +23,12 @@ public class Message: TranscriptItem, MessageProtocol {
     public var messageDirection: MessageDirection?
     public var messageID: String?
 
-    public init(participant: String, text: String, contentType: String, messageDirection: MessageDirection? = nil, timeStamp: String, messageID: String? = nil, rawData: [String: Any]) {
+    public init(participant: String, text: String, contentType: String, messageDirection: MessageDirection? = nil, timeStamp: String, messageID: String? = nil, serializedContent: [String: Any]) {
         self.participant = participant
         self.text = text
         self.messageDirection = messageDirection
         self.messageID = messageID
-        super.init(timeStamp: timeStamp, contentType: contentType, rawData: rawData)
+        super.init(timeStamp: timeStamp, contentType: contentType, serializedContent: serializedContent)
     }
     
     public var content: MessageContent? {

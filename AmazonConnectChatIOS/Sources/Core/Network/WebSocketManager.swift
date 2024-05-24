@@ -371,7 +371,7 @@ extension WebsocketManager {
     }
     
     // MARK: - Handle Events
-    func handleMessage(_ innerJson: [String: Any], _ rawData: [String: Any]) {
+    func handleMessage(_ innerJson: [String: Any], _ serializedContent: [String: Any]) {
         let participantRole = innerJson["ParticipantRole"] as! String
         let messageId = innerJson["Id"] as! String
         var messageText = innerJson["Content"] as! String
@@ -386,12 +386,12 @@ extension WebsocketManager {
             contentType: innerJson["ContentType"] as! String,
             timeStamp: time,
             messageID: messageId,
-            rawData: rawData
+            serializedContent: serializedContent
         )
         transcriptPublisher.send(message)
     }
     
-    func handleParticipantJoined(_ innerJson: [String: Any], _ rawData: [String: Any]) {
+    func handleParticipantJoined(_ innerJson: [String: Any], _ serializedContent: [String: Any]) {
         let participantRole = innerJson["ParticipantRole"] as! String
         let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
 
@@ -400,12 +400,12 @@ extension WebsocketManager {
             contentType: innerJson["ContentType"] as! String,
             participant: participantRole,
             eventDirection: .Common,
-            rawData: rawData
+            serializedContent: serializedContent
         )
         transcriptPublisher.send(event)
     }
     
-    func handleParticipantLeft(_ innerJson: [String: Any], _ rawData: [String: Any]) {
+    func handleParticipantLeft(_ innerJson: [String: Any], _ serializedContent: [String: Any]) {
         let participantRole = innerJson["ParticipantRole"] as! String
         let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
 
@@ -414,12 +414,12 @@ extension WebsocketManager {
             contentType: innerJson["ContentType"] as! String,
             participant: participantRole,
             eventDirection: .Common,
-            rawData: rawData
+            serializedContent: serializedContent
         )
         transcriptPublisher.send(event)
     }
     
-    func handleTyping(_ innerJson: [String: Any], _ rawData: [String: Any]) {
+    func handleTyping(_ innerJson: [String: Any], _ serializedContent: [String: Any]) {
         let participantRole = innerJson["ParticipantRole"] as! String
         let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
 
@@ -427,23 +427,23 @@ extension WebsocketManager {
             timeStamp: time,
             contentType: innerJson["ContentType"] as! String,
             participant: participantRole,
-            rawData: rawData
+            serializedContent: serializedContent
         )
         transcriptPublisher.send(event)
     }
     
-    func handleChatEnded(_ innerJson: [String: Any], _ rawData: [String: Any]) {
+    func handleChatEnded(_ innerJson: [String: Any], _ serializedContent: [String: Any]) {
         let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
 
         let event = Event(
             timeStamp: time,
             contentType: innerJson["ContentType"] as! String,
             eventDirection: .Common,
-            rawData: rawData)
+            serializedContent: serializedContent)
         transcriptPublisher.send(event)
     }
     
-    func handleMetadata(_ innerJson: [String: Any], _ rawData: [String: Any]) {
+    func handleMetadata(_ innerJson: [String: Any], _ serializedContent: [String: Any]) {
         let messageMetadata = innerJson["MessageMetadata"] as! [String: Any]
         let messageId = messageMetadata["MessageId"] as! String
         let receipts = messageMetadata["Receipts"] as? [[String: Any]]
@@ -463,7 +463,7 @@ extension WebsocketManager {
             timeStamp: time,
             contentType: innerJson["ContentType"] as! String,
             eventDirection: .Outgoing,
-            rawData: rawData
+            serializedContent: serializedContent
         )
         transcriptPublisher.send(metadata)
     }
