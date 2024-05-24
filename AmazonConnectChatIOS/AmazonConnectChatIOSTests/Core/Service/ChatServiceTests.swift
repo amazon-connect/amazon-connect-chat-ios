@@ -79,7 +79,7 @@ class ChatServiceTests: XCTestCase {
             
             // Simulate WebSocket events
             self.mockWebsocketManager.eventPublisher.send(.connectionEstablished)
-            let transcriptItem = TranscriptItem(timeStamp: "timestamp", contentType: "text/plain", rawData: ["content": "testContent"])
+            let transcriptItem = TranscriptItem(timeStamp: "timestamp", contentType: "text/plain", serializedContent: ["content": "testContent"])
             self.mockWebsocketManager.transcriptPublisher.send(transcriptItem)
         }
         
@@ -101,7 +101,7 @@ class ChatServiceTests: XCTestCase {
     }
     
     func testSubscribeToTranscriptItem() {
-        let receivedItem = subscribeAndSendTranscriptItem(TranscriptItem(timeStamp: "timestamp", contentType: "text/plain", rawData: ["content": "testContent"]))
+        let receivedItem = subscribeAndSendTranscriptItem(TranscriptItem(timeStamp: "timestamp", contentType: "text/plain", serializedContent: ["content": "testContent"]))
         XCTAssertEqual(receivedItem?.contentType, "text/plain", "Should receive the correct transcript item")
     }
     
@@ -118,7 +118,7 @@ class ChatServiceTests: XCTestCase {
             }
         }
         
-        let transcriptItem = TranscriptItem(timeStamp: "timestamp", contentType: "text/plain", rawData: ["content": "testContent"])
+        let transcriptItem = TranscriptItem(timeStamp: "timestamp", contentType: "text/plain", serializedContent: ["content": "testContent"])
         chatService.transcriptListPublisher.send([transcriptItem])
         
         waitForExpectations(timeout: 1) { error in

@@ -7,19 +7,19 @@ protocol TranscriptItemProtocol: Identifiable, Equatable, Hashable {
     var id: UUID { get }
     var timeStamp: String { get set }
     var contentType: String { get set }
-    var rawData: [String: Any]? { get set }
+    var serializedContent: [String: Any]? { get set }
 }
 
 public class TranscriptItem: TranscriptItemProtocol {
     public var id = UUID()
     public var timeStamp: String
     public var contentType: String
-    public var rawData: [String: Any]?
+    public var serializedContent: [String: Any]?
 
-    public init(timeStamp: String, contentType: String, rawData: [String: Any]?) {
+    public init(timeStamp: String, contentType: String, serializedContent: [String: Any]?) {
         self.timeStamp = timeStamp
         self.contentType = contentType
-        self.rawData = rawData
+        self.serializedContent = serializedContent
     }
 
     public static func == (lhs: TranscriptItem, rhs: TranscriptItem) -> Bool {
