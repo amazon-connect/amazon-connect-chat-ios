@@ -4,7 +4,7 @@ import AWSConnectParticipant
 @testable import AmazonConnectChatIOS
 
 class MockChatService: ChatServiceProtocol {
-    var createChatSessionResult: (Bool, Error?)?
+    var createChatSessionResult: Result<Void, Error>?
     var disconnectChatSessionResult: (Bool, Error?)?
     var sendMessageResult: (Bool, Error?)?
     var sendEventResult: (Bool, Error?)?
@@ -14,15 +14,18 @@ class MockChatService: ChatServiceProtocol {
     var transcriptListPublisher = CurrentValueSubject<[TranscriptItem], Never>([])
 
     func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void) {
-        if let result = createChatSessionResult {
-            DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
-                completion(result.0, result.1)
-                if result.0 {
-                    self.eventPublisher.send(.connectionEstablished)
+            if let result = createChatSessionResult {
+                DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
+                    switch result {
+                    case .success:
+                        completion(true, nil)
+                        self.eventPublisher.send(.connectionEstablished)
+                    case .failure(let error):
+                        completion(false, error)
+                    }
                 }
             }
         }
-    }
 
     func disconnectChatSession(completion: @escaping (Bool, Error?) -> Void) {
         if let result = disconnectChatSessionResult {

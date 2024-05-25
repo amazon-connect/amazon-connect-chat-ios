@@ -41,6 +41,7 @@
 		7ED5DEC22BEAF933001693FC /* TranscriptItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED5DEC12BEAF933001693FC /* TranscriptItem.swift */; };
 		7ED5DEC42BEAFD42001693FC /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED5DEC32BEAFD42001693FC /* Event.swift */; };
 		7ED5DEC62BEB38B8001693FC /* Metadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED5DEC52BEB38B8001693FC /* Metadata.swift */; };
+		7EF4384A2BFF056400E7F8E9 /* AWSConnectParticipantAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EF438492BFF056400E7F8E9 /* AWSConnectParticipantAdapter.swift */; };
 		8E707533CF4D462148DA797D /* Pods_AmazonConnectChatIOS_AmazonConnectChatIOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49398D9125DCBBD394D971FE /* Pods_AmazonConnectChatIOS_AmazonConnectChatIOSTests.framework */; };
 		CD381512D9332C2CE8DF5489 /* Pods_AmazonConnectChatIOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3765814AC8510BA5F1CFD238 /* Pods_AmazonConnectChatIOS.framework */; };
 		F747263E2BF4143D002B278E /* MetricsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F747263D2BF4143D002B278E /* MetricsUtils.swift */; };
@@ -62,6 +63,27 @@
 			proxyType = 1;
 			remoteGlobalIDString = 7E58A5D32BB5F3DA00965327;
 			remoteInfo = AmazonConnectChatIOS;
+		};
+		7E6C0E3D2BFEE769000D07AF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7E6C0E372BFEE769000D07AF /* iOSChatExample.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 7E9159142BBE674100821C05;
+			remoteInfo = iOSChatExample;
+		};
+		7E6C0E3F2BFEE769000D07AF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7E6C0E372BFEE769000D07AF /* iOSChatExample.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 7E9159242BBE674200821C05;
+			remoteInfo = iOSChatExampleTests;
+		};
+		7E6C0E412BFEE769000D07AF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7E6C0E372BFEE769000D07AF /* iOSChatExample.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 7E91592E2BBE674200821C05;
+			remoteInfo = iOSChatExampleUITests;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -99,11 +121,13 @@
 		7E58A6222BBDDBF900965327 /* ChatSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSession.swift; sourceTree = "<group>"; };
 		7E58A6262BBDDE4A00965327 /* AWSClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWSClient.swift; sourceTree = "<group>"; };
 		7E58A6282BBE415700965327 /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
+		7E6C0E372BFEE769000D07AF /* iOSChatExample.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iOSChatExample.xcodeproj; path = "../../../workplace/amazon-connect-chat-ui-examples/mobileChatExamples/iOSChatExample/iOSChatExample.xcodeproj"; sourceTree = "<group>"; };
 		7E91597A2BC0A92E00821C05 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		7EC0A21A2BC79D7A00DB47F4 /* WebSocketManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocketManager.swift; sourceTree = "<group>"; };
 		7ED5DEC12BEAF933001693FC /* TranscriptItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptItem.swift; sourceTree = "<group>"; };
 		7ED5DEC32BEAFD42001693FC /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		7ED5DEC52BEB38B8001693FC /* Metadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metadata.swift; sourceTree = "<group>"; };
+		7EF438492BFF056400E7F8E9 /* AWSConnectParticipantAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWSConnectParticipantAdapter.swift; sourceTree = "<group>"; };
 		E266CCF647ADAA5FBE9C4CFA /* Pods-AmazonConnectChatIOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AmazonConnectChatIOS.debug.xcconfig"; path = "Target Support Files/Pods-AmazonConnectChatIOS/Pods-AmazonConnectChatIOS.debug.xcconfig"; sourceTree = "<group>"; };
 		F747263D2BF4143D002B278E /* MetricsUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsUtils.swift; sourceTree = "<group>"; };
 		F74726432BF418F0002B278E /* MetricsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsClient.swift; sourceTree = "<group>"; };
@@ -187,6 +211,7 @@
 		7E58A5CA2BB5F3DA00965327 = {
 			isa = PBXGroup;
 			children = (
+				7E6C0E372BFEE769000D07AF /* iOSChatExample.xcodeproj */,
 				7E58A5EE2BB5F71500965327 /* Sources */,
 				7E2336DF2BFE7D7400E6C4B7 /* AmazonConnectChatIOSTests */,
 				7E58A5D62BB5F3DA00965327 /* AmazonConnectChatIOS */,
@@ -260,6 +285,7 @@
 				F7B074812BDB2D3A00E8B805 /* NetworkConnectionManager.swift */,
 				F74726432BF418F0002B278E /* MetricsClient.swift */,
 				F74726462BF41948002B278E /* MetricsManager.swift */,
+				7EF438492BFF056400E7F8E9 /* AWSConnectParticipantAdapter.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -305,6 +331,16 @@
 				7E58A6282BBE415700965327 /* ChatService.swift */,
 			);
 			path = Service;
+			sourceTree = "<group>";
+		};
+		7E6C0E382BFEE769000D07AF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7E6C0E3E2BFEE769000D07AF /* iOSChatExample.app */,
+				7E6C0E402BFEE769000D07AF /* iOSChatExampleTests.xctest */,
+				7E6C0E422BFEE769000D07AF /* iOSChatExampleUITests.xctest */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		93067FFD20E434157B7197A6 /* Frameworks */ = {
@@ -409,6 +445,12 @@
 			mainGroup = 7E58A5CA2BB5F3DA00965327;
 			productRefGroup = 7E58A5D52BB5F3DA00965327 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 7E6C0E382BFEE769000D07AF /* Products */;
+					ProjectRef = 7E6C0E372BFEE769000D07AF /* iOSChatExample.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				7E58A5D32BB5F3DA00965327 /* AmazonConnectChatIOS */,
@@ -416,6 +458,30 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		7E6C0E3E2BFEE769000D07AF /* iOSChatExample.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = iOSChatExample.app;
+			remoteRef = 7E6C0E3D2BFEE769000D07AF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		7E6C0E402BFEE769000D07AF /* iOSChatExampleTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = iOSChatExampleTests.xctest;
+			remoteRef = 7E6C0E3F2BFEE769000D07AF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		7E6C0E422BFEE769000D07AF /* iOSChatExampleUITests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = iOSChatExampleUITests.xctest;
+			remoteRef = 7E6C0E412BFEE769000D07AF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		7E58A5D22BB5F3DA00965327 /* Resources */ = {
@@ -529,6 +595,7 @@
 				7E58A6202BBDDB0900965327 /* GlobalConfig.swift in Sources */,
 				7E58A6132BBB4B0200965327 /* SDKLogger.swift in Sources */,
 				7EC0A21B2BC79D7B00DB47F4 /* WebSocketManager.swift in Sources */,
+				7EF4384A2BFF056400E7F8E9 /* AWSConnectParticipantAdapter.swift in Sources */,
 				F747263E2BF4143D002B278E /* MetricsUtils.swift in Sources */,
 				7E58A61E2BBDDADB00965327 /* ChatDetails.swift in Sources */,
 				F74726472BF41948002B278E /* MetricsManager.swift in Sources */,

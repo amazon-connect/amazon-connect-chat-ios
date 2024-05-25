@@ -26,20 +26,37 @@ class ChatSessionTests: XCTestCase {
     }
     
     // Helper method for connection tests
-    func performConnectTest(chatDetails: ChatDetails, expectedResult: (Bool, Error?), onConnectionEstablished: (() -> Void)? = nil, expectedError: Error? = nil) {
+    func performConnectTest(chatDetails: ChatDetails, expectedResult: Result<Void, Error>, onConnectionEstablished: (() -> Void)? = nil) {
         var connectionEstablished = false
         var receivedError: Error?
+        var expectationFulfilled = false // Flag to track if expectation is fulfilled
         let expectation = self.expectation(description: "ConnectionTest")
         
         chatSession.onConnectionEstablished = {
             connectionEstablished = true
-            expectation.fulfill()
+            if case .success = expectedResult {
+                if !expectationFulfilled {
+                    expectation.fulfill()
+                    expectationFulfilled = true
+                }
+            }
         }
         
         mockChatService.createChatSessionResult = expectedResult
-        chatSession.connect(chatDetails: chatDetails) { error in
-            receivedError = error
-            expectation.fulfill()
+        chatSession.connect(chatDetails: chatDetails) { result in
+            switch result {
+            case .success:
+                if !connectionEstablished && !expectationFulfilled {
+                    expectation.fulfill()
+                    expectationFulfilled = true
+                }
+            case .failure(let error):
+                receivedError = error
+                if !expectationFulfilled {
+                    expectation.fulfill()
+                    expectationFulfilled = true
+                }
+            }
         }
         
         waitForExpectations(timeout: 1) { error in
@@ -49,25 +66,28 @@ class ChatSessionTests: XCTestCase {
             if let onConnectionEstablished = onConnectionEstablished {
                 onConnectionEstablished()
             }
-            if let expectedError = expectedError {
-                XCTAssertEqual(receivedError as NSError?, expectedError as NSError?, "Should receive the expected error")
-            } else {
+            switch expectedResult {
+            case .success:
                 XCTAssertTrue(connectionEstablished, "Connection should be established")
+            case .failure(let expectedError):
+                XCTAssertEqual(receivedError as NSError?, expectedError as NSError?, "Should receive the expected error")
             }
         }
     }
+
+
     
     // Test the successful connection scenario
     func testConnect_Success() {
         let chatDetails = ChatDetails(contactId: "testContactId", participantId: "testParticipantId", participantToken: "testParticipantToken")
-        performConnectTest(chatDetails: chatDetails, expectedResult: (true, nil))
+        performConnectTest(chatDetails: chatDetails, expectedResult: .success(()))
     }
     
     // Test the unsuccessful connection scenario
     func testConnect_Failure() {
         let chatDetails = ChatDetails(contactId: "testContactId", participantId: "testParticipantId", participantToken: "testParticipantToken")
         let expectedError = NSError(domain: "TestDomain", code: 1, userInfo: nil)
-        performConnectTest(chatDetails: chatDetails, expectedResult: (false, expectedError), expectedError: expectedError)
+        performConnectTest(chatDetails: chatDetails, expectedResult: .failure(expectedError))
     }
     
     // Helper method for disconnection tests

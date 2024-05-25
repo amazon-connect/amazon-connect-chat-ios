@@ -85,7 +85,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
             case .success(let message):
                 switch message {
                 case .string(let text):
-                    print("Received text: \(text)")
+                    print("Received text in receiveMessage(): \(text)")
                     self?.handleWebsocketTextEvent(text: text)
                 case .data(let data):
                     print("Received data: \(data)")

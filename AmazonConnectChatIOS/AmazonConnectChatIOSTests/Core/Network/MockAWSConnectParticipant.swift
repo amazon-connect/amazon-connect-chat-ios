@@ -15,24 +15,30 @@ class MockAWSConnectParticipant: AWSConnectParticipantProtocol {
     var sendMessageResult: Result<AnyObject?, Error>?
     var sendEventResult: Result<AnyObject?, Error>?
     var getTranscriptResult: Result<AWSConnectParticipantGetTranscriptResponse, Error>?
-
+    
+//    init() {
+//        // Ensure AWSConnectParticipant is initialized
+//        let credentials = AWSStaticCredentialsProvider(accessKey: "", secretKey: "")
+//        let config = AWSServiceConfiguration(region: Constants.DEFAULT_REGION, credentialsProvider: credentials)
+//        AWSConnectParticipant.register(with: config!, forKey: Constants.AWSConnectParticipantKey)
+//    }
     
     func createParticipantConnection(_ request: AWSConnectParticipantCreateParticipantConnectionRequest?) -> AWSTask<AWSConnectParticipantCreateParticipantConnectionResponse> {
-           let taskCompletionSource = AWSTaskCompletionSource<AWSConnectParticipantCreateParticipantConnectionResponse>()
-           if request == nil {
-               taskCompletionSource.set(error: AWSClient.AWSClientError.requestCreationFailed)
-           } else if let result = createParticipantConnectionResult {
-               switch result {
-               case .success(let response):
-                   taskCompletionSource.set(result: response)
-               case .failure(let error):
-                   taskCompletionSource.set(error: error)
-               }
-           } else {
-               taskCompletionSource.set(error: MockError.unexpected)
-           }
-           return taskCompletionSource.task
-       }
+        let taskCompletionSource = AWSTaskCompletionSource<AWSConnectParticipantCreateParticipantConnectionResponse>()
+        if request == nil {
+            taskCompletionSource.set(error: AWSClient.AWSClientError.requestCreationFailed)
+        } else if let result = createParticipantConnectionResult {
+            switch result {
+            case .success(let response):
+                taskCompletionSource.set(result: response)
+            case .failure(let error):
+                taskCompletionSource.set(error: error)
+            }
+        } else {
+            taskCompletionSource.set(error: MockError.unexpected)
+        }
+        return taskCompletionSource.task
+    }
     
     func disconnectParticipant(_ request: AWSConnectParticipantDisconnectParticipantRequest?) -> AWSTask<AnyObject> {
         let taskCompletionSource = AWSTaskCompletionSource<AnyObject>()
