@@ -167,9 +167,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
               let innerJson = try? JSONSerialization.jsonObject(with: Data(content.utf8), options: []) as? [String: Any] else {
             return nil
         }
-        
-        print("InnterJSon \(innerJson)")
-        
+                
         let type = innerJson["Type"] as! String // MESSAGE, EVENT
         if type == "MESSAGE" {
             return handleMessage(innerJson, json)
