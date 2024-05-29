@@ -17,6 +17,9 @@ public struct Constants {
     static let DEFAULT_REGION : AWSRegionType  = .USWest2
     public static let QUICK_REPLY = "QuickReply"
     public static let LIST_PICKER = "ListPicker"
+    public static let PANEL = "Panel"
+    public static let TIME_PICKER = "TimePicker"
+    public static let CAROUSEL = "Carousel"
     
     // For future reference
     struct Error {

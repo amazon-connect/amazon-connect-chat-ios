@@ -1,9 +1,5 @@
-//
-//  MockAWSConnectParticipant.swift
-//  AmazonConnectChatIOSTests
-//
-//  Created by Mittal, Rajat on 5/18/24.
-//
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: MIT-0
 
 import Foundation
 import AWSConnectParticipant
@@ -15,13 +11,6 @@ class MockAWSConnectParticipant: AWSConnectParticipantProtocol {
     var sendMessageResult: Result<AnyObject?, Error>?
     var sendEventResult: Result<AnyObject?, Error>?
     var getTranscriptResult: Result<AWSConnectParticipantGetTranscriptResponse, Error>?
-    
-//    init() {
-//        // Ensure AWSConnectParticipant is initialized
-//        let credentials = AWSStaticCredentialsProvider(accessKey: "", secretKey: "")
-//        let config = AWSServiceConfiguration(region: Constants.DEFAULT_REGION, credentialsProvider: credentials)
-//        AWSConnectParticipant.register(with: config!, forKey: Constants.AWSConnectParticipantKey)
-//    }
     
     func createParticipantConnection(_ request: AWSConnectParticipantCreateParticipantConnectionRequest?) -> AWSTask<AWSConnectParticipantCreateParticipantConnectionResponse> {
         let taskCompletionSource = AWSTaskCompletionSource<AWSConnectParticipantCreateParticipantConnectionResponse>()

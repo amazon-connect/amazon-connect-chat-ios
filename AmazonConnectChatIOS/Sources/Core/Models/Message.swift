@@ -14,6 +14,7 @@ public protocol MessageProtocol: TranscriptItemProtocol {
     var text: String { get set }
     var contentType: String { get set }
     var messageID: String? { get set }
+    var displayName: String? { get set }
     var messageDirection: MessageDirection? { get set }
     var metadata: (any MetadataProtocol)? { get set }
 }
@@ -23,14 +24,17 @@ public class Message: TranscriptItem, MessageProtocol {
     public var text: String
     public var messageDirection: MessageDirection?
     public var messageID: String?
+    public var displayName: String?
     @Published public var metadata: (any MetadataProtocol)?
 
-    public init(participant: String, text: String, contentType: String, messageDirection: MessageDirection? = nil, timeStamp: String, messageID: String? = nil, serializedContent: [String: Any], metadata: (any MetadataProtocol)? = nil) {
+    public init(participant: String, text: String, contentType: String, messageDirection: MessageDirection? = nil, timeStamp: String, messageID: String? = nil,
+                displayName: String? = nil, serializedContent: [String: Any], metadata: (any MetadataProtocol)? = nil) {
         self.participant = participant
         self.text = text
         self.messageDirection = messageDirection
         self.messageID = messageID
         self.metadata = metadata
+        self.displayName = displayName
         super.init(timeStamp: timeStamp, contentType: contentType, serializedContent: serializedContent)
     }
     
@@ -60,6 +64,12 @@ public class Message: TranscriptItem, MessageProtocol {
             return QuickReplyContent.decode(from: text)
         case ListPickerContent.templateType:
             return ListPickerContent.decode(from: text)
+        case TimePickerContent.templateType:
+            return TimePickerContent.decode(from: text)
+        case PanelContent.templateType:
+            return PanelContent.decode(from: text)
+        case CarouselContent.templateType:
+            return CarouselContent.decode(from: text)
         default:
             print("Unsupported interactive content type: \(genericTemplate.templateType)")
             return nil

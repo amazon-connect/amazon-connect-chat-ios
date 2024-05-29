@@ -1,3 +1,6 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: MIT-0
+
 import XCTest
 import AWSConnectParticipant
 @testable import AmazonConnectChatIOS
@@ -33,7 +36,6 @@ class AWSClientTests: XCTestCase {
         AWSClient.shared.disconnectParticipantRequest = { AWSConnectParticipantDisconnectParticipantRequest() }
         AWSClient.shared.sendMessageRequest = { AWSConnectParticipantSendMessageRequest() }
         AWSClient.shared.sendEventRequest = { AWSConnectParticipantSendEventRequest() }
-        AWSClient.shared.getTranscriptRequest = { AWSConnectParticipantGetTranscriptRequest() }
     }
     
     
@@ -218,19 +220,15 @@ class AWSClientTests: XCTestCase {
     
     // Helper method for get transcript tests
     func performGetTranscriptTest(expectedResult: Result<AWSConnectParticipantGetTranscriptResponse, Error>, simulateRequestFailure: Bool = false) {
-        if simulateRequestFailure {
-            awsClient.getTranscriptRequest = { nil }
-        } else {
-            mockClient.getTranscriptResult = expectedResult
-        }
-        
+        mockClient.getTranscriptResult = expectedResult
+
         let expectation = self.expectation(description: "GetTranscript")
         
         awsClient.getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest()) { result in
             switch (expectedResult, result) {
-            case (.success(let expectedResponse), .success(let items)):
-                XCTAssertEqual(items.count, expectedResponse.transcript?.count)
-                XCTAssertEqual(items.first?.content, expectedResponse.transcript?.first?.content)
+            case (.success(let expectedResponse), .success(let response)):
+                XCTAssertEqual(expectedResponse.transcript?.count, response.transcript?.count)
+                XCTAssertEqual(response.transcript?.first?.content, expectedResponse.transcript?.first?.content)
             case (.failure(let expectedError), .failure(let error)):
                 XCTAssertEqual(error as? AWSClient.AWSClientError, expectedError as? AWSClient.AWSClientError)
             default:
@@ -254,11 +252,6 @@ class AWSClientTests: XCTestCase {
     // Test Get Transcript Failure
     func testGetTranscriptFailure() {
         performGetTranscriptTest(expectedResult: .failure(MockAWSConnectParticipant.MockError.unexpected))
-    }
-    
-    // Test Get Transcript Request Failure
-    func testGetTranscriptRequestCreationFailure() {
-        performGetTranscriptTest(expectedResult: .failure(AWSClient.AWSClientError.requestCreationFailed), simulateRequestFailure: true)
     }
     
     // Test Get Transcript No Result

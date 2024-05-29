@@ -1,9 +1,5 @@
-//
-//  MockConnectionDetailsProvider.swift
-//  AmazonConnectChatIOSTests
-//
-//  Created by Mittal, Rajat on 5/18/24.
-//
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: MIT-0
 
 import Foundation
 @testable import AmazonConnectChatIOS

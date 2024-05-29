@@ -16,6 +16,7 @@ protocol WebsocketManagerProtocol {
     var transcriptPublisher: PassthroughSubject<TranscriptItem, Never> { get }
     func connect(wsUrl: URL?)
     func disconnect()
+    func formatAndProcessTranscriptItems(_ transcriptItems: [AWSConnectParticipantItem]) -> [TranscriptItem]
 }
 
 class WebsocketManager: NSObject, WebsocketManagerProtocol {
@@ -85,10 +86,10 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
             case .success(let message):
                 switch message {
                 case .string(let text):
-                    print("Received text in receiveMessage(): \(text)")
+                    print("Received text in receiveMessage()")
                     self?.handleWebsocketTextEvent(text: text)
                 case .data(let data):
-                    print("Received data: \(data)")
+                    print("Received data from websocket")
                 @unknown default:
                     print("Received an unknown message type, which is not handled.")
                 }
@@ -155,34 +156,36 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
         }
     }
     
-    
     func websocketDidReceiveMessage(json: [String: Any]) {
-        let content = json["content"] as? String
-        
-        if let stringContent = content,
-           let innerJson = try? JSONSerialization.jsonObject(with: Data(stringContent.utf8), options: []) as? [String: Any] {
-            let type = innerJson["Type"] as! String // MESSAGE, EVENT
-            if type == "MESSAGE" {
-                // Handle messages
-                handleMessage(innerJson, json)
-            } else if innerJson["ContentType"] as! String == ContentType.joined.rawValue {
-                // Handle participant joined event
-                handleParticipantJoined(innerJson, json)
-            } else if innerJson["ContentType"] as! String == ContentType.left.rawValue {
-                // Handle participant left event
-                handleParticipantLeft(innerJson, json)
-            } else if innerJson["ContentType"] as! String == ContentType.typing.rawValue {
-                // Handle typing event
-                handleTyping(innerJson, json)
-            } else if innerJson["ContentType"] as! String == ContentType.ended.rawValue {
-                // Handle chat ended event
-                handleChatEnded(innerJson, json)
-            } else if innerJson["ContentType"] as! String == ContentType.metaData.rawValue {
-                // Handle message metadata
-                handleMetadata(innerJson, json)
-            }
-            
+        if let item = processJsonContentAndGetItem(json) {
+            transcriptPublisher.send(item)
         }
+    }
+    
+    func processJsonContentAndGetItem(_ json: [String: Any]) -> TranscriptItem? {
+        guard let content = json["content"] as? String,
+              let innerJson = try? JSONSerialization.jsonObject(with: Data(content.utf8), options: []) as? [String: Any] else {
+            return nil
+        }
+        
+        print("InnterJSon \(innerJson)")
+        
+        let type = innerJson["Type"] as! String // MESSAGE, EVENT
+        if type == "MESSAGE" {
+            return handleMessage(innerJson, json)
+        } else if innerJson["ContentType"] as! String == ContentType.joined.rawValue {
+            return handleParticipantJoined(innerJson, json)
+        } else if innerJson["ContentType"] as! String == ContentType.left.rawValue {
+            return handleParticipantLeft(innerJson, json)
+        } else if innerJson["ContentType"] as! String == ContentType.typing.rawValue {
+            return handleTyping(innerJson, json)
+        } else if innerJson["ContentType"] as! String == ContentType.ended.rawValue {
+            return handleChatEnded(innerJson, json)
+        } else if innerJson["ContentType"] as! String == ContentType.metaData.rawValue {
+            return handleMetadata(innerJson, json)
+        }
+        
+        return nil
     }
     
     // MARK: - Reconnection / State Management
@@ -337,15 +340,13 @@ extension WebsocketManager: URLSessionWebSocketDelegate {
 // MARK: - Formatting extension
 
 extension WebsocketManager {
-    func formatAndProcessTranscriptItems(_ transcriptItems: [AWSConnectParticipantItem]) {
-        transcriptItems.forEach { item in
-            
+    func formatAndProcessTranscriptItems(_ transcriptItems: [AWSConnectParticipantItem]) -> [TranscriptItem] {
+        return transcriptItems.compactMap { item in
+            // Create a dictionary with the necessary fields
             let participantRole = CommonUtils().convertParticipantRoleToString(item.participantRole.rawValue)
-            
-            // First, create the message dictionary for the inner content
             let messageContentDict: [String: Any] = [
                 "Id": item.identifier ?? "",
-                "ParticipantRole": "\(participantRole)", // Make sure this maps correctly
+                "ParticipantRole": "\(participantRole)",
                 "AbsoluteTime": item.absoluteTime ?? "",
                 "ContentType": item.contentType ?? "",
                 "Content": item.content ?? "",
@@ -353,97 +354,104 @@ extension WebsocketManager {
                 "DisplayName": item.displayName ?? ""
             ]
             
-            // Serialize the inner content dictionary to a JSON string
+            // Serialize the dictionary to JSON string
             guard let messageContentData = try? JSONSerialization.data(withJSONObject: messageContentDict, options: []),
                   let messageContentString = String(data: messageContentData, encoding: .utf8) else {
                 print("Failed to serialize message content to JSON string")
-                return
+                return nil
             }
             
-            // wrapping string in the outer structure expected by websocketDidReceiveMessage
+            // Wrap the JSON string
             let wrappedMessageString = "{\"content\":\"\(messageContentString.replacingOccurrences(of: "\"", with: "\\\""))\"}"
             
+            // Deserialize back to JSON object
             if let jsonData = wrappedMessageString.data(using: .utf8),
                let json = try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
-                self.websocketDidReceiveMessage(json: json)
+                // Process the JSON content and return a TranscriptItem
+                return processJsonContentAndGetItem(json)
             }
+            
+            return nil
         }
     }
+
     
     // MARK: - Handle Events
-    func handleMessage(_ innerJson: [String: Any], _ serializedContent: [String: Any]) {
+    func handleMessage(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {
         let participantRole = innerJson["ParticipantRole"] as! String
         let messageId = innerJson["Id"] as! String
         var messageText = innerJson["Content"] as! String
+        let displayName = innerJson["DisplayName"] as! String
         let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
 
         // Workaround for Attributed string to enable newline
         messageText = messageText.replacingOccurrences(of: "\n", with: "\\\n")
         
-        let message = Message(
+        return Message(
             participant: participantRole,
             text: messageText,
             contentType: innerJson["ContentType"] as! String,
             timeStamp: time,
             messageID: messageId,
+            displayName: displayName,
             serializedContent: serializedContent
         )
-        transcriptPublisher.send(message)
     }
     
-    func handleParticipantJoined(_ innerJson: [String: Any], _ serializedContent: [String: Any]) {
+    func handleParticipantJoined(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {
         let participantRole = innerJson["ParticipantRole"] as! String
         let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
+        let displayName = innerJson["DisplayName"] as! String
 
-        let event = Event(
+        return Event(
             timeStamp: time,
             contentType: innerJson["ContentType"] as! String,
+            displayName: displayName,
             participant: participantRole,
             eventDirection: .Common,
             serializedContent: serializedContent
         )
-        transcriptPublisher.send(event)
     }
     
-    func handleParticipantLeft(_ innerJson: [String: Any], _ serializedContent: [String: Any]) {
+    func handleParticipantLeft(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {
         let participantRole = innerJson["ParticipantRole"] as! String
         let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
+        let displayName = innerJson["DisplayName"] as! String
 
-        let event = Event(
+        return Event(
             timeStamp: time,
             contentType: innerJson["ContentType"] as! String,
+            displayName: displayName,
             participant: participantRole,
             eventDirection: .Common,
             serializedContent: serializedContent
         )
-        transcriptPublisher.send(event)
     }
     
-    func handleTyping(_ innerJson: [String: Any], _ serializedContent: [String: Any]) {
+    func handleTyping(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem {
         let participantRole = innerJson["ParticipantRole"] as! String
         let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
+        let displayName = innerJson["DisplayName"] as! String
 
-        let event = Event(
+        return Event(
             timeStamp: time,
             contentType: innerJson["ContentType"] as! String,
             participant: participantRole,
             serializedContent: serializedContent
         )
-        transcriptPublisher.send(event)
     }
     
-    func handleChatEnded(_ innerJson: [String: Any], _ serializedContent: [String: Any]) {
+    func handleChatEnded(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {
         let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
 
-        let event = Event(
+        return Event(
             timeStamp: time,
             contentType: innerJson["ContentType"] as! String,
             eventDirection: .Common,
             serializedContent: serializedContent)
-        transcriptPublisher.send(event)
     }
     
-    func handleMetadata(_ innerJson: [String: Any], _ serializedContent: [String: Any]) {
+    func handleMetadata(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {
         let messageMetadata = innerJson["MessageMetadata"] as! [String: Any]
         let messageId = messageMetadata["MessageId"] as! String
         let receipts = messageMetadata["Receipts"] as? [[String: Any]]
@@ -457,7 +465,7 @@ extension WebsocketManager {
                 }
             }
         }
-        let metadata = Metadata(
+        return Metadata(
             status: status,
             messageId: messageId,
             timeStamp: time,
@@ -465,7 +473,6 @@ extension WebsocketManager {
             eventDirection: .Outgoing,
             serializedContent: serializedContent
         )
-        transcriptPublisher.send(metadata)
     }
     
 }
