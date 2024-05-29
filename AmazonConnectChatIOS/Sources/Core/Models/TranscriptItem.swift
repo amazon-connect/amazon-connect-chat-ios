@@ -3,7 +3,7 @@
 
 import Foundation
 
-protocol TranscriptItemProtocol: Identifiable, Equatable, Hashable {
+public protocol TranscriptItemProtocol: Identifiable, Equatable, Hashable, ObservableObject {
     var id: UUID { get }
     var timeStamp: String { get set }
     var contentType: String { get set }

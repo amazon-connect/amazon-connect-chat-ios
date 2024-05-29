@@ -8,7 +8,7 @@ import AWSConnectParticipant
 /// Protocol defining the core functionalities of a chat session.
 public protocol ChatSessionProtocol {
     func configure(config: GlobalConfig)
-    func connect(chatDetails: ChatDetails, onError: @escaping (Error?) -> Void)
+    func connect(chatDetails: ChatDetails, completion: @escaping (Result<Void, Error>) -> Void)
     func disconnect(onError: @escaping (Error) -> Void)
     func sendMessage(contentType: ContentType, message: String, onError: @escaping (Error) -> Void)
     func sendEvent(event: ContentType, content: String, onError: @escaping (Error) -> Void)
@@ -76,19 +76,21 @@ public class ChatSession: ChatSessionProtocol {
     }
     
     /// Attempts to connect to a chat session with the given details.
-    public func connect(chatDetails: ChatDetails, onError: @escaping (Error?) -> Void) {
+    public func connect(chatDetails: ChatDetails, completion: @escaping (Result<Void, Error>) -> Void) {
+        print("Connecting with chatDetails: \(chatDetails)")
         chatService.createChatSession(chatDetails: chatDetails) { [weak self] success, error in
             DispatchQueue.main.async {
                 if success {
                     SDKLogger.logger.logDebug("Chat session successfully created.")
+                    completion(.success(())) // Call completion with success
                 } else if let error = error {
-                    print()
-                    SDKLogger.logger.logError("Error creating chat session: \(error.localizedDescription )")
-                    onError(error)
+                    SDKLogger.logger.logError("Error creating chat session: \(error.localizedDescription)")
+                    completion(.failure(error))
                 }
             }
         }
     }
+
     
     public func getTranscript(
         scanDirection: AWSConnectParticipantScanDirection? = nil,

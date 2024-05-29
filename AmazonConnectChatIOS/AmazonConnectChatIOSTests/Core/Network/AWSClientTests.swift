@@ -5,7 +5,7 @@ import AWSConnectParticipant
 class AWSClientTests: XCTestCase {
     
     var mockClient: MockAWSConnectParticipant!
-    var awsClient: AWSClient!
+    let awsClient = AWSClient.shared
     
     let dummyToken = "dummyToken"
     let timeout = 1.0
@@ -13,14 +13,29 @@ class AWSClientTests: XCTestCase {
     override func setUp() {
         super.setUp()
         mockClient = MockAWSConnectParticipant()
-        awsClient = AWSClient(connectParticipantClient: mockClient)
+        let config = GlobalConfig(region: .USEast1)
+        AWSClient.shared.configure(with: config, participantClient: mockClient)
+        
+        // Reset state for awsClient
+        resetAWSClientState()
     }
     
     override func tearDown() {
+        // Reset state for awsClient
+        resetAWSClientState()
         mockClient = nil
-        awsClient = nil
         super.tearDown()
     }
+    
+    // Helper function to reset AWSClient state
+    private func resetAWSClientState() {
+        AWSClient.shared.createParticipantConnectionRequest = { AWSConnectParticipantCreateParticipantConnectionRequest() }
+        AWSClient.shared.disconnectParticipantRequest = { AWSConnectParticipantDisconnectParticipantRequest() }
+        AWSClient.shared.sendMessageRequest = { AWSConnectParticipantSendMessageRequest() }
+        AWSClient.shared.sendEventRequest = { AWSConnectParticipantSendEventRequest() }
+        AWSClient.shared.getTranscriptRequest = { AWSConnectParticipantGetTranscriptRequest() }
+    }
+    
     
     // Test Configure Method
     func testConfigure() {

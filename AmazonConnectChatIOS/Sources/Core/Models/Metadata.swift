@@ -9,16 +9,16 @@ public enum MessageStatus : String {
     case Unknown = ""     // Leaving it empty as in case of unknown as it would not render anythin on UI if customer is relying on Enum values
 }
 
-protocol MetadataProtocol: TranscriptItemProtocol {
+public protocol MetadataProtocol: TranscriptItemProtocol {
     var status: MessageStatus? { get set }
     var messageId: String? { get set }
     var eventDirection: MessageDirection? { get set }
 }
 
 public class Metadata: TranscriptItem, MetadataProtocol {
-    public var status: MessageStatus?
-    public var messageId: String?
-    public var eventDirection: MessageDirection?
+    @Published public var status: MessageStatus?
+    @Published public var messageId: String?
+    @Published public var eventDirection: MessageDirection?
     
     init(status: MessageStatus? = nil, messageId: String? = nil, timeStamp: String, contentType: String, eventDirection: MessageDirection? = .Common, serializedContent: [String: Any]) {
         self.status = status
