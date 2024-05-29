@@ -13,7 +13,7 @@ protocol ChatServiceProtocol {
     func subscribeToEvents(handleEvent: @escaping (ChatEvent) -> Void) -> AnyCancellable
     func subscribeToTranscriptItem(handleTranscriptItem: @escaping (TranscriptItem) -> Void) -> AnyCancellable
     func subscribeToTranscriptList(handleTranscriptList: @escaping ([TranscriptItem]) -> Void) -> AnyCancellable
-    func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<[AWSConnectParticipantItem], Error>) -> Void)
+    func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void)
 }
 
 class ChatService : ChatServiceProtocol {
@@ -43,7 +43,6 @@ class ChatService : ChatServiceProtocol {
         awsClient.createParticipantConnection(participantToken: chatDetails.participantToken) { result in
             switch result {
             case .success(let connectionDetails):
-                SDKLogger.logger.logDebug("Participant connection created: WebSocket URL - \(connectionDetails.websocketUrl ?? "N/A")")
                 self.connectionDetailsProvider.updateConnectionDetails(newDetails: connectionDetails)
                 if let wsUrl = URL(string: connectionDetails.websocketUrl ?? "") {
                     self.setupWebSocket(url: wsUrl)
@@ -62,7 +61,6 @@ class ChatService : ChatServiceProtocol {
         self.websocketManager?.eventPublisher
             .receive(on: RunLoop.main)
             .sink(receiveValue: { [weak self] event in
-                SDKLogger.logger.logDebug("Received chat event: \(event)")
                 self?.eventPublisher.send(event)
             })
             .store(in: &eventCancellables)
@@ -70,7 +68,6 @@ class ChatService : ChatServiceProtocol {
         self.websocketManager?.transcriptPublisher
             .receive(on: RunLoop.main)
             .sink(receiveValue: { [weak self] transcriptItem in
-                SDKLogger.logger.logDebug("Received message from WebsocketManager: \(transcriptItem)")
                 self?.transcriptItemPublisher.send(transcriptItem)
                 self?.updateTranscriptList(with: transcriptItem)
             })
@@ -81,7 +78,6 @@ class ChatService : ChatServiceProtocol {
         let subscription = eventPublisher
             .receive(on: RunLoop.main)
             .sink(receiveValue: { event in
-                SDKLogger.logger.logDebug("Event received in ChatService: \(event)")
                 handleEvent(event)
             })
         eventCancellables.insert(subscription)
@@ -92,7 +88,6 @@ class ChatService : ChatServiceProtocol {
         let subscription = transcriptItemPublisher
             .receive(on: RunLoop.main)
             .sink(receiveValue: { transcriptItem in
-                SDKLogger.logger.logDebug("TranscriptItem received in ChatService: \(transcriptItem)")
                 handleTranscriptItem(transcriptItem)
             })
         transcriptItemCancellables.insert(subscription)
@@ -132,6 +127,7 @@ class ChatService : ChatServiceProtocol {
                 SDKLogger.logger.logDebug("Participant Disconnected")
                 self.eventPublisher.send(.chatEnded)
                 self.websocketManager?.disconnect()
+                self.clearSubscriptionsAndPublishers()
                 completion(true, nil)
             case .failure(let error):
                 completion(false, error)
@@ -174,12 +170,20 @@ class ChatService : ChatServiceProtocol {
         }
     }
     
-    func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<[AWSConnectParticipantItem], Error>) -> Void) {
+    func getTranscript(
+        scanDirection: AWSConnectParticipantScanDirection? = nil,
+        sortOrder: AWSConnectParticipantSortKey? = nil,
+        maxResults: NSNumber? = nil,
+        nextToken: String? = nil,
+        startPosition: AWSConnectParticipantStartPosition? = nil,
+        completion: @escaping (Result<TranscriptResponse, Error>) -> Void
+    ) {
         guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
             let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
             completion(.failure(error))
             return
         }
+        
         let getTranscriptArgs = AWSConnectParticipantGetTranscriptRequest()
         getTranscriptArgs?.connectionToken = connectionDetails.connectionToken
         getTranscriptArgs?.scanDirection = scanDirection ?? .backward
@@ -187,15 +191,32 @@ class ChatService : ChatServiceProtocol {
         getTranscriptArgs?.maxResults = maxResults ?? 15
         getTranscriptArgs?.startPosition = startPosition
         
-        awsClient.getTranscript(getTranscriptArgs: getTranscriptArgs!) { result in
+        awsClient.getTranscript(getTranscriptArgs: getTranscriptArgs!) { [weak self] result in
             switch result {
-            case .success(let items):
-                completion(.success(items))
+            case .success(let response):
+                
+                guard let transcriptItems = response.transcript else {
+                    completion(.failure(NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Transcript items are nil"])))
+                    return
+                }
+                
+                if let websocketManager = self?.websocketManager {
+                    let formattedItems = websocketManager.formatAndProcessTranscriptItems(transcriptItems)
+                    let transcriptResponse = TranscriptResponse(
+                        initialContactId: response.initialContactId ?? "", // Assuming contactId is part of connectionDetails
+                        nextToken: response.nextToken ?? "", // Handle nextToken if it is available in the response
+                        transcript: formattedItems
+                    )
+                    completion(.success(transcriptResponse))
+                } else {
+                    completion(.failure(NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "WebsocketManager is not available"])))
+                }
             case .failure(let error):
                 completion(.failure(error))
             }
         }
     }
+    
     
     func registerNotificationListeners() {
         NotificationCenter.default.addObserver(forName: .requestNewWsUrl, object: nil, queue: .main) { [weak self] _ in
@@ -203,7 +224,6 @@ class ChatService : ChatServiceProtocol {
                 self?.awsClient.createParticipantConnection(participantToken: pToken) { result in
                     switch result {
                     case .success(let connectionDetails):
-                        print("Participant connection created: WebSocket URL - \(connectionDetails.websocketUrl ?? "N/A")")
                         self?.connectionDetailsProvider.updateConnectionDetails(newDetails: connectionDetails)
                         if let wsUrl = URL(string: connectionDetails.websocketUrl ?? "") {
                             self?.websocketManager?.connect(wsUrl: wsUrl)
@@ -214,6 +234,20 @@ class ChatService : ChatServiceProtocol {
                 }
             }
         }
+    }
+    
+    private func clearSubscriptionsAndPublishers() {
+        eventCancellables.forEach { $0.cancel() }
+        transcriptItemCancellables.forEach { $0.cancel() }
+        transcriptListCancellables.forEach { $0.cancel() }
+        
+        eventCancellables.removeAll()
+        transcriptItemCancellables.removeAll()
+        transcriptListCancellables.removeAll()
+        
+        eventPublisher = PassthroughSubject<ChatEvent, Never>()
+        transcriptItemPublisher = PassthroughSubject<TranscriptItem, Never>()
+        transcriptListPublisher = CurrentValueSubject<[TranscriptItem], Never>([])
     }
     
 }

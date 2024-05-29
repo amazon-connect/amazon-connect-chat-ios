@@ -5,11 +5,11 @@ import Foundation
 import AWSCore
 
 public struct ChatDetails {
-    var contactId: String
-    var participantId: String
+    var contactId: String?
+    var participantId: String?
     var participantToken: String
     
-    public init(contactId: String, participantId: String, participantToken: String) {
+    public init(contactId: String? = nil, participantId: String? = nil, participantToken: String) {
         self.contactId = contactId
         self.participantId = participantId
         self.participantToken = participantToken
