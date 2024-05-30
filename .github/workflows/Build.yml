@@ -31,7 +31,7 @@ jobs:
 
     - name: Install Pods
       run: pod install
-      working-directory: ./AmazonConnectChatIOS
+      working-directory: AmazonConnectChatIOS
 
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
@@ -52,7 +52,7 @@ jobs:
                          -sdk iphonesimulator \
                          -configuration Debug \
                          build
-      working-directory: ./AmazonConnectChatIOS
+      working-directory: AmazonConnectChatIOS
 
   test:
     runs-on: macos-latest
@@ -70,7 +70,7 @@ jobs:
         TEST_RESULT=${PIPESTATUS[0]}
         if [ $TEST_RESULT -ne 0 ]; then
           echo "xcodebuild test failed with exit code $TEST_RESULT"
-      working-directory: ./AmazonConnectChatIOS
+      working-directory: AmazonConnectChatIOS
       continue-on-error: true
 
     - name: Print Test Results
