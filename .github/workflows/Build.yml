@@ -27,7 +27,9 @@ jobs:
 
     - name: Set working directory
       id: set_workdir
-      run: echo "WORKDIR=${{ github.workspace }}/AmazonConnectChatIOS" >> $GITHUB_ENV
+      run: |
+        echo "workdir=${{ github.workspace }}/AmazonConnectChatIOS" >> $GITHUB_ENV
+        echo "::set-output name=workdir::${{ github.workspace }}/AmazonConnectChatIOS"
 
     - name: Debug - Verify WORKDIR environment variable
       run: echo ${{ steps.set_workdir.outputs.workdir }}
@@ -54,8 +56,8 @@ jobs:
       run: sudo gem install cocoapods
 
     - name: Install Pods
-      run: pod install
       working-directory: ${{ needs.checkout.outputs.workdir }}
+      run: pod install
 
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
@@ -76,13 +78,13 @@ jobs:
       run: ls -al
 
     - name: Clean and Build SDK
+      working-directory: ${{ needs.checkout.outputs.workdir }}
       run: |
         xcodebuild clean -workspace AmazonConnectChatIOS.xcworkspace \
                          -scheme AmazonConnectChatIOS \
                          -sdk iphonesimulator \
                          -configuration Debug \
                          build
-      working-directory: ${{ needs.checkout.outputs.workdir }}
 
   test:
     runs-on: macos-latest
@@ -95,6 +97,7 @@ jobs:
       run: ls -al
 
     - name: Run Unit Tests
+      working-directory: ${{ needs.checkout.outputs.workdir }}
       run: |
         xcodebuild test -workspace AmazonConnectChatIOS.xcworkspace \
                         -scheme AmazonConnectChatIOS \
@@ -106,10 +109,9 @@ jobs:
         TEST_RESULT=${PIPESTATUS[0]}
         if [ $TEST_RESULT -ne 0 ]; then
           echo "xcodebuild test failed with exit code $TEST_RESULT"
-      working-directory: ${{ needs.checkout.outputs.workdir }}
       continue-on-error: true
 
     - name: Print Test Results
       if: always()
-      run: cat raw-test-output.log
       working-directory: ${{ needs.checkout.outputs.workdir }}
+      run: cat raw-test-output.log
