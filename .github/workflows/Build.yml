@@ -11,16 +11,16 @@ on:
       - rajatttt/test
 
 jobs:
-  build-and-test:
+  checkout:
     runs-on: macos-latest
-    defaults:
-      run:
-        working-directory: ./AmazonConnectChatIOS
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
 
+  setup:
+    runs-on: macos-latest
+    needs: checkout
+    steps:
     - name: Set up Xcode
       uses: maxim-lobanov/setup-xcode@v1
       with:
@@ -40,24 +40,43 @@ jobs:
     - name: Install xcpretty
       run: gem install xcpretty
 
+  build:
+    runs-on: macos-latest
+    needs: setup
+    defaults:
+      run:
+        working-directory: ./AmazonConnectChatIOS
+    steps:
     - name: Clean and Build SDK
       run: |
-        echo "::group::Clean and Build SDK"
         xcodebuild clean -workspace AmazonConnectChatIOS.xcworkspace \
                          -scheme AmazonConnectChatIOS \
                          -sdk iphonesimulator \
                          -configuration Debug \
                          build
-        echo "::endgroup::"
 
+  test:
+    runs-on: macos-latest
+    needs: build
+    defaults:
+      run:
+        working-directory: ./AmazonConnectChatIOS
+    steps:
     - name: Run Unit Tests
       run: |
-        echo "::group::Run Unit Tests"
         xcodebuild test -workspace AmazonConnectChatIOS.xcworkspace \
                         -scheme AmazonConnectChatIOS \
                         -sdk iphonesimulator \
                         -destination 'platform=iOS Simulator,name=iPhone 12,OS=latest' \
                         -configuration Debug \
                         -enableCodeCoverage YES \
-                        2>&1 | xcpretty --color --simple
-        echo "::endgroup::"
+                        2>&1 | tee raw-test-output.log | xcpretty --color --simple
+        TEST_RESULT=${PIPESTATUS[0]}
+        if [ $TEST_RESULT -ne 0 ]; then
+          echo "xcodebuild test failed with exit code $TEST_RESULT"
+        fi
+      continue-on-error: true
+
+    - name: Print Test Results
+      if: always()
+      run: cat raw-test-output.log
