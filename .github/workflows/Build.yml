@@ -53,11 +53,11 @@ jobs:
     - name: Run Unit Tests
       run: |
         echo "::group::Run Unit Tests"
-        set -o pipefail && xcodebuild test -workspace AmazonConnectChatIOS.xcworkspace \
-                                           -scheme AmazonConnectChatIOS \
-                                           -sdk iphonesimulator \
-                                           -destination 'platform=iOS Simulator,name=iPhone 12,OS=latest' \
-                                           -configuration Debug \
-                                           -enableCodeCoverage YES \
-                                           2>&1 | tee raw-test-output.log | xcpretty --color --simple
+        xcodebuild test -workspace AmazonConnectChatIOS.xcworkspace \
+                        -scheme AmazonConnectChatIOS \
+                        -sdk iphonesimulator \
+                        -destination 'platform=iOS Simulator,name=iPhone 12,OS=latest' \
+                        -configuration Debug \
+                        -enableCodeCoverage YES \
+                        2>&1 | xcpretty --color --simple
         echo "::endgroup::"
