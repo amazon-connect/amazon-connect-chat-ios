@@ -32,13 +32,21 @@ jobs:
     - name: Install Pods
       run: pod install
 
-    - name: Build SDK
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7
+
+    - name: Install xcpretty
+      run: gem install xcpretty
+
+    - name: Clean and Build SDK
       run: |
-        xcodebuild -workspace AmazonConnectChatIOS.xcworkspace \
-                   -scheme AmazonConnectChatIOS \
-                   -sdk iphonesimulator \
-                   -configuration Debug \
-                   build
+        xcodebuild clean -workspace AmazonConnectChatIOS.xcworkspace \
+                         -scheme AmazonConnectChatIOS \
+                         -sdk iphonesimulator \
+                         -configuration Debug \
+                         build
 
     - name: Run Unit Tests
       run: |
@@ -47,4 +55,5 @@ jobs:
                         -sdk iphonesimulator \
                         -destination 'platform=iOS Simulator,name=iPhone 12,OS=latest' \
                         -configuration Debug \
-                        -enableCodeCoverage YES
+                        -enableCodeCoverage YES \
+                        2>&1 | xcpretty --color --simple
