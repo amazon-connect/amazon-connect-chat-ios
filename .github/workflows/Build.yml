@@ -11,41 +11,12 @@ on:
       - rajatttt/test
 
 jobs:
-  checkout:
-    runs-on: macos-latest
-    outputs:
-      workdir: ${{ steps.set_workdir.outputs.workdir }}
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Debug - Print current directory
-      run: pwd
-
-    - name: Debug - List root directory contents
-      run: ls -al
-
-    - name: Set working directory
-      id: set_workdir
-      run: |
-        echo "workdir=${{ github.workspace }}/AmazonConnectChatIOS" >> $GITHUB_ENV
-        echo "::set-output name=workdir::${{ github.workspace }}/AmazonConnectChatIOS"
-
-    - name: Debug - Verify WORKDIR environment variable
-      run: echo ${{ steps.set_workdir.outputs.workdir }}
-
-    - name: Debug - List AmazonConnectChatIOS directory contents
-      run: ls -al ${{ steps.set_workdir.outputs.workdir }}
 
   setup:
     runs-on: macos-latest
-    needs: checkout
     steps:
-    - name: Debug - Print current directory
-      run: pwd
-
-    - name: Debug - List root directory contents
-      run: ls -al
+    - name: Checkout code
+      uses: actions/checkout@v3
 
     - name: Set up Xcode
       uses: maxim-lobanov/setup-xcode@v1
@@ -56,7 +27,6 @@ jobs:
       run: sudo gem install cocoapods
 
     - name: Install Pods
-      working-directory: ${{ needs.checkout.outputs.workdir }}
       run: pod install
 
     - name: Set up Ruby
@@ -68,50 +38,37 @@ jobs:
       run: gem install xcpretty
 
   build:
-    runs-on: macos-latest
     needs: setup
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./AmazonConnectChatIOS
     steps:
-    - name: Debug - Print current directory
-      run: pwd
-
-    - name: Debug - List root directory contents
-      run: ls -al
-
     - name: Clean and Build SDK
-      working-directory: ${{ needs.checkout.outputs.workdir }}
       run: |
+        echo "::group::Clean and Build SDK"
         xcodebuild clean -workspace AmazonConnectChatIOS.xcworkspace \
                          -scheme AmazonConnectChatIOS \
                          -sdk iphonesimulator \
                          -configuration Debug \
                          build
+        echo "::endgroup::"
 
   test:
-    runs-on: macos-latest
     needs: build
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./AmazonConnectChatIOS
     steps:
-    - name: Debug - Print current directory
-      run: pwd
-
-    - name: Debug - List root directory contents
-      run: ls -al
-
     - name: Run Unit Tests
-      working-directory: ${{ needs.checkout.outputs.workdir }}
       run: |
+        echo "::group::Run Unit Tests"
         xcodebuild test -workspace AmazonConnectChatIOS.xcworkspace \
                         -scheme AmazonConnectChatIOS \
                         -sdk iphonesimulator \
                         -destination 'platform=iOS Simulator,name=iPhone 12,OS=latest' \
                         -configuration Debug \
                         -enableCodeCoverage YES \
-                        2>&1 | tee raw-test-output.log | xcpretty --color --simple
-        TEST_RESULT=${PIPESTATUS[0]}
-        if [ $TEST_RESULT -ne 0 ]; then
-          echo "xcodebuild test failed with exit code $TEST_RESULT"
-      continue-on-error: true
-
-    - name: Print Test Results
-      if: always()
-      working-directory: ${{ needs.checkout.outputs.workdir }}
-      run: cat raw-test-output.log
+                        2>&1 | xcpretty --color --simple
+        echo "::endgroup::"
