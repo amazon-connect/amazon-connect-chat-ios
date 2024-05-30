@@ -30,8 +30,8 @@ jobs:
       run: sudo gem install cocoapods
 
     - name: Install Pods
-      working-directory: ./AmazonConnectChatIOS
       run: pod install
+      working-directory: ./AmazonConnectChatIOS
 
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
@@ -46,20 +46,19 @@ jobs:
     needs: setup
     steps:
     - name: Clean and Build SDK
-      working-directory: ./AmazonConnectChatIOS
       run: |
         xcodebuild clean -workspace AmazonConnectChatIOS.xcworkspace \
                          -scheme AmazonConnectChatIOS \
                          -sdk iphonesimulator \
                          -configuration Debug \
                          build
+      working-directory: ./AmazonConnectChatIOS
 
   test:
     runs-on: macos-latest
     needs: build
     steps:
     - name: Run Unit Tests
-      working-directory: ./AmazonConnectChatIOS
       run: |
         xcodebuild test -workspace AmazonConnectChatIOS.xcworkspace \
                         -scheme AmazonConnectChatIOS \
@@ -71,9 +70,10 @@ jobs:
         TEST_RESULT=${PIPESTATUS[0]}
         if [ $TEST_RESULT -ne 0 ]; then
           echo "xcodebuild test failed with exit code $TEST_RESULT"
+      working-directory: ./AmazonConnectChatIOS
       continue-on-error: true
 
     - name: Print Test Results
       if: always()
-      working-directory: ./AmazonConnectChatIOS
       run: cat raw-test-output.log
+      working-directory: ./AmazonConnectChatIOS
