@@ -15,7 +15,7 @@ jobs:
     runs-on: macos-latest
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
   setup:
     runs-on: macos-latest
@@ -30,6 +30,7 @@ jobs:
       run: sudo gem install cocoapods
 
     - name: Install Pods
+      working-directory: ./AmazonConnectChatIOS
       run: pod install
 
     - name: Set up Ruby
@@ -43,11 +44,9 @@ jobs:
   build:
     runs-on: macos-latest
     needs: setup
-    defaults:
-      run:
-        working-directory: ./AmazonConnectChatIOS
     steps:
     - name: Clean and Build SDK
+      working-directory: ./AmazonConnectChatIOS
       run: |
         xcodebuild clean -workspace AmazonConnectChatIOS.xcworkspace \
                          -scheme AmazonConnectChatIOS \
@@ -58,11 +57,9 @@ jobs:
   test:
     runs-on: macos-latest
     needs: build
-    defaults:
-      run:
-        working-directory: ./AmazonConnectChatIOS
     steps:
     - name: Run Unit Tests
+      working-directory: ./AmazonConnectChatIOS
       run: |
         xcodebuild test -workspace AmazonConnectChatIOS.xcworkspace \
                         -scheme AmazonConnectChatIOS \
@@ -74,9 +71,9 @@ jobs:
         TEST_RESULT=${PIPESTATUS[0]}
         if [ $TEST_RESULT -ne 0 ]; then
           echo "xcodebuild test failed with exit code $TEST_RESULT"
-        fi
       continue-on-error: true
 
     - name: Print Test Results
       if: always()
+      working-directory: ./AmazonConnectChatIOS
       run: cat raw-test-output.log
