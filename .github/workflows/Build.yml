@@ -17,18 +17,27 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Debug - Print current directory
+      run: pwd
+
+    - name: Debug - List root directory contents
+      run: ls -al
+
   setup:
     runs-on: macos-latest
     needs: checkout
-    defaults:
-      run:
-        working-directory: ${{ github.workspace }}/AmazonConnectChatIOS
     steps:
     - name: Debug - Print current directory
       run: pwd
 
-    - name: Debug - List directory contents
+    - name: Debug - List root directory contents
       run: ls -al
+
+    - name: Set working directory to AmazonConnectChatIOS
+      run: echo "::set-output name=workdir::${{ github.workspace }}/AmazonConnectChatIOS"
+
+    - name: Debug - List AmazonConnectChatIOS directory contents
+      run: ls -al ${{ steps.set_working_directory.outputs.workdir }}
 
     - name: Set up Xcode
       uses: maxim-lobanov/setup-xcode@v1
@@ -38,10 +47,8 @@ jobs:
     - name: Install CocoaPods
       run: sudo gem install cocoapods
 
-    - name: Debug - List directory contents before pod install
-      run: ls -al
-
     - name: Install Pods
+      working-directory: ${{ steps.set_working_directory.outputs.workdir }}
       run: pod install
 
     - name: Set up Ruby
@@ -55,17 +62,15 @@ jobs:
   build:
     runs-on: macos-latest
     needs: setup
-    defaults:
-      run:
-        working-directory: ${{ github.workspace }}/AmazonConnectChatIOS
     steps:
     - name: Debug - Print current directory
       run: pwd
 
-    - name: Debug - List directory contents
+    - name: Debug - List root directory contents
       run: ls -al
 
     - name: Clean and Build SDK
+      working-directory: ${{ steps.set_working_directory.outputs.workdir }}
       run: |
         xcodebuild clean -workspace AmazonConnectChatIOS.xcworkspace \
                          -scheme AmazonConnectChatIOS \
@@ -76,17 +81,15 @@ jobs:
   test:
     runs-on: macos-latest
     needs: build
-    defaults:
-      run:
-        working-directory: ${{ github.workspace }}/AmazonConnectChatIOS
     steps:
     - name: Debug - Print current directory
       run: pwd
 
-    - name: Debug - List directory contents
+    - name: Debug - List root directory contents
       run: ls -al
 
     - name: Run Unit Tests
+      working-directory: ${{ steps.set_working_directory.outputs.workdir }}
       run: |
         xcodebuild test -workspace AmazonConnectChatIOS.xcworkspace \
                         -scheme AmazonConnectChatIOS \
@@ -102,4 +105,5 @@ jobs:
 
     - name: Print Test Results
       if: always()
+      working-directory: ${{ steps.set_working_directory.outputs.workdir }}
       run: cat raw-test-output.log
