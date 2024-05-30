@@ -11,9 +11,12 @@ on:
       - rajatttt/test
 
 jobs:
-
-  setup:
+  build-and-test:
     runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./AmazonConnectChatIOS
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -37,13 +40,6 @@ jobs:
     - name: Install xcpretty
       run: gem install xcpretty
 
-  build:
-    needs: setup
-    runs-on: macos-latest
-    defaults:
-      run:
-        working-directory: ./AmazonConnectChatIOS
-    steps:
     - name: Clean and Build SDK
       run: |
         echo "::group::Clean and Build SDK"
@@ -53,14 +49,6 @@ jobs:
                          -configuration Debug \
                          build
         echo "::endgroup::"
-
-  test:
-    needs: build
-    runs-on: macos-latest
-    defaults:
-      run:
-        working-directory: ./AmazonConnectChatIOS
-    steps:
     - name: Run Unit Tests
       run: |
         echo "::group::Run Unit Tests"
