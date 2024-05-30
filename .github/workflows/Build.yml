@@ -20,6 +20,9 @@ jobs:
   setup:
     runs-on: macos-latest
     needs: checkout
+    defaults:
+      run:
+        working-directory: ./AmazonConnectChatIOS
     steps:
     - name: Set up Xcode
       uses: maxim-lobanov/setup-xcode@v1
@@ -31,7 +34,6 @@ jobs:
 
     - name: Install Pods
       run: pod install
-      working-directory: AmazonConnectChatIOS
 
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
@@ -44,6 +46,9 @@ jobs:
   build:
     runs-on: macos-latest
     needs: setup
+    defaults:
+      run:
+        working-directory: ./AmazonConnectChatIOS
     steps:
     - name: Clean and Build SDK
       run: |
@@ -52,11 +57,13 @@ jobs:
                          -sdk iphonesimulator \
                          -configuration Debug \
                          build
-      working-directory: AmazonConnectChatIOS
 
   test:
     runs-on: macos-latest
     needs: build
+    defaults:
+      run:
+        working-directory: ./AmazonConnectChatIOS
     steps:
     - name: Run Unit Tests
       run: |
@@ -70,10 +77,8 @@ jobs:
         TEST_RESULT=${PIPESTATUS[0]}
         if [ $TEST_RESULT -ne 0 ]; then
           echo "xcodebuild test failed with exit code $TEST_RESULT"
-      working-directory: AmazonConnectChatIOS
       continue-on-error: true
 
     - name: Print Test Results
       if: always()
       run: cat raw-test-output.log
-      working-directory: ./AmazonConnectChatIOS
