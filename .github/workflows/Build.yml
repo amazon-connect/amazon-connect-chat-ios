@@ -22,7 +22,7 @@ jobs:
     needs: checkout
     defaults:
       run:
-        working-directory: ${{ github.workspace }}
+        working-directory: ${{ github.workspace }}/AmazonConnectChatIOS/
     steps:
     - name: Set up Xcode
       uses: maxim-lobanov/setup-xcode@v1
