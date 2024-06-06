@@ -13,6 +13,13 @@ extension HttpHeader {
         case contentType = "Content-Type"
         case wafToken = "x-aws-waf-token"
         case amzBearer = "X-Amz-Bearer"
+        case amzMetaInitialContactId = "x-amz-meta-initial_contact_id"
+        case amzMetaContactId = "x-amz-meta-contact_id"
+        case amzMetaOrganizationId = "x-amz-meta-organization_id"
+        case amzAcl = "x-amz-acl"
+        case contentLength = "Content-Length"
+        case contentDisposition = "Content-Disposition"
+        case amzMetaAccountId = "x-amz-meta-account_id"
     }
 }
 

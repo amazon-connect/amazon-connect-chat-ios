@@ -7,11 +7,12 @@ import AWSConnectParticipant
 @testable import AmazonConnectChatIOS
 
 class MockChatService: ChatServiceProtocol {
-    
     var createChatSessionResult: Result<Void, Error>?
     var disconnectChatSessionResult: Result<Void, Error>?
     var sendMessageResult: Result<Void, Error>?
     var sendEventResult: Result<Void, Error>?
+    var sendAttachmentResult: Result<Void, Error>?
+    var downloadAttachmentResult: Result<URL, Error>?
     var getTranscriptResult: Result<TranscriptResponse, Error>?
     var eventPublisher = PassthroughSubject<ChatEvent, Never>()
     var transcriptItemPublisher = PassthroughSubject<TranscriptItem, Never>()
@@ -68,6 +69,32 @@ class MockChatService: ChatServiceProtocol {
                     completion(true, nil)
                 case .failure(let error):
                     completion(false, error)
+                }
+            }
+        }
+    }
+    
+    func sendAttachment(file: URL, completion: @escaping (Bool, (any Error)?) -> Void) {
+        if let result = sendAttachmentResult {
+            DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
+                switch result {
+                case .success:
+                    completion(true, nil)
+                case .failure(let error):
+                    completion(false, error)
+                }
+            }
+        }
+    }
+    
+    func downloadAttachment(attachmentId: String, filename: String, completion: @escaping (Result<URL, Error>) -> Void) {
+        if let result = downloadAttachmentResult {
+            DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
+                switch result {
+                case .success(let url):
+                    completion(.success(url))
+                case .failure(let error):
+                    completion(.failure(error))
                 }
             }
         }

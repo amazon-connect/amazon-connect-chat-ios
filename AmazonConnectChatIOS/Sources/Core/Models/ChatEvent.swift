@@ -18,6 +18,13 @@ public enum ContentType: String {
     case interactiveText = "application/vnd.amazonaws.connect.message.interactive"
 }
 
+public enum WebSocketMessageType: String {
+    case message = "MESSAGE"
+    case event = "EVENT"
+    case attachment = "ATTACHMENT"
+    case messageMetadata = "MESSAGEMETADATA"
+}
+
 
 enum ChatEvent {
     case connectionEstablished

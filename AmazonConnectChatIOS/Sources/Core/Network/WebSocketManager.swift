@@ -163,26 +163,48 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
     }
     
     func processJsonContentAndGetItem(_ json: [String: Any]) -> TranscriptItem? {
-        guard let content = json["content"] as? String,
-              let innerJson = try? JSONSerialization.jsonObject(with: Data(content.utf8), options: []) as? [String: Any] else {
+        let content = json["content"] as? String
+        
+        if let stringContent = content,
+           let innerJson = try? JSONSerialization.jsonObject(with: Data(stringContent.utf8), options: []) as? [String: Any] {
+            guard let typeString = innerJson["Type"] as? String, let type = WebSocketMessageType(rawValue: typeString) else {
+                print("Unknown websocket message type: \(String(describing: innerJson["Type"]))")
+                return nil
+            }
+            let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
+            switch type {
+            case .message:
+                return self.handleMessage(innerJson, json)
+            case .event:
+                guard let eventTypeString = innerJson["ContentType"] as? String, let eventType = ContentType(rawValue: eventTypeString) else {
+                    print("Unknown event type \(String(describing: innerJson["ContentType"]))")
+                    return nil
+                }
+                
+                switch eventType {
+                case .joined:
+                    // Handle participant joined event
+                    return handleParticipantJoined(innerJson, json)
+                case .left:
+                    // Handle participant left event
+                    return handleParticipantLeft(innerJson, json)
+                case .typing:
+                    // Handle typing event
+                    return handleTyping(innerJson, json)
+                case .ended:
+                    // Handle chat ended event
+                    return handleChatEnded(innerJson, json)
+                default:
+                    print("Unknown event: \(String(describing: eventType))")
+                }
+            case .attachment:
+                return handleAttachment(innerJson, json)
+            case .messageMetadata:
+                return handleMetadata(innerJson, json)
+            }
+            
             return nil
         }
-                
-        let type = innerJson["Type"] as! String // MESSAGE, EVENT
-        if type == "MESSAGE" {
-            return handleMessage(innerJson, json)
-        } else if innerJson["ContentType"] as! String == ContentType.joined.rawValue {
-            return handleParticipantJoined(innerJson, json)
-        } else if innerJson["ContentType"] as! String == ContentType.left.rawValue {
-            return handleParticipantLeft(innerJson, json)
-        } else if innerJson["ContentType"] as! String == ContentType.typing.rawValue {
-            return handleTyping(innerJson, json)
-        } else if innerJson["ContentType"] as! String == ContentType.ended.rawValue {
-            return handleChatEnded(innerJson, json)
-        } else if innerJson["ContentType"] as! String == ContentType.metaData.rawValue {
-            return handleMetadata(innerJson, json)
-        }
-        
         return nil
     }
     
@@ -394,6 +416,39 @@ extension WebsocketManager {
             displayName: displayName,
             serializedContent: serializedContent
         )
+    }
+    
+    func handleAttachment(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem?  {
+        let participantRole = innerJson["ParticipantRole"] as! String
+        let messageId = innerJson["Id"] as! String
+        let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
+        
+        var attachmentName: String? = nil
+        var contentType: String? = nil
+        var attachmentId: String? = nil
+        if let attachmentsArray = innerJson["Attachments"] as? [[String: Any]],
+           let firstAttachment = attachmentsArray.first,
+           let firstAttachmentName = firstAttachment["AttachmentName"] as? String,
+           let firstAttachmentContentType = firstAttachment["ContentType"] as? String,
+           let firstAttachmentId = firstAttachment["AttachmentId"] as? String {
+            attachmentName = firstAttachmentName
+            contentType = firstAttachmentContentType
+            attachmentId = firstAttachmentId
+        } else {
+            print("Failed to access attachments")
+            return nil
+        }
+
+        let message = Message(
+            participant: participantRole,
+            text: attachmentName!,
+            contentType: contentType!,
+            timeStamp: time,
+            attachmentId: attachmentId,
+            messageID: messageId,
+            serializedContent: serializedContent
+        )
+        return message
     }
     
     func handleParticipantJoined(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {

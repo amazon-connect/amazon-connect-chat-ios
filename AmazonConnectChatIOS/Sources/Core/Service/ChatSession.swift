@@ -14,6 +14,8 @@ public protocol ChatSessionProtocol {
     func sendEvent(event: ContentType, content: String, completion: @escaping (Result<Void, Error>) -> Void)
     func sendReadReceipt(event: ContentType, messageId: String, completion: @escaping (Result<Void, Error>) -> Void)
     func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void)
+    func sendAttachment(file: URL, completion: @escaping (Result<Void, Error>) -> Void)
+    func downloadAttachment(attachmentId: String, filename: String, completion: @escaping (Result<URL?, Error>) -> Void)
     
     var onConnectionEstablished: (() -> Void)? { get set }
     var onConnectionBroken: (() -> Void)? { get set }
@@ -176,6 +178,34 @@ public class ChatSession: ChatSessionProtocol {
                 } else {
                     completion(.success(()))
                 }
+            }
+        }
+    }
+    
+    /// Sends an attachment within the chat session.
+    public func sendAttachment(file: URL, completion: @escaping (Result<Void, Error>) -> Void) {
+        chatService.sendAttachment(file: file) { success, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    SDKLogger.logger.logError("Error sending attachment: \(error.localizedDescription )")
+                    completion(.failure(error))
+                } else {
+                    completion(.success(()))
+                }
+            }
+        }
+    }
+    
+    /// Downloads an attachment given an attachment ID.
+    public func downloadAttachment(attachmentId: String, filename: String, completion: @escaping (Result<URL?, Error>) -> Void) {
+        chatService.downloadAttachment(attachmentId: attachmentId, filename: filename) { result in
+            switch result {
+            case .success(let localUrl):
+                print("Local URL: \(String(describing: localUrl))")
+                completion(.success(localUrl))
+            case .failure(let error):
+                print("Failed to download attachment \(error.localizedDescription)")
+                completion(.failure(error))
             }
         }
     }

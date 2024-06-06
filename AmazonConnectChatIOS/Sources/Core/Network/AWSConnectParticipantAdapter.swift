@@ -10,6 +10,9 @@ protocol AWSConnectParticipantProtocol {
     func sendMessage(_ request: AWSConnectParticipantSendMessageRequest?) -> AWSTask<AnyObject>
     func sendEvent(_ request: AWSConnectParticipantSendEventRequest?) -> AWSTask<AnyObject>
     func getTranscript(_ request: AWSConnectParticipantGetTranscriptRequest?) -> AWSTask<AWSConnectParticipantGetTranscriptResponse>
+    func startAttachmentUpload(_ request: AWSConnectParticipantStartAttachmentUploadRequest?) -> AWSTask<AWSConnectParticipantStartAttachmentUploadResponse>
+    func completeAttachmentUpload(_ request: AWSConnectParticipantCompleteAttachmentUploadRequest?) -> AWSTask<AWSConnectParticipantCompleteAttachmentUploadResponse>
+    func getAttachment(_ request: AWSConnectParticipantGetAttachmentRequest?) -> AWSTask<AWSConnectParticipantGetAttachmentResponse>
 }
 
 class AWSConnectParticipantAdapter: AWSConnectParticipantProtocol {
@@ -67,5 +70,26 @@ class AWSConnectParticipantAdapter: AWSConnectParticipantProtocol {
             return AWSTask(error: NSError(domain: "AWSConnectParticipantAdapter", code: 1001, userInfo: [NSLocalizedDescriptionKey: "Invalid request"]))
         }
         return participant.getTranscript(request)
+    }
+
+    func startAttachmentUpload(_ request: AWSConnectParticipantStartAttachmentUploadRequest?) -> AWSTask<AWSConnectParticipantStartAttachmentUploadResponse> {
+        guard let request = request else {
+            return AWSTask(error: NSError(domain: "AWSConnectParticipantAdapter", code: 1001, userInfo: [NSLocalizedDescriptionKey: "Invalid request"]))
+        }
+        return participant.startAttachmentUpload(request)
+    }
+    
+    func completeAttachmentUpload(_ request: AWSConnectParticipantCompleteAttachmentUploadRequest?) -> AWSTask<AWSConnectParticipantCompleteAttachmentUploadResponse> {
+        guard let request = request else {
+            return AWSTask(error: NSError(domain: "AWSConnectParticipantAdapter", code: 1001, userInfo: [NSLocalizedDescriptionKey: "Invalid request"]))
+        }
+        return participant.completeAttachmentUpload(request)
+    }
+    
+    func getAttachment(_ request: AWSConnectParticipantGetAttachmentRequest?) -> AWSTask<AWSConnectParticipantGetAttachmentResponse> {
+        guard let request = request else {
+            return AWSTask(error: NSError(domain: "AWSConnectParticipantAdapter", code: 1001, userInfo: [NSLocalizedDescriptionKey: "Invalid request"]))
+        }
+        return participant.getAttachment(request)
     }
 }

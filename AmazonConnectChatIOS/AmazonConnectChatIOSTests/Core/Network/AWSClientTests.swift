@@ -79,7 +79,7 @@ class AWSClientTests: XCTestCase {
     }
     
     // Test Create Participant Connection Success
-    func testCreateParticipantConnectionSuccess() {
+    func testCreateParticipantConnection_Success() {
         let response = AWSConnectParticipantCreateParticipantConnectionResponse()!
         response.websocket = AWSConnectParticipantWebsocket()
         response.websocket?.url = "wss://example.com"
@@ -89,12 +89,12 @@ class AWSClientTests: XCTestCase {
     }
     
     // Test Create Participant Connection Failure
-    func testCreateParticipantConnectionFailure() {
+    func testCreateParticipantConnection_Failure() {
         performCreateParticipantConnectionTest(expectedResult: .failure(MockAWSConnectParticipant.MockError.unexpected))
     }
     
     // Test Create Participant Connection Request Failure
-    func testCreateParticipantConnectionRequestCreationFailure() {
+    func testCreateParticipantConnection_RequestCreationFailure() {
         performCreateParticipantConnectionTest(expectedResult: .failure(AWSClient.AWSClientError.requestCreationFailed), simulateRequestFailure: true)
     }
     
@@ -124,17 +124,17 @@ class AWSClientTests: XCTestCase {
     }
     
     // Test Disconnect Participant Connection Success
-    func testDisconnectParticipantConnectionSuccess() {
+    func testDisconnectParticipantConnection_Success() {
         performDisconnectParticipantConnectionTest(expectedResult: .success(nil))
     }
     
     // Test Disconnect Participant Connection Failure
-    func testDisconnectParticipantConnectionFailure() {
+    func testDisconnectParticipantConnection_Failure() {
         performDisconnectParticipantConnectionTest(expectedResult: .failure(MockAWSConnectParticipant.MockError.unexpected))
     }
     
     // Test Disconnect Participant Connection Request Failure
-    func testDisconnectParticipantConnectionRequestCreationFailure() {
+    func testDisconnectParticipantConnection_RequestCreationFailure() {
         performDisconnectParticipantConnectionTest(expectedResult: .failure(AWSClient.AWSClientError.requestCreationFailed), simulateRequestFailure: true)
     }
     
@@ -164,17 +164,17 @@ class AWSClientTests: XCTestCase {
     }
     
     // Test Send Message Success
-    func testSendMessageSuccess() {
+    func testSendMessage_Success() {
         performSendMessageTest(expectedResult: .success(nil))
     }
     
     // Test Send Message Failure
-    func testSendMessageFailure() {
+    func testSendMessage_Failure() {
         performSendMessageTest(expectedResult: .failure(MockAWSConnectParticipant.MockError.unexpected))
     }
     
     // Test Send Message Request Failure
-    func testSendMessageRequestCreationFailure() {
+    func testSendMessage_RequestCreationFailure() {
         performSendMessageTest(expectedResult: .failure(AWSClient.AWSClientError.requestCreationFailed), simulateRequestFailure: true)
     }
     
@@ -204,17 +204,17 @@ class AWSClientTests: XCTestCase {
     }
     
     // Test Send Event Success
-    func testSendEventSuccess() {
+    func testSendEvent_Success() {
         performSendEventTest(expectedResult: .success(nil))
     }
     
     // Test Send Event Failure
-    func testSendEventFailure() {
+    func testSendEvent_Failure() {
         performSendEventTest(expectedResult: .failure(MockAWSConnectParticipant.MockError.unexpected))
     }
     
     // Test Send Event Request Failure
-    func testSendEventRequestCreationFailure() {
+    func testSendEvent_RequestCreationFailure() {
         performSendEventTest(expectedResult: .failure(AWSClient.AWSClientError.requestCreationFailed), simulateRequestFailure: true)
     }
     
@@ -241,7 +241,7 @@ class AWSClientTests: XCTestCase {
     }
     
     // Test Get Transcript Success
-    func testGetTranscriptSuccess() {
+    func testGetTranscript_Success() {
         let response = AWSConnectParticipantGetTranscriptResponse()!
         let item = AWSConnectParticipantItem()!
         item.content = "Hello"
@@ -250,19 +250,19 @@ class AWSClientTests: XCTestCase {
     }
     
     // Test Get Transcript Failure
-    func testGetTranscriptFailure() {
+    func testGetTranscript_Failure() {
         performGetTranscriptTest(expectedResult: .failure(MockAWSConnectParticipant.MockError.unexpected))
     }
     
     // Test Get Transcript No Result
-    func testGetTranscriptNoResult() {
+    func testGetTranscript_NoResultFailure() {
         mockClient.getTranscriptResult = .success(AWSConnectParticipantGetTranscriptResponse())
         let expectation = self.expectation(description: "GetTranscriptNoResult")
         
         awsClient.getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest()) { result in
             switch result {
-            case .success:
-                XCTFail("Expected failure, got success")
+            case .success(let response):
+                XCTFail("Expected failure, got unexpected success: \(String(describing: response))")
             case .failure(let error as NSError):
                 XCTAssertEqual(error.domain, "aws.amazon.com")
                 XCTAssertEqual(error.code, 1001)
@@ -275,7 +275,7 @@ class AWSClientTests: XCTestCase {
     }
     
     // Test Get Transcript Incorrect Type
-    func testGetTranscriptIncorrectType() {
+    func testGetTranscript_IncorrectTypeFailure() {
         let response = AWSConnectParticipantGetTranscriptResponse()!
         response.transcript = nil  // Simulate incorrect type
         mockClient.getTranscriptResult = .success(response)
@@ -283,8 +283,8 @@ class AWSClientTests: XCTestCase {
         
         awsClient.getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest()) { result in
             switch result {
-            case .success:
-                XCTFail("Expected failure, got success")
+            case .success(let response):
+                XCTFail("Expected failure, got unexpected success: \(String(describing: response))")
             case .failure(let error as NSError):
                 XCTAssertEqual(error.domain, "aws.amazon.com")
                 XCTAssertEqual(error.code, 1001)
@@ -293,6 +293,105 @@ class AWSClientTests: XCTestCase {
             }
         }
         
+        waitForExpectations(timeout: timeout, handler: nil)
+    }
+
+    func testStartAttachmentUpload_Success() {
+        let response = AWSConnectParticipantStartAttachmentUploadResponse()!
+        response.attachmentId = "12345"
+        mockClient.startAttachmentUploadResult = .success(response)
+        let expectation = self.expectation(description: "StartAttachmentUpload")
+        
+        awsClient.startAttachmentUpload(connectionToken: dummyToken, contentType: "text/plain", attachmentName: "sample.txt", attachmentSizeInBytes: 1000) { result in
+                switch result {
+                case .success(let expectedResponse):
+                    XCTAssertEqual(expectedResponse.attachmentId, response.attachmentId)
+                    expectation.fulfill()
+                case .failure(let error as NSError):
+                    XCTFail("Expected success, got unexpected failure: \(String(describing: error))")
+                }
+        }
+        waitForExpectations(timeout: timeout, handler: nil)
+    }
+    
+    func testStartAttachmentUpload_Failure() {
+        mockClient.startAttachmentUploadResult = .failure(MockAWSConnectParticipant.MockError.unexpected)
+        let expectation = self.expectation(description: "StartAttachmentUpload")
+        
+        awsClient.startAttachmentUpload(connectionToken: dummyToken, contentType: "text/plain", attachmentName: "sample.txt", attachmentSizeInBytes: 1000) { result in
+                switch result {
+                case .success(let response):
+                    XCTFail("Expected failure, got unexpected success: \(String(describing: response))")
+                case .failure(let error):
+                    XCTAssertEqual(error as NSError, MockAWSConnectParticipant.MockError.unexpected as NSError)
+                    expectation.fulfill()
+                }
+        }
+        waitForExpectations(timeout: timeout, handler: nil)
+    }
+    
+    func testCompleteAttachmentUpload_Success() {
+        let response = AWSConnectParticipantCompleteAttachmentUploadResponse()!
+        mockClient.completeAttachmnetUploadResult = .success(response)
+        let expectation = self.expectation(description: "CompleteAttachmentUpload")
+        
+        awsClient.completeAttachmentUpload(connectionToken: dummyToken, attachmentIds: ["12345"]) { result in
+                switch result {
+                case .success(let expectedResponse):
+                    expectation.fulfill()
+                case .failure(let error as NSError):
+                    XCTFail("Expected success, got unexpected failure: \(String(describing: error))")
+                }
+        }
+        waitForExpectations(timeout: timeout, handler: nil)
+    }
+    
+    func testCompleteAttachmentUpload_Failure() {
+        mockClient.completeAttachmnetUploadResult = .failure(MockAWSConnectParticipant.MockError.unexpected)
+        let expectation = self.expectation(description: "CompleteAttachmentUpload")
+        
+        awsClient.completeAttachmentUpload(connectionToken: dummyToken, attachmentIds: ["12345"]) { result in
+            switch result {
+            case .success(let response):
+                XCTFail("Expected failure, got unexpected success: \(String(describing: response))")
+            case .failure(let error as NSError):
+                XCTAssertEqual(error as NSError, MockAWSConnectParticipant.MockError.unexpected as NSError)
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: timeout, handler: nil)
+    }
+    
+    func testGetAttachment_Success() {
+        let response = AWSConnectParticipantGetAttachmentResponse()!
+        response.url = "https://www.example-s3-url.com"
+        mockClient.getAttachmentResult = .success(response)
+        let expectation = self.expectation(description: "CompleteAttachmentUpload")
+        
+        awsClient.getAttachment(connectionToken: dummyToken, attachmentId: "12345") { result in
+                switch result {
+                case .success(let expectedResponse):
+                    XCTAssertEqual(expectedResponse.url, response.url)
+                    expectation.fulfill()
+                case .failure(let error as NSError):
+                    XCTFail("Expected success, got unexpected failure: \(String(describing: error))")
+                }
+        }
+        waitForExpectations(timeout: timeout, handler: nil)
+    }
+    
+    func testGetAttachment_Failure() {
+        mockClient.getAttachmentResult = .failure(MockAWSConnectParticipant.MockError.unexpected)
+        let expectation = self.expectation(description: "GetAttachment")
+
+        awsClient.getAttachment(connectionToken: dummyToken, attachmentId: "12345") { result in
+                switch result {
+                case .success(let response):
+                    XCTFail("Expected failure, got unexpected success: \(String(describing: response))")
+                case .failure(let error as NSError):
+                    XCTAssertEqual(error as NSError, MockAWSConnectParticipant.MockError.unexpected as NSError)
+                    expectation.fulfill()                }
+        }
         waitForExpectations(timeout: timeout, handler: nil)
     }
 }

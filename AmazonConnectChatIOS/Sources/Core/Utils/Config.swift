@@ -7,6 +7,6 @@ import AWSCore
 // Temporary using this file untill we figure out how to separate sender and reciever based on thier name or role.
 
 class Config {
-    let isDevMode = false // TODO: Set up isDevMode
+    let isDevMode = true // TODO: Set up isDevMode
     let disableCsm = false // TODO: Set up disableCsm
 }
