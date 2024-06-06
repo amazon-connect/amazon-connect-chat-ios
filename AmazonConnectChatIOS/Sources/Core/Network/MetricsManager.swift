@@ -28,29 +28,23 @@ class MetricsManager {
             return
         }
         self.isMonitoring = true
-        DispatchQueue.main.async {
-            self.timer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: true) { _ in
-                if !self.metricList.isEmpty {
-                    self.apiClient.sendMetrics(metricsEndpoint: self.endpointUrl, metricList: self.metricList) { result in
-                        switch result {
-                        case .success:
-                            self.metricList = []
+        self.timer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: true) { _ in
+            if !self.metricList.isEmpty {
+                self.apiClient.sendMetrics(metricsEndpoint: self.endpointUrl, metricList: self.metricList) { result in
+                    switch result {
+                    case .success:
+                        self.metricList = []
+                        self.isMonitoring = false
+                        self.timer?.invalidate()
+                    case .failure(let error):
+                        if self.shouldRetry {
+                            self.shouldRetry = false
+                        } else {
                             self.isMonitoring = false
+                            self.shouldRetry = true
                             self.timer?.invalidate()
-                            print("Metrics sent")
-                        case .failure(let error):
-                            print("Error sending metrics:", error)
-                            if self.shouldRetry {
-                                self.shouldRetry = false
-                            } else {
-                                self.isMonitoring = false
-                                self.shouldRetry = true
-                                self.timer?.invalidate()
-                            }
                         }
                     }
-                } else {
-                    print("No metrics to send")
                 }
             }
         }
@@ -86,7 +80,7 @@ class MetricsManager {
             return
         }
         
-        self.metricList.append(metric)
+        self.metricList.insert(metric, at: 0)
         self.monitorAndSendMetrics()
     }
 }

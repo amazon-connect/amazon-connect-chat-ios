@@ -18,6 +18,20 @@ public enum ContentType: String {
     case interactiveText = "application/vnd.amazonaws.connect.message.interactive"
 }
 
+public enum MessageReceiptType: String {
+    case messageDelivered = "application/vnd.amazonaws.connect.event.message.delivered"
+    case messageRead = "application/vnd.amazonaws.connect.event.message.read"
+    
+    func toContentType() -> ContentType {
+        switch self {
+        case .messageDelivered:
+            return .messageDelivered
+        case .messageRead:
+            return .messageRead
+        }
+    }
+}
+
 public enum WebSocketMessageType: String {
     case message = "MESSAGE"
     case event = "EVENT"

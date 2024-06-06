@@ -12,7 +12,7 @@ public protocol ChatSessionProtocol {
     func disconnect(completion: @escaping (Result<Void, Error>) -> Void)
     func sendMessage(contentType: ContentType, message: String, completion: @escaping (Result<Void, Error>) -> Void)
     func sendEvent(event: ContentType, content: String, completion: @escaping (Result<Void, Error>) -> Void)
-    func sendReadReceipt(event: ContentType, messageId: String, completion: @escaping (Result<Void, Error>) -> Void)
+    func sendMessageReceipt(event: MessageReceiptType, messageId: String, completion: @escaping (Result<Void, Error>) -> Void)
     func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void)
     func sendAttachment(file: URL, completion: @escaping (Result<Void, Error>) -> Void)
     func downloadAttachment(attachmentId: String, filename: String, completion: @escaping (Result<URL?, Error>) -> Void)
@@ -169,15 +169,15 @@ public class ChatSession: ChatSessionProtocol {
     }
     
     /// Sends read receipt for a message.
-    public func sendReadReceipt(event: ContentType = .messageRead, messageId: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        let content = "{\"messageId\":\"\(messageId)\"}"
-        chatService.sendEvent(event: event, content: content) { success, error in
+    public func sendMessageReceipt(event: MessageReceiptType, messageId: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        chatService.sendMessageReceipt(event: event, messageId: messageId) { result in
             DispatchQueue.main.async {
-                if let error = error {
-                    SDKLogger.logger.logError("Error sending read receipt: \(error.localizedDescription)")
-                    completion(.failure(error))
-                } else {
+                switch result {
+                case .success():
                     completion(.success(()))
+                case .failure(let error):
+                    SDKLogger.logger.logError("Error sending message receipt: \(error.localizedDescription)")
+                    completion(.failure(error))
                 }
             }
         }

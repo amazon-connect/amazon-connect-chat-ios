@@ -11,6 +11,7 @@ class ChatServiceTests: XCTestCase {
     var mockAWSClient: MockAWSClient!
     var mockConnectionDetailsProvider: MockConnectionDetailsProvider!
     var mockWebsocketManager: MockWebsocketManager!
+    let expectedError = NSError(domain: "TestDomain", code: 1, userInfo: nil)
     
     override func setUp() {
         super.setUp()
@@ -28,6 +29,7 @@ class ChatServiceTests: XCTestCase {
         mockAWSClient = MockAWSClient()
         mockConnectionDetailsProvider = MockConnectionDetailsProvider()
         mockWebsocketManager = MockWebsocketManager()
+        mockConnectionDetailsProvider.mockConnectionDetails = createConnectionDetails()
     }
     
     private func setupChatService() {
@@ -165,14 +167,13 @@ class ChatServiceTests: XCTestCase {
     
     func testCreateChatSession_Failure() {
         let chatDetails = createChatDetails()
-        let expectedError = NSError(domain: "TestDomain", code: 1, userInfo: nil)
         mockAWSClient.createParticipantConnectionResult = .failure(expectedError)
         
         let expectation = self.expectation(description: "Chat session creation should fail")
         
         chatService.createChatSession(chatDetails: chatDetails) { success, error in
             XCTAssertFalse(success, "Chat session should not be created successfully")
-            XCTAssertEqual(error as NSError?, expectedError, "Should receive the expected error")
+            XCTAssertEqual(error as NSError?, self.expectedError, "Should receive the expected error")
             expectation.fulfill()
         }
         
@@ -180,9 +181,6 @@ class ChatServiceTests: XCTestCase {
     }
     
     func testDisconnectChatSession_Success() {
-        let connectionDetails = createConnectionDetails()
-        mockConnectionDetailsProvider.mockConnectionDetails = connectionDetails
-        
         let expectation = self.expectation(description: "Chat session should be disconnected successfully")
         mockAWSClient.disconnectParticipantConnectionResult = .success(true)
         
@@ -196,17 +194,13 @@ class ChatServiceTests: XCTestCase {
     }
     
     func testDisconnectChatSession_Failure() {
-        let connectionDetails = createConnectionDetails()
-        mockConnectionDetailsProvider.mockConnectionDetails = connectionDetails
-        
-        let expectedError = NSError(domain: "TestDomain", code: 1, userInfo: nil)
         mockAWSClient.disconnectParticipantConnectionResult = .failure(expectedError)
         
         let expectation = self.expectation(description: "Chat session disconnection should fail")
         
         chatService.disconnectChatSession { success, error in
             XCTAssertFalse(success, "Chat session should not be disconnected successfully")
-            XCTAssertEqual(error as NSError?, expectedError, "Should receive the expected error")
+            XCTAssertEqual(error as NSError?, self.expectedError, "Should receive the expected error")
             expectation.fulfill()
         }
         
@@ -232,8 +226,6 @@ class ChatServiceTests: XCTestCase {
     func testSendMessage_Success() {
         let message = "Test message"
         let contentType = ContentType.plainText
-        let connectionDetails = createConnectionDetails()
-        mockConnectionDetailsProvider.mockConnectionDetails = connectionDetails
         mockAWSClient.sendMessageResult = .success(true)
         
         let expectation = self.expectation(description: "Message should be sent successfully")
@@ -250,16 +242,13 @@ class ChatServiceTests: XCTestCase {
     func testSendMessage_Failure() {
         let message = "Test message"
         let contentType = ContentType.plainText
-        let expectedError = NSError(domain: "TestDomain", code: 1, userInfo: nil)
-        let connectionDetails = createConnectionDetails()
-        mockConnectionDetailsProvider.mockConnectionDetails = connectionDetails
         mockAWSClient.sendMessageResult = .failure(expectedError)
         
         let expectation = self.expectation(description: "Message sending should fail")
         
         chatService.sendMessage(contentType: contentType, message: message) { success, error in
             XCTAssertFalse(success, "Message should not be sent successfully")
-            XCTAssertEqual(error as NSError?, expectedError, "Should receive the expected error")
+            XCTAssertEqual(error as NSError?, self.expectedError, "Should receive the expected error")
             expectation.fulfill()
         }
         
@@ -285,8 +274,6 @@ class ChatServiceTests: XCTestCase {
     func testSendEvent_Success() {
         let event = ContentType.typing
         let content = "Test event"
-        let connectionDetails = createConnectionDetails()
-        mockConnectionDetailsProvider.mockConnectionDetails = connectionDetails
         mockAWSClient.sendEventResult = .success(true)
         
         let expectation = self.expectation(description: "Event should be sent successfully")
@@ -303,16 +290,13 @@ class ChatServiceTests: XCTestCase {
     func testSendEvent_Failure() {
         let event = ContentType.typing
         let content = "Test event"
-        let expectedError = NSError(domain: "TestDomain", code: 1, userInfo: nil)
-        let connectionDetails = createConnectionDetails()
-        mockConnectionDetailsProvider.mockConnectionDetails = connectionDetails
         mockAWSClient.sendEventResult = .failure(expectedError)
         
         let expectation = self.expectation(description: "Event sending should fail")
         
         chatService.sendEvent(event: event, content: content) { success, error in
             XCTAssertFalse(success, "Event should not be sent successfully")
-            XCTAssertEqual(error as NSError?, expectedError, "Should receive the expected error")
+            XCTAssertEqual(error as NSError?, self.expectedError, "Should receive the expected error")
             expectation.fulfill()
         }
         
@@ -335,11 +319,218 @@ class ChatServiceTests: XCTestCase {
         waitForExpectations(timeout: 1)
     }
     
+    func testSendEvent_TypingEventThrottling() {
+        let event = ContentType.typing
+        let content = "Test event"
+        mockAWSClient.sendEventResult = .success(true)
+        
+        let expectation = self.expectation(description: "Typing event should only be sent once if two typing events occur")
+        
+        chatService.sendEvent(event: event, content: content) { success, error in
+            XCTAssertTrue(success, "Event should be sent successfully")
+            XCTAssertNil(error, "Error should be nil")
+            XCTAssertEqual(self.mockAWSClient.numTypingEventCalled, 1)
+        }
+        chatService.sendEvent(event: event, content: content) { success, error in
+            XCTAssertTrue(success, "Event should be sent successfully")
+            XCTAssertNil(error, "Error should be nil")
+            XCTAssertEqual(self.mockAWSClient.numTypingEventCalled, 1)
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 1)
+    }
+    
+    func testSendMessageReceipt_Success() {
+        let expectation = self.expectation(description: "SendMessageReceipt succeeds")
+        
+        let mockChatService = MockChatService()
+        mockChatService.mockSendMessageReceipt = false
+        
+        let mockMessageReceiptsManager = MockMessageReceiptsManager()
+        var pendingMessageReceipts = PendingMessageReceipts(readReceiptMessageId: "67890", deliveredReceiptMessageId: "12345")
+
+        mockMessageReceiptsManager.throttleAndSendMessageReceiptResult = .success(pendingMessageReceipts)
+        mockChatService.messageReceiptsManager = mockMessageReceiptsManager
+        mockChatService.sendPendingMessageReceiptsResult = .success(.messageRead)
+        
+        
+        
+        mockChatService.sendMessageReceipt(event: .messageRead, messageId: "12345") { result in
+            switch result {
+            case .success:
+                XCTAssertEqual(mockMessageReceiptsManager.numThrottleAndSendMessageReceiptCalled, 1)
+                XCTAssertEqual(mockChatService.numSendPendingMessageReceiptsCalled, 1)
+                expectation.fulfill()
+                break
+            case .failure(let error):
+                XCTFail("Expected success, got unexpected failure: \(String(describing: error))")
+            }
+        }
+
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+    
+    func testSendMessageReceipt_MessageReceiptsManagerFailure() {
+        let expectation = self.expectation(description: "SendMessageReceipt fails when throttleAndSendMessageReceipt fails")
+        
+        let mockChatService = MockChatService()
+        mockChatService.mockSendMessageReceipt = false
+        let mockMessageReceiptsManager = MockMessageReceiptsManager()
+        mockMessageReceiptsManager.throttleAndSendMessageReceiptResult = .failure(expectedError)
+        mockChatService.messageReceiptsManager = mockMessageReceiptsManager
+        
+        
+        mockChatService.sendMessageReceipt(event: .messageRead, messageId: "12345") { result in
+            switch result {
+            case .success:
+                XCTFail("Expected failure, got unexpected success")
+                break
+            case .failure(let error):
+                XCTAssertEqual(mockMessageReceiptsManager.numThrottleAndSendMessageReceiptCalled, 1)
+                XCTAssertEqual(mockChatService.numSendPendingMessageReceiptsCalled, 0)
+                XCTAssertEqual(error as NSError, self.expectedError)
+                expectation.fulfill()
+            }
+        }
+
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+    
+    func testSendMessageReceipt_SendPendingMessagesFailure() {
+        let expectation = self.expectation(description: "SendMessageReceipt fails when sendPendingMessageReceipts fails")
+                
+        let mockChatService = MockChatService()
+        mockChatService.mockSendMessageReceipt = false
+        
+        let mockMessageReceiptsManager = MockMessageReceiptsManager()
+        var pendingMessageReceipts = PendingMessageReceipts(readReceiptMessageId: "67890", deliveredReceiptMessageId: "12345")
+
+        mockMessageReceiptsManager.throttleAndSendMessageReceiptResult = .success(pendingMessageReceipts)
+        mockChatService.messageReceiptsManager = mockMessageReceiptsManager
+        mockChatService.sendPendingMessageReceiptsResult = .failure(expectedError)
+        
+        
+        mockChatService.sendMessageReceipt(event: .messageRead, messageId: "12345") { result in
+            switch result {
+            case .success:
+                XCTFail("Expected failure, got unexpected success")
+                break
+            case .failure(let error):
+                XCTAssertEqual(mockMessageReceiptsManager.numThrottleAndSendMessageReceiptCalled, 1)
+                XCTAssertEqual(mockChatService.numSendPendingMessageReceiptsCalled, 1)
+                XCTAssertEqual(error as NSError, self.expectedError)
+                expectation.fulfill()
+            }
+        }
+
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+    
+    func testSendPendingMessageReceipts_ReadSucccess() {
+        let expectation = self.expectation(description: "SendPendingMessageReceipts read receipt succeeds")
+                
+        let mockChatService = MockChatService()
+        mockChatService.mockSendPendingMessageReceipts = false
+        mockChatService.sendEventResult = (true, nil)
+        var pendingMessageReceipts = PendingMessageReceipts(readReceiptMessageId: "67890")
+        
+        mockChatService.sendPendingMessageReceipts(pendingMessageReceipts: pendingMessageReceipts) { result in
+            switch result {
+            case .success(let messageReceiptType):
+                XCTAssertEqual(mockChatService.numSendEventCalled, 1)
+                XCTAssertEqual(messageReceiptType, .messageRead)
+                expectation.fulfill()
+                break
+            case .failure(let error):
+                XCTFail("Expected success, got unexpected failure: \(String(describing: error))")
+            }
+        }
+
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+    
+    func testSendPendingMessageReceipts_DeliveredSucccess() {
+        let expectation = self.expectation(description: "SendPendingMessageReceipts delivered receipt succeeds")
+                
+        let mockChatService = MockChatService()
+        mockChatService.mockSendPendingMessageReceipts = false
+        mockChatService.sendEventResult = (true, nil)
+        var pendingMessageReceipts = PendingMessageReceipts(deliveredReceiptMessageId: "12345")
+        
+        mockChatService.sendPendingMessageReceipts(pendingMessageReceipts: pendingMessageReceipts) { result in
+            switch result {
+            case .success(let messageReceiptType):
+                XCTAssertEqual(mockChatService.numSendEventCalled, 1)
+                XCTAssertEqual(messageReceiptType, .messageDelivered)
+                expectation.fulfill()
+                break
+            case .failure(let error):
+                XCTFail("Expected success, got unexpected failure: \(String(describing: error))")
+            }
+        }
+
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+    
+    func testSendPendingMessageReceipts_ReadDeliveredSucccess() {
+        let expectation = self.expectation(description: "SendPendingMessageReceipts delivered receipt succeeds")
+                
+        let mockChatService = MockChatService()
+        mockChatService.mockSendPendingMessageReceipts = false
+        mockChatService.sendEventResult = (true, nil)
+        var pendingMessageReceipts = PendingMessageReceipts(readReceiptMessageId: "67890", deliveredReceiptMessageId: "12345")
+        
+        var firstCompletion = false
+        
+        mockChatService.sendPendingMessageReceipts(pendingMessageReceipts: pendingMessageReceipts) { result in
+            switch result {
+            case .success(let messageReceiptType):
+                if !firstCompletion {
+                    XCTAssertEqual(messageReceiptType, .messageRead)
+                    firstCompletion = true
+                } else {
+                    XCTAssertEqual(mockChatService.numSendEventCalled, 2)
+                    XCTAssertEqual(messageReceiptType, .messageDelivered)
+                    expectation.fulfill()
+                }
+
+                break
+            case .failure(let error):
+                XCTFail("Expected success, got unexpected failure: \(String(describing: error))")
+            }
+        }
+
+        waitForExpectations(timeout: 2.0, handler: nil)
+    }
+    
+    func testSendPendingMessageReceipts_Failure() {
+        let expectation = self.expectation(description: "SendPendingMessageReceipts fails")
+                
+        let mockChatService = MockChatService()
+        mockChatService.mockSendPendingMessageReceipts = false
+        mockChatService.sendEventResult = (false, expectedError)
+        var pendingMessageReceipts = PendingMessageReceipts(deliveredReceiptMessageId: "12345")
+        
+        mockChatService.sendPendingMessageReceipts(pendingMessageReceipts: pendingMessageReceipts) { result in
+            switch result {
+            case .success(let messageReceiptType):
+                XCTFail("Expected failure, got unexpected success: \(String(describing: messageReceiptType))")
+                break
+            case .failure(let error):
+                XCTAssertEqual(mockChatService.numSendEventCalled, 1)
+                XCTAssertEqual(error as NSError, self.expectedError)
+                expectation.fulfill()
+            }
+        }
+
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+    
     func testGetTranscript_Success() {
         let chatDetails = createChatDetails()
-        let connectionDetails = createConnectionDetails()
-        mockAWSClient.createParticipantConnectionResult = .success(connectionDetails)
-        mockConnectionDetailsProvider.mockConnectionDetails = connectionDetails
+        
+        mockAWSClient.createParticipantConnectionResult = .success(createConnectionDetails())
         
         let transcriptItem = AWSConnectParticipantItem()
         transcriptItem!.content = "testContent"
@@ -374,9 +565,6 @@ class ChatServiceTests: XCTestCase {
 
     
     func testGetTranscript_Failure() {
-        let expectedError = NSError(domain: "TestDomain", code: 1, userInfo: nil)
-        let connectionDetails = createConnectionDetails()
-        mockConnectionDetailsProvider.mockConnectionDetails = connectionDetails
         mockAWSClient.getTranscriptResult = .failure(expectedError)
         
         let expectation = self.expectation(description: "Transcript retrieval should fail")
@@ -386,7 +574,7 @@ class ChatServiceTests: XCTestCase {
             case .success(_):
                 XCTFail("Unexpected success")
             case .failure(let error):
-                XCTAssertEqual(error as NSError?, expectedError, "Should receive the expected error")
+                XCTAssertEqual(error as NSError?, self.expectedError, "Should receive the expected error")
             }
             expectation.fulfill()
         }
@@ -439,15 +627,22 @@ class ChatServiceTests: XCTestCase {
         let expectation = self.expectation(description: "SendAttachment succeeds")
         TestUtils.writeSampleTextToUrl(url: TestConstants.testFileUrl)
         
-        let mockAttachmentManager = MockAttachmentManager()
+        let mockAttachmentManager = MockChatService()
         let mockAPIClient = MockAPIClient()
         mockAttachmentManager.apiClient = mockAPIClient
+        mockAttachmentManager.mockSendAttachment = false
+        
+        let mockResponse = AWSConnectParticipantStartAttachmentUploadResponse()
+        mockResponse!.attachmentId = "mockAttachmentId"
+        mockAttachmentManager.startAttachmentUploadResult = .success(mockResponse!)
+        mockAttachmentManager.completeAttachmentUploadResult = (true, nil)
+        
         mockAttachmentManager.sendAttachment(file: TestConstants.testFileUrl) { success, error in
             XCTAssertTrue(success)
             XCTAssertNil(error)
-            XCTAssertTrue(mockAttachmentManager.startAttachmentUploadCalled)
+            XCTAssertEqual(mockAttachmentManager.numStartAttachmentUploadCalled, 1)
             XCTAssertTrue(mockAPIClient.uploadAttachmentCalled)
-            XCTAssertTrue(mockAttachmentManager.completeAttachmentUploadCalled)
+            XCTAssertEqual(mockAttachmentManager.numCompleteAttachmentUploadCalled, 1)
             expectation.fulfill()
         }
 
@@ -466,16 +661,17 @@ class ChatServiceTests: XCTestCase {
             print("Failed to create file: \(error.localizedDescription)")
             return
         }
-        let mockAttachmentManager = MockAttachmentManager()
+        let mockAttachmentManager = MockChatService()
         let mockAPIClient = MockAPIClient()
         mockAttachmentManager.apiClient = mockAPIClient
+        mockAttachmentManager.mockSendAttachment = false
         mockAttachmentManager.sendAttachment(file: fileUrl) { success, error in
             self.tearDownTempFile(url: fileUrl)
             XCTAssertFalse(success)
             XCTAssertEqual(error?.localizedDescription, "Could not parse MIME type from file URL")
-            XCTAssertFalse(mockAttachmentManager.startAttachmentUploadCalled)
+            XCTAssertEqual(mockAttachmentManager.numStartAttachmentUploadCalled, 0)
             XCTAssertFalse(mockAPIClient.uploadAttachmentCalled)
-            XCTAssertFalse(mockAttachmentManager.completeAttachmentUploadCalled)
+            XCTAssertEqual(mockAttachmentManager.numCompleteAttachmentUploadCalled, 0)
             expectation.fulfill()
         }
 
@@ -494,16 +690,17 @@ class ChatServiceTests: XCTestCase {
             print("Failed to create file: \(error.localizedDescription)")
             return
         }
-        let mockAttachmentManager = MockAttachmentManager()
+        let mockAttachmentManager = MockChatService()
         let mockAPIClient = MockAPIClient()
         mockAttachmentManager.apiClient = mockAPIClient
+        mockAttachmentManager.mockSendAttachment = false
         mockAttachmentManager.sendAttachment(file: fileUrl) { success, error in
             self.tearDownTempFile(url: fileUrl)
             XCTAssertFalse(success)
             XCTAssertEqual(error?.localizedDescription, "image/webp is not a supported file type")
-            XCTAssertFalse(mockAttachmentManager.startAttachmentUploadCalled)
+            XCTAssertEqual(mockAttachmentManager.numStartAttachmentUploadCalled, 0)
             XCTAssertFalse(mockAPIClient.uploadAttachmentCalled)
-            XCTAssertFalse(mockAttachmentManager.completeAttachmentUploadCalled)
+            XCTAssertEqual(mockAttachmentManager.numCompleteAttachmentUploadCalled, 0)
             expectation.fulfill()
         }
 
@@ -513,15 +710,16 @@ class ChatServiceTests: XCTestCase {
     func testSendAttachment_InvalidFileSizeFailure() {
         let expectation = self.expectation(description: "SendAttachment fails due to invalid file size")
 
-        let mockAttachmentManager = MockAttachmentManager()
+        let mockAttachmentManager = MockChatService()
         let mockAPIClient = MockAPIClient()
         mockAttachmentManager.apiClient = mockAPIClient
+        mockAttachmentManager.mockSendAttachment = false
         mockAttachmentManager.sendAttachment(file: TestConstants.testFileUrl) { success, error in
             XCTAssertFalse(success)
             XCTAssertEqual(error?.localizedDescription, "Could not get valid file size")
-            XCTAssertFalse(mockAttachmentManager.startAttachmentUploadCalled)
+            XCTAssertEqual(mockAttachmentManager.numStartAttachmentUploadCalled, 0)
             XCTAssertFalse(mockAPIClient.uploadAttachmentCalled)
-            XCTAssertFalse(mockAttachmentManager.completeAttachmentUploadCalled)
+            XCTAssertEqual(mockAttachmentManager.numCompleteAttachmentUploadCalled, 0)
             expectation.fulfill()
         }
 
@@ -532,8 +730,6 @@ class ChatServiceTests: XCTestCase {
         let expectation = self.expectation(description: "StartAttachmentUpload succeeds")
         let response = AWSConnectParticipantStartAttachmentUploadResponse()
         mockAWSClient.startAttachmentUploadResult = .success(response!)
-        let connectionDetails = createConnectionDetails()
-        mockConnectionDetailsProvider.mockConnectionDetails = connectionDetails
         
         chatService.startAttachmentUpload(contentType: "text/plain", attachmentName: "sample.txt", attachmentSizeInBytes: 1000) { result in
             switch result {
@@ -550,17 +746,14 @@ class ChatServiceTests: XCTestCase {
     
     func testStartAttachmentUpload_Failure() {
         let expectation = self.expectation(description: "StartAttachmentUpload fails")
-        let expectedError = NSError(domain: "TestDomain", code: 1, userInfo: nil)
         mockAWSClient.startAttachmentUploadResult = .failure(expectedError)
-        let connectionDetails = createConnectionDetails()
-        mockConnectionDetailsProvider.mockConnectionDetails = connectionDetails
         
         chatService.startAttachmentUpload(contentType: "text/plain", attachmentName: "sample.txt", attachmentSizeInBytes: 1000) { result in
             switch result {
             case .success(let startAttachmentResponse):
                 XCTFail("Expected failure, got unexpected success: \(String(describing: startAttachmentResponse))")
             case .failure(let error):
-                XCTAssertEqual(error as NSError?, expectedError)
+                XCTAssertEqual(error as NSError?, self.expectedError)
                 expectation.fulfill()
             }
         }
@@ -572,8 +765,6 @@ class ChatServiceTests: XCTestCase {
         let expectation = self.expectation(description: "CompleteAttachmentUpload succeeds")
         let response = AWSConnectParticipantCompleteAttachmentUploadResponse()
         mockAWSClient.completeAttachmentUploadResult = .success(response!)
-        let connectionDetails = createConnectionDetails()
-        mockConnectionDetailsProvider.mockConnectionDetails = connectionDetails
         
         chatService.completeAttachmentUpload(attachmentIds: ["12345"]) { success, error in
             if success {
@@ -590,16 +781,13 @@ class ChatServiceTests: XCTestCase {
     
     func testCompleteAttachmentUpload_Failure() {
         let expectation = self.expectation(description: "CompleteAttachmentUpload fails")
-        let expectedError = NSError(domain: "TestDomain", code: 1, userInfo: nil)
         mockAWSClient.completeAttachmentUploadResult = .failure(expectedError)
-        let connectionDetails = createConnectionDetails()
-        mockConnectionDetailsProvider.mockConnectionDetails = connectionDetails
         
         chatService.completeAttachmentUpload(attachmentIds: ["12345"]) { success, error in
             if success {
                 XCTFail("Expected success, got unexpected success")
             } else if error != nil {
-                XCTAssertEqual(error as NSError?, expectedError)
+                XCTAssertEqual(error as NSError?, self.expectedError)
                 expectation.fulfill()
             } else {
                 XCTFail("Expected success, got unexpected result")
@@ -611,10 +799,6 @@ class ChatServiceTests: XCTestCase {
     
     func testGetAttachmentDownloadUrl_Success() {
         let expectation = self.expectation(description: "GetAttachmentDownloadUrl succeeds")
-        let expectedError = NSError(domain: "TestDomain", code: 1, userInfo: nil)
-
-        let connectionDetails = createConnectionDetails()
-        mockConnectionDetailsProvider.mockConnectionDetails = connectionDetails
         guard let response = AWSConnectParticipantGetAttachmentResponse() else {
             XCTFail("AWSConnectParticipantGetAttachmentResponse returned nil")
             return
@@ -639,10 +823,7 @@ class ChatServiceTests: XCTestCase {
     
     func testGetAttachmentDownloadUrl_Failure() {
         let expectation = self.expectation(description: "GetAttachmentDownloadUrl fails")
-        let expectedError = NSError(domain: "TestDomain", code: 1, userInfo: nil)
 
-        let connectionDetails = createConnectionDetails()
-        mockConnectionDetailsProvider.mockConnectionDetails = connectionDetails
         guard let response = AWSConnectParticipantGetAttachmentResponse() else {
             XCTFail("AWSConnectParticipantGetAttachmentResponse returned nil")
             return
@@ -657,7 +838,7 @@ class ChatServiceTests: XCTestCase {
             case .success(let url):
                 XCTFail("Expected failure, got unexpected success: \(url.absoluteString)")
             case .failure(let error):
-                XCTAssertEqual(error as NSError, expectedError)
+                XCTAssertEqual(error as NSError, self.expectedError)
                 expectation.fulfill()
             }
         }
@@ -666,7 +847,7 @@ class ChatServiceTests: XCTestCase {
     }
     
     func testDownloadAttachment_Success() {
-        let expectation = self.expectation(description: "StartAttachmentUpload succeeds")
+        let expectation = self.expectation(description: "downloadAttachment succeeds")
         guard let response = AWSConnectParticipantGetAttachmentResponse() else {
             XCTFail("AWSConnectParticipantGetAttachmentResponse returned nil")
             return
@@ -675,19 +856,24 @@ class ChatServiceTests: XCTestCase {
         response.url = "https://www.test-endpoint.com"
         mockAWSClient.getAttachmentResult = .success(response)
 
-        let connectionDetails = createConnectionDetails()
-        mockConnectionDetailsProvider.mockConnectionDetails = connectionDetails
-
-        let mockAttachmentManager = MockAttachmentManager(
+        let mockAttachmentManager = MockChatService(
             awsClient: mockAWSClient,
             connectionDetailsProvider: mockConnectionDetailsProvider,
             websocketManagerFactory: { _ in self.mockWebsocketManager }
         )
         
+        let sampleUrlString = "https://www.example.com"
+        let sampleUrl = URL(string: sampleUrlString)!
+        
+        mockAttachmentManager.mockDownloadAttachment = false
+        mockAttachmentManager.getAttachmentDownloadUrlResult = .success(sampleUrl)
+        
+        mockAttachmentManager.downloadFileResult = (sampleUrl, nil)
+        
         mockAttachmentManager.downloadAttachment(attachmentId: "12345", filename: "sample.txt") { result in
             switch result {
             case .success(let url):
-                XCTAssertEqual(url.absoluteString, response.url)
+                XCTAssertEqual(url.absoluteString, sampleUrlString)
                 expectation.fulfill()
             case .failure(let error):
                 XCTFail("Expected success, got unexpected failure: \(String(describing: error))")
@@ -700,19 +886,14 @@ class ChatServiceTests: XCTestCase {
     func testDownloadAttachment_Failure() {
         let expectation = self.expectation(description: "StartAttachmentUpload fails")
         
-        let expectedError = NSError(domain: "TestDomain", code: 1, userInfo: nil)
         mockAWSClient.getAttachmentResult = .failure(expectedError)
-
-        let connectionDetails = createConnectionDetails()
-        mockConnectionDetailsProvider.mockConnectionDetails = connectionDetails
-
         
         chatService.downloadAttachment(attachmentId: "12345", filename: "sample.txt") { result in
             switch result {
             case .success(let url):
                 XCTFail("Expected failure, got unexpected success: \(url.absoluteString)")
             case .failure(let error):
-                XCTAssertEqual(error as NSError, expectedError)
+                XCTAssertEqual(error as NSError, self.expectedError)
                 expectation.fulfill()
             }
         }
@@ -747,7 +928,6 @@ class ChatServiceTests: XCTestCase {
     
     func testDownloadFile_ErrorFailure() {
         let expectation = self.expectation(description: "DownloadFile fails")
-        let expectedError = NSError(domain: "TestDomain", code: 1, userInfo: nil)
 
         TestUtils.writeSampleTextToUrl(url: TestConstants.testFileUrl)
     
@@ -760,7 +940,7 @@ class ChatServiceTests: XCTestCase {
                 XCTFail("Expected failure, got unexpected success: \(localUrl.absoluteString)")
                 expectation.fulfill()
             } else if let error = error {
-                XCTAssertEqual(error as NSError, expectedError)
+                XCTAssertEqual(error as NSError, self.expectedError)
                 expectation.fulfill()
             }
         }
