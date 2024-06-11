@@ -1,0 +1,60 @@
+name: Build and Test Amazon Connect Chat SDK for iOS
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./AmazonConnectChatIOS
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: 'latest'
+
+    - name: Install CocoaPods
+      run: sudo gem install cocoapods
+
+    - name: Install Pods
+      run: pod install
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7
+
+    - name: Install xcpretty
+      run: gem install xcpretty
+
+    - name: Clean and Build SDK
+      run: |
+        echo "::group::Clean and Build SDK"
+        xcodebuild clean -workspace AmazonConnectChatIOS.xcworkspace \
+                         -scheme AmazonConnectChatIOS \
+                         -sdk iphonesimulator \
+                         -configuration Debug \
+                         build
+        echo "::endgroup::"
+    - name: Run Unit Tests
+      run: |
+        echo "::group::Run Unit Tests"
+        xcodebuild test -workspace AmazonConnectChatIOS.xcworkspace \
+                        -scheme AmazonConnectChatIOS \
+                        -sdk iphonesimulator \
+                        -destination 'platform=iOS Simulator,name=iPhone 12,OS=latest' \
+                        -configuration Debug \
+                        -enableCodeCoverage YES \
+                        2>&1 | xcpretty --color --simple
+        echo "::endgroup::"
