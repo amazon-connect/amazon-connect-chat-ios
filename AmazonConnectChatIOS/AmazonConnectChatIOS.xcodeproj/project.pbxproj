@@ -64,27 +64,6 @@
 			remoteGlobalIDString = 7E58A5D32BB5F3DA00965327;
 			remoteInfo = AmazonConnectChatIOS;
 		};
-		7E6C0E3D2BFEE769000D07AF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 7E6C0E372BFEE769000D07AF /* iOSChatExample.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7E9159142BBE674100821C05;
-			remoteInfo = iOSChatExample;
-		};
-		7E6C0E3F2BFEE769000D07AF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 7E6C0E372BFEE769000D07AF /* iOSChatExample.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7E9159242BBE674200821C05;
-			remoteInfo = iOSChatExampleTests;
-		};
-		7E6C0E412BFEE769000D07AF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 7E6C0E372BFEE769000D07AF /* iOSChatExample.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7E91592E2BBE674200821C05;
-			remoteInfo = iOSChatExampleUITests;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -121,7 +100,6 @@
 		7E58A6222BBDDBF900965327 /* ChatSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSession.swift; sourceTree = "<group>"; };
 		7E58A6262BBDDE4A00965327 /* AWSClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWSClient.swift; sourceTree = "<group>"; };
 		7E58A6282BBE415700965327 /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
-		7E6C0E372BFEE769000D07AF /* iOSChatExample.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = iOSChatExample.xcodeproj; path = "../../../workplace/amazon-connect-chat-ui-examples/mobileChatExamples/iOSChatExample/iOSChatExample.xcodeproj"; sourceTree = "<group>"; };
 		7E91597A2BC0A92E00821C05 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		7EC0A21A2BC79D7A00DB47F4 /* WebSocketManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocketManager.swift; sourceTree = "<group>"; };
 		7ED5DEC12BEAF933001693FC /* TranscriptItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptItem.swift; sourceTree = "<group>"; };
@@ -211,7 +189,6 @@
 		7E58A5CA2BB5F3DA00965327 = {
 			isa = PBXGroup;
 			children = (
-				7E6C0E372BFEE769000D07AF /* iOSChatExample.xcodeproj */,
 				7E58A5EE2BB5F71500965327 /* Sources */,
 				7E2336DF2BFE7D7400E6C4B7 /* AmazonConnectChatIOSTests */,
 				7E58A5D62BB5F3DA00965327 /* AmazonConnectChatIOS */,
@@ -333,16 +310,6 @@
 			path = Service;
 			sourceTree = "<group>";
 		};
-		7E6C0E382BFEE769000D07AF /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				7E6C0E3E2BFEE769000D07AF /* iOSChatExample.app */,
-				7E6C0E402BFEE769000D07AF /* iOSChatExampleTests.xctest */,
-				7E6C0E422BFEE769000D07AF /* iOSChatExampleUITests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		93067FFD20E434157B7197A6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -445,12 +412,6 @@
 			mainGroup = 7E58A5CA2BB5F3DA00965327;
 			productRefGroup = 7E58A5D52BB5F3DA00965327 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 7E6C0E382BFEE769000D07AF /* Products */;
-					ProjectRef = 7E6C0E372BFEE769000D07AF /* iOSChatExample.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				7E58A5D32BB5F3DA00965327 /* AmazonConnectChatIOS */,
@@ -458,30 +419,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		7E6C0E3E2BFEE769000D07AF /* iOSChatExample.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = iOSChatExample.app;
-			remoteRef = 7E6C0E3D2BFEE769000D07AF /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		7E6C0E402BFEE769000D07AF /* iOSChatExampleTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = iOSChatExampleTests.xctest;
-			remoteRef = 7E6C0E3F2BFEE769000D07AF /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		7E6C0E422BFEE769000D07AF /* iOSChatExampleUITests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = iOSChatExampleUITests.xctest;
-			remoteRef = 7E6C0E412BFEE769000D07AF /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		7E58A5D22BB5F3DA00965327 /* Resources */ = {

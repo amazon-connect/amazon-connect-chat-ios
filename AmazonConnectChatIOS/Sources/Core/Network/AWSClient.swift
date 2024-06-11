@@ -35,7 +35,7 @@ protocol AWSClientProtocol {
     ///   - completion: Completion handler to handle the success status or error.
     func sendEvent(connectionToken: String, contentType: ContentType, content: String, completion: @escaping (Result<Bool, Error>) -> Void)
     
-    func getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Result<[AWSConnectParticipantItem], Error>) -> Void)
+    func getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Result<AWSConnectParticipantGetTranscriptResponse, Error>) -> Void)
 }
 
 /// AWSClient manages the interactions with AWS Connect Participant service.
@@ -62,10 +62,6 @@ class AWSClient: AWSClientProtocol {
     var sendEventRequest: () -> AWSConnectParticipantSendEventRequest? = {
         AWSConnectParticipantSendEventRequest()
     }
-    var getTranscriptRequest: () -> AWSConnectParticipantGetTranscriptRequest? = {
-        AWSConnectParticipantGetTranscriptRequest()
-    }
-    
     
     private init() {}
     
@@ -172,13 +168,8 @@ class AWSClient: AWSClientProtocol {
         })
     }
     
-    func getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Result<[AWSConnectParticipantItem], Error>) -> Void) {
-        guard let request = getTranscriptRequest() else {
-            completion(.failure(AWSClientError.requestCreationFailed))
-            return
-        }
-        
-        connectParticipantClient?.getTranscript(request).continueWith { (task) -> AnyObject? in
+    func getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Result<AWSConnectParticipantGetTranscriptResponse, Error>) -> Void) {
+        connectParticipantClient?.getTranscript(getTranscriptArgs).continueWith { (task) -> AnyObject? in
             if let error = task.error {
                 print("Error in getting transcript: \(error.localizedDescription)")
                 completion(.failure(error))
@@ -193,7 +184,7 @@ class AWSClient: AWSClientProtocol {
                 completion(.failure(error))
                 return nil
             }
-            completion(.success(transcriptItems))
+            completion(.success(result))
             return nil
         }
     }

@@ -1,17 +1,22 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: MIT-0
+
 import Foundation
 import Combine
 import AWSConnectParticipant
 @testable import AmazonConnectChatIOS
 
 class MockChatService: ChatServiceProtocol {
+    
     var createChatSessionResult: Result<Void, Error>?
-    var disconnectChatSessionResult: (Bool, Error?)?
-    var sendMessageResult: (Bool, Error?)?
-    var sendEventResult: (Bool, Error?)?
-    var getTranscriptResult: Result<[AWSConnectParticipantItem], Error>?
+    var disconnectChatSessionResult: Result<Void, Error>?
+    var sendMessageResult: Result<Void, Error>?
+    var sendEventResult: Result<Void, Error>?
+    var getTranscriptResult: Result<TranscriptResponse, Error>?
     var eventPublisher = PassthroughSubject<ChatEvent, Never>()
     var transcriptItemPublisher = PassthroughSubject<TranscriptItem, Never>()
     var transcriptListPublisher = CurrentValueSubject<[TranscriptItem], Never>([])
+    var websocketManager: WebsocketManagerProtocol?
 
     func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void) {
             if let result = createChatSessionResult {
@@ -30,9 +35,12 @@ class MockChatService: ChatServiceProtocol {
     func disconnectChatSession(completion: @escaping (Bool, Error?) -> Void) {
         if let result = disconnectChatSessionResult {
             DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
-                completion(result.0, result.1)
-                if result.0 {
+                switch result {
+                case .success:
+                    completion(true, nil)
                     self.eventPublisher.send(.chatEnded)
+                case .failure(let error):
+                    completion(false, error)
                 }
             }
         }
@@ -41,7 +49,12 @@ class MockChatService: ChatServiceProtocol {
     func sendMessage(contentType: ContentType, message: String, completion: @escaping (Bool, Error?) -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             if let result = self.sendMessageResult {
-                completion(result.0, result.1)
+                switch result {
+                case .success:
+                    completion(true, nil)
+                case .failure(let error):
+                    completion(false, error)
+                }
             }
         }
     }
@@ -50,7 +63,12 @@ class MockChatService: ChatServiceProtocol {
     func sendEvent(event: ContentType, content: String?, completion: @escaping (Bool, Error?) -> Void) {
         if let result = sendEventResult {
             DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
-                completion(result.0, result.1)
+                switch result {
+                case .success:
+                    completion(true, nil)
+                case .failure(let error):
+                    completion(false, error)
+                }
             }
         }
     }
@@ -67,12 +85,17 @@ class MockChatService: ChatServiceProtocol {
         return transcriptListPublisher.sink(receiveValue: handleTranscriptList)
     }
 
-    func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<[AWSConnectParticipantItem], Error>) -> Void) {
-        if let result = getTranscriptResult {
-            DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
-                completion(result)
+    func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void) {
+            if let result = getTranscriptResult {
+                DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
+                    switch result {
+                    case .success(let response):
+                        completion(.success(response))
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
+                }
             }
         }
-    }
 }
 

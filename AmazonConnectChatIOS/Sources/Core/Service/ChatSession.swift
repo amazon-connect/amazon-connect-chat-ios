@@ -9,9 +9,11 @@ import AWSConnectParticipant
 public protocol ChatSessionProtocol {
     func configure(config: GlobalConfig)
     func connect(chatDetails: ChatDetails, completion: @escaping (Result<Void, Error>) -> Void)
-    func disconnect(onError: @escaping (Error) -> Void)
-    func sendMessage(contentType: ContentType, message: String, onError: @escaping (Error) -> Void)
-    func sendEvent(event: ContentType, content: String, onError: @escaping (Error) -> Void)
+    func disconnect(completion: @escaping (Result<Void, Error>) -> Void)
+    func sendMessage(contentType: ContentType, message: String, completion: @escaping (Result<Void, Error>) -> Void)
+    func sendEvent(event: ContentType, content: String, completion: @escaping (Result<Void, Error>) -> Void)
+    func sendReadReceipt(event: ContentType, messageId: String, completion: @escaping (Result<Void, Error>) -> Void)
+    func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void)
     
     var onConnectionEstablished: (() -> Void)? { get set }
     var onConnectionBroken: (() -> Void)? { get set }
@@ -19,6 +21,7 @@ public protocol ChatSessionProtocol {
     var onTranscriptUpdated: (([TranscriptItem]) -> Void)? { get set }
     var onChatEnded: (() -> Void)? { get set }
 }
+
 
 public class ChatSession: ChatSessionProtocol {
     public static let shared : ChatSessionProtocol = ChatSession()
@@ -42,6 +45,7 @@ public class ChatSession: ChatSessionProtocol {
     
     /// Sets up subscriptions to various chat-related events.
     private func setupEventSubscriptions() {
+        cleanupSubscriptions()
         eventSubscription = chatService.subscribeToEvents { [weak self] event in
             DispatchQueue.main.async {
                 switch event {
@@ -70,6 +74,11 @@ public class ChatSession: ChatSessionProtocol {
         }
     }
     
+    /// Re-establishes subscriptions to various chat-related events.
+    private func reestablishSubscriptions() {
+        setupEventSubscriptions()
+    }
+    
     /// Configures the chat service with global configuration.
     public func configure(config: GlobalConfig) {
         AWSClient.shared.configure(with: config)
@@ -77,7 +86,7 @@ public class ChatSession: ChatSessionProtocol {
     
     /// Attempts to connect to a chat session with the given details.
     public func connect(chatDetails: ChatDetails, completion: @escaping (Result<Void, Error>) -> Void) {
-        print("Connecting with chatDetails: \(chatDetails)")
+        reestablishSubscriptions() // Re-establish subscriptions whenever a new chat session is initiated
         chatService.createChatSession(chatDetails: chatDetails) { [weak self] success, error in
             DispatchQueue.main.async {
                 if success {
@@ -90,65 +99,82 @@ public class ChatSession: ChatSessionProtocol {
             }
         }
     }
-
+    
     
     public func getTranscript(
-        scanDirection: AWSConnectParticipantScanDirection? = nil,
-        sortOrder: AWSConnectParticipantSortKey? = nil,
-        maxResults: NSNumber? = nil,
+        scanDirection: AWSConnectParticipantScanDirection? = .backward,
+        sortOrder: AWSConnectParticipantSortKey? = .ascending,
+        maxResults: NSNumber? = 15,
         nextToken: String? = nil,
-        startPosition: AWSConnectParticipantStartPosition? = nil
+        startPosition: AWSConnectParticipantStartPosition? = nil,
+        completion: @escaping (Result<TranscriptResponse, Error>) -> Void
     ) {
         self.chatService.getTranscript(scanDirection: scanDirection, sortOrder: sortOrder, maxResults: maxResults, nextToken: nextToken, startPosition: startPosition) { result in
-            switch result {
-            case .success(let items):
-                print("Get transcript response: \(items)")
-            case .failure(let error):
-                print("Get transcript failure: \(error)")
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let items):
+                    completion(.success(items))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
             }
         }
     }
     
     /// Disconnects the current chat session.
-    public func disconnect(onError: @escaping (Error) -> Void) {
-        chatService.disconnectChatSession { [weak self] success, error in
+    public func disconnect(completion: @escaping (Result<Void, Error>) -> Void) {
+        chatService.disconnectChatSession { success, error in
             DispatchQueue.main.async {
                 if success {
-                    self?.onChatEnded?()
-                    self?.cleanupSubscriptions()
+                    self.onChatEnded?()
+                    self.cleanupSubscriptions()
+                    completion(.success(()))
                 } else if let error = error {
-                    SDKLogger.logger.logError("Error disconnecting chat session: \(error.localizedDescription )")
-                    onError(error)
+                    SDKLogger.logger.logError("Error disconnecting chat session: \(error.localizedDescription)")
+                    completion(.failure(error))
                 }
             }
         }
     }
     
     /// Sends a message within the chat session.
-    public func sendMessage(contentType: ContentType, message: String, onError: @escaping (Error) -> Void) {
-        print("ChatSession: sendMessage called")
+    public func sendMessage(contentType: ContentType, message: String, completion: @escaping (Result<Void, Error>) -> Void) {
         chatService.sendMessage(contentType: contentType, message: message) { success, error in
             DispatchQueue.main.async {
-                print("ChatSession: sendMessage completion handler called with success: \(success), error: \(String(describing: error))")
                 if let error = error {
                     SDKLogger.logger.logError("Error sending message: \(error.localizedDescription)")
-                    print("ChatSession: onError called with error: \(error.localizedDescription)")
-                    onError(error)
+                    completion(.failure(error))
                 } else {
-                    print("ChatSession: onError not called, success: \(success)")
-                    // No action needed if there's no error
+                    completion(.success(()))
                 }
             }
         }
     }
     
     /// Sends an event within the chat session.
-    public func sendEvent(event: ContentType, content: String, onError: @escaping (Error) -> Void) {
+    public func sendEvent(event: ContentType, content: String, completion: @escaping (Result<Void, Error>) -> Void) {
         chatService.sendEvent(event: event, content: content) { success, error in
             DispatchQueue.main.async {
                 if let error = error {
-                    SDKLogger.logger.logError("Error sending event: \(error.localizedDescription )")
-                    onError(error)
+                    SDKLogger.logger.logError("Error sending event: \(error.localizedDescription)")
+                    completion(.failure(error))
+                } else {
+                    completion(.success(()))
+                }
+            }
+        }
+    }
+    
+    /// Sends read receipt for a message.
+    public func sendReadReceipt(event: ContentType = .messageRead, messageId: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        let content = "{\"messageId\":\"\(messageId)\"}"
+        chatService.sendEvent(event: event, content: content) { success, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    SDKLogger.logger.logError("Error sending read receipt: \(error.localizedDescription)")
+                    completion(.failure(error))
+                } else {
+                    completion(.success(()))
                 }
             }
         }
@@ -157,11 +183,13 @@ public class ChatSession: ChatSessionProtocol {
     deinit {
         eventSubscription?.cancel()
         messageSubscription?.cancel()
+        transcriptSubscription?.cancel()
     }
     
     private func cleanupSubscriptions() {
         eventSubscription?.cancel()
         messageSubscription?.cancel()
+        transcriptSubscription?.cancel()
     }
 }
 

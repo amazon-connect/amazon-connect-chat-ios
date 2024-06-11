@@ -1,3 +1,6 @@
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: MIT-0
+
 import Foundation
 import XCTest
 import AWSConnectParticipant
@@ -40,7 +43,7 @@ class ChatServiceTests: XCTestCase {
         mockConnectionDetailsProvider = nil
         mockWebsocketManager = nil
     }
-
+    
     // Helper method to create chat details
     private func createChatDetails() -> ChatDetails {
         return ChatDetails(contactId: "testContactId", participantId: "testParticipantId", participantToken: "testParticipantToken")
@@ -254,7 +257,7 @@ class ChatServiceTests: XCTestCase {
         mockConnectionDetailsProvider.mockConnectionDetails = nil
         
         let noConnectionDetailsError = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
-
+        
         let expectation = self.expectation(description: "Message sending should fail due to no connection details")
         
         chatService.sendMessage(contentType: .plainText, message: "Test") { success, error in
@@ -305,9 +308,9 @@ class ChatServiceTests: XCTestCase {
     
     func testSendEvent_Failure_NoConnectionDetails() {
         mockConnectionDetailsProvider.mockConnectionDetails = nil
-
+        
         let noConnectionDetailsError = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
-
+        
         let expectation = self.expectation(description: "Event sending should fail due to no connection details")
         
         chatService.sendEvent(event: .typing, content: "Test event") { success, error in
@@ -320,29 +323,42 @@ class ChatServiceTests: XCTestCase {
     }
     
     func testGetTranscript_Success() {
+        let chatDetails = createChatDetails()
+        let connectionDetails = createConnectionDetails()
+        mockAWSClient.createParticipantConnectionResult = .success(connectionDetails)
+        mockConnectionDetailsProvider.mockConnectionDetails = connectionDetails
+        
         let transcriptItem = AWSConnectParticipantItem()
         transcriptItem!.content = "testContent"
         
-        let transcriptItems: [AWSConnectParticipantItem] = [transcriptItem!]
-        let connectionDetails = createConnectionDetails()
-        mockConnectionDetailsProvider.mockConnectionDetails = connectionDetails
-        mockAWSClient.getTranscriptResult = .success(transcriptItems)
+        let response = AWSConnectParticipantGetTranscriptResponse()!
+        response.transcript = [transcriptItem!]
+        
+        mockAWSClient.getTranscriptResult = .success(response)
         
         let expectation = self.expectation(description: "Transcript should be retrieved successfully")
         
-        chatService.getTranscript(scanDirection: .backward, sortOrder: .ascending, maxResults: 15, nextToken: nil, startPosition: nil) { result in
-            switch result {
-            case .success(let items):
-                XCTAssertEqual(items.count, transcriptItems.count, "Retrieved items should match expected items count")
-                XCTAssertEqual(items.first?.content, transcriptItems.first?.content, "Retrieved content should match expected content")
-            case .failure(let error):
-                XCTFail("Unexpected failure: \(error)")
+        // Create the chat session to ensure WebSocket is set up
+        chatService.createChatSession(chatDetails: chatDetails) { success, error in
+            XCTAssertTrue(success, "Chat session should be created successfully")
+            XCTAssertNil(error, "Error should be nil")
+            
+            // Get the transcript after the chat session is created
+            self.chatService.getTranscript(scanDirection: .backward, sortOrder: .ascending, maxResults: 15, nextToken: nil, startPosition: nil) { result in
+                switch result {
+                case .success(let transcriptResponse):
+                    XCTAssertEqual(transcriptResponse.transcript.count, 1, "Retrieved items should match expected items count")
+                    XCTAssertEqual(transcriptResponse.transcript.first?.serializedContent?["content"] as! String, "testContent", "Retrieved content should match expected content")
+                case .failure(let error):
+                    XCTFail("Unexpected failure: \(error)")
+                }
+                expectation.fulfill()
             }
-            expectation.fulfill()
         }
         
         waitForExpectations(timeout: 1)
     }
+
     
     func testGetTranscript_Failure() {
         let expectedError = NSError(domain: "TestDomain", code: 1, userInfo: nil)
