@@ -4,7 +4,7 @@
 import Foundation
 
 class MetricsManager {
-    private let httpClient = DefaultHttpClient()
+    var apiClient: APIClientProtocol = APIClient.shared
     private let endpointUrl: String
     private var timer: Timer?
     private var metricList: [Metric]
@@ -31,7 +31,7 @@ class MetricsManager {
         DispatchQueue.main.async {
             self.timer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: true) { _ in
                 if !self.metricList.isEmpty {
-                    self.sendMetrics() { result in
+                    self.apiClient.sendMetrics(metricsEndpoint: self.endpointUrl, metricList: self.metricList) { result in
                         switch result {
                         case .success:
                             self.metricList = []
@@ -53,15 +53,6 @@ class MetricsManager {
                     print("No metrics to send")
                 }
             }
-        }
-    }
-    
-    func sendMetrics(completion: @escaping (Result<PutMetricsResponse, Error>) -> Void) -> Void {
-        let body = CreateMetricRequestBody(metricList: self.metricList, metricNamespace: "chat-widget")
-        self.httpClient.postJson(self.endpointUrl, nil, body) { (data : PutMetricsResponse) in
-            completion(.success(data))
-        } _: { error in
-            completion(.failure(error))
         }
     }
     

@@ -5,7 +5,8 @@ import Foundation
 import os
 
 class DefaultHttpClient: HttpClient {
-    
+    static var shared: any HttpClient = DefaultHttpClient()
+
     // Retryable http codes: https://docs.aws.amazon.com/sdkref/latest/guide/feature-retry-behavior.html
     private let retryableHttpCodes: Set<Int> = [400, 403, 408, 429, 500, 502, 503, 504, 509]
     private let maxRetry = 2

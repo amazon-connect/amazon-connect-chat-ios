@@ -1,9 +1,5 @@
-//
-//  MockAttachmentManager.swift
-//  AmazonConnectChatIOSTests
-//
-//  Created by Liao, Michael on 6/8/24.
-//
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: MIT-0
 
 import XCTest
 import UniformTypeIdentifiers
@@ -13,12 +9,10 @@ import AWSConnectParticipant
 
 class MockAttachmentManager: ChatService {
     var startAttachmentUploadCalled = false
-    var uploadAttachmentCalled = false
     var completeAttachmentUploadCalled = false
     var downloadFileCalled = false
     
     var mockStartAttachmentUpload = true
-    var mockUploadAttachment = true
     var mockCompleteAttachmentUpload = true
     var mockDownloadFile = true
 
@@ -30,15 +24,6 @@ class MockAttachmentManager: ChatService {
             completion(.success(mockResponse!))
         } else {
             super.startAttachmentUpload(contentType: contentType, attachmentName: attachmentName, attachmentSizeInBytes: attachmentSizeInBytes, completion: completion)
-        }
-    }
-
-    override func uploadAttachment(file: URL, response: AWSConnectParticipantStartAttachmentUploadResponse, completion: @escaping (Bool, Error?) -> Void) {
-        if mockUploadAttachment {
-            uploadAttachmentCalled = true
-            completion(true, nil)
-        } else {
-            super.uploadAttachment(file: file, response: response, completion: completion)
         }
     }
 

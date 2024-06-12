@@ -300,7 +300,7 @@ class AWSClientTests: XCTestCase {
         let response = AWSConnectParticipantStartAttachmentUploadResponse()!
         response.attachmentId = "12345"
         mockClient.startAttachmentUploadResult = .success(response)
-        let expectation = self.expectation(description: "StartAttachmentUpload")
+        let expectation = self.expectation(description: "StartAttachmentUpload succeeds")
         
         awsClient.startAttachmentUpload(connectionToken: dummyToken, contentType: "text/plain", attachmentName: "sample.txt", attachmentSizeInBytes: 1000) { result in
                 switch result {
@@ -316,7 +316,7 @@ class AWSClientTests: XCTestCase {
     
     func testStartAttachmentUpload_Failure() {
         mockClient.startAttachmentUploadResult = .failure(MockAWSConnectParticipant.MockError.unexpected)
-        let expectation = self.expectation(description: "StartAttachmentUpload")
+        let expectation = self.expectation(description: "StartAttachmentUpload fails")
         
         awsClient.startAttachmentUpload(connectionToken: dummyToken, contentType: "text/plain", attachmentName: "sample.txt", attachmentSizeInBytes: 1000) { result in
                 switch result {
@@ -333,7 +333,7 @@ class AWSClientTests: XCTestCase {
     func testCompleteAttachmentUpload_Success() {
         let response = AWSConnectParticipantCompleteAttachmentUploadResponse()!
         mockClient.completeAttachmnetUploadResult = .success(response)
-        let expectation = self.expectation(description: "CompleteAttachmentUpload")
+        let expectation = self.expectation(description: "CompleteAttachmentUpload succeeds")
         
         awsClient.completeAttachmentUpload(connectionToken: dummyToken, attachmentIds: ["12345"]) { result in
                 switch result {
@@ -348,7 +348,7 @@ class AWSClientTests: XCTestCase {
     
     func testCompleteAttachmentUpload_Failure() {
         mockClient.completeAttachmnetUploadResult = .failure(MockAWSConnectParticipant.MockError.unexpected)
-        let expectation = self.expectation(description: "CompleteAttachmentUpload")
+        let expectation = self.expectation(description: "CompleteAttachmentUpload fails")
         
         awsClient.completeAttachmentUpload(connectionToken: dummyToken, attachmentIds: ["12345"]) { result in
             switch result {
@@ -366,7 +366,7 @@ class AWSClientTests: XCTestCase {
         let response = AWSConnectParticipantGetAttachmentResponse()!
         response.url = "https://www.example-s3-url.com"
         mockClient.getAttachmentResult = .success(response)
-        let expectation = self.expectation(description: "CompleteAttachmentUpload")
+        let expectation = self.expectation(description: "GetAttachment succeeds")
         
         awsClient.getAttachment(connectionToken: dummyToken, attachmentId: "12345") { result in
                 switch result {
@@ -382,7 +382,7 @@ class AWSClientTests: XCTestCase {
     
     func testGetAttachment_Failure() {
         mockClient.getAttachmentResult = .failure(MockAWSConnectParticipant.MockError.unexpected)
-        let expectation = self.expectation(description: "GetAttachment")
+        let expectation = self.expectation(description: "GetAttachment fails")
 
         awsClient.getAttachment(connectionToken: dummyToken, attachmentId: "12345") { result in
                 switch result {

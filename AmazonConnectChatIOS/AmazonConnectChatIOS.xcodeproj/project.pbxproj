@@ -48,16 +48,16 @@
 		F74726442BF418F0002B278E /* MetricsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74726432BF418F0002B278E /* MetricsClient.swift */; };
 		F74726472BF41948002B278E /* MetricsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74726462BF41948002B278E /* MetricsManager.swift */; };
 		F74726522BF6F018002B278E /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74726512BF6F018002B278E /* Config.swift */; };
+		F76BB94D2C1898BE0005C3EC /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76BB94C2C1898BE0005C3EC /* APIClient.swift */; };
+		F76BB9532C18F84D0005C3EC /* MockAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76BB9522C18F84D0005C3EC /* MockAPIClient.swift */; };
+		F76BB9562C1900480005C3EC /* APIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76BB9552C1900480005C3EC /* APIClientTests.swift */; };
 		F7B0747C2BDB298400E8B805 /* HeartbeatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B0747B2BDB298400E8B805 /* HeartbeatManager.swift */; };
-		F7B0747D2BDB298400E8B805 /* HeartbeatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B0747B2BDB298400E8B805 /* HeartbeatManager.swift */; };
 		F7B0747F2BDB2A0700E8B805 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B0747E2BDB2A0700E8B805 /* Notifications.swift */; };
-		F7B074802BDB2A0700E8B805 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B0747E2BDB2A0700E8B805 /* Notifications.swift */; };
 		F7B074822BDB2D3A00E8B805 /* NetworkConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B074812BDB2D3A00E8B805 /* NetworkConnectionManager.swift */; };
-		F7B074832BDB2D3A00E8B805 /* NetworkConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B074812BDB2D3A00E8B805 /* NetworkConnectionManager.swift */; };
 		F7B4A1282C1157B0005C7921 /* AttachmentTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B4A1272C1157B0005C7921 /* AttachmentTypes.swift */; };
 		F7B4A1362C14FDA9005C7921 /* MockAttachmentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B4A1352C14FDA9005C7921 /* MockAttachmentManager.swift */; };
 		F7B4A1382C15649B005C7921 /* MockHttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B4A1372C15649B005C7921 /* MockHttpClient.swift */; };
-		F7B4A13A2C17AE43005C7921 /* TestConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B4A1392C17AE43005C7921 /* TestConstants.swift */; };
+		F7B4A13A2C17AE43005C7921 /* TestUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B4A1392C17AE43005C7921 /* TestUtils.swift */; };
 		F7B4A13C2C17E3C3005C7921 /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B4A13B2C17E3C3005C7921 /* MockURLSession.swift */; };
 /* End PBXBuildFile section */
 
@@ -116,13 +116,16 @@
 		F74726432BF418F0002B278E /* MetricsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsClient.swift; sourceTree = "<group>"; };
 		F74726462BF41948002B278E /* MetricsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsManager.swift; sourceTree = "<group>"; };
 		F74726512BF6F018002B278E /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		F76BB94C2C1898BE0005C3EC /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		F76BB9522C18F84D0005C3EC /* MockAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAPIClient.swift; sourceTree = "<group>"; };
+		F76BB9552C1900480005C3EC /* APIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientTests.swift; sourceTree = "<group>"; };
 		F7B0747B2BDB298400E8B805 /* HeartbeatManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatManager.swift; sourceTree = "<group>"; };
 		F7B0747E2BDB2A0700E8B805 /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		F7B074812BDB2D3A00E8B805 /* NetworkConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkConnectionManager.swift; sourceTree = "<group>"; };
 		F7B4A1272C1157B0005C7921 /* AttachmentTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentTypes.swift; sourceTree = "<group>"; };
 		F7B4A1352C14FDA9005C7921 /* MockAttachmentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAttachmentManager.swift; sourceTree = "<group>"; };
 		F7B4A1372C15649B005C7921 /* MockHttpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHttpClient.swift; sourceTree = "<group>"; };
-		F7B4A1392C17AE43005C7921 /* TestConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestConstants.swift; sourceTree = "<group>"; };
+		F7B4A1392C17AE43005C7921 /* TestUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestUtils.swift; sourceTree = "<group>"; };
 		F7B4A13B2C17E3C3005C7921 /* MockURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLSession.swift; sourceTree = "<group>"; };
 		FA5FA5BCFCE22047DCA91060 /* Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests.debug.xcconfig"; path = "Target Support Files/Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests/Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		FCB565490D66D6F8C4BB3C09 /* Pods-AmazonConnectChatIOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AmazonConnectChatIOS.release.xcconfig"; path = "Target Support Files/Pods-AmazonConnectChatIOS/Pods-AmazonConnectChatIOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -170,10 +173,9 @@
 		7E2336E12BFE7D7400E6C4B7 /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				F76BB9542C19000F0005C3EC /* Mocks */,
 				7E2336E22BFE7D7400E6C4B7 /* AWSClientTests.swift */,
-				7E2336E32BFE7D7400E6C4B7 /* MockAWSClient.swift */,
-				7E2336E42BFE7D7400E6C4B7 /* MockWebSocketManager.swift */,
-				7E2336E52BFE7D7400E6C4B7 /* MockAWSConnectParticipant.swift */,
+				F76BB9552C1900480005C3EC /* APIClientTests.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -182,10 +184,8 @@
 			isa = PBXGroup;
 			children = (
 				7E2336E72BFE7D7400E6C4B7 /* MockConnectionDetailsProvider.swift */,
-				F7B4A13B2C17E3C3005C7921 /* MockURLSession.swift */,
 				F7B4A1352C14FDA9005C7921 /* MockAttachmentManager.swift */,
-				F7B4A1372C15649B005C7921 /* MockHttpClient.swift */,
-				F7B4A1392C17AE43005C7921 /* TestConstants.swift */,
+				F7B4A1392C17AE43005C7921 /* TestUtils.swift */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -278,6 +278,7 @@
 				F74726432BF418F0002B278E /* MetricsClient.swift */,
 				F74726462BF41948002B278E /* MetricsManager.swift */,
 				7EF438492BFF056400E7F8E9 /* AWSConnectParticipantAdapter.swift */,
+				F76BB94C2C1898BE0005C3EC /* APIClient.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -343,6 +344,19 @@
 				11EE73D713DFF2FDBEC73AE7 /* Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		F76BB9542C19000F0005C3EC /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				7E2336E52BFE7D7400E6C4B7 /* MockAWSConnectParticipant.swift */,
+				7E2336E42BFE7D7400E6C4B7 /* MockWebSocketManager.swift */,
+				7E2336E32BFE7D7400E6C4B7 /* MockAWSClient.swift */,
+				F76BB9522C18F84D0005C3EC /* MockAPIClient.swift */,
+				F7B4A1372C15649B005C7921 /* MockHttpClient.swift */,
+				F7B4A13B2C17E3C3005C7921 /* MockURLSession.swift */,
+			);
+			path = Mocks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -522,6 +536,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7E57F6522BC7758C00B25623 /* ConnectionDetails.swift in Sources */,
+				F76BB94D2C1898BE0005C3EC /* APIClient.swift in Sources */,
 				7E58A6092BBB460A00965327 /* DefaultHttpClient.swift in Sources */,
 				F74726522BF6F018002B278E /* Config.swift in Sources */,
 				7E91597B2BC0A92E00821C05 /* Constants.swift in Sources */,
@@ -563,16 +578,15 @@
 			files = (
 				F7B4A13C2C17E3C3005C7921 /* MockURLSession.swift in Sources */,
 				F7B4A1362C14FDA9005C7921 /* MockAttachmentManager.swift in Sources */,
-				F7B4A13A2C17AE43005C7921 /* TestConstants.swift in Sources */,
+				F76BB9532C18F84D0005C3EC /* MockAPIClient.swift in Sources */,
+				F76BB9562C1900480005C3EC /* APIClientTests.swift in Sources */,
+				F7B4A13A2C17AE43005C7921 /* TestUtils.swift in Sources */,
 				7E2336EF2BFE7D7400E6C4B7 /* MockAWSConnectParticipant.swift in Sources */,
 				7E2336F22BFE7D7400E6C4B7 /* ChatServiceTests.swift in Sources */,
-				F7B074802BDB2A0700E8B805 /* Notifications.swift in Sources */,
 				7E2336F32BFE7D7400E6C4B7 /* MockChatService.swift in Sources */,
-				F7B0747D2BDB298400E8B805 /* HeartbeatManager.swift in Sources */,
 				7E2336EE2BFE7D7400E6C4B7 /* MockWebSocketManager.swift in Sources */,
 				7E2336EC2BFE7D7400E6C4B7 /* AWSClientTests.swift in Sources */,
 				7E2336F12BFE7D7400E6C4B7 /* ChatSessionTests.swift in Sources */,
-				F7B074832BDB2D3A00E8B805 /* NetworkConnectionManager.swift in Sources */,
 				7E2336F02BFE7D7400E6C4B7 /* MockConnectionDetailsProvider.swift in Sources */,
 				F7B4A1382C15649B005C7921 /* MockHttpClient.swift in Sources */,
 				7E2336ED2BFE7D7400E6C4B7 /* MockAWSClient.swift in Sources */,

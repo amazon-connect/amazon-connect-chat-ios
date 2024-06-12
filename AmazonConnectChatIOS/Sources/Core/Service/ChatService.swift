@@ -13,6 +13,7 @@ protocol ChatServiceProtocol {
     func sendEvent(event: ContentType, content: String?, completion: @escaping (Bool, Error?) -> Void)
     func sendAttachment(file: URL, completion: @escaping (Bool, Error?) -> Void)
     func downloadAttachment(attachmentId: String, filename: String, completion: @escaping (Result<URL, Error>) -> Void)
+    func getAttachmentDownloadUrl(attachmentId: String, completion: @escaping (Result<URL, Error>) -> Void)
     func subscribeToEvents(handleEvent: @escaping (ChatEvent) -> Void) -> AnyCancellable
     func subscribeToTranscriptItem(handleTranscriptItem: @escaping (TranscriptItem) -> Void) -> AnyCancellable
     func subscribeToTranscriptList(handleTranscriptList: @escaping ([TranscriptItem]) -> Void) -> AnyCancellable
@@ -23,8 +24,8 @@ class ChatService : ChatServiceProtocol {
     var eventPublisher = PassthroughSubject<ChatEvent, Never>()
     var transcriptItemPublisher = PassthroughSubject<TranscriptItem, Never>()
     var transcriptListPublisher = CurrentValueSubject<[TranscriptItem], Never>([])
-    var httpClient: DefaultHttpClient = DefaultHttpClient()
     var urlSession = URLSession(configuration: .default)
+    var apiClient: APIClientProtocol = APIClient.shared
     private var eventCancellables = Set<AnyCancellable>()
     private var transcriptItemCancellables = Set<AnyCancellable>()
     private var transcriptListCancellables = Set<AnyCancellable>()
@@ -206,7 +207,7 @@ class ChatService : ChatServiceProtocol {
         self.startAttachmentUpload(contentType: mimeType!, attachmentName: fileName, attachmentSizeInBytes: fileSize!) { result in
             switch result {
             case .success(let response):
-                self.uploadAttachment(file: file, response: response) { success, error in
+                self.apiClient.uploadAttachment(file: file, response: response) { success, error in
                     if success {
                         self.completeAttachmentUpload(attachmentIds: [response.attachmentId!]) { success, error in
                             if success {
@@ -243,30 +244,6 @@ class ChatService : ChatServiceProtocol {
         }
     }
     
-    func uploadAttachment(file: URL, response: AWSConnectParticipantStartAttachmentUploadResponse, completion: @escaping (Bool, Error?) -> Void) {
-        guard let fileData = try? Data(contentsOf: file) else {
-            completion(false, NSError(domain: "ChatService", code: 1, userInfo: [NSLocalizedDescriptionKey: "Unable to read file data"]))
-            return
-        }
-        
-        guard let headers = response.uploadMetadata?.headersToInclude else {
-            completion(false, NSError(domain: "ChatService", code: 1, userInfo: [NSLocalizedDescriptionKey: "Missing upload metadata headers"]))
-            return
-        }
-        
-        let headersToInclude: HttpHeaders = headers.reduce(into: HttpHeaders()) { result, pair in
-            if let key = HttpHeader.Key(rawValue: pair.key) {
-                result[key] = pair.value
-            }
-        }
-
-        self.httpClient.putJson((response.uploadMetadata?.url)!, headersToInclude, fileData) {
-            completion(true, nil)
-        } _: { error in
-            completion(false, error)
-        }
-    }
-    
     func completeAttachmentUpload(attachmentIds: [String], completion: @escaping (Bool, Error?) -> Void) {
         guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
             completion(false, NSError())
@@ -284,7 +261,7 @@ class ChatService : ChatServiceProtocol {
         }
     }
     
-    func downloadAttachment(attachmentId: String, filename: String, completion: @escaping (Result<URL, Error>) -> Void) {
+    func getAttachmentDownloadUrl(attachmentId: String, completion: @escaping (Result<URL, Error>) -> Void) {
         guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
             completion(.failure(NSError()))
             return
@@ -294,15 +271,7 @@ class ChatService : ChatServiceProtocol {
             switch result {
             case .success(let response):
                 if let url = URL(string: response.url!) {
-                    self.downloadFile(url: url, filename: filename) { (localUrl, error) in
-                        if let localUrl = localUrl {
-                            print("Downloaded file location: \(localUrl)")
-                            completion(.success(localUrl))
-                        } else if let error = error {
-                            print("Failed to download file: \(error.localizedDescription)")
-                            completion(.failure(error))
-                        }
-                    }
+                    completion(.success(url))
                 } else {
                     completion(.failure(NSError()))
                 }
@@ -311,6 +280,25 @@ class ChatService : ChatServiceProtocol {
             }
         }
     }
+    
+    func downloadAttachment(attachmentId: String, filename: String, completion: @escaping (Result<URL, Error>) -> Void) {
+        getAttachmentDownloadUrl(attachmentId: attachmentId) { result in
+            switch result {
+            case .success(let url):
+                self.downloadFile(url: url, filename: filename) { (localUrl, error) in
+                    if let localUrl = localUrl {
+                        print("File successfully downloaded to temporary directory")
+                        completion(.success(localUrl))
+                    } else if let error = error {
+                        print("Failed to download file: \(error.localizedDescription)")
+                        completion(.failure(error))
+                    }
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+            }
+        }
     
     func downloadFile(url: URL, filename: String, completion: @escaping (URL?, Error?) -> Void) {
         let downloadTask = urlSession.downloadTask(with: url) { (tempLocalUrl, response, error) in

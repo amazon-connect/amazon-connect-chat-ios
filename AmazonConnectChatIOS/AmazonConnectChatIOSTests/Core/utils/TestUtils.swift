@@ -1,11 +1,20 @@
-//
-//  TestConstants.swift
-//  AmazonConnectChatIOSTests
-//
-//  Created by Liao, Michael on 6/10/24.
-//
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: MIT-0
 
 @testable import AmazonConnectChatIOS
+
+struct TestUtils {
+    static func writeSampleTextToUrl(url: URL) {
+        let fileContents = "Sample text file contents"
+        do {
+            try fileContents.write(to: url, atomically: true, encoding: .utf8)
+            print("File created successfully at: \(url.path)")
+        } catch {
+            print("Failed to create file: \(error.localizedDescription)")
+            return
+        }
+    }
+}
 
 struct TestConstants {
     static let sampleAttachmentHeaders = [
@@ -29,4 +38,6 @@ struct TestConstants {
         HttpHeaders.Key.contentType: "text/plain",
         HttpHeaders.Key.amzMetaOrganizationId: "12345"
     ]
+    
+    static let testFileUrl = FileManager.default.temporaryDirectory.appendingPathComponent("sample.txt")
 }

@@ -13,6 +13,7 @@ class MockChatService: ChatServiceProtocol {
     var sendEventResult: Result<Void, Error>?
     var sendAttachmentResult: Result<Void, Error>?
     var downloadAttachmentResult: Result<URL, Error>?
+    var getAttachmentDownloadUrlResult: Result<URL, Error>?
     var getTranscriptResult: Result<TranscriptResponse, Error>?
     var eventPublisher = PassthroughSubject<ChatEvent, Never>()
     var transcriptItemPublisher = PassthroughSubject<TranscriptItem, Never>()
@@ -89,6 +90,19 @@ class MockChatService: ChatServiceProtocol {
     
     func downloadAttachment(attachmentId: String, filename: String, completion: @escaping (Result<URL, Error>) -> Void) {
         if let result = downloadAttachmentResult {
+            DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
+                switch result {
+                case .success(let url):
+                    completion(.success(url))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+    
+    func getAttachmentDownloadUrl(attachmentId: String, completion: @escaping (Result<URL, Error>) -> Void) {
+        if let result = getAttachmentDownloadUrlResult {
             DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
                 switch result {
                 case .success(let url):
