@@ -184,6 +184,7 @@ class DefaultHttpClient: HttpClient {
             }
         }
         
+        // TODO: Remove request printing
         // Print the entire request for debugging
         if let requestData = try? JSONSerialization.data(withJSONObject: request.allHTTPHeaderFields ?? [:], options: .prettyPrinted),
            let requestBody = String(data: requestData, encoding: .utf8) {
@@ -217,6 +218,7 @@ class DefaultHttpClient: HttpClient {
             }
         }
         
+        // TODO: Remove request printing
         // Print the entire request for debugging
         if let requestData = try? JSONSerialization.data(withJSONObject: request.allHTTPHeaderFields ?? [:], options: .prettyPrinted),
            let requestBody = String(data: requestData, encoding: .utf8) {
