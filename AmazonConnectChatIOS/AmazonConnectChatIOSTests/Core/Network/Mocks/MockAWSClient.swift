@@ -11,7 +11,10 @@ class MockAWSClient: AWSClientProtocol {
     var sendMessageResult: Result<Bool, Error>?
     var sendEventResult: Result<Bool, Error>?
     var getTranscriptResult: Result<AWSConnectParticipantGetTranscriptResponse, Error>?
-    
+    var startAttachmentUploadResult: Result<AWSConnectParticipantStartAttachmentUploadResponse, Error>?
+    var completeAttachmentUploadResult: Result<AWSConnectParticipantCompleteAttachmentUploadResponse, Error>?
+    var getAttachmentResult: Result<AWSConnectParticipantGetAttachmentResponse, Error>?
+
     func createParticipantConnection(participantToken: String, completion: @escaping (Result<ConnectionDetails, Error>) -> Void) {
         if let result = createParticipantConnectionResult {
             completion(result)
@@ -38,6 +41,24 @@ class MockAWSClient: AWSClientProtocol {
     
     func getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Result<AWSConnectParticipantGetTranscriptResponse, Error>) -> Void) {
         if let result = getTranscriptResult {
+            completion(result)
+        }
+    }
+    
+    func startAttachmentUpload(connectionToken: String, contentType: String, attachmentName: String, attachmentSizeInBytes: Int, completion: @escaping (Result<AWSConnectParticipantStartAttachmentUploadResponse, Error>) -> Void) {
+        if let result = startAttachmentUploadResult {
+            completion(result)
+        }
+    }
+
+    func completeAttachmentUpload(connectionToken: String, attachmentIds: [String], completion: @escaping (Result<AWSConnectParticipantCompleteAttachmentUploadResponse, Error>) -> Void) {
+        if let result = completeAttachmentUploadResult {
+            completion(result)
+        }
+    }
+    
+    func getAttachment(connectionToken: String, attachmentId: String, completion: @escaping (Result<AWSConnectParticipantGetAttachmentResponse, Error>) -> Void) {
+        if let result = getAttachmentResult {
             completion(result)
         }
     }

@@ -4,12 +4,16 @@
 import Foundation
 import Combine
 import AWSConnectParticipant
+import UniformTypeIdentifiers
 
 protocol ChatServiceProtocol {
     func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void)
     func disconnectChatSession(completion: @escaping (Bool, Error?) -> Void)
     func sendMessage(contentType: ContentType, message: String, completion: @escaping (Bool, Error?) -> Void)
     func sendEvent(event: ContentType, content: String?, completion: @escaping (Bool, Error?) -> Void)
+    func sendAttachment(file: URL, completion: @escaping (Bool, Error?) -> Void)
+    func downloadAttachment(attachmentId: String, filename: String, completion: @escaping (Result<URL, Error>) -> Void)
+    func getAttachmentDownloadUrl(attachmentId: String, completion: @escaping (Result<URL, Error>) -> Void)
     func subscribeToEvents(handleEvent: @escaping (ChatEvent) -> Void) -> AnyCancellable
     func subscribeToTranscriptItem(handleTranscriptItem: @escaping (TranscriptItem) -> Void) -> AnyCancellable
     func subscribeToTranscriptList(handleTranscriptList: @escaping ([TranscriptItem]) -> Void) -> AnyCancellable
@@ -20,6 +24,8 @@ class ChatService : ChatServiceProtocol {
     var eventPublisher = PassthroughSubject<ChatEvent, Never>()
     var transcriptItemPublisher = PassthroughSubject<TranscriptItem, Never>()
     var transcriptListPublisher = CurrentValueSubject<[TranscriptItem], Never>([])
+    var urlSession = URLSession(configuration: .default)
+    var apiClient: APIClientProtocol = APIClient.shared
     private var eventCancellables = Set<AnyCancellable>()
     private var transcriptItemCancellables = Set<AnyCancellable>()
     private var transcriptListCancellables = Set<AnyCancellable>()
@@ -27,17 +33,16 @@ class ChatService : ChatServiceProtocol {
     private var awsClient: AWSClientProtocol
     private var websocketManager: WebsocketManagerProtocol?
     private var websocketManagerFactory: (URL) -> WebsocketManagerProtocol
-    
+
     init(awsClient: AWSClientProtocol = AWSClient.shared,
-         connectionDetailsProvider: ConnectionDetailsProviderProtocol = ConnectionDetailsProvider.shared,
-         websocketManagerFactory: @escaping (URL) -> WebsocketManagerProtocol = { WebsocketManager(wsUrl: $0) }) {
+        connectionDetailsProvider: ConnectionDetailsProviderProtocol = ConnectionDetailsProvider.shared,
+        websocketManagerFactory: @escaping (URL) -> WebsocketManagerProtocol = { WebsocketManager(wsUrl: $0) }) {
         self.awsClient = awsClient
         self.connectionDetailsProvider = connectionDetailsProvider
         self.websocketManagerFactory = websocketManagerFactory
         self.registerNotificationListeners()
     }
-    
-    
+
     func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void) {
         self.connectionDetailsProvider.updateChatDetails(newDetails: chatDetails)
         awsClient.createParticipantConnection(participantToken: chatDetails.participantToken) { result in
@@ -168,6 +173,172 @@ class ChatService : ChatServiceProtocol {
                 completion(false, error)
             }
         }
+    }
+    
+    func sendAttachment(file: URL, completion: @escaping(Bool, Error?) -> Void) {
+        var mimeType: String?
+        var fileSize: Int?
+        
+        if let typeIdentifier = UTType(filenameExtension: file.pathExtension),
+           let mime = typeIdentifier.preferredMIMEType {
+            if AttachmentTypes(rawValue: mime) != nil {
+                mimeType = mime
+            } else {
+                let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "\(mime) is not a supported file type"])
+                completion(false, error)
+                return
+            }
+        } else {
+            let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Could not parse MIME type from file URL"])
+            completion(false, error)
+            return
+        }
+        
+        let fileName = file.lastPathComponent
+        
+        if let fileSizeValue = try? file.resourceValues(forKeys: [.fileSizeKey]).fileSize {
+            fileSize = fileSizeValue
+        } else {
+            let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Could not get valid file size"])
+            completion(false, error)
+            return
+        }
+        
+        self.startAttachmentUpload(contentType: mimeType!, attachmentName: fileName, attachmentSizeInBytes: fileSize!) { result in
+            switch result {
+            case .success(let response):
+                self.apiClient.uploadAttachment(file: file, response: response) { success, error in
+                    if success {
+                        self.completeAttachmentUpload(attachmentIds: [response.attachmentId!]) { success, error in
+                            if success {
+                                completion(true, nil)
+                            } else {
+                                completion(false, error)
+                            }
+                        }
+                    } else if error != nil {
+                        print("Attachment upload failed: \(String(describing: error))")
+                    } else {
+                        print("Attachment upload failed")
+                    }
+                }
+            case .failure(let error):
+                completion(false, error)
+            }
+        }
+    }
+    
+    func startAttachmentUpload(contentType: String, attachmentName: String, attachmentSizeInBytes: Int, completion: @escaping (Result<AWSConnectParticipantStartAttachmentUploadResponse, Error>) -> Void) {
+        guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
+            completion(.failure(NSError()))
+            return
+        }
+        
+        awsClient.startAttachmentUpload(connectionToken: connectionDetails.connectionToken!, contentType: contentType, attachmentName: attachmentName, attachmentSizeInBytes: attachmentSizeInBytes) { result in
+            switch result {
+            case .success(let response):
+                completion(.success(response))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func completeAttachmentUpload(attachmentIds: [String], completion: @escaping (Bool, Error?) -> Void) {
+        guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
+            completion(false, NSError())
+            return
+        }
+        
+        awsClient.completeAttachmentUpload(connectionToken: connectionDetails.connectionToken!, attachmentIds: attachmentIds) { result in
+            switch result {
+            case .success(_):
+                completion(true, nil)
+            case .failure(let error):
+                print("Complete attachmentUpload failed: \(String(describing: error))")
+                completion(false, error)
+            }
+        }
+    }
+    
+    func getAttachmentDownloadUrl(attachmentId: String, completion: @escaping (Result<URL, Error>) -> Void) {
+        guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
+            completion(.failure(NSError()))
+            return
+        }
+        
+        awsClient.getAttachment(connectionToken: connectionDetails.connectionToken!, attachmentId: attachmentId) { result in
+            switch result {
+            case .success(let response):
+                if let url = URL(string: response.url!) {
+                    completion(.success(url))
+                } else {
+                    completion(.failure(NSError()))
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func downloadAttachment(attachmentId: String, filename: String, completion: @escaping (Result<URL, Error>) -> Void) {
+        getAttachmentDownloadUrl(attachmentId: attachmentId) { result in
+            switch result {
+            case .success(let url):
+                self.downloadFile(url: url, filename: filename) { (localUrl, error) in
+                    if let localUrl = localUrl {
+                        print("File successfully downloaded to temporary directory")
+                        completion(.success(localUrl))
+                    } else if let error = error {
+                        print("Failed to download file: \(error.localizedDescription)")
+                        completion(.failure(error))
+                    }
+                }
+            case .failure(let error):
+                completion(.failure(error))
+            }
+            }
+        }
+    
+    func downloadFile(url: URL, filename: String, completion: @escaping (URL?, Error?) -> Void) {
+        let downloadTask = urlSession.downloadTask(with: url) { (tempLocalUrl, response, error) in
+            if let error = error {
+                print("Download error: \(error.localizedDescription)")
+                completion(nil, error)
+                return
+            }
+            
+            guard let tempLocalUrl = tempLocalUrl else {
+                print("No file found at URL")
+                completion(nil, NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No file found at URL"]))
+                return
+            }
+            
+            do {
+                let tempDirectory = FileManager.default.temporaryDirectory
+                let tempFilePathUrl = tempDirectory.appendingPathComponent(filename)
+
+                
+                if FileManager.default.fileExists(atPath: tempFilePathUrl.path) {
+                    do {
+                        // Delete the existing file
+                        try FileManager.default.removeItem(at: tempFilePathUrl)
+                        print("Existing file deleted successfully.")
+                    } catch {
+                        print("Error deleting existing file: \(error)")
+                        completion(nil, error)
+                        return
+                    }
+                }
+                
+                try FileManager.default.moveItem(at: tempLocalUrl, to: tempFilePathUrl)
+                completion(tempFilePathUrl, nil)
+            } catch let error {
+                completion(nil, error)
+            }
+        }
+        
+        downloadTask.resume()
     }
     
     func getTranscript(

@@ -13,7 +13,7 @@ public protocol MessageProtocol: TranscriptItemProtocol {
     var participant: String { get set }
     var text: String { get set }
     var contentType: String { get set }
-    var messageID: String? { get set }
+    var messageId: String? { get set }
     var displayName: String? { get set }
     var messageDirection: MessageDirection? { get set }
     var metadata: (any MetadataProtocol)? { get set }
@@ -23,18 +23,20 @@ public class Message: TranscriptItem, MessageProtocol {
     public var participant: String
     public var text: String
     public var messageDirection: MessageDirection?
-    public var messageID: String?
+    public var messageId: String?
+    public var attachmentId: String?
     public var displayName: String?
     @Published public var metadata: (any MetadataProtocol)?
 
-    public init(participant: String, text: String, contentType: String, messageDirection: MessageDirection? = nil, timeStamp: String, messageID: String? = nil,
+    public init(participant: String, text: String, contentType: String, messageDirection: MessageDirection? = nil, timeStamp: String, attachmentId: String? = nil, messageID: String? = nil,
                 displayName: String? = nil, serializedContent: [String: Any], metadata: (any MetadataProtocol)? = nil) {
         self.participant = participant
         self.text = text
         self.messageDirection = messageDirection
-        self.messageID = messageID
+        self.messageId = messageID
         self.metadata = metadata
         self.displayName = displayName
+        self.attachmentId = attachmentId
         super.init(timeStamp: timeStamp, contentType: contentType, serializedContent: serializedContent)
     }
     

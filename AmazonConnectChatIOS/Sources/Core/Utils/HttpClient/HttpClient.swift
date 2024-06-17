@@ -6,7 +6,6 @@ import Foundation
 typealias HttpHeaders = [HttpHeader.Key: String]
 
 protocol HttpClient {
-    
     func getJson<R: Decodable>(_ urlString: String,
                                _ onSuccess: @escaping (_ data: R) -> Void,
                                _ onFailure: @escaping (_ error: Error) -> Void)
@@ -27,5 +26,10 @@ protocol HttpClient {
                                               _ headers: HttpHeaders?,
                                               _ body: B,
                                               _ onSuccess: @escaping (_ data: R) -> Void,
+                                              _ onFailure: @escaping (_ error: Error) -> Void)
+    func putJson<B: Encodable>(_ urlString: String,
+                                              _ headers: HttpHeaders?,
+                                              _ body: B,
+                                              _ onSuccess: @escaping () -> Void,
                                               _ onFailure: @escaping (_ error: Error) -> Void)
 }

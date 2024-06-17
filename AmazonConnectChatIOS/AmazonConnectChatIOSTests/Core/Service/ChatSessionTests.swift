@@ -8,6 +8,7 @@ import AWSConnectParticipant
 class ChatSessionTests: XCTestCase {
     var chatSession: ChatSession!
     var mockChatService: MockChatService!
+    var testFileUrl = FileManager.default.temporaryDirectory.appendingPathComponent("sample.txt")
     
     override func setUp() {
         super.setUp()
@@ -256,5 +257,100 @@ class ChatSessionTests: XCTestCase {
     func testGetTranscript_Failure() {
         let expectedError = NSError(domain: "TestDomain", code: 1, userInfo: nil)
         performGetTranscriptTest(scanDirection: .backward, sortOrder: .ascending, maxResults: 15, nextToken: nil, startPosition: nil, expectedResult: .failure(expectedError))
+    }
+    
+    func testSendAttachment_Success() {
+        let expectation = self.expectation(description: "SendAttachment succeeds")
+
+        mockChatService.sendAttachmentResult = .success(())
+        chatSession.sendAttachment(file: testFileUrl) { result in
+            switch result {
+            case .success():
+                expectation.fulfill()
+            case .failure(let error):
+                XCTFail("Expected success, got unexpected failure: \(String(describing: error))")
+            }
+        }
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+            
+    func testSendAttachment_Failure() {
+        let expectation = self.expectation(description: "SendAttachment fails")
+        let expectedError = NSError(domain: "TestDomain", code: 1, userInfo: nil)
+        mockChatService.sendAttachmentResult = .failure(expectedError)
+        chatSession.sendAttachment(file: testFileUrl) { result in
+            switch result {
+            case .success():
+                XCTFail("Expected failure, got unexpected success")
+            case .failure(let error):
+                XCTAssertEqual(error as NSError, expectedError)
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+    
+    func testDownloadAttachment_Success() {
+        let expectation = self.expectation(description: "DownloadAttachment succeeds")
+
+        mockChatService.downloadAttachmentResult = .success(testFileUrl)
+        chatSession.downloadAttachment(attachmentId: "12345", filename: "sample.txt") { result in
+            switch result {
+            case .success(let url):
+                XCTAssertEqual(url, self.testFileUrl)
+                expectation.fulfill()
+            case .failure(let error):
+                XCTFail("Expected success, got unexpected failure: \(String(describing: error))")
+            }
+        }
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+
+    func testDownloadAttachment_Failure() {
+        let expectation = self.expectation(description: "DownloadAttachment fails")
+        let expectedError = NSError(domain: "TestDomain", code: 1, userInfo: nil)
+        mockChatService.downloadAttachmentResult = .failure(expectedError)
+        chatSession.downloadAttachment(attachmentId: "12345", filename: "sample.txt") { result in
+            switch result {
+            case .success(let url):
+                XCTFail("Expected failure, got unexpected success: \(String(describing: url))")
+            case .failure(let error):
+                XCTAssertEqual(error as NSError, expectedError)
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+    
+    func testGetAttachmentDownloadUrl_Success() {
+        let expectation = self.expectation(description: "GetAttachmentDownloadUrl succeeds")
+
+        mockChatService.getAttachmentDownloadUrlResult = .success(testFileUrl)
+        chatSession.getAttachmentDownloadUrl(attachmentId: "12345") { result in
+            switch result {
+            case .success(let url):
+                XCTAssertEqual(url, self.testFileUrl)
+                expectation.fulfill()
+            case .failure(let error):
+                XCTFail("Expected success, got unexpected failure: \(String(describing: error))")
+            }
+        }
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+
+    func testGetAttachmentDownloadUrl_Failure() {
+        let expectation = self.expectation(description: "GetAttachmentDownloadUrl fails")
+        let expectedError = NSError(domain: "TestDomain", code: 1, userInfo: nil)
+        mockChatService.getAttachmentDownloadUrlResult = .failure(expectedError)
+        chatSession.getAttachmentDownloadUrl(attachmentId: "12345") { result in
+            switch result {
+            case .success(let url):
+                XCTFail("Expected failure, got unexpected success: \(String(describing: url))")
+            case .failure(let error):
+                XCTAssertEqual(error as NSError, expectedError)
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1.0, handler: nil)
     }
 }

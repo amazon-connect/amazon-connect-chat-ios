@@ -14,6 +14,9 @@ public protocol ChatSessionProtocol {
     func sendEvent(event: ContentType, content: String, completion: @escaping (Result<Void, Error>) -> Void)
     func sendReadReceipt(event: ContentType, messageId: String, completion: @escaping (Result<Void, Error>) -> Void)
     func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void)
+    func sendAttachment(file: URL, completion: @escaping (Result<Void, Error>) -> Void)
+    func downloadAttachment(attachmentId: String, filename: String, completion: @escaping (Result<URL?, Error>) -> Void)
+    func getAttachmentDownloadUrl(attachmentId: String, completion: @escaping (Result<URL?, Error>) -> Void)
     
     var onConnectionEstablished: (() -> Void)? { get set }
     var onConnectionBroken: (() -> Void)? { get set }
@@ -87,7 +90,7 @@ public class ChatSession: ChatSessionProtocol {
     /// Attempts to connect to a chat session with the given details.
     public func connect(chatDetails: ChatDetails, completion: @escaping (Result<Void, Error>) -> Void) {
         reestablishSubscriptions() // Re-establish subscriptions whenever a new chat session is initiated
-        chatService.createChatSession(chatDetails: chatDetails) { [weak self] success, error in
+        chatService.createChatSession(chatDetails: chatDetails) { success, error in
             DispatchQueue.main.async {
                 if success {
                     SDKLogger.logger.logDebug("Chat session successfully created.")
@@ -176,6 +179,48 @@ public class ChatSession: ChatSessionProtocol {
                 } else {
                     completion(.success(()))
                 }
+            }
+        }
+    }
+    
+    /// Sends an attachment within the chat session.
+    public func sendAttachment(file: URL, completion: @escaping (Result<Void, Error>) -> Void) {
+        chatService.sendAttachment(file: file) { success, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    SDKLogger.logger.logError("Error sending attachment: \(error.localizedDescription )")
+                    completion(.failure(error))
+                } else {
+                    completion(.success(()))
+                }
+            }
+        }
+    }
+    
+    /// Downloads an attachment to the app's temporary directory given an attachment ID.
+    public func downloadAttachment(attachmentId: String, filename: String, completion: @escaping (Result<URL?, Error>) -> Void) {
+        chatService.downloadAttachment(attachmentId: attachmentId, filename: filename) { result in
+            switch result {
+            case .success(let localUrl):
+                SDKLogger.logger.logDebug("File successfully downloaded to temporary directory")
+                completion(.success(localUrl))
+            case .failure(let error):
+                SDKLogger.logger.logError("Failed to download attachment: \(error.localizedDescription )")
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    /// Returns the download URL link for the given attachment ID
+    public func getAttachmentDownloadUrl(attachmentId: String, completion: @escaping (Result<URL?, Error>) -> Void) {
+        chatService.getAttachmentDownloadUrl(attachmentId: attachmentId) { result in
+            switch result {
+            case .success(let localUrl):
+                SDKLogger.logger.logDebug("Attachment download url successfully retrieved")
+                completion(.success(localUrl))
+            case .failure(let error):
+                SDKLogger.logger.logError("Failed to download attachment \(error.localizedDescription)")
+                completion(.failure(error))
             }
         }
     }

@@ -5,7 +5,8 @@ import Foundation
 import os
 
 class DefaultHttpClient: HttpClient {
-    
+    static var shared: any HttpClient = DefaultHttpClient()
+
     // Retryable http codes: https://docs.aws.amazon.com/sdkref/latest/guide/feature-retry-behavior.html
     private let retryableHttpCodes: Set<Int> = [400, 403, 408, 429, 500, 502, 503, 504, 509]
     private let maxRetry = 2
@@ -63,6 +64,20 @@ class DefaultHttpClient: HttpClient {
         send(request, 0, onSuccess, onFailure)
     }
     
+    func putJson<B: Encodable>(_ urlString: String,
+                                              _ headers: HttpHeaders?,
+                                              _ body: B,
+                                              _ onSuccess: @escaping () -> Void,
+                                              _ onFailure: @escaping (_ error: Error) -> Void) {
+        
+        guard let request = createPutRequest(urlString, headers, body as? Data) else {
+            let error = NSError(domain: "aws.amazon.com", code: 400)
+            onFailure(error)
+            return
+        }
+        send(request, 0, onSuccess, onFailure)
+    }
+    
     func send(_ request: URLRequest,
               _ retryCount: Int,
               _ onSuccess: @escaping () -> Void,
@@ -73,7 +88,7 @@ class DefaultHttpClient: HttpClient {
             onFailure(error)
         }
     }
-    
+
     func send<R: Decodable>(_ request: URLRequest,
                             _ retryCount: Int,
                             _ onSuccess: @escaping (_ data: R) -> Void,
@@ -91,8 +106,14 @@ class DefaultHttpClient: HttpClient {
                 } else {
                     // Fallback on earlier versions
                 }
-                let decodedData = try decoder.decode(R.self, from: data)
-                onSuccess(decodedData)
+                if data.isEmpty {
+                    let jsonData = "{}".data(using: .utf8)!
+                    let emptyObject = try decoder.decode(R.self, from: jsonData)
+                    onSuccess(emptyObject)
+                } else {
+                    let decodedData = try decoder.decode(R.self, from: data)
+                    onSuccess(decodedData)
+                }
             } catch {
                 onFailure(error)
             }
@@ -129,6 +150,7 @@ class DefaultHttpClient: HttpClient {
                 onFailure(error)
                 return
             }
+            print(data.base64EncodedString())
             onSuccess(data)
         }.resume()
     }
@@ -162,6 +184,7 @@ class DefaultHttpClient: HttpClient {
             }
         }
         
+        // TODO: Remove request printing
         // Print the entire request for debugging
         if let requestData = try? JSONSerialization.data(withJSONObject: request.allHTTPHeaderFields ?? [:], options: .prettyPrinted),
            let requestBody = String(data: requestData, encoding: .utf8) {
@@ -177,6 +200,35 @@ class DefaultHttpClient: HttpClient {
         }
         
         
+        return request
+    }
+    
+    
+    private func createPutRequest(_ urlString: String,
+                                   _ headers: HttpHeaders?,
+                                   _ body: Data?) -> URLRequest? {
+        guard let serviceUrl = URL(string: urlString) else { return nil }
+        
+        var request = URLRequest(url: serviceUrl)
+        request.httpMethod = HttpMethod.put.rawValue
+        
+        if let headers = headers {
+            for (headerKey, headerValue) in headers {
+                request.setValue(headerValue, forHTTPHeaderField: headerKey.rawValue)
+            }
+        }
+        
+        // TODO: Remove request printing
+        // Print the entire request for debugging
+        if let requestData = try? JSONSerialization.data(withJSONObject: request.allHTTPHeaderFields ?? [:], options: .prettyPrinted),
+           let requestBody = String(data: requestData, encoding: .utf8) {
+            print("Raw Request:")
+            print("URL: \(request.url?.absoluteString ?? "N/A")")
+            print("HTTP Method: \(request.httpMethod ?? "N/A")")
+            print("Headers:\n\(requestBody)")
+        }
+                
+        request.httpBody = body
         return request
     }
 }

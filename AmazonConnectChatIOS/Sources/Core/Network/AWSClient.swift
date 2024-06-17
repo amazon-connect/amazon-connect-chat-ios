@@ -35,6 +35,34 @@ protocol AWSClientProtocol {
     ///   - completion: Completion handler to handle the success status or error.
     func sendEvent(connectionToken: String, contentType: ContentType, content: String, completion: @escaping (Result<Bool, Error>) -> Void)
     
+    /// Requests a pre-signed S3 URL with authentication headers used to upload a given file to S3.
+    /// - Parameters:
+    ///   - connectionToken: The token for the connection through which the event is sent.
+    ///   - contentType: Describes the MIME file type of the attachment.
+    ///   - attachmentName: A case-sensitive name of the attachment being uploaded.
+    ///   - attachmentSizeInBytes: The size of the attachment in bytes.
+    ///   - completion: Completion handler to handle the success status or error.
+    func startAttachmentUpload(connectionToken: String, contentType: String, attachmentName: String, attachmentSizeInBytes: Int, completion: @escaping (Result<AWSConnectParticipantStartAttachmentUploadResponse, Error>) -> Void)
+
+    /// Communicates with the Connect Participant backend to signal that the file has been uploaded successfully.
+    /// - Parameters:
+    ///   - connectionToken: The token for the connection through which the event is sent.
+    ///   - attachmentIds: A list of unique identifiers for the attachments.
+    ///   - completion: Completion handler to handle the success status or error.
+    func completeAttachmentUpload(connectionToken: String, attachmentIds: [String], completion: @escaping (Result<AWSConnectParticipantCompleteAttachmentUploadResponse, Error>) -> Void)
+    
+    /// Retrieves a download URL for the attachment defined by the attachmentId.
+    /// - Parameters:
+    ///   - connectionToken: The token for the connection through which the event is sent.
+    ///   - attachmentId: A unique identifier for the attachment.
+    ///   - completion: Completion handler to handle the success status or error.
+    func getAttachment(connectionToken: String, attachmentId: String, completion: @escaping (Result<AWSConnectParticipantGetAttachmentResponse, Error>) -> Void)
+  
+    /// Requests the chat transcript.
+    /// - Parameters:
+    ///   - connectionToken: The token for the connection through which the event is sent.
+    ///   - attachmentIds: A list of unique identifiers for the attachments.
+    ///   - completion: Completion handler to handle the success status or error.
     func getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Result<AWSConnectParticipantGetTranscriptResponse, Error>) -> Void)
 }
 
@@ -61,6 +89,18 @@ class AWSClient: AWSClientProtocol {
     }
     var sendEventRequest: () -> AWSConnectParticipantSendEventRequest? = {
         AWSConnectParticipantSendEventRequest()
+    }
+    
+    var startAttachmentUploadRequest: () -> AWSConnectParticipantStartAttachmentUploadRequest? = {
+        AWSConnectParticipantStartAttachmentUploadRequest()
+    }
+    
+    var completeAttachmentUploadRequest: () -> AWSConnectParticipantCompleteAttachmentUploadRequest? = {
+        AWSConnectParticipantCompleteAttachmentUploadRequest()
+    }
+    
+    var getAttachmentRequest: () -> AWSConnectParticipantGetAttachmentRequest? = {
+        AWSConnectParticipantGetAttachmentRequest()
     }
     
     private init() {}
@@ -163,6 +203,71 @@ class AWSClient: AWSClientProtocol {
                 completion(.failure(error))
             } else {
                 completion(.success(true))
+            }
+            return nil
+        })
+    }
+    
+    func startAttachmentUpload(connectionToken: String, contentType: String, attachmentName: String, attachmentSizeInBytes: Int, completion: @escaping (Result<AWSConnectParticipantStartAttachmentUploadResponse, Error>) -> Void) {
+        guard let request = AWSConnectParticipantStartAttachmentUploadRequest() else {
+            completion(.failure(AWSClientError.requestCreationFailed))
+            return
+        }
+        
+        request.connectionToken = connectionToken
+        request.contentType = contentType
+        request.attachmentName = attachmentName
+        request.attachmentSizeInBytes = NSNumber(value: attachmentSizeInBytes)
+        
+        connectParticipantClient?.startAttachmentUpload(request).continueWith(executor: AWSExecutor.mainThread(), block: { (task: AWSTask<AWSConnectParticipantStartAttachmentUploadResponse>) -> AnyObject? in
+            if let error = task.error {
+                completion(.failure(error))
+            } else if let result = task.result {
+                completion(.success(result))
+            } else {
+                completion(.failure(AWSClientError.unknownError))
+            }
+            return nil
+        })
+    }
+    
+    func completeAttachmentUpload(connectionToken: String, attachmentIds: [String], completion: @escaping (Result<AWSConnectParticipantCompleteAttachmentUploadResponse, Error>) -> Void) {
+        guard let request = AWSConnectParticipantCompleteAttachmentUploadRequest() else {
+            completion(.failure(AWSClientError.requestCreationFailed))
+            return
+        }
+        
+        request.connectionToken = connectionToken
+        request.attachmentIds = attachmentIds
+        
+        connectParticipantClient?.completeAttachmentUpload(request).continueWith(executor: AWSExecutor.mainThread(), block: { (task: AWSTask) -> AnyObject? in
+            if let error = task.error {
+                completion(.failure(error))
+            } else if let result = task.result {
+                completion(.success(result))
+            } else {
+                completion(.failure(AWSClientError.unknownError))
+            }
+            return nil
+        })
+    }
+    
+    func getAttachment(connectionToken: String, attachmentId: String, completion: @escaping (Result<AWSConnectParticipantGetAttachmentResponse, Error>) -> Void) {
+        guard let request = AWSConnectParticipantGetAttachmentRequest() else {
+            completion(.failure(AWSClientError.requestCreationFailed))
+            return
+        }
+        
+        request.connectionToken = connectionToken
+        request.attachmentId = attachmentId
+        
+        connectParticipantClient?.getAttachment(request).continueWith(executor: AWSExecutor.mainThread(), block: { (task: AWSTask<AWSConnectParticipantGetAttachmentResponse>) -> AnyObject? in
+            if let error = task.error {
+                completion(.failure(error))
+            } else if let result = task.result {
+                completion(.success(result))
+            } else {
+                completion(.failure(AWSClientError.unknownError))
             }
             return nil
         })
