@@ -38,7 +38,7 @@ class MessageReceiptsManager: MessageReceiptsManagerProtocol {
     var deliveredReceiptSet = Set<String>()
     var pendingMessageReceipts: PendingMessageReceipts = PendingMessageReceipts()
     var timer: Timer?
-    var throttleTime: Double = 5
+    var throttleTime: Double = MessageReceipts.defaultReceipts.throttleTime
     var deliveredThrottleTime: Double = 3
     
     func throttleAndSendMessageReceipt(event: MessageReceiptType, messageId: String, completion: @escaping (Result<PendingMessageReceipts, Error>) -> Void) {
