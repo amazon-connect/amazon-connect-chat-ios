@@ -14,6 +14,7 @@ class MockAWSClient: AWSClientProtocol {
     var startAttachmentUploadResult: Result<AWSConnectParticipantStartAttachmentUploadResponse, Error>?
     var completeAttachmentUploadResult: Result<AWSConnectParticipantCompleteAttachmentUploadResponse, Error>?
     var getAttachmentResult: Result<AWSConnectParticipantGetAttachmentResponse, Error>?
+    var numTypingEventCalled: Int = 0
 
     func createParticipantConnection(participantToken: String, completion: @escaping (Result<ConnectionDetails, Error>) -> Void) {
         if let result = createParticipantConnectionResult {
@@ -34,6 +35,9 @@ class MockAWSClient: AWSClientProtocol {
     }
     
     func sendEvent(connectionToken: String, contentType: ContentType, content: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+        if contentType == .typing {
+            numTypingEventCalled += 1
+        }
         if let result = sendEventResult {
             completion(result)
         }

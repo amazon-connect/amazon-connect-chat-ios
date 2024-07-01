@@ -60,8 +60,7 @@ protocol AWSClientProtocol {
   
     /// Requests the chat transcript.
     /// - Parameters:
-    ///   - connectionToken: The token for the connection through which the event is sent.
-    ///   - attachmentIds: A list of unique identifiers for the attachments.
+    ///   - getTranscriptArgs: arguments for the get transcript request.
     ///   - completion: Completion handler to handle the success status or error.
     func getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Result<AWSConnectParticipantGetTranscriptResponse, Error>) -> Void)
 }

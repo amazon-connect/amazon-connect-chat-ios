@@ -1,7 +1,7 @@
 PODS:
-  - AWSConnectParticipant (2.33.4):
-    - AWSCore (= 2.33.4)
-  - AWSCore (2.33.4)
+  - AWSConnectParticipant (2.36.3):
+    - AWSCore (= 2.36.3)
+  - AWSCore (2.36.3)
 
 DEPENDENCIES:
   - AWSConnectParticipant
@@ -13,8 +13,8 @@ SPEC REPOS:
     - AWSCore
 
 SPEC CHECKSUMS:
-  AWSConnectParticipant: d016830fc2883d4b5a62dff6c7cc4d933f5f47b6
-  AWSCore: 83e3416d2224ba98b61d8eadcfcb1f90f48fab82
+  AWSConnectParticipant: edb8b38919c23b6fba081f1bf2302d746774ef53
+  AWSCore: c80f0c849456deb66aaf7d97e77854f7c2b28236
 
 PODFILE CHECKSUM: 8ce922eea6873625e870ccb0e15742075629a4f8
 
