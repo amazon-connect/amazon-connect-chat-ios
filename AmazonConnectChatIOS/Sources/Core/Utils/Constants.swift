@@ -12,6 +12,7 @@ public struct Constants {
     static let SYSTEM = "SYSTEM"
     static let UNKNOWN = "UNKNOWN"
     static let MESSAGE = "MESSAGE"
+    static let ATTACHMENT = "ATTACHMENT"
     static let EVENT = "EVENT"
     static let MESSAGE_RECEIPT_THROTTLE_TIME = 5000
     static let DEFAULT_REGION : AWSRegionType  = .USWest2

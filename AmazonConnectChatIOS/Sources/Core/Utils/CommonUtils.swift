@@ -45,6 +45,8 @@ struct CommonUtils {
             return Constants.MESSAGE
         case AWSConnectParticipantChatItemType.event.rawValue:
             return Constants.EVENT
+        case AWSConnectParticipantChatItemType.attachment.rawValue:
+            return Constants.ATTACHMENT
         default:
             return Constants.UNKNOWN
         }
