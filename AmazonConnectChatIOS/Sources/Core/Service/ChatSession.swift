@@ -80,7 +80,7 @@ public protocol ChatSessionProtocol {
 
 public class ChatSession: ChatSessionProtocol {
     public static let shared : ChatSessionProtocol = ChatSession()
-    var isChatConnected: Bool = false
+    var isChatSessionActive: Bool = false
     private var chatService: ChatServiceProtocol
     private var eventSubscription: AnyCancellable?
     private var messageSubscription: AnyCancellable?
@@ -106,13 +106,13 @@ public class ChatSession: ChatSessionProtocol {
             DispatchQueue.main.async {
                 switch event {
                 case .connectionEstablished:
-                    self?.isChatConnected = true
+                    self?.isChatSessionActive = true
                     self?.onConnectionEstablished?()
                 case .connectionBroken:
                     self?.onConnectionBroken?()
                 case .chatEnded:
-                    if (self != nil && self?.isChatConnected == true) {
-                        self?.isChatConnected = false
+                    if (self != nil && self?.isChatSessionActive == true) {
+                        self?.isChatSessionActive = false
                         self?.onChatEnded?()
                     }
                 default:
@@ -172,7 +172,7 @@ public class ChatSession: ChatSessionProtocol {
     
     /// Disconnects the current chat session.
     public func disconnect(completion: @escaping (Result<Void, Error>) -> Void) {
-        if (!self.isChatConnected) {
+        if (!self.isChatSessionActive) {
             self.cleanupSubscriptions()
             return
         }
@@ -180,8 +180,8 @@ public class ChatSession: ChatSessionProtocol {
         chatService.disconnectChatSession { success, error in
             DispatchQueue.main.async {
                 if success {
-                    self?.onChatEnded?()
-                    self?.cleanupSubscriptions()
+                    self.onChatEnded?()
+                    self.cleanupSubscriptions()
                     completion(.success(()))
                 } else if let error = error {
                     SDKLogger.logger.logError("Error disconnecting chat session: \(error.localizedDescription)")
