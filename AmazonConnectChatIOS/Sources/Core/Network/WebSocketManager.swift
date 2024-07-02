@@ -496,6 +496,8 @@ extension WebsocketManager {
     
     func handleChatEnded(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {
         let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
+        self.eventPublisher.send(.chatEnded)
+        resetHeartbeatManagers()
 
         return Event(
             timeStamp: time,

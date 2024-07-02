@@ -75,6 +75,9 @@ class ChatService : ChatServiceProtocol {
             .receive(on: RunLoop.main)
             .sink(receiveValue: { [weak self] event in
                 self?.eventPublisher.send(event)
+                if (event == .chatEnded) {
+                    self?.messageReceiptsManager?.invalidateTimer()
+                }
             })
             .store(in: &eventCancellables)
         
