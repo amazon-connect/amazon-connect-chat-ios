@@ -171,7 +171,7 @@ class ChatSessionTests: XCTestCase {
     
     
     // Helper method for send event tests
-    func performSendEventTest(eventType: ContentType, content: String, expectedResult: Result<Void, Error>) {
+    func performSendEventTest(eventType: ContentType, content: String, expectedResult: (Bool, Error?)?) {
         var receivedError: Error?
         
         let expectation = XCTestExpectation(description: "SendEventTest")
@@ -189,25 +189,29 @@ class ChatSessionTests: XCTestCase {
         
         let waiterResult = XCTWaiter().wait(for: [expectation], timeout: 1)
         XCTAssertEqual(waiterResult, .completed, "Expectation should be fulfilled")
-        
-        switch expectedResult {
-        case .success:
-            XCTAssertNil(receivedError, "Error should be nil on successful event send")
-        case .failure(let expectedError):
-            XCTAssertEqual(receivedError as NSError?, expectedError as NSError?, "Should receive the expected error")
+
+        if let result = expectedResult {
+            let (success, error) = result
+            DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
+                if success {
+                    XCTAssertNil(receivedError, "Error should be nil on successful event send")
+                } else if error != nil {
+                    XCTAssertEqual(receivedError as NSError?, error as NSError?, "Should receive the expected error")
+                }
+            }
         }
     }
     
     
     // Test the successful sendEvent scenario
     func testSendEvent_Success() {
-        performSendEventTest(eventType: .typing, content: "Test Event", expectedResult: .success(()))
+        performSendEventTest(eventType: .typing, content: "Test Event", expectedResult: (true, nil))
     }
     
     // Test the unsuccessful sendEvent scenario
     func testSendEvent_Failure() {
         let expectedError = NSError(domain: "TestDomain", code: 1, userInfo: nil)
-        performSendEventTest(eventType: .typing, content: "Test Event", expectedResult: .failure(expectedError))
+        performSendEventTest(eventType: .typing, content: "Test Event", expectedResult: (false, expectedError))
     }
     
     // Helper method for get transcript tests

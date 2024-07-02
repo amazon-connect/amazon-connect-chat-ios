@@ -34,14 +34,14 @@ public protocol ChatSessionProtocol {
     ///   - content: The event content to send.
     ///   - completion: The completion handler to call when the send operation is complete.
     func sendEvent(event: ContentType, content: String, completion: @escaping (Result<Void, Error>) -> Void)
-    
+
     /// Sends read receipt for a message.
     /// - Parameters:
     ///   - event: The type of the event content (default is .messageRead).
     ///   - messageId: The ID of the message to acknowledge.
     ///   - completion: The completion handler to call when the send operation is complete.
-    func sendReadReceipt(event: ContentType, messageId: String, completion: @escaping (Result<Void, Error>) -> Void)
-    
+    func sendMessageReceipt(event: MessageReceiptType, messageId: String, completion: @escaping (Result<Void, Error>) -> Void)
+
     /// Retrieves the chat transcript.
     /// - Parameters:
     ///   - scanDirection: The direction to scan the transcript.
@@ -79,7 +79,8 @@ public protocol ChatSessionProtocol {
 }
 
 public class ChatSession: ChatSessionProtocol {
-    public static let shared: ChatSessionProtocol = ChatSession()
+    public static let shared : ChatSessionProtocol = ChatSession()
+    var isChatConnected: Bool = false
     private var chatService: ChatServiceProtocol
     private var eventSubscription: AnyCancellable?
     private var messageSubscription: AnyCancellable?
@@ -105,9 +106,15 @@ public class ChatSession: ChatSessionProtocol {
             DispatchQueue.main.async {
                 switch event {
                 case .connectionEstablished:
+                    self?.isChatConnected = true
                     self?.onConnectionEstablished?()
                 case .connectionBroken:
                     self?.onConnectionBroken?()
+                case .chatEnded:
+                    if (self != nil && self?.isChatConnected == true) {
+                        self?.isChatConnected = false
+                        self?.onChatEnded?()
+                    }
                 default:
                     break
                 }
@@ -165,7 +172,12 @@ public class ChatSession: ChatSessionProtocol {
     
     /// Disconnects the current chat session.
     public func disconnect(completion: @escaping (Result<Void, Error>) -> Void) {
-        chatService.disconnectChatSession { [weak self] success, error in
+        if (!self.isChatConnected) {
+            self.cleanupSubscriptions()
+            return
+        }
+      
+        chatService.disconnectChatSession { success, error in
             DispatchQueue.main.async {
                 if success {
                     self?.onChatEnded?()
@@ -194,10 +206,17 @@ public class ChatSession: ChatSessionProtocol {
     }
     
     /// Sends read receipt for a message.
-    public func sendReadReceipt(event: ContentType = .messageRead, messageId: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        let content = "{\"messageId\":\"\(messageId)\"}"
-        chatService.sendEvent(event: event, content: content) { [weak self] success, error in
-            self?.handleCompletion(success: success, error: error, completion: completion)
+    public func sendMessageReceipt(event: MessageReceiptType, messageId: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        chatService.sendMessageReceipt(event: event, messageId: messageId) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success():
+                    completion(.success(()))
+                case .failure(let error):
+                    SDKLogger.logger.logError("Error sending message receipt: \(error.localizedDescription)")
+                    completion(.failure(error))
+                }
+            }
         }
     }
     

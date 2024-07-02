@@ -14,7 +14,7 @@ public struct Constants {
     static let MESSAGE = "MESSAGE"
     static let ATTACHMENT = "ATTACHMENT"
     static let EVENT = "EVENT"
-    static let MESSAGE_RECEIPT_THROTTLE_TIME = 5000
+    static let MESSAGE_RECEIPT_THROTTLE_TIME = 5.0
     static let DEFAULT_REGION : AWSRegionType  = .USWest2
     public static let QUICK_REPLY = "QuickReply"
     public static let LIST_PICKER = "ListPicker"

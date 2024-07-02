@@ -37,14 +37,14 @@ public struct Features {
 
 public struct MessageReceipts {
     public var shouldSendMessageReceipts: Bool
-    public var throttleTime: Int
+    public var throttleTime: Double
     
     // Provides default MessageReceipts configuration
     public static var defaultReceipts: MessageReceipts {
         return MessageReceipts(shouldSendMessageReceipts: true, throttleTime: Constants.MESSAGE_RECEIPT_THROTTLE_TIME)
     }
     
-    public init(shouldSendMessageReceipts: Bool, throttleTime: Int) {
+    public init(shouldSendMessageReceipts: Bool, throttleTime: Double) {
         self.shouldSendMessageReceipts = shouldSendMessageReceipts
         self.throttleTime = throttleTime
     }
