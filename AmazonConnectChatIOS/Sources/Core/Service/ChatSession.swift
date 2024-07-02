@@ -28,8 +28,8 @@ public protocol ChatSessionProtocol {
 
 public class ChatSession: ChatSessionProtocol {
     public static let shared : ChatSessionProtocol = ChatSession()
+    var isChatConnected: Bool = false
     private var chatService: ChatServiceProtocol
-    private var isChatConnected: Bool = false
     private var eventSubscription: AnyCancellable?
     private var messageSubscription: AnyCancellable?
     private var transcriptSubscription: AnyCancellable?
