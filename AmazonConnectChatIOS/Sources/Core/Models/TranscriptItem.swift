@@ -4,22 +4,23 @@
 import Foundation
 
 public protocol TranscriptItemProtocol: Identifiable, Equatable, Hashable, ObservableObject {
-    var id: UUID { get }
+    var id: String { get }
     var timeStamp: String { get set }
     var contentType: String { get set }
     var serializedContent: [String: Any]? { get set }
 }
 
 public class TranscriptItem: TranscriptItemProtocol {
-    public var id = UUID()
+    public var id: String
     public var timeStamp: String
     public var contentType: String
     public var serializedContent: [String: Any]?
 
-    public init(timeStamp: String, contentType: String, serializedContent: [String: Any]?) {
+    public init(timeStamp: String, contentType: String, id: String?, serializedContent: [String: Any]?) {
         self.timeStamp = timeStamp
         self.contentType = contentType
         self.serializedContent = serializedContent
+        self.id = id ?? UUID().uuidString
     }
 
     public static func == (lhs: TranscriptItem, rhs: TranscriptItem) -> Bool {

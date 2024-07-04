@@ -5,6 +5,7 @@ import Foundation
 import Combine
 import AWSConnectParticipant
 import UniformTypeIdentifiers
+import UIKit
 
 protocol ChatServiceProtocol {
     func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void)
@@ -484,6 +485,21 @@ class ChatService : ChatServiceProtocol {
     
     
     func registerNotificationListeners() {
+        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
+            if let pToken = self?.connectionDetailsProvider.getChatDetails()?.participantToken {
+                self?.awsClient.createParticipantConnection(participantToken: pToken) { result in
+                    switch result {
+                    case .success(let connectionDetails):
+                        self?.connectionDetailsProvider.updateConnectionDetails(newDetails: connectionDetails)
+                        if let wsUrl = URL(string: connectionDetails.websocketUrl ?? "") {
+                            self?.websocketManager?.connect(wsUrl: wsUrl)
+                        }
+                    case .failure(let error):
+                        print("CreateParticipantConnection failed \(error)")
+                    }
+                }
+            }
+        }
         NotificationCenter.default.addObserver(forName: .requestNewWsUrl, object: nil, queue: .main) { [weak self] _ in
             if let pToken = self?.connectionDetailsProvider.getChatDetails()?.participantToken {
                 self?.awsClient.createParticipantConnection(participantToken: pToken) { result in

@@ -71,6 +71,9 @@ public protocol ChatSessionProtocol {
     ///   - completion: The completion handler to call when the URL retrieval is complete.
     func getAttachmentDownloadUrl(attachmentId: String, completion: @escaping (Result<URL, Error>) -> Void)
     
+    /// Returns a boolean indicating whether the chat session is still active.
+    func isChatSessionActive() -> Bool
+    
     var onConnectionEstablished: (() -> Void)? { get set }
     var onConnectionBroken: (() -> Void)? { get set }
     var onMessageReceived: ((TranscriptItem) -> Void)? { get set }
@@ -80,7 +83,6 @@ public protocol ChatSessionProtocol {
 
 public class ChatSession: ChatSessionProtocol {
     public static let shared : ChatSessionProtocol = ChatSession()
-    var isChatSessionActive: Bool = false
     private var chatService: ChatServiceProtocol
     private var eventSubscription: AnyCancellable?
     private var messageSubscription: AnyCancellable?
@@ -106,13 +108,13 @@ public class ChatSession: ChatSessionProtocol {
             DispatchQueue.main.async {
                 switch event {
                 case .connectionEstablished:
-                    self?.isChatSessionActive = true
+                    ConnectionDetailsProvider.shared.setChatSessionState(isActive: true)
                     self?.onConnectionEstablished?()
                 case .connectionBroken:
                     self?.onConnectionBroken?()
                 case .chatEnded:
-                    if (self != nil && self?.isChatSessionActive == true) {
-                        self?.isChatSessionActive = false
+                    if (self != nil && ConnectionDetailsProvider.shared.isChatSessionActive() == true) {
+                        ConnectionDetailsProvider.shared.setChatSessionState(isActive: false)
                         self?.onChatEnded?()
                     }
                 default:
@@ -139,6 +141,10 @@ public class ChatSession: ChatSessionProtocol {
     /// Re-establishes subscriptions to various chat-related events.
     private func reestablishSubscriptions() {
         setupEventSubscriptions()
+    }
+    
+    public func isChatSessionActive() -> Bool {
+        return ConnectionDetailsProvider.shared.isChatSessionActive()
     }
     
     /// Configures the chat service with global configuration.
@@ -172,7 +178,7 @@ public class ChatSession: ChatSessionProtocol {
     
     /// Disconnects the current chat session.
     public func disconnect(completion: @escaping (Result<Void, Error>) -> Void) {
-        if (!self.isChatSessionActive) {
+        if (!ConnectionDetailsProvider.shared.isChatSessionActive()) {
             self.cleanupSubscriptions()
             return
         }

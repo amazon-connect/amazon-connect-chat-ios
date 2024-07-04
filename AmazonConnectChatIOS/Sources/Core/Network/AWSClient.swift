@@ -18,14 +18,14 @@ protocol AWSClientProtocol {
     /// - Parameters:
     ///   - connectionToken: The token for the connection to be disconnected.
     ///   - completion: Completion handler to handle the success status or error.
-    func disconnectParticipantConnection(connectionToken: String, completion: @escaping (Result<Bool, Error>) -> Void)
+    func disconnectParticipantConnection(connectionToken: String, completion: @escaping (Result<AWSConnectParticipantDisconnectParticipantResponse, Error>) -> Void)
     
     /// Sends a message.
     /// - Parameters:
     ///   - connectionToken: The token for the connection through which the message is sent.
     ///   - message: The message text to be sent.
     ///   - completion: Completion handler to handle the success status or error.
-    func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<Bool, Error>) -> Void)
+    func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<AWSConnectParticipantSendMessageResponse, Error>) -> Void)
     
     /// Sends an event..
     /// - Parameters:
@@ -33,7 +33,7 @@ protocol AWSClientProtocol {
     ///   - contentType: The type of content being sent.
     ///   - content: The content string to be sent.
     ///   - completion: Completion handler to handle the success status or error.
-    func sendEvent(connectionToken: String, contentType: ContentType, content: String, completion: @escaping (Result<Bool, Error>) -> Void)
+    func sendEvent(connectionToken: String, contentType: ContentType, content: String, completion: @escaping (Result<AWSConnectParticipantSendEventResponse, Error>) -> Void)
     
     /// Requests a pre-signed S3 URL with authentication headers used to upload a given file to S3.
     /// - Parameters:
@@ -149,7 +149,7 @@ class AWSClient: AWSClientProtocol {
     }
     
     /// Disconnects a participant connection using a connection token.
-    func disconnectParticipantConnection(connectionToken: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+    func disconnectParticipantConnection(connectionToken: String, completion: @escaping (Result<AWSConnectParticipantDisconnectParticipantResponse, Error>) -> Void) {
         guard let request = disconnectParticipantRequest() else {
             completion(.failure(AWSClientError.requestCreationFailed))
             return
@@ -159,15 +159,18 @@ class AWSClient: AWSClientProtocol {
         connectParticipantClient?.disconnectParticipant(request).continueWith(executor: AWSExecutor.mainThread(), block: { (task: AWSTask) -> AnyObject? in
             if let error = task.error {
                 completion(.failure(error))
+            } else if let result = task.result as? AWSConnectParticipantDisconnectParticipantResponse {
+                completion(.success(result))
             } else {
-                completion(.success(true))
+                let error = NSError(domain: "AWSClient", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unexpected response from disconnectParticipant"])
+                completion(.failure(error))
             }
             return nil
         })
     }
     
     /// Sends a message using a connection token.
-    func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+    func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<AWSConnectParticipantSendMessageResponse, Error>) -> Void) {
         guard let request = sendMessageRequest() else {
             completion(.failure(AWSClientError.requestCreationFailed))
             return
@@ -179,15 +182,18 @@ class AWSClient: AWSClientProtocol {
         connectParticipantClient?.sendMessage(request).continueWith(executor: AWSExecutor.mainThread(), block: { (task: AWSTask) -> AnyObject? in
             if let error = task.error {
                 completion(.failure(error))
+            } else if let result = task.result as? AWSConnectParticipantSendMessageResponse {
+                completion(.success(result))
             } else {
-                completion(.success(true))
+                let error = NSError(domain: "AWSClient", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unexpected response from sendMessage"])
+                completion(.failure(error))
             }
             return nil
         })
     }
     
     /// Sends an event using a connection token.
-    func sendEvent(connectionToken: String, contentType: ContentType, content: String = "", completion: @escaping (Result<Bool, Error>) -> Void) {
+    func sendEvent(connectionToken: String, contentType: ContentType, content: String = "", completion: @escaping (Result<AWSConnectParticipantSendEventResponse, Error>) -> Void) {
         guard let request = sendEventRequest() else {
             completion(.failure(AWSClientError.requestCreationFailed))
             return
@@ -200,8 +206,11 @@ class AWSClient: AWSClientProtocol {
         connectParticipantClient?.sendEvent(request).continueWith(executor: AWSExecutor.mainThread(), block: { (task: AWSTask) -> AnyObject? in
             if let error = task.error {
                 completion(.failure(error))
+            } else if let result = task.result as? AWSConnectParticipantSendEventResponse {
+                completion(.success(result))
             } else {
-                completion(.success(true))
+                let error = NSError(domain: "AWSClient", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unexpected response from sendEvent"])
+                completion(.failure(error))
             }
             return nil
         })

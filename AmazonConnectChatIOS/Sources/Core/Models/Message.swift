@@ -28,16 +28,16 @@ public class Message: TranscriptItem, MessageProtocol {
     public var displayName: String?
     @Published public var metadata: (any MetadataProtocol)?
 
-    public init(participant: String, text: String, contentType: String, messageDirection: MessageDirection? = nil, timeStamp: String, attachmentId: String? = nil, messageID: String? = nil,
+    public init(participant: String, text: String, contentType: String, messageDirection: MessageDirection? = nil, timeStamp: String, attachmentId: String? = nil, messageId: String? = nil,
                 displayName: String? = nil, serializedContent: [String: Any], metadata: (any MetadataProtocol)? = nil) {
         self.participant = participant
         self.text = text
         self.messageDirection = messageDirection
-        self.messageId = messageID
+        self.messageId = messageId
         self.metadata = metadata
         self.displayName = displayName
         self.attachmentId = attachmentId
-        super.init(timeStamp: timeStamp, contentType: contentType, serializedContent: serializedContent)
+        super.init(timeStamp: timeStamp, contentType: contentType, id: messageId, serializedContent: serializedContent)
     }
     
     public var content: MessageContent? {
