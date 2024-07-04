@@ -13,7 +13,6 @@ public protocol MessageProtocol: TranscriptItemProtocol {
     var participant: String { get set }
     var text: String { get set }
     var contentType: String { get set }
-    var messageId: String? { get set }
     var displayName: String? { get set }
     var messageDirection: MessageDirection? { get set }
     var metadata: (any MetadataProtocol)? { get set }
@@ -23,7 +22,6 @@ public class Message: TranscriptItem, MessageProtocol {
     public var participant: String
     public var text: String
     public var messageDirection: MessageDirection?
-    public var messageId: String?
     public var attachmentId: String?
     public var displayName: String?
     @Published public var metadata: (any MetadataProtocol)?
@@ -33,7 +31,6 @@ public class Message: TranscriptItem, MessageProtocol {
         self.participant = participant
         self.text = text
         self.messageDirection = messageDirection
-        self.messageId = messageId
         self.metadata = metadata
         self.displayName = displayName
         self.attachmentId = attachmentId

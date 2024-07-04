@@ -395,9 +395,6 @@ extension WebsocketManager {
                 "Attachments": attachmentsArray
             ]
             
-            var checkValue: TranscriptItem? = nil
-            
-            
             // Serialize the dictionary to JSON string
             guard let messageContentData = try? JSONSerialization.data(withJSONObject: messageContentDict, options: []),
                   let messageContentString = String(data: messageContentData, encoding: .utf8) else {
@@ -412,10 +409,9 @@ extension WebsocketManager {
             if let jsonData = wrappedMessageString.data(using: .utf8),
                let json = try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
                 // Process the JSON content and return a TranscriptItem
-                var transcriptItem = self.processJsonContentAndGetItem(json)
-                checkValue = transcriptItem
-                if let test = transcriptItem {
-                    transcriptPublisher.send(test)
+                let transcriptItem = self.processJsonContentAndGetItem(json)
+                if let validItem = transcriptItem {
+                    transcriptPublisher.send(validItem)
                 }
 
                 return transcriptItem

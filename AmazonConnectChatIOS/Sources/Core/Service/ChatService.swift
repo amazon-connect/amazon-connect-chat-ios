@@ -40,6 +40,7 @@ class ChatService : ChatServiceProtocol {
     private var throttleTypingEvent: Bool = false
     private var throttleTypingEventTimer: Timer?
     private var transcriptItemSet = Set<String>()
+    private var messageDict: [String: Message] = [:]
 
     init(awsClient: AWSClientProtocol = AWSClient.shared,
         connectionDetailsProvider: ConnectionDetailsProviderProtocol = ConnectionDetailsProvider.shared,
@@ -113,14 +114,20 @@ class ChatService : ChatServiceProtocol {
     // Update transcript list and notify subscribers
     private func updateTranscriptList(with item: TranscriptItem) {
         var currentList = transcriptListPublisher.value
-        
-        if (transcriptItemSet.contains(item.id)) {
-            return
+        if let metadata = item as? Metadata {
+            let messageItem = messageDict[metadata.id]
+            messageItem?.metadata = metadata
+        } else if let message = item as? Message {
+            if (transcriptItemSet.contains(message.id)) {
+                return
+            }
+            transcriptItemSet.insert(message.id)
+            messageDict[item.id] = message
+            currentList.append(message)
         }
-        transcriptItemSet.insert(item.id)
-        currentList.append(item)
         // Avoid sending empty transcript update
         transcriptListPublisher.send(currentList)  // Send updated list to all subscribers
+
     }
     
     func subscribeToTranscriptList(handleTranscriptList: @escaping ([TranscriptItem]) -> Void) -> AnyCancellable {
@@ -168,6 +175,9 @@ class ChatService : ChatServiceProtocol {
             return
         }
         
+        // Create dummy message
+        
+        
         awsClient.sendMessage(connectionToken: connectionDetails.connectionToken!, contentType: contentType, message: message) { result in
             switch result {
             case .success(_):
@@ -175,6 +185,7 @@ class ChatService : ChatServiceProtocol {
                 completion(true, nil)
             case .failure(let error):
                 completion(false, error)
+                // Message failed to send
             }
         }
     }
@@ -528,6 +539,7 @@ class ChatService : ChatServiceProtocol {
         transcriptItemPublisher = PassthroughSubject<TranscriptItem, Never>()
         transcriptListPublisher = CurrentValueSubject<[TranscriptItem], Never>([])
         transcriptItemSet = Set<String>()
+        messageDict = [:]
     }
     
 }
