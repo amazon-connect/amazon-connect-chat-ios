@@ -326,6 +326,7 @@ extension WebsocketManager: URLSessionWebSocketDelegate {
         print("Websocket connection successfully established")
         self.onConnected?()
         self.isConnected = true
+        print("DEBUB - CONNECTED!")
         self.eventPublisher.send(.connectionEstablished)
         self.sendWebSocketMessage(string: EventTypes.subscribe)
         self.startHeartbeats()
@@ -347,16 +348,16 @@ extension WebsocketManager: URLSessionWebSocketDelegate {
         self.isConnected = false
         if error != nil {
             handleError(error)
-            // NotificationCenter.default.post(name: .requestNewWsUrl, object: nil)
         }
         guard let response = task.response as? HTTPURLResponse else {
             print("Failed to parse HTTPURLResponse")
             return
         }
-        if response.statusCode == 403 || response.statusCode == 101 {
+        if ConnectionDetailsProvider.shared.isChatSessionActive() {
             NotificationCenter.default.post(name: .requestNewWsUrl, object: nil)
             self.wsUrl = nil
         }
+
         self.intentionalDisconnect = false
     }
 }
@@ -394,6 +395,9 @@ extension WebsocketManager {
                 "Attachments": attachmentsArray
             ]
             
+            var checkValue: TranscriptItem? = nil
+            
+            
             // Serialize the dictionary to JSON string
             guard let messageContentData = try? JSONSerialization.data(withJSONObject: messageContentDict, options: []),
                   let messageContentString = String(data: messageContentData, encoding: .utf8) else {
@@ -408,7 +412,13 @@ extension WebsocketManager {
             if let jsonData = wrappedMessageString.data(using: .utf8),
                let json = try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
                 // Process the JSON content and return a TranscriptItem
-                return processJsonContentAndGetItem(json)
+                var transcriptItem = self.processJsonContentAndGetItem(json)
+                checkValue = transcriptItem
+                if let test = transcriptItem {
+                    transcriptPublisher.send(test)
+                }
+
+                return transcriptItem
             }
             
             return nil

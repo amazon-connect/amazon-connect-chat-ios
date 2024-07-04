@@ -178,11 +178,6 @@ public class ChatSession: ChatSessionProtocol {
     
     /// Disconnects the current chat session.
     public func disconnect(completion: @escaping (Result<Void, Error>) -> Void) {
-        if (!ConnectionDetailsProvider.shared.isChatSessionActive()) {
-            self.cleanupSubscriptions()
-            return
-        }
-      
         chatService.disconnectChatSession { success, error in
             DispatchQueue.main.async {
                 if success {

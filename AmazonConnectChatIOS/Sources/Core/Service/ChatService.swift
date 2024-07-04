@@ -39,8 +39,7 @@ class ChatService : ChatServiceProtocol {
     private var websocketManagerFactory: (URL) -> WebsocketManagerProtocol
     private var throttleTypingEvent: Bool = false
     private var throttleTypingEventTimer: Timer?
-    private let readReceiptSet = Set<String>()
-    private let deliveredReceiptSet = Set<String>()
+    private var transcriptItemSet = Set<String>()
 
     init(awsClient: AWSClientProtocol = AWSClient.shared,
         connectionDetailsProvider: ConnectionDetailsProviderProtocol = ConnectionDetailsProvider.shared,
@@ -114,11 +113,14 @@ class ChatService : ChatServiceProtocol {
     // Update transcript list and notify subscribers
     private func updateTranscriptList(with item: TranscriptItem) {
         var currentList = transcriptListPublisher.value
+        
+        if (transcriptItemSet.contains(item.id)) {
+            return
+        }
+        transcriptItemSet.insert(item.id)
         currentList.append(item)
         // Avoid sending empty transcript update
-        if !currentList.isEmpty {
-            transcriptListPublisher.send(currentList)  // Send updated list to all subscribers
-        }
+        transcriptListPublisher.send(currentList)  // Send updated list to all subscribers
     }
     
     func subscribeToTranscriptList(handleTranscriptList: @escaping ([TranscriptItem]) -> Void) -> AnyCancellable {
@@ -132,6 +134,11 @@ class ChatService : ChatServiceProtocol {
     }
     
     func disconnectChatSession(completion: @escaping (Bool, Error?) -> Void) {
+        if (!ConnectionDetailsProvider.shared.isChatSessionActive()) {
+            self.websocketManager?.disconnect()
+            self.clearSubscriptionsAndPublishers()
+            return
+        }
         guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
             let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
             completion(false, error)
@@ -468,6 +475,7 @@ class ChatService : ChatServiceProtocol {
                 
                 if let websocketManager = self?.websocketManager {
                     let formattedItems = websocketManager.formatAndProcessTranscriptItems(transcriptItems)
+                    print("DEBUG - OUT OF LOOP! \(String(describing: formattedItems))")
                     let transcriptResponse = TranscriptResponse(
                         initialContactId: response.initialContactId ?? "", // Assuming contactId is part of connectionDetails
                         nextToken: response.nextToken ?? "", // Handle nextToken if it is available in the response
@@ -486,18 +494,8 @@ class ChatService : ChatServiceProtocol {
     
     func registerNotificationListeners() {
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
-            if let pToken = self?.connectionDetailsProvider.getChatDetails()?.participantToken {
-                self?.awsClient.createParticipantConnection(participantToken: pToken) { result in
-                    switch result {
-                    case .success(let connectionDetails):
-                        self?.connectionDetailsProvider.updateConnectionDetails(newDetails: connectionDetails)
-                        if let wsUrl = URL(string: connectionDetails.websocketUrl ?? "") {
-                            self?.websocketManager?.connect(wsUrl: wsUrl)
-                        }
-                    case .failure(let error):
-                        print("CreateParticipantConnection failed \(error)")
-                    }
-                }
+            if (ConnectionDetailsProvider.shared.isChatSessionActive()) {
+                self?.getTranscript() {_ in }
             }
         }
         NotificationCenter.default.addObserver(forName: .requestNewWsUrl, object: nil, queue: .main) { [weak self] _ in
@@ -529,6 +527,7 @@ class ChatService : ChatServiceProtocol {
         eventPublisher = PassthroughSubject<ChatEvent, Never>()
         transcriptItemPublisher = PassthroughSubject<TranscriptItem, Never>()
         transcriptListPublisher = CurrentValueSubject<[TranscriptItem], Never>([])
+        transcriptItemSet = Set<String>()
     }
     
 }
