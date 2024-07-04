@@ -364,6 +364,20 @@ extension WebsocketManager {
         return transcriptItems.compactMap { item in
             // Create a dictionary with the necessary fields
             let participantRole = CommonUtils().convertParticipantRoleToString(item.participantRole.rawValue)
+            
+            // Process attachments
+            var attachmentsArray: [[String: Any]] = []
+            if let attachments = item.attachments {
+                attachmentsArray = attachments.map { attachment in
+                    [
+                        "AttachmentId": attachment.attachmentId ?? "",
+                        "AttachmentName": attachment.attachmentName ?? "",
+                        "ContentType": attachment.contentType ?? "",
+                        "Status": attachment.status.rawValue
+                    ]
+                }
+            }
+            
             let messageContentDict: [String: Any] = [
                 "Id": item.identifier ?? "",
                 "ParticipantRole": "\(participantRole)",
@@ -371,7 +385,8 @@ extension WebsocketManager {
                 "ContentType": item.contentType ?? "",
                 "Content": item.content ?? "",
                 "Type": CommonUtils().convertParticipantTypeToString(item.types.rawValue),
-                "DisplayName": item.displayName ?? ""
+                "DisplayName": item.displayName ?? "",
+                "Attachments": attachmentsArray
             ]
             
             // Serialize the dictionary to JSON string

@@ -7,16 +7,69 @@ import AWSConnectParticipant
 
 /// Protocol defining the core functionalities of a chat session.
 public protocol ChatSessionProtocol {
+    /// Configures the chat service with global configuration.
+    /// - Parameter config: The global configuration to use.
     func configure(config: GlobalConfig)
+    
+    /// Attempts to connect to a chat session with the given details.
+    /// - Parameters:
+    ///   - chatDetails: The details of the chat session to connect to.
+    ///   - completion: The completion handler to call when the connect operation is complete.
     func connect(chatDetails: ChatDetails, completion: @escaping (Result<Void, Error>) -> Void)
+    
+    /// Disconnects the current chat session.
+    /// - Parameter completion: The completion handler to call when the disconnect operation is complete.
     func disconnect(completion: @escaping (Result<Void, Error>) -> Void)
+    
+    /// Sends a message within the chat session.
+    /// - Parameters:
+    ///   - contentType: The type of the message content.
+    ///   - message: The message to send.
+    ///   - completion: The completion handler to call when the send operation is complete.
     func sendMessage(contentType: ContentType, message: String, completion: @escaping (Result<Void, Error>) -> Void)
+    
+    /// Sends an event within the chat session.
+    /// - Parameters:
+    ///   - event: The type of the event content.
+    ///   - content: The event content to send.
+    ///   - completion: The completion handler to call when the send operation is complete.
     func sendEvent(event: ContentType, content: String, completion: @escaping (Result<Void, Error>) -> Void)
+
+    /// Sends read receipt for a message.
+    /// - Parameters:
+    ///   - event: The type of the event content (default is .messageRead).
+    ///   - messageId: The ID of the message to acknowledge.
+    ///   - completion: The completion handler to call when the send operation is complete.
     func sendMessageReceipt(event: MessageReceiptType, messageId: String, completion: @escaping (Result<Void, Error>) -> Void)
+
+    /// Retrieves the chat transcript.
+    /// - Parameters:
+    ///   - scanDirection: The direction to scan the transcript.
+    ///   - sortOrder: The order to sort the transcript.
+    ///   - maxResults: The maximum number of results to retrieve.
+    ///   - nextToken: The token for the next set of results.
+    ///   - startPosition: The start position for the transcript.
+    ///   - completion: The completion handler to call when the transcript retrieval is complete.
     func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void)
+    
+    /// Sends an attachment within the chat session.
+    /// - Parameters:
+    ///   - file: The URL of the file to attach.
+    ///   - completion: The completion handler to call when the send operation is complete.
     func sendAttachment(file: URL, completion: @escaping (Result<Void, Error>) -> Void)
-    func downloadAttachment(attachmentId: String, filename: String, completion: @escaping (Result<URL?, Error>) -> Void)
-    func getAttachmentDownloadUrl(attachmentId: String, completion: @escaping (Result<URL?, Error>) -> Void)
+    
+    /// Downloads an attachment to the app's temporary directory given an attachment ID.
+    /// - Parameters:
+    ///   - attachmentId: The ID of the attachment to download.
+    ///   - filename: The name of the file to save the attachment as.
+    ///   - completion: The completion handler to call when the download operation is complete.
+    func downloadAttachment(attachmentId: String, filename: String, completion: @escaping (Result<URL, Error>) -> Void)
+    
+    /// Returns the download URL link for the given attachment ID.
+    /// - Parameters:
+    ///   - attachmentId: The ID of the attachment.
+    ///   - completion: The completion handler to call when the URL retrieval is complete.
+    func getAttachmentDownloadUrl(attachmentId: String, completion: @escaping (Result<URL, Error>) -> Void)
     
     var onConnectionEstablished: (() -> Void)? { get set }
     var onConnectionBroken: (() -> Void)? { get set }
@@ -25,10 +78,9 @@ public protocol ChatSessionProtocol {
     var onChatEnded: (() -> Void)? { get set }
 }
 
-
 public class ChatSession: ChatSessionProtocol {
     public static let shared : ChatSessionProtocol = ChatSession()
-    var isChatConnected: Bool = false
+    var isChatSessionActive: Bool = false
     private var chatService: ChatServiceProtocol
     private var eventSubscription: AnyCancellable?
     private var messageSubscription: AnyCancellable?
@@ -54,13 +106,13 @@ public class ChatSession: ChatSessionProtocol {
             DispatchQueue.main.async {
                 switch event {
                 case .connectionEstablished:
-                    self?.isChatConnected = true
+                    self?.isChatSessionActive = true
                     self?.onConnectionEstablished?()
                 case .connectionBroken:
                     self?.onConnectionBroken?()
                 case .chatEnded:
-                    if (self != nil && self?.isChatConnected == true) {
-                        self?.isChatConnected = false
+                    if (self != nil && self?.isChatSessionActive == true) {
+                        self?.isChatSessionActive = false
                         self?.onChatEnded?()
                     }
                 default:
@@ -69,16 +121,16 @@ public class ChatSession: ChatSessionProtocol {
             }
         }
         
-        messageSubscription = chatService.subscribeToTranscriptItem  { [weak self] handleTranscriptItem in
+        messageSubscription = chatService.subscribeToTranscriptItem { [weak self] transcriptItem in
             DispatchQueue.main.async {
-                self?.onMessageReceived?(handleTranscriptItem)
+                self?.onMessageReceived?(transcriptItem)
             }
         }
         
-        transcriptSubscription = chatService.subscribeToTranscriptList { [weak self] handleTranscriptList in
+        transcriptSubscription = chatService.subscribeToTranscriptList { [weak self] transcriptList in
             DispatchQueue.main.async {
-                if !handleTranscriptList.isEmpty {
-                    self?.onTranscriptUpdated?(handleTranscriptList)
+                if !transcriptList.isEmpty {
+                    self?.onTranscriptUpdated?(transcriptList)
                 }
             }
         }
@@ -94,23 +146,15 @@ public class ChatSession: ChatSessionProtocol {
         AWSClient.shared.configure(with: config)
     }
     
-    /// Attempts to connect to a chat session with the given details.
+    /// Connects to a chat session with the given details.
     public func connect(chatDetails: ChatDetails, completion: @escaping (Result<Void, Error>) -> Void) {
         reestablishSubscriptions() // Re-establish subscriptions whenever a new chat session is initiated
-        chatService.createChatSession(chatDetails: chatDetails) { success, error in
-            DispatchQueue.main.async {
-                if success {
-                    SDKLogger.logger.logDebug("Chat session successfully created.")
-                    completion(.success(())) // Call completion with success
-                } else if let error = error {
-                    SDKLogger.logger.logError("Error creating chat session: \(error.localizedDescription)")
-                    completion(.failure(error))
-                }
-            }
+        chatService.createChatSession(chatDetails: chatDetails) { [weak self] success, error in
+            self?.handleCompletion(success: success, error: error, completion: completion)
         }
     }
     
-    
+    /// Retrieves the chat transcript.
     public func getTranscript(
         scanDirection: AWSConnectParticipantScanDirection? = .backward,
         sortOrder: AWSConnectParticipantSortKey? = .ascending,
@@ -119,24 +163,20 @@ public class ChatSession: ChatSessionProtocol {
         startPosition: AWSConnectParticipantStartPosition? = nil,
         completion: @escaping (Result<TranscriptResponse, Error>) -> Void
     ) {
-        self.chatService.getTranscript(scanDirection: scanDirection, sortOrder: sortOrder, maxResults: maxResults, nextToken: nextToken, startPosition: startPosition) { result in
+        chatService.getTranscript(scanDirection: scanDirection, sortOrder: sortOrder, maxResults: maxResults, nextToken: nextToken, startPosition: startPosition) { result in
             DispatchQueue.main.async {
-                switch result {
-                case .success(let items):
-                    completion(.success(items))
-                case .failure(let error):
-                    completion(.failure(error))
-                }
+                completion(result)
             }
         }
     }
     
     /// Disconnects the current chat session.
     public func disconnect(completion: @escaping (Result<Void, Error>) -> Void) {
-        if (!self.isChatConnected) {
+        if (!self.isChatSessionActive) {
             self.cleanupSubscriptions()
             return
         }
+      
         chatService.disconnectChatSession { success, error in
             DispatchQueue.main.async {
                 if success {
@@ -153,29 +193,15 @@ public class ChatSession: ChatSessionProtocol {
     
     /// Sends a message within the chat session.
     public func sendMessage(contentType: ContentType, message: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        chatService.sendMessage(contentType: contentType, message: message) { success, error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    SDKLogger.logger.logError("Error sending message: \(error.localizedDescription)")
-                    completion(.failure(error))
-                } else {
-                    completion(.success(()))
-                }
-            }
+        chatService.sendMessage(contentType: contentType, message: message) { [weak self] success, error in
+            self?.handleCompletion(success: success, error: error, completion: completion)
         }
     }
     
     /// Sends an event within the chat session.
     public func sendEvent(event: ContentType, content: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        chatService.sendEvent(event: event, content: content) { success, error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    SDKLogger.logger.logError("Error sending event: \(error.localizedDescription)")
-                    completion(.failure(error))
-                } else {
-                    completion(.success(()))
-                }
-            }
+        chatService.sendEvent(event: event, content: content) { [weak self] success, error in
+            self?.handleCompletion(success: success, error: error, completion: completion)
         }
     }
     
@@ -196,56 +222,50 @@ public class ChatSession: ChatSessionProtocol {
     
     /// Sends an attachment within the chat session.
     public func sendAttachment(file: URL, completion: @escaping (Result<Void, Error>) -> Void) {
-        chatService.sendAttachment(file: file) { success, error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    SDKLogger.logger.logError("Error sending attachment: \(error.localizedDescription )")
-                    completion(.failure(error))
-                } else {
-                    completion(.success(()))
-                }
-            }
+        chatService.sendAttachment(file: file) { [weak self] success, error in
+            self?.handleCompletion(success: success, error: error, completion: completion)
         }
     }
     
-    /// Downloads an attachment to the app's temporary directory given an attachment ID.
-    public func downloadAttachment(attachmentId: String, filename: String, completion: @escaping (Result<URL?, Error>) -> Void) {
+    /// Downloads an attachment to the app's temporary directory.
+    public func downloadAttachment(attachmentId: String, filename: String, completion: @escaping (Result<URL, Error>) -> Void) {
         chatService.downloadAttachment(attachmentId: attachmentId, filename: filename) { result in
-            switch result {
-            case .success(let localUrl):
-                SDKLogger.logger.logDebug("File successfully downloaded to temporary directory")
-                completion(.success(localUrl))
-            case .failure(let error):
-                SDKLogger.logger.logError("Failed to download attachment: \(error.localizedDescription )")
-                completion(.failure(error))
+            DispatchQueue.main.async {
+                completion(result)
             }
         }
     }
     
-    /// Returns the download URL link for the given attachment ID
-    public func getAttachmentDownloadUrl(attachmentId: String, completion: @escaping (Result<URL?, Error>) -> Void) {
+    /// Returns the download URL link for the given attachment ID.
+    public func getAttachmentDownloadUrl(attachmentId: String, completion: @escaping (Result<URL, Error>) -> Void) {
         chatService.getAttachmentDownloadUrl(attachmentId: attachmentId) { result in
-            switch result {
-            case .success(let localUrl):
-                SDKLogger.logger.logDebug("Attachment download url successfully retrieved")
-                completion(.success(localUrl))
-            case .failure(let error):
-                SDKLogger.logger.logError("Failed to download attachment \(error.localizedDescription)")
-                completion(.failure(error))
+            DispatchQueue.main.async {
+                completion(result)
             }
         }
     }
     
+    /// Cleans up subscriptions when the chat session is deinitialized.
     deinit {
-        eventSubscription?.cancel()
-        messageSubscription?.cancel()
-        transcriptSubscription?.cancel()
+        cleanupSubscriptions()
     }
     
+    /// Cancels all active subscriptions.
     private func cleanupSubscriptions() {
         eventSubscription?.cancel()
         messageSubscription?.cancel()
         transcriptSubscription?.cancel()
     }
+    
+    /// Handles the completion of a service call.
+    private func handleCompletion(success: Bool, error: Error?, completion: @escaping (Result<Void, Error>) -> Void) {
+        DispatchQueue.main.async {
+            if success {
+                completion(.success(()))
+            } else if let error = error {
+                SDKLogger.logger.logError("Error: \(error.localizedDescription)")
+                completion(.failure(error))
+            }
+        }
+    }
 }
-

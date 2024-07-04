@@ -51,6 +51,9 @@ public class Message: TranscriptItem, MessageProtocol {
             return decodeInteractiveContent(from: text)
         default:
             // Handle or log unsupported content types
+            if attachmentId != nil{
+                return PlainTextContent.decode(from: text)
+            }
             print("Unsupported content type: \(contentType)")
             return nil
         }
