@@ -40,7 +40,9 @@ class ChatService : ChatServiceProtocol {
     private var throttleTypingEvent: Bool = false
     private var throttleTypingEventTimer: Timer?
     private var transcriptItemSet = Set<String>()
-    private var messageDict: [String: Message] = [:]
+    private var messageDict: [String: TranscriptItem] = [:]
+    private var typingEventIndex = -1
+    private var typingTimer: Timer? = nil
 
     init(awsClient: AWSClientProtocol = AWSClient.shared,
         connectionDetailsProvider: ConnectionDetailsProviderProtocol = ConnectionDetailsProvider.shared,
@@ -115,19 +117,41 @@ class ChatService : ChatServiceProtocol {
     private func updateTranscriptList(with item: TranscriptItem) {
         var currentList = transcriptListPublisher.value
         if let metadata = item as? Metadata {
-            let messageItem = messageDict[metadata.id]
+            let messageItem: Message? = messageDict[metadata.id] as? Message
             messageItem?.metadata = metadata
-        } else if let message = item as? Message {
-            if (transcriptItemSet.contains(message.id)) {
+        } else {
+            if (transcriptItemSet.contains(item.id)) {
                 return
             }
-            transcriptItemSet.insert(message.id)
-            messageDict[item.id] = message
-            currentList.append(message)
+            transcriptItemSet.insert(item.id)
+            messageDict[item.id] = item
+            currentList.append(item)
+            if item.contentType == ContentType.typing.rawValue {
+                currentList = removeTypingEvent(arr: currentList)
+                typingEventIndex = currentList.count - 1
+                self.typingTimer?.invalidate()
+                DispatchQueue.main.async {
+                    self.typingTimer = Timer.scheduledTimer(withTimeInterval: 12.0, repeats: false) { _ in
+                        let removedTypingList = self.removeTypingEvent(arr: self.transcriptListPublisher.value)
+                        self.transcriptListPublisher.send(removedTypingList)
+                    }
+                }
+            } else if let message = item as? Message, message.participant == Constants.AGENT {
+                currentList = removeTypingEvent(arr: currentList)
+            }
         }
-        // Avoid sending empty transcript update
-        transcriptListPublisher.send(currentList)  // Send updated list to all subscribers
 
+        transcriptListPublisher.send(currentList)  // Send updated list to all subscribers
+    }
+    
+    private func removeTypingEvent(arr: [TranscriptItem]) -> [TranscriptItem] {
+        var resultArr = arr
+        if typingEventIndex != -1 {
+            resultArr.remove(at: typingEventIndex)
+            typingEventIndex = -1
+            self.typingTimer?.invalidate()
+        }
+        return resultArr
     }
     
     func subscribeToTranscriptList(handleTranscriptList: @escaping ([TranscriptItem]) -> Void) -> AnyCancellable {
@@ -141,7 +165,7 @@ class ChatService : ChatServiceProtocol {
     }
     
     func disconnectChatSession(completion: @escaping (Bool, Error?) -> Void) {
-        if (!ConnectionDetailsProvider.shared.isChatSessionActive()) {
+        if (!connectionDetailsProvider.isChatSessionActive()) {
             self.websocketManager?.disconnect()
             self.clearSubscriptionsAndPublishers()
             return
@@ -486,7 +510,6 @@ class ChatService : ChatServiceProtocol {
                 
                 if let websocketManager = self?.websocketManager {
                     let formattedItems = websocketManager.formatAndProcessTranscriptItems(transcriptItems)
-                    print("DEBUG - OUT OF LOOP! \(String(describing: formattedItems))")
                     let transcriptResponse = TranscriptResponse(
                         initialContactId: response.initialContactId ?? "", // Assuming contactId is part of connectionDetails
                         nextToken: response.nextToken ?? "", // Handle nextToken if it is available in the response
@@ -505,7 +528,7 @@ class ChatService : ChatServiceProtocol {
     
     func registerNotificationListeners() {
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
-            if (ConnectionDetailsProvider.shared.isChatSessionActive()) {
+            if (self?.connectionDetailsProvider.isChatSessionActive() != nil && self?.connectionDetailsProvider.isChatSessionActive() != false) {
                 self?.getTranscript() {_ in }
             }
         }

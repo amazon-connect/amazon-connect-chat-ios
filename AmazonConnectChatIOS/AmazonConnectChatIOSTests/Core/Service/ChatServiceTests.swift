@@ -97,7 +97,7 @@ class ChatServiceTests: XCTestCase {
             
             // Simulate WebSocket events
             self.mockWebsocketManager.eventPublisher.send(.connectionEstablished)
-            let transcriptItem = TranscriptItem(timeStamp: "timestamp", contentType: "text/plain", serializedContent: ["content": "testContent"])
+            let transcriptItem = TranscriptItem(timeStamp: "timestamp", contentType: "text/plain", id: "12345" ,serializedContent: ["content": "testContent"])
             self.mockWebsocketManager.transcriptPublisher.send(transcriptItem)
         }
         
@@ -119,7 +119,7 @@ class ChatServiceTests: XCTestCase {
     }
     
     func testSubscribeToTranscriptItem() {
-        let receivedItem = subscribeAndSendTranscriptItem(TranscriptItem(timeStamp: "timestamp", contentType: "text/plain", serializedContent: ["content": "testContent"]))
+        let receivedItem = subscribeAndSendTranscriptItem(TranscriptItem(timeStamp: "timestamp", contentType: "text/plain", id: "12345", serializedContent: ["content": "testContent"]))
         XCTAssertEqual(receivedItem?.contentType, "text/plain", "Should receive the correct transcript item")
     }
     
@@ -136,7 +136,7 @@ class ChatServiceTests: XCTestCase {
             }
         }
         
-        let transcriptItem = TranscriptItem(timeStamp: "timestamp", contentType: "text/plain", serializedContent: ["content": "testContent"])
+        let transcriptItem = TranscriptItem(timeStamp: "timestamp", contentType: "text/plain", id: "12345", serializedContent: ["content": "testContent"])
         chatService.transcriptListPublisher.send([transcriptItem])
         
         waitForExpectations(timeout: 1) { error in
@@ -182,7 +182,7 @@ class ChatServiceTests: XCTestCase {
     
     func testDisconnectChatSession_Success() {
         let expectation = self.expectation(description: "Chat session should be disconnected successfully")
-        mockAWSClient.disconnectParticipantConnectionResult = .success(true)
+        mockAWSClient.disconnectParticipantConnectionResult = .success(AWSConnectParticipantDisconnectParticipantResponse())
         
         chatService.disconnectChatSession { success, error in
             XCTAssertTrue(success, "Chat session should be disconnected successfully")
@@ -197,7 +197,7 @@ class ChatServiceTests: XCTestCase {
         mockAWSClient.disconnectParticipantConnectionResult = .failure(expectedError)
         
         let expectation = self.expectation(description: "Chat session disconnection should fail")
-        
+
         chatService.disconnectChatSession { success, error in
             XCTAssertFalse(success, "Chat session should not be disconnected successfully")
             XCTAssertEqual(error as NSError?, self.expectedError, "Should receive the expected error")
@@ -226,7 +226,7 @@ class ChatServiceTests: XCTestCase {
     func testSendMessage_Success() {
         let message = "Test message"
         let contentType = ContentType.plainText
-        mockAWSClient.sendMessageResult = .success(true)
+        mockAWSClient.sendMessageResult = .success(AWSConnectParticipantSendMessageResponse())
         
         let expectation = self.expectation(description: "Message should be sent successfully")
         
@@ -274,7 +274,7 @@ class ChatServiceTests: XCTestCase {
     func testSendEvent_Success() {
         let event = ContentType.typing
         let content = "Test event"
-        mockAWSClient.sendEventResult = .success(true)
+        mockAWSClient.sendEventResult = .success(AWSConnectParticipantSendEventResponse())
         
         let expectation = self.expectation(description: "Event should be sent successfully")
         
@@ -322,7 +322,7 @@ class ChatServiceTests: XCTestCase {
     func testSendEvent_TypingEventThrottling() {
         let event = ContentType.typing
         let content = "Test event"
-        mockAWSClient.sendEventResult = .success(true)
+        mockAWSClient.sendEventResult = .success(AWSConnectParticipantSendEventResponse())
         
         let expectation = self.expectation(description: "Typing event should only be sent once if two typing events occur")
         
@@ -481,20 +481,26 @@ class ChatServiceTests: XCTestCase {
         mockChatService.sendEventResult = (true, nil)
         var pendingMessageReceipts = PendingMessageReceipts(readReceiptMessageId: "67890", deliveredReceiptMessageId: "12345")
         
-        var firstCompletion = false
+        var readReceiptReceived = false
+        var deliveredReceiptReceived = false
         
         mockChatService.sendPendingMessageReceipts(pendingMessageReceipts: pendingMessageReceipts) { result in
             switch result {
             case .success(let messageReceiptType):
-                if !firstCompletion {
-                    XCTAssertEqual(messageReceiptType, .messageRead)
-                    firstCompletion = true
-                } else {
-                    XCTAssertEqual(mockChatService.numSendEventCalled, 2)
-                    XCTAssertEqual(messageReceiptType, .messageDelivered)
+                if messageReceiptType == .messageDelivered {
+                    if deliveredReceiptReceived {
+                        XCTFail("Unexpectedly received two delivered receipts")
+                    }
+                    deliveredReceiptReceived = true
+                } else if messageReceiptType == .messageRead {
+                    if readReceiptReceived {
+                        XCTFail("Unexpectedly received two read receipts")
+                    }
+                    readReceiptReceived = true
+                }
+                if readReceiptReceived && deliveredReceiptReceived {
                     expectation.fulfill()
                 }
-
                 break
             case .failure(let error):
                 XCTFail("Expected success, got unexpected failure: \(String(describing: error))")

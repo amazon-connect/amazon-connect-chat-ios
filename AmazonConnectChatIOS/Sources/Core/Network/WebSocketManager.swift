@@ -326,7 +326,6 @@ extension WebsocketManager: URLSessionWebSocketDelegate {
         print("Websocket connection successfully established")
         self.onConnected?()
         self.isConnected = true
-        print("DEBUB - CONNECTED!")
         self.eventPublisher.send(.connectionEstablished)
         self.sendWebSocketMessage(string: EventTypes.subscribe)
         self.startHeartbeats()
