@@ -38,11 +38,39 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
     var onError: ((Error?) -> Void)?
     
     init(wsUrl: URL) {
+        print("THIS IS NEW")
         self.wsUrl = wsUrl
         super.init()
         self.connect()
         self.initializeHeartbeatManagers()
         self.addNetworkNotificationObserver()
+        self.addAppLifecycleObservers() // Add this line
+
+    }
+    
+    private var cancellables = Set<AnyCancellable>()
+
+    func addAppLifecycleObservers() {
+        NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)
+            .sink { [weak self] _ in
+                self?.appDidEnterBackground()
+            }
+            .store(in: &cancellables)
+
+        NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)
+            .sink { [weak self] _ in
+                self?.appWillEnterForeground()
+            }
+            .store(in: &cancellables)
+    }
+
+    private func appDidEnterBackground() {
+        print("App did enter background")
+        // Optionally stop heartbeats or perform other actions
+    }
+
+    private func appWillEnterForeground() {
+        print("App will enter foreground")
     }
     
     func connect(wsUrl: URL? = nil) {
@@ -86,7 +114,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
             case .success(let message):
                 switch message {
                 case .string(let text):
-                    print("Received text in receiveMessage()")
+                    print("Received text in receiveMessage() \(text)")
                     self?.handleWebsocketTextEvent(text: text)
                 case .data(let data):
                     print("Received data from websocket")
@@ -171,7 +199,6 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
                 print("Unknown websocket message type: \(String(describing: innerJson["Type"]))")
                 return nil
             }
-            let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
             switch type {
             case .message:
                 return self.handleMessage(innerJson, json)
@@ -238,6 +265,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
                                         timer?.invalidate()
                                         self.hasActiveReconnection = false
                                         numAttempts = 0.0
+                                        self.eventPublisher.send(.connectionEstablished)
                                     } else {
                                         print("Attempting websocket re-connect... attempt \(numAttempts)")
                                         self.connect()
@@ -346,19 +374,26 @@ extension WebsocketManager: URLSessionWebSocketDelegate {
         print("WebSocket connection completed with error.")
         self.onDisconnected?()
         self.isConnected = false
+        self.eventPublisher.send(.connectionBroken)
         if error != nil {
             handleError(error)
         }
-        guard let response = task.response as? HTTPURLResponse else {
-            print("Failed to parse HTTPURLResponse")
-            return
-        }
+
         if ConnectionDetailsProvider.shared.isChatSessionActive() {
             NotificationCenter.default.post(name: .requestNewWsUrl, object: nil)
             self.wsUrl = nil
         }
 
         self.intentionalDisconnect = false
+        
+        // Attempt to reconnect with the same URL
+        if wsUrl != nil {
+            retryConnection()
+        } else {
+            // Request a new URL if the current one is invalid
+            self.wsUrl = nil
+            NotificationCenter.default.post(name: .requestNewWsUrl, object: nil)
+        }
     }
 }
 
@@ -428,7 +463,7 @@ extension WebsocketManager {
         let messageId = innerJson["Id"] as! String
         var messageText = innerJson["Content"] as! String
         let displayName = innerJson["DisplayName"] as! String
-        let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
+        let time = innerJson["AbsoluteTime"] as! String
 
         // Workaround for Attributed string to enable newline
         messageText = messageText.replacingOccurrences(of: "\n", with: "\\\n")
@@ -447,7 +482,7 @@ extension WebsocketManager {
     func handleAttachment(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem?  {
         let participantRole = innerJson["ParticipantRole"] as! String
         let messageId = innerJson["Id"] as! String
-        let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
+        let time = innerJson["AbsoluteTime"] as! String
         
         var attachmentName: String? = nil
         var contentType: String? = nil
@@ -479,7 +514,7 @@ extension WebsocketManager {
     
     func handleParticipantEvent(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {
         let participantRole = innerJson["ParticipantRole"] as! String
-        let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
+        let time = innerJson["AbsoluteTime"] as! String
         let displayName = innerJson["DisplayName"] as! String
         let messageId = innerJson["Id"] as! String
 
@@ -496,7 +531,7 @@ extension WebsocketManager {
     
     func handleTyping(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem {
         let participantRole = innerJson["ParticipantRole"] as! String
-        let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
+        let time = innerJson["AbsoluteTime"] as! String
         let displayName = innerJson["DisplayName"] as! String
         let messageId = innerJson["Id"] as! String
 
@@ -504,13 +539,14 @@ extension WebsocketManager {
             timeStamp: time,
             contentType: innerJson["ContentType"] as! String,
             messageId: messageId,
+            displayName: displayName,
             participant: participantRole,
             serializedContent: serializedContent
         )
     }
     
     func handleChatEnded(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {
-        let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
+        let time = innerJson["AbsoluteTime"] as! String
         self.eventPublisher.send(.chatEnded)
         let messageId = innerJson["Id"] as! String
         resetHeartbeatManagers()
@@ -528,7 +564,7 @@ extension WebsocketManager {
         let messageId = messageMetadata["MessageId"] as! String
         let receipts = messageMetadata["Receipts"] as? [[String: Any]]
         var status: MessageStatus = .Delivered // Default status
-        let time = CommonUtils().formatTime(innerJson["AbsoluteTime"] as! String)!
+        let time = innerJson["AbsoluteTime"] as! String
 
         if let receipts = receipts {
             for receipt in receipts {

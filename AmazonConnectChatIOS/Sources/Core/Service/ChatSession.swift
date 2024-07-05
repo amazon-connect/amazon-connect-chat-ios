@@ -109,8 +109,12 @@ public class ChatSession: ChatSessionProtocol {
                 switch event {
                 case .connectionEstablished:
                     ConnectionDetailsProvider.shared.setChatSessionState(isActive: true)
+                    if (ConnectionDetailsProvider.shared.isChatSessionActive()) {
+                        self?.getTranscript() {_ in }
+                    }
                     self?.onConnectionEstablished?()
                 case .connectionBroken:
+                    ConnectionDetailsProvider.shared.setChatSessionState(isActive: false)
                     self?.onConnectionBroken?()
                 case .chatEnded:
                     if (self != nil && ConnectionDetailsProvider.shared.isChatSessionActive() == true) {
@@ -129,13 +133,33 @@ public class ChatSession: ChatSessionProtocol {
             }
         }
         
-        transcriptSubscription = chatService.subscribeToTranscriptList { [weak self] transcriptList in
+//        transcriptSubscription = chatService.subscribeToTranscriptList { [weak self] transcriptList in
+//            DispatchQueue.main.async {
+//                if !transcriptList.isEmpty {
+//                    self?.onTranscriptUpdated?(transcriptList)
+//                }
+//            }
+//        }
+        
+        transcriptSubscription = chatService.subscribeToTranscriptDict { [weak self] transcriptDict in
             DispatchQueue.main.async {
+//                let transcriptList = self?.convertDictToList(transcriptDict) ?? []
+                let transcriptList = Array(transcriptDict.values.sorted { $0.timeStamp < $1.timeStamp })
                 if !transcriptList.isEmpty {
                     self?.onTranscriptUpdated?(transcriptList)
                 }
             }
         }
+        
+        
+        
+    }
+    
+    /// Converts a dictionary of transcript items to a sorted list.
+    /// - Parameter transcriptDict: The dictionary of transcript items.
+    /// - Returns: A sorted list of transcript items.
+    private func convertDictToList(_ transcriptDict: [String: TranscriptItem]) -> [TranscriptItem] {
+        return transcriptDict.values.sorted { $0.timeStamp < $1.timeStamp }
     }
     
     /// Re-establishes subscriptions to various chat-related events.
@@ -164,7 +188,7 @@ public class ChatSession: ChatSessionProtocol {
     public func getTranscript(
         scanDirection: AWSConnectParticipantScanDirection? = .backward,
         sortOrder: AWSConnectParticipantSortKey? = .ascending,
-        maxResults: NSNumber? = 15,
+        maxResults: NSNumber? = 30,
         nextToken: String? = nil,
         startPosition: AWSConnectParticipantStartPosition? = nil,
         completion: @escaping (Result<TranscriptResponse, Error>) -> Void

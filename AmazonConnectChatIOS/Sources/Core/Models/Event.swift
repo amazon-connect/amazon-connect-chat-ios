@@ -6,6 +6,7 @@ import Foundation
 protocol EventProtocol: TranscriptItemProtocol {
     var participant: String? { get set }
     var text: String? { get set }
+    var displayName: String? { get set }
     var eventDirection: MessageDirection? { get set }
 }
 

@@ -23,7 +23,8 @@ struct CommonUtils {
             
             // Convert to local time or fallback to UTC time string
             let localTime = dateFormatter.string(from: utcDate)
-            return localTime.isEmpty ? timeStamp : localTime
+//            return localTime.isEmpty ? timeStamp : localTime
+        return timeStamp
     }
     
     func convertParticipantRoleToString(_ roleValue: Int) -> String {

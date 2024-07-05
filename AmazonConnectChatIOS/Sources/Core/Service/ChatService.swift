@@ -20,6 +20,7 @@ protocol ChatServiceProtocol {
     func subscribeToEvents(handleEvent: @escaping (ChatEvent) -> Void) -> AnyCancellable
     func subscribeToTranscriptItem(handleTranscriptItem: @escaping (TranscriptItem) -> Void) -> AnyCancellable
     func subscribeToTranscriptList(handleTranscriptList: @escaping ([TranscriptItem]) -> Void) -> AnyCancellable
+    func subscribeToTranscriptDict(handleTranscriptDict: @escaping ([String: TranscriptItem]) -> Void) -> AnyCancellable
     func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void)
 }
 
@@ -41,6 +42,9 @@ class ChatService : ChatServiceProtocol {
     private var throttleTypingEventTimer: Timer?
     private var transcriptItemSet = Set<String>()
     private var messageDict: [String: Message] = [:]
+    var transcriptDictPublisher = CurrentValueSubject<[String: TranscriptItem], Never>([:])
+    private var transcriptDictCancellables = Set<AnyCancellable>()
+
 
     init(awsClient: AWSClientProtocol = AWSClient.shared,
         connectionDetailsProvider: ConnectionDetailsProviderProtocol = ConnectionDetailsProvider.shared,
@@ -86,7 +90,8 @@ class ChatService : ChatServiceProtocol {
             .receive(on: RunLoop.main)
             .sink(receiveValue: { [weak self] transcriptItem in
                 self?.transcriptItemPublisher.send(transcriptItem)
-                self?.updateTranscriptList(with: transcriptItem)
+//                self?.updateTranscriptList(with: transcriptItem)
+                self?.updateTranscriptDict(with: transcriptItem)
             })
             .store(in: &transcriptItemCancellables)
     }
@@ -114,21 +119,74 @@ class ChatService : ChatServiceProtocol {
     // Update transcript list and notify subscribers
     private func updateTranscriptList(with item: TranscriptItem) {
         var currentList = transcriptListPublisher.value
+        //Remove previous typing indicators
+        currentList.removeAll { $0 is Event && ($0 as? Event)?.contentType == ContentType.typing.rawValue }
+        
         if let metadata = item as? Metadata {
-            let messageItem = messageDict[metadata.id]
-            messageItem?.metadata = metadata
-        } else if let message = item as? Message {
-            if (transcriptItemSet.contains(message.id)) {
+            if let messageItem = self.messageDict[metadata.id]{
+                messageItem.metadata = metadata
+                // Update the message in the current list
+                if let messageIndex = currentList.firstIndex(where: { $0.id == metadata.id }) {
+                    currentList[messageIndex] = messageItem
+                }
+            }
+        }
+        else if let message = item as? Message {
+            if let tempMessageIndex = currentList.firstIndex(where: { $0.id == message.id }) {
+                // Update the temporary message with actual data
+                currentList[tempMessageIndex] = message
+                self.messageDict[message.id] = message
+            } else if !transcriptItemSet.contains(message.id) {
+                // Add the new message
+                transcriptItemSet.insert(message.id)
+                self.messageDict[message.id] = message
+                currentList.append(message)
+            }
+        }
+        else if let event = item as? Event  {
+            // Event
+            if (transcriptItemSet.contains(event.id)) {
                 return
             }
-            transcriptItemSet.insert(message.id)
-            messageDict[item.id] = message
-            currentList.append(message)
+            transcriptItemSet.insert(event.id)
+            currentList.append(event)
         }
+        
         // Avoid sending empty transcript update
         transcriptListPublisher.send(currentList)  // Send updated list to all subscribers
-
+        
     }
+    
+    // Update transcript dictionary and notify subscribers
+        private func updateTranscriptDict(with item: TranscriptItem) {
+            var currentDict = transcriptDictPublisher.value
+
+            if let metadata = item as? Metadata {
+                if let messageItem = self.messageDict[metadata.id] {
+                    messageItem.metadata = metadata
+                    currentDict[metadata.id] = messageItem
+                }
+            } else if let message = item as? Message {
+                currentDict[message.id] = message
+                self.messageDict[message.id] = message
+            } else if let event = item as? Event {
+                currentDict[event.id] = event
+            }
+
+            transcriptDictPublisher.send(currentDict)  // Send updated dictionary to all subscribers
+        }
+    
+    
+    func subscribeToTranscriptDict(handleTranscriptDict: @escaping ([String: TranscriptItem]) -> Void) -> AnyCancellable {
+            let subscription = transcriptDictPublisher
+                .receive(on: RunLoop.main)
+                .sink(receiveValue: { updatedTranscript in
+                    handleTranscriptDict(updatedTranscript)
+                })
+            transcriptDictCancellables.insert(subscription)
+            return subscription
+        }
+
     
     func subscribeToTranscriptList(handleTranscriptList: @escaping ([TranscriptItem]) -> Void) -> AnyCancellable {
         let subscription = transcriptListPublisher
@@ -140,34 +198,6 @@ class ChatService : ChatServiceProtocol {
         return subscription
     }
     
-    func disconnectChatSession(completion: @escaping (Bool, Error?) -> Void) {
-        if (!ConnectionDetailsProvider.shared.isChatSessionActive()) {
-            self.websocketManager?.disconnect()
-            self.clearSubscriptionsAndPublishers()
-            return
-        }
-        guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
-            let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
-            completion(false, error)
-            return
-        }
-        
-        messageReceiptsManager?.invalidateTimer()
-        
-        awsClient.disconnectParticipantConnection(connectionToken: connectionDetails.connectionToken!) { result in
-            switch result {
-            case .success(_):
-                SDKLogger.logger.logDebug("Participant Disconnected")
-                self.eventPublisher.send(.chatEnded)
-                self.websocketManager?.disconnect()
-                self.clearSubscriptionsAndPublishers()
-                completion(true, nil)
-            case .failure(let error):
-                completion(false, error)
-            }
-        }
-    }
-    
     func sendMessage(contentType: ContentType, message: String, completion: @escaping (Bool, Error?) -> Void) {
         guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
             let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
@@ -175,20 +205,71 @@ class ChatService : ChatServiceProtocol {
             return
         }
         
-        // Create dummy message
+        // Create a temporary message ID and timestamp
+        let temporaryMessageId = UUID().uuidString
+        
+        // Add the recently sent message to transcript temporarily
+        let recentlySentMessage = Message(
+            participant: "CUSTOMER",
+            text: message,
+            contentType: contentType.rawValue,
+            messageDirection: MessageDirection.Outgoing,
+            timeStamp: "Sending...",
+            attachmentId: nil,
+            messageId: temporaryMessageId,
+            serializedContent: [:]
+        )
+        
+//        var currentList = transcriptListPublisher.value
+//        currentList.append(recentlySentMessage)
+//        transcriptListPublisher.send(currentList)
         
         
-        awsClient.sendMessage(connectionToken: connectionDetails.connectionToken!, contentType: contentType, message: message) { result in
-            switch result {
-            case .success(_):
-                MetricsClient.shared.triggerCountMetric(metricName: .SendMessage)
-                completion(true, nil)
-            case .failure(let error):
-                completion(false, error)
-                // Message failed to send
+        var currentDict = transcriptDictPublisher.value
+        currentDict[temporaryMessageId] = recentlySentMessage
+        transcriptDictPublisher.send(currentDict)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            
+            self.awsClient.sendMessage(connectionToken: connectionDetails.connectionToken!, contentType: contentType, message: message) { result in
+                switch result {
+                case .success(let response):
+                    MetricsClient.shared.triggerCountMetric(metricName: .SendMessage)
+                    if let id = response.identifier {
+                        self.updateMessageId(oldId: temporaryMessageId, newId: id)
+                    }
+                    completion(true, nil)
+                case .failure(let error):
+                    completion(false, error)
+                    // Message failed to send
+                }
             }
+            
         }
     }
+    
+    private func updateMessageId(oldId: String, newId: String) {
+//        var currentList = transcriptListPublisher.value
+//        
+//        if let index = currentList.firstIndex(where: { $0.id == oldId }) {
+//            if let message = currentList[index] as? Message {
+//                message.id = newId
+//                currentList[index] = message
+//                transcriptListPublisher.send(currentList)
+//            }
+//        }
+        
+        var currentDict = transcriptDictPublisher.value
+
+                if let message = currentDict[oldId] as? Message {
+                    message.id = newId
+                    currentDict.removeValue(forKey: oldId)
+                    currentDict[newId] = message
+                    transcriptDictPublisher.send(currentDict)
+                }
+        
+    }
+
     
     func sendEvent(event: ContentType, content: String?, completion: @escaping (Bool, Error?) -> Void) {
         guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
@@ -472,7 +553,7 @@ class ChatService : ChatServiceProtocol {
         getTranscriptArgs?.connectionToken = connectionDetails.connectionToken
         getTranscriptArgs?.scanDirection = scanDirection ?? .backward
         getTranscriptArgs?.sortOrder = sortOrder ?? .ascending
-        getTranscriptArgs?.maxResults = maxResults ?? 15
+        getTranscriptArgs?.maxResults = maxResults ?? 30
         getTranscriptArgs?.startPosition = startPosition
         
         awsClient.getTranscript(getTranscriptArgs: getTranscriptArgs!) { [weak self] result in
@@ -502,13 +583,41 @@ class ChatService : ChatServiceProtocol {
         }
     }
     
-    
-    func registerNotificationListeners() {
-        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
-            if (ConnectionDetailsProvider.shared.isChatSessionActive()) {
-                self?.getTranscript() {_ in }
+    func disconnectChatSession(completion: @escaping (Bool, Error?) -> Void) {
+        if (!ConnectionDetailsProvider.shared.isChatSessionActive()) {
+            self.websocketManager?.disconnect()
+            self.clearSubscriptionsAndPublishers()
+            return
+        }
+        guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
+            let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
+            completion(false, error)
+            return
+        }
+        
+        messageReceiptsManager?.invalidateTimer()
+        
+        awsClient.disconnectParticipantConnection(connectionToken: connectionDetails.connectionToken!) { result in
+            switch result {
+            case .success(_):
+                SDKLogger.logger.logDebug("Participant Disconnected")
+                self.eventPublisher.send(.chatEnded)
+                self.websocketManager?.disconnect()
+                self.clearSubscriptionsAndPublishers()
+                completion(true, nil)
+            case .failure(let error):
+                completion(false, error)
             }
         }
+    }
+    
+    
+    func registerNotificationListeners() {
+//        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
+//            if (ConnectionDetailsProvider.shared.isChatSessionActive()) {
+//                self?.getTranscript() {_ in }
+//            }
+//        }
         NotificationCenter.default.addObserver(forName: .requestNewWsUrl, object: nil, queue: .main) { [weak self] _ in
             if let pToken = self?.connectionDetailsProvider.getChatDetails()?.participantToken {
                 self?.awsClient.createParticipantConnection(participantToken: pToken) { result in
@@ -538,6 +647,7 @@ class ChatService : ChatServiceProtocol {
         eventPublisher = PassthroughSubject<ChatEvent, Never>()
         transcriptItemPublisher = PassthroughSubject<TranscriptItem, Never>()
         transcriptListPublisher = CurrentValueSubject<[TranscriptItem], Never>([])
+        transcriptDictPublisher = CurrentValueSubject<[String: TranscriptItem], Never>([:])
         transcriptItemSet = Set<String>()
         messageDict = [:]
     }
