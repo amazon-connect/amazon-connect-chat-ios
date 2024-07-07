@@ -16,9 +16,11 @@ public protocol MessageProtocol: TranscriptItemProtocol {
     var displayName: String? { get set }
     var messageDirection: MessageDirection? { get set }
     var metadata: (any MetadataProtocol)? { get set }
+//    func copy() -> any MessageProtocol
 }
 
 public class Message: TranscriptItem, MessageProtocol {
+    
     public var participant: String
     public var text: String
     public var messageDirection: MessageDirection?
@@ -77,4 +79,9 @@ public class Message: TranscriptItem, MessageProtocol {
             return nil
         }
     }
+    
+//    public func copy() -> any MessageProtocol {
+//            let copiedMetadata = self.metadata?.copy() as? any MetadataProtocol
+//            return Message(participant: self.participant, text: self.text, contentType: self.contentType, messageDirection: self.messageDirection, timeStamp: self.timeStamp, attachmentId: self.attachmentId, messageId: self.id, displayName: self.displayName, serializedContent: self.serializedContent ?? [:], metadata: copiedMetadata)
+//        }
 }

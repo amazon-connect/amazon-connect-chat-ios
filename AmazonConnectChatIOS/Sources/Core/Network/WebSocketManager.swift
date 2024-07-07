@@ -44,55 +44,24 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
         self.connect()
         self.initializeHeartbeatManagers()
         self.addNetworkNotificationObserver()
-        self.addAppLifecycleObservers() // Add this line
-
-    }
-    
-    private var cancellables = Set<AnyCancellable>()
-
-    func addAppLifecycleObservers() {
-        NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)
-            .sink { [weak self] _ in
-                self?.appDidEnterBackground()
-            }
-            .store(in: &cancellables)
-
-        NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)
-            .sink { [weak self] _ in
-                self?.appWillEnterForeground()
-            }
-            .store(in: &cancellables)
-    }
-
-    private func appDidEnterBackground() {
-        print("App did enter background")
-        // Optionally stop heartbeats or perform other actions
-    }
-
-    private func appWillEnterForeground() {
-        print("App will enter foreground")
     }
     
     func connect(wsUrl: URL? = nil) {
         self.intentionalDisconnect = false
         disconnect() // Ensure previous WebSocket tasks are properly closed
         
-        if let wsTask = self.websocketTask {
-            wsTask.cancel(with: .goingAway, reason: nil)
-        }
         if let nonEmptyWsUrl = wsUrl {
             self.hasActiveReconnection = false
             self.wsUrl = nonEmptyWsUrl
         }
-        if let webSocketUrl = self.wsUrl {
-            self.session = URLSession(configuration: .default, delegate: self, delegateQueue: OperationQueue())
-            self.websocketTask = self.session?.webSocketTask(with: webSocketUrl)
-            websocketTask?.resume()
-            receiveMessage()
-        } else {
+        guard let webSocketUrl = self.wsUrl else {
             print("No WebSocketURL found")
             return
         }
+        self.session = URLSession(configuration: .default, delegate: self, delegateQueue: OperationQueue())
+        self.websocketTask = self.session?.webSocketTask(with: webSocketUrl)
+        websocketTask?.resume()
+        receiveMessage()
     }
     
     func sendWebSocketMessage(string message: String) {
@@ -147,7 +116,9 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
         NotificationCenter.default.addObserver(forName: .networkConnected, object: nil, queue: .main) { [weak self] _ in
             if (self?.pendingNetworkReconnection == true) {
                 self?.pendingNetworkReconnection = false
-                self?.retryConnection()
+                DispatchQueue.global(qos: .background).async {
+                    self?.retryConnection()
+                }
             }
         }
     }
@@ -243,56 +214,68 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
     }
     
     func retryConnection() {
-        if !self.hasActiveReconnection {
-            self.hasActiveReconnection = true
-            var numAttempts = 0.0
-            var numOfflineChecks = 0.0
-            var timer: Timer?
+        guard !self.hasActiveReconnection else { return }
+        
+        self.hasActiveReconnection = true
+        var numAttempts = 0.0
+        var numOfflineChecks = 0.0
+        
+        func retry() {
+            guard let wsUrl = self.wsUrl else {
+                self.hasActiveReconnection = false
+                return
+            }
             
-            func retry() {
-                if self.wsUrl == nil {
-                    return
-                }
-                timer?.invalidate()
-                if numOfflineChecks < 5 {
-                    if numAttempts < 5 {
-                        DispatchQueue.main.async {
-                            timer = Timer.scheduledTimer(withTimeInterval: self.getRetryDelay(numAttempts: max(numAttempts, numOfflineChecks)), repeats: false) { _ in
-                                if NetworkConnectionManager.shared.checkConnectivity() {
-                                    numOfflineChecks = 0
-                                    if self.isConnected {
-                                        print("Connected successfully on attempt \(numAttempts)")
-                                        timer?.invalidate()
-                                        self.hasActiveReconnection = false
-                                        numAttempts = 0.0
+            if numOfflineChecks < 5 {
+                if numAttempts < 5 {
+                    let delay = self.getRetryDelay(numAttempts: max(numAttempts, numOfflineChecks))
+                    
+                    DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + delay) {
+                        if NetworkConnectionManager.shared.checkConnectivity() {
+                            numOfflineChecks = 0
+                            DispatchQueue.global(qos: .background).async {
+                                if self.isConnected {
+                                    print("Connected successfully on attempt \(numAttempts)")
+                                    self.hasActiveReconnection = false
+                                    numAttempts = 0.0
+                                    DispatchQueue.main.async {
                                         self.eventPublisher.send(.connectionEstablished)
-                                    } else {
-                                        print("Attempting websocket re-connect... attempt \(numAttempts)")
-                                        self.connect()
-                                        numAttempts += 1
-                                        retry()
                                     }
                                 } else {
-                                    print("Device is not connected to the internet, retrying... attempt \(numOfflineChecks)")
-                                    numOfflineChecks += 1
-                                    numAttempts = 0
+                                    print("Attempting websocket re-connect... attempt \(numAttempts)")
+                                    self.connect()
+                                    numAttempts += 1
                                     retry()
                                 }
                             }
+                        } else {
+                            print("Device is not connected to the internet, retrying... attempt \(numOfflineChecks)")
+                            numOfflineChecks += 1
+                            numAttempts = 0
+                            retry()
                         }
-                    } else {
-                        print("Retry connection failed after \(numAttempts) attempts. Please re-start chat session.")
-                        self.hasActiveReconnection = false
                     }
                 } else {
-                    print("Network connection has been lost. Please restore your network connection to try again.")
-                    self.pendingNetworkReconnection = true
+                    print("Retry connection failed after \(numAttempts) attempts. Restarting the session")
                     self.hasActiveReconnection = false
+                    if NetworkConnectionManager.shared.checkConnectivity() {
+                        DispatchQueue.global(qos: .background).async {
+                            self.wsUrl = nil
+                            NotificationCenter.default.post(name: .requestNewWsUrl, object: nil)
+                        }
+                    }
                 }
+            } else {
+                print("Network connection has been lost. Please restore your network connection to try again.")
+                self.pendingNetworkReconnection = true
+                self.hasActiveReconnection = false
             }
-            retry()
         }
+        
+        retry()
     }
+
+
     
     // MARK: - Heartbeat Logic
     
@@ -328,7 +311,9 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
         } else {
             print("Device is not connected to the internet")
         }
-        retryConnection()
+        DispatchQueue.global(qos: .background).async {
+            self.retryConnection()
+        }
     }
     
     func onDeepHeartbeatMissed() {
@@ -341,7 +326,9 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
             print("Device is not connected to the internet")
         }
         self.eventPublisher.send(.connectionBroken)
-        retryConnection()
+        DispatchQueue.global(qos: .background).async {
+            self.retryConnection()
+        }
     }
 }
 
@@ -363,6 +350,7 @@ extension WebsocketManager: URLSessionWebSocketDelegate {
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
         self.onDisconnected?()
         self.isConnected = false
+        self.wsUrl = nil
         print("WebSocket connection closed")
     }
     
@@ -374,26 +362,22 @@ extension WebsocketManager: URLSessionWebSocketDelegate {
         print("WebSocket connection completed with error.")
         self.onDisconnected?()
         self.isConnected = false
-        self.eventPublisher.send(.connectionBroken)
         if error != nil {
             handleError(error)
         }
-
-        if ConnectionDetailsProvider.shared.isChatSessionActive() {
-            NotificationCenter.default.post(name: .requestNewWsUrl, object: nil)
-            self.wsUrl = nil
-        }
-
-        self.intentionalDisconnect = false
         
         // Attempt to reconnect with the same URL
-        if wsUrl != nil {
-            retryConnection()
+        if !ConnectionDetailsProvider.shared.isChatSessionActive(){
+            DispatchQueue.global(qos: .background).async {
+                self.retryConnection()
+            }
         } else {
             // Request a new URL if the current one is invalid
             self.wsUrl = nil
             NotificationCenter.default.post(name: .requestNewWsUrl, object: nil)
         }
+        
+        self.intentionalDisconnect = false
     }
 }
 
@@ -448,14 +432,14 @@ extension WebsocketManager {
                 if let validItem = transcriptItem {
                     transcriptPublisher.send(validItem)
                 }
-
+                
                 return transcriptItem
             }
             
             return nil
         }
     }
-
+    
     
     // MARK: - Handle Events
     func handleMessage(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {
@@ -464,7 +448,7 @@ extension WebsocketManager {
         var messageText = innerJson["Content"] as! String
         let displayName = innerJson["DisplayName"] as! String
         let time = innerJson["AbsoluteTime"] as! String
-
+        
         // Workaround for Attributed string to enable newline
         messageText = messageText.replacingOccurrences(of: "\n", with: "\\\n")
         
@@ -499,7 +483,7 @@ extension WebsocketManager {
             print("Failed to access attachments")
             return nil
         }
-
+        
         let message = Message(
             participant: participantRole,
             text: attachmentName!,
@@ -517,7 +501,7 @@ extension WebsocketManager {
         let time = innerJson["AbsoluteTime"] as! String
         let displayName = innerJson["DisplayName"] as! String
         let messageId = innerJson["Id"] as! String
-
+        
         return Event(
             timeStamp: time,
             contentType: innerJson["ContentType"] as! String,
@@ -534,7 +518,7 @@ extension WebsocketManager {
         let time = innerJson["AbsoluteTime"] as! String
         let displayName = innerJson["DisplayName"] as! String
         let messageId = innerJson["Id"] as! String
-
+        
         return Event(
             timeStamp: time,
             contentType: innerJson["ContentType"] as! String,
@@ -550,7 +534,7 @@ extension WebsocketManager {
         self.eventPublisher.send(.chatEnded)
         let messageId = innerJson["Id"] as! String
         resetHeartbeatManagers()
-
+        
         return Event(
             timeStamp: time,
             contentType: innerJson["ContentType"] as! String,
@@ -565,7 +549,7 @@ extension WebsocketManager {
         let receipts = messageMetadata["Receipts"] as? [[String: Any]]
         var status: MessageStatus = .Delivered // Default status
         let time = innerJson["AbsoluteTime"] as! String
-
+        
         if let receipts = receipts {
             for receipt in receipts {
                 if receipt["ReadTimestamp"] is String {

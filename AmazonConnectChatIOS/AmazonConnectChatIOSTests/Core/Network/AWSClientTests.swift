@@ -111,7 +111,7 @@ class AWSClientTests: XCTestCase {
         awsClient.disconnectParticipantConnection(connectionToken: dummyToken) { result in
             switch (expectedResult, result) {
             case (.success(let expectedSuccess), .success(let success)):
-                XCTAssertTrue(success)
+                XCTAssertNotNil(success)
             case (.failure(let expectedError), .failure(let error)):
                 XCTAssertEqual(error as? AWSClient.AWSClientError, expectedError as? AWSClient.AWSClientError)
             default:
@@ -125,7 +125,7 @@ class AWSClientTests: XCTestCase {
     
     // Test Disconnect Participant Connection Success
     func testDisconnectParticipantConnection_Success() {
-        performDisconnectParticipantConnectionTest(expectedResult: .success(nil))
+        performDisconnectParticipantConnectionTest(expectedResult: .success(AWSConnectParticipantDisconnectParticipantResponse()))
     }
     
     // Test Disconnect Participant Connection Failure
@@ -151,7 +151,7 @@ class AWSClientTests: XCTestCase {
         awsClient.sendMessage(connectionToken: dummyToken, contentType: .plainText, message: "Hello, world!") { result in
             switch (expectedResult, result) {
             case (.success(_), .success(let success)):
-                XCTAssertTrue(success)
+                XCTAssertNotNil(success)
             case (.failure(let expectedError), .failure(let error)):
                 XCTAssertEqual(error as? AWSClient.AWSClientError, expectedError as? AWSClient.AWSClientError)
             default:
@@ -165,7 +165,7 @@ class AWSClientTests: XCTestCase {
     
     // Test Send Message Success
     func testSendMessage_Success() {
-        performSendMessageTest(expectedResult: .success(nil))
+        performSendMessageTest(expectedResult: .success(AWSConnectParticipantSendMessageResponse()))
     }
     
     // Test Send Message Failure
@@ -191,7 +191,7 @@ class AWSClientTests: XCTestCase {
         awsClient.sendEvent(connectionToken: dummyToken, contentType: .typing, content: "{}") { result in
             switch (expectedResult, result) {
             case (.success(_), .success(let success)):
-                XCTAssertTrue(success)
+                XCTAssertNotNil(success)
             case (.failure(let expectedError), .failure(let error)):
                 XCTAssertEqual(error as? AWSClient.AWSClientError, expectedError as? AWSClient.AWSClientError)
             default:
@@ -205,7 +205,7 @@ class AWSClientTests: XCTestCase {
     
     // Test Send Event Success
     func testSendEvent_Success() {
-        performSendEventTest(expectedResult: .success(nil))
+        performSendEventTest(expectedResult: .success(AWSConnectParticipantSendEventResponse()))
     }
     
     // Test Send Event Failure

@@ -8,6 +8,7 @@ class MockConnectionDetailsProvider: ConnectionDetailsProviderProtocol {
     static let shared = MockConnectionDetailsProvider()
     var mockConnectionDetails: ConnectionDetails?
     var mockChatDetails: ChatDetails?
+    var isChatActive: Bool = true
 
     func updateChatDetails(newDetails: ChatDetails) {
         mockChatDetails = newDetails
@@ -23,5 +24,13 @@ class MockConnectionDetailsProvider: ConnectionDetailsProviderProtocol {
 
     func getChatDetails() -> ChatDetails? {
         return mockChatDetails
+    }
+    
+    func isChatSessionActive() -> Bool {
+        return isChatActive
+    }
+
+    func setChatSessionState(isActive: Bool) {
+        isChatActive = isActive
     }
 }

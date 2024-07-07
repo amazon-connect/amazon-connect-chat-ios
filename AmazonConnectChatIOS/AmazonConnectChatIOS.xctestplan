@@ -9,7 +9,15 @@
     }
   ],
   "defaultOptions" : {
-    "codeCoverage" : false
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:AmazonConnectChatIOS.xcodeproj",
+          "identifier" : "7E58A5D32BB5F3DA00965327",
+          "name" : "AmazonConnectChatIOS"
+        }
+      ]
+    }
   },
   "testTargets" : [
     {
