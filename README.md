@@ -1,9 +1,37 @@
 # Amazon Connect Chat SDK for iOS
 
 ## Table of Contents
-asdf
-asdf
-asdf
+* [About](#about)
+* [Installation Steps](#installation-steps)
+* [Getting Started](#getting-started)
+  * [How to receive messages](#how-to-receive-messages)
+* [API List](#api-list)
+  * [GlobalConfig](#globalconfig)
+    * [GlobalConfig.init](#globalconfiginit)
+    * [Updating configuration](#updating-configuration)
+ * [ChatSession APIs](#chatsession-apis)
+    * [configure](#chatsessionconfigure)
+    * [connect](#chatsessionconnect)
+    * [disconnect](#chatsessiondisconnect)
+    * [sendMessage](#chatsessionsendmessage)
+    * [sendEvent](#chatsessionsendevent)
+    * [sendMessageReceipt](#chatsessionsendmessagereceipt)
+    * [getTranscript](#chatsessiongettranscript)
+    * [sendAttachment](#chatsessionsendattachment)
+    * [downloadAttachment](#chatsessiondownloadattachment)
+    * [getAttachmentDownloadUrl](#chatsessiongetattachmentdownloadurl)
+    * [isChatSessionActive](#chatsessionischatsessionactive)
+ * [ChatSession Events](#chatsession-events)
+    * [onConnectionEstablished](#chatsessiononconnectionestablished)
+    * [onConnectionBroken](#chatsessiononconnectionbroken)
+    * [onMessageReceived](#chatsessiononmessagereceived)
+    * [onTranscriptUpdated](#chatsessionontranscriptupdated)
+    * [onChatEnded](#chatsessiononchatended)
+ * [Classes and Structs](#classes-and-structs)
+    * [Features](#features)
+    * [MessageReceipts](#messagereceipts)
+    * [ContentType](#contenttype)
+    * [ChatDetails](#chatdetails)
 
 ## About
 The Amazon Connect Chat SDK for iOS is a Swift library that gives you the power to easily integrate Amazon Connect Chat directly into your native iOS applications. The Amazon Connect Chat SDK helps handle client side chat logic and back-end communications similar to the [Amazon Connect ChatJS Library](https://github.com/amazon-connect/amazon-connect-chatjs). The SDK wraps the [Amazon Connect Participant Service](https://docs.aws.amazon.com/connect/latest/APIReference/API_Operations_Amazon_Connect_Participant_Service.html) APIs and abstracts away the management of the chat session and WebSocket.  This allows you to focus on the user interface and experience while relying on the Amazon Connect Chat SDK to interact with all the back-end services.  This approach still requires using your own chat back end to call the Amazon Connect [StartChatContact](https://docs.aws.amazon.com/connect/latest/APIReference/API_StartChatContact.html) API to initiate contact. You can read instructions on how to quickly set up a StartChatContact Lambda from our [startChatContactAPI](https://github.com/amazon-connect/amazon-connect-chat-ui-examples/tree/master/cloudformationTemplates/startChatContactAPI) example.
@@ -67,10 +95,10 @@ From here, you are now ready to interact with the chat via the `ChatSession` obj
 
 The Amazon Connect Chat SDK for iOS provides two methods to receive messages.
 
-1. Use [ChatSession.onTranscriptUpdated](link)
+1. Use [ChatSession.onTranscriptUpdated](chatsessionontranscriptupdated)
   * This event will pass back the entire transcript every time the transcript is updated. This will return the transcript via an array of [TranscriptItem](#transcriptitem)
 
-2. Use [ChatSession.onMessageReceived](link)
+2. Use [ChatSession.onMessageReceived](#chatsessionontranscriptupdated)
   * This event will pass back each message that is received by the WebSocket.  The event handler will be passed a single [TranscriptItem](#transcriptitem).
 
 ## API List
@@ -101,7 +129,7 @@ public struct GlobalConfig {
   * This property is used to set the region of the ConnectParticipant client.  This should be set to the region of your Connect instance (e.g. `.USEast1`)
   * Type: `AWSRegionType`
 * `features: Features`
-  * The features property dictates the enablement of certain features as well as their configurations. If no value is passed for this property, the chat will be configured with default values. See [Features](https://github.com/amazon-connect/amazon-connect-chat-ios/edit/mikeliao/documentation/README.md#features) for more details.
+  * The features property dictates the enablement of certain features as well as their configurations. If no value is passed for this property, the chat will be configured with default values. See [Features](#features) for more details.
   * Type: [Features](#features)
  
 #### Updating configuration
@@ -413,8 +441,6 @@ public struct MessageReceipts {
   * Default: `5.0`
 
 --------------------
-### ContentType
-
 ### ChatDetails
 
 ```
@@ -478,7 +504,7 @@ public class TranscriptResponse: Equatable {
   * This is the id of the chat contact
   * Type: `String`
 * `nextToken`
-  * The `nextToken` is used to retrieve the next batch of messages from the server. This can be passed into [ChatSession.getTranscript](TODO)
+  * The `nextToken` is used to retrieve the next batch of messages from the server. This can be passed into [ChatSession.getTranscript](#chatsessiongettranscript)
   * Type: `String`
 * `transcript`
   * This contains the messages that were loaded
