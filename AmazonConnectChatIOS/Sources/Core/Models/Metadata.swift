@@ -22,13 +22,13 @@ public class Metadata: TranscriptItem, MetadataProtocol {
     @Published public var status: MessageStatus?
     @Published public var eventDirection: MessageDirection?
     
-    init(status: MessageStatus? = nil, messageId: String? = nil, timeStamp: String, contentType: String, eventDirection: MessageDirection? = .Common, serializedContent: [String: Any]) {
+    public init(status: MessageStatus? = nil, messageId: String? = nil, timeStamp: String, contentType: String, eventDirection: MessageDirection? = .Common, serializedContent: [String: Any]) {
         self.status = status
         self.eventDirection = eventDirection
         super.init(timeStamp: timeStamp, contentType: contentType, id: messageId, serializedContent: serializedContent)
     }
     
 //    public func copy() -> any MetadataProtocol {
-//        return Metadata(status: self.status, messageId: self.id, timeStamp: self.timeStamp, contentType: self.contentType, eventDirection: self.eventDirection, serializedContent: self.serializedContent ?? [:])
+//        return Metadata(status: self.status, messageId: self.id, timeStamp: self.timeStamp, contentType: self.contentType, eventDirection: self.eventDirection, serializedContent: self.serializedContent ?? [:])https://github.com/aws-amplify/aws-sdk-ios-spm
 //    }
 }
