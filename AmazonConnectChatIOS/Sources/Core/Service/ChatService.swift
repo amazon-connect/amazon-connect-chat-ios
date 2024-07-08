@@ -282,7 +282,7 @@ class ChatService : ChatServiceProtocol {
             return
         }
         
-        var recentlySentAttachmentMessage = createDummyMessage(content: file.lastPathComponent, contentType: mimeType!, status: .Sending, attachmentId: UUID().uuidString)
+        let recentlySentAttachmentMessage = createDummyMessage(content: file.lastPathComponent, contentType: mimeType!, status: .Sending, attachmentId: UUID().uuidString)
         
         self.sendSingleUpdateToClient(for: recentlySentAttachmentMessage)
         

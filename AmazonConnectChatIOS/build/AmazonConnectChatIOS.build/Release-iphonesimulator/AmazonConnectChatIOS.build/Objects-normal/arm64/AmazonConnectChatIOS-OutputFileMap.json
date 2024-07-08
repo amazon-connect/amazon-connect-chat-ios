@@ -1,0 +1,180 @@
+{
+  "" : {
+    "const-values" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/AmazonConnectChatIOS-master.swiftconstvalues",
+    "dependencies" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/AmazonConnectChatIOS-master.d",
+    "diagnostics" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/AmazonConnectChatIOS-master.dia",
+    "emit-module-dependencies" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/AmazonConnectChatIOS-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/AmazonConnectChatIOS-master-emit-module.dia",
+    "swift-dependencies" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/AmazonConnectChatIOS-master.swiftdeps"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Models/AttachmentTypes.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/AttachmentTypes.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/AttachmentTypes.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/AttachmentTypes.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Models/ChatDetails.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/ChatDetails.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/ChatDetails.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/ChatDetails.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Models/ChatEvent.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/ChatEvent.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/ChatEvent.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/ChatEvent.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Models/ConnectionDetails.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/ConnectionDetails.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/ConnectionDetails.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/ConnectionDetails.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Models/Event.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/Event.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/Event.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/Event.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Models/GlobalConfig.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/GlobalConfig.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/GlobalConfig.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/GlobalConfig.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Models/Message.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/Message.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/Message.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/Message.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Models/MessageContent.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/MessageContent.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/MessageContent.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/MessageContent.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Models/Metadata.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/Metadata.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/Metadata.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/Metadata.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Models/Notifications.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/Notifications.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/Notifications.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/Notifications.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Models/TranscriptItem.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/TranscriptItem.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/TranscriptItem.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/TranscriptItem.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Models/TranscriptResponse.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/TranscriptResponse.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/TranscriptResponse.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/TranscriptResponse.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Network/APIClient.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/APIClient.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/APIClient.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/APIClient.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Network/AWSClient.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/AWSClient.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/AWSClient.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/AWSClient.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Network/AWSConnectParticipantAdapter.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/AWSConnectParticipantAdapter.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/AWSConnectParticipantAdapter.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/AWSConnectParticipantAdapter.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Network/HeartbeatManager.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/HeartbeatManager.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/HeartbeatManager.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/HeartbeatManager.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Network/MessageReceiptsManager.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/MessageReceiptsManager.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/MessageReceiptsManager.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/MessageReceiptsManager.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Network/MetricsClient.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/MetricsClient.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/MetricsClient.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/MetricsClient.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Network/MetricsManager.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/MetricsManager.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/MetricsManager.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/MetricsManager.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Network/NetworkConnectionManager.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/NetworkConnectionManager.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/NetworkConnectionManager.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/NetworkConnectionManager.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Network/WebSocketManager.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/WebSocketManager.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/WebSocketManager.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/WebSocketManager.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Service/ChatService.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/ChatService.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/ChatService.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/ChatService.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Service/ChatSession.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/ChatSession.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/ChatSession.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/ChatSession.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Utils/CommonUtils.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/CommonUtils.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/CommonUtils.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/CommonUtils.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Utils/Config.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/Config.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/Config.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/Config.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Utils/ConnectionDetailsProvider.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/ConnectionDetailsProvider.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/ConnectionDetailsProvider.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/ConnectionDetailsProvider.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Utils/Constants.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/Constants.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/Constants.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/Constants.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Utils/HttpClient/DefaultHttpClient.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/DefaultHttpClient.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/DefaultHttpClient.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/DefaultHttpClient.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Utils/HttpClient/HttpClient.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/HttpClient.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/HttpClient.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/HttpClient.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Utils/HttpClient/HttpHeader.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/HttpHeader.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/HttpHeader.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/HttpHeader.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Utils/HttpClient/HttpMethod.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/HttpMethod.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/HttpMethod.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/HttpMethod.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Utils/Logger/SDKLogger.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/SDKLogger.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/SDKLogger.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/SDKLogger.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Utils/Logger/SDKLoggerProtocol.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/SDKLoggerProtocol.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/SDKLoggerProtocol.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/SDKLoggerProtocol.o"
+  },
+  "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/Sources/Core/Utils/MetricsUtils.swift" : {
+    "index-unit-output-path" : "/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/MetricsUtils.o",
+    "llvm-bc" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/MetricsUtils.bc",
+    "object" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build/AmazonConnectChatIOS.build/Release-iphonesimulator/AmazonConnectChatIOS.build/Objects-normal/arm64/MetricsUtils.o"
+  }
+}
