@@ -34,7 +34,7 @@ struct PendingMessageReceipts {
     }
 }
 
-class MessageReceiptsManager: MessageReceiptsManagerProtocol {
+class MessageReceiptsManager: MessageReceiptsManagerProtocol {    
     var readReceiptSet = Set<String>()
     var deliveredReceiptSet = Set<String>()
     var pendingMessageReceipts: PendingMessageReceipts = PendingMessageReceipts()
@@ -47,6 +47,7 @@ class MessageReceiptsManager: MessageReceiptsManagerProtocol {
         if !shouldSendMessageReceipts {
             return
         }
+
         handleMessageReceipt(event: event, messageId: messageId)
         
         if self.timer == nil || !self.timer!.isValid {

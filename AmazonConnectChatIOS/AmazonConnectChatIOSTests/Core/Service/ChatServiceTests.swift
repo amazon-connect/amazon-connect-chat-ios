@@ -97,7 +97,7 @@ class ChatServiceTests: XCTestCase {
             
             // Simulate WebSocket events
             self.mockWebsocketManager.eventPublisher.send(.connectionEstablished)
-            let transcriptItem = Message(participant: "Customer", text: "text", contentType: "text/plain", timeStamp: "timestamp", serializedContent: ["content": "test"])
+            let transcriptItem = TranscriptItem(timeStamp: "timestamp", contentType: "text/plain", id: "12345" ,serializedContent: ["content": "testContent"])
             self.mockWebsocketManager.transcriptPublisher.send(transcriptItem)
         }
         
@@ -201,7 +201,7 @@ class ChatServiceTests: XCTestCase {
         mockAWSClient.disconnectParticipantConnectionResult = .failure(expectedError)
         mockConnectionDetailsProvider.mockConnectionDetails = createConnectionDetails() // Ensure connection details are provided
         let expectation = self.expectation(description: "Chat session disconnection should fail")
-        
+
         chatService.disconnectChatSession { success, error in
             XCTAssertFalse(success, "Chat session should not be disconnected successfully")
             XCTAssertEqual(error as NSError?, self.expectedError, "Should receive the expected error")
