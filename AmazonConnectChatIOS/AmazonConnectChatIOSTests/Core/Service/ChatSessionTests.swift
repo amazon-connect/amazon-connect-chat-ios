@@ -252,7 +252,7 @@ class ChatSessionTests: XCTestCase {
     
     // Test the successful getTranscript scenario
     func testGetTranscript_Success() {
-        let items = [TranscriptItem(timeStamp: "timestamp", contentType: ContentType.plainText.rawValue,id: "12345", serializedContent: ["content": "testContent"])] // Mock TranscriptItem data
+        let items = [TranscriptItem(timeStamp: "timestamp", contentType: ContentType.plainText.rawValue, id: "12345", serializedContent: ["content": "testContent"])] // Mock TranscriptItem data
         let transcriptResponse = TranscriptResponse(initialContactId: "testContactId", nextToken: "testNextToken", transcript: items)
         performGetTranscriptTest(scanDirection: .backward, sortOrder: .ascending, maxResults: 15, nextToken: nil, startPosition: nil, expectedResult: .success(transcriptResponse))
     }

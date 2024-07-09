@@ -5,7 +5,6 @@ import Foundation
 import Combine
 import AWSConnectParticipant
 import UniformTypeIdentifiers
-import UIKit
 
 protocol ChatServiceProtocol {
     func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void)

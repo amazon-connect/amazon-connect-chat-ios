@@ -430,7 +430,6 @@ extension WebsocketManager {
                 if let validItem = transcriptItem {
                     transcriptPublisher.send(validItem)
                 }
-                
                 return transcriptItem
             }
             
@@ -499,7 +498,7 @@ extension WebsocketManager {
         let time = innerJson["AbsoluteTime"] as! String
         let displayName = innerJson["DisplayName"] as! String
         let messageId = innerJson["Id"] as! String
-        
+
         return Event(
             timeStamp: time,
             contentType: innerJson["ContentType"] as! String,
@@ -516,7 +515,7 @@ extension WebsocketManager {
         let time = innerJson["AbsoluteTime"] as! String
         let displayName = innerJson["DisplayName"] as! String
         let messageId = innerJson["Id"] as! String
-        
+
         return Event(
             timeStamp: time,
             contentType: innerJson["ContentType"] as! String,
