@@ -150,6 +150,7 @@ public class ChatSession: ChatSessionProtocol {
     /// Configures the chat service with global configuration.
     public func configure(config: GlobalConfig) {
         AWSClient.shared.configure(with: config)
+        chatService.configure(config: config)
     }
     
     /// Connects to a chat session with the given details.

@@ -21,6 +21,7 @@ protocol ChatServiceProtocol {
     func subscribeToTranscriptItem(handleTranscriptItem: @escaping (TranscriptItem) -> Void) -> AnyCancellable
     func subscribeToTranscriptList(handleTranscriptList: @escaping ([TranscriptItem]) -> Void) -> AnyCancellable
     func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void)
+    func configure(config: GlobalConfig)
 }
 
 class ChatService : ChatServiceProtocol {
@@ -198,9 +199,6 @@ class ChatService : ChatServiceProtocol {
             completion(false, error)
             return
         }
-        
-        // Create dummy message
-        
         
         awsClient.sendMessage(connectionToken: connectionDetails.connectionToken!, contentType: contentType, message: message) { result in
             switch result {
@@ -525,6 +523,11 @@ class ChatService : ChatServiceProtocol {
         }
     }
     
+    func configure(config: GlobalConfig) {
+        let messageReceiptConfig = config.features.messageReceipts
+        messageReceiptsManager?.throttleTime = messageReceiptConfig.throttleTime
+        messageReceiptsManager?.shouldSendMessageReceipts = messageReceiptConfig.shouldSendMessageReceipts
+    }
     
     func registerNotificationListeners() {
         NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
@@ -542,7 +545,14 @@ class ChatService : ChatServiceProtocol {
                             self?.websocketManager?.connect(wsUrl: wsUrl)
                         }
                     case .failure(let error):
+                        if error.localizedDescription == "Access denied" {
+                            self?.updateTranscriptList(with: DummyEndedEvent())
+                            self?.eventPublisher.send(.chatEnded)
+                            self?.websocketManager?.disconnect()
+                            self?.clearSubscriptionsAndPublishers()
+                        }
                         print("CreateParticipantConnection failed \(error)")
+                        
                     }
                 }
             }

@@ -7,6 +7,7 @@ protocol MessageReceiptsManagerProtocol {
     var timer: Timer? {get}
     var throttleTime: Double {get set}
     var deliveredThrottleTime: Double {get set}
+    var shouldSendMessageReceipts: Bool {get set}
     func throttleAndSendMessageReceipt(event: MessageReceiptType, messageId: String, completion: @escaping (Result<PendingMessageReceipts, Error>) -> Void)
     func invalidateTimer() -> Void
     func handleMessageReceipt(event: MessageReceiptType, messageId: String)
@@ -33,15 +34,20 @@ struct PendingMessageReceipts {
     }
 }
 
-class MessageReceiptsManager: MessageReceiptsManagerProtocol {
+class MessageReceiptsManager: MessageReceiptsManagerProtocol {    
     var readReceiptSet = Set<String>()
     var deliveredReceiptSet = Set<String>()
     var pendingMessageReceipts: PendingMessageReceipts = PendingMessageReceipts()
     var timer: Timer?
     var throttleTime: Double = MessageReceipts.defaultReceipts.throttleTime
     var deliveredThrottleTime: Double = 3
+    var shouldSendMessageReceipts: Bool = true
     
     func throttleAndSendMessageReceipt(event: MessageReceiptType, messageId: String, completion: @escaping (Result<PendingMessageReceipts, Error>) -> Void) {
+        if !shouldSendMessageReceipts {
+            return
+        }
+
         handleMessageReceipt(event: event, messageId: messageId)
         
         if self.timer == nil || !self.timer!.isValid {
