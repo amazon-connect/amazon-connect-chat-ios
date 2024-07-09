@@ -8,12 +8,15 @@ protocol ConnectionDetailsProviderProtocol {
     func getConnectionDetails() -> ConnectionDetails?
     func updateConnectionDetails(newDetails: ConnectionDetails)
     func getChatDetails() -> ChatDetails?
+    func isChatSessionActive() -> Bool
+    func setChatSessionState(isActive: Bool) -> Void
 }
 
 class ConnectionDetailsProvider: ConnectionDetailsProviderProtocol {
     static let shared = ConnectionDetailsProvider()
     private var connectionDetails: ConnectionDetails?
     private var chatDetails: ChatDetails?
+    private var isChatActive: Bool = false
 
     func updateConnectionDetails(newDetails: ConnectionDetails) {
         // Logic to update connection details
@@ -31,6 +34,14 @@ class ConnectionDetailsProvider: ConnectionDetailsProviderProtocol {
     
     func getChatDetails() -> ChatDetails? {
         return self.chatDetails
+    }
+    
+    func isChatSessionActive() -> Bool {
+        return self.isChatActive
+    }
+    
+    func setChatSessionState(isActive: Bool) -> Void {
+        self.isChatActive = isActive
     }
 
     // Additional logic to handle connection details lifecycle

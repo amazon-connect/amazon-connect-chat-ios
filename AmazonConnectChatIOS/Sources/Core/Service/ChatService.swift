@@ -5,6 +5,7 @@ import Foundation
 import Combine
 import AWSConnectParticipant
 import UniformTypeIdentifiers
+import UIKit
 
 protocol ChatServiceProtocol {
     func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void)
@@ -20,6 +21,7 @@ protocol ChatServiceProtocol {
     func subscribeToTranscriptItem(handleTranscriptItem: @escaping (TranscriptItem) -> Void) -> AnyCancellable
     func subscribeToTranscriptList(handleTranscriptList: @escaping ([TranscriptItem]) -> Void) -> AnyCancellable
     func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void)
+    func configure(config: GlobalConfig)
 }
 
 class ChatService : ChatServiceProtocol {
@@ -38,8 +40,10 @@ class ChatService : ChatServiceProtocol {
     private var websocketManagerFactory: (URL) -> WebsocketManagerProtocol
     private var throttleTypingEvent: Bool = false
     private var throttleTypingEventTimer: Timer?
-    private let readReceiptSet = Set<String>()
-    private let deliveredReceiptSet = Set<String>()
+    private var transcriptItemSet = Set<String>()
+    private var messageDict: [String: TranscriptItem] = [:]
+    private var typingEventIndex = -1
+    private var typingTimer: Timer? = nil
 
     init(awsClient: AWSClientProtocol = AWSClient.shared,
         connectionDetailsProvider: ConnectionDetailsProviderProtocol = ConnectionDetailsProvider.shared,
@@ -113,11 +117,42 @@ class ChatService : ChatServiceProtocol {
     // Update transcript list and notify subscribers
     private func updateTranscriptList(with item: TranscriptItem) {
         var currentList = transcriptListPublisher.value
-        currentList.append(item)
-        // Avoid sending empty transcript update
-        if !currentList.isEmpty {
-            transcriptListPublisher.send(currentList)  // Send updated list to all subscribers
+        if let metadata = item as? Metadata {
+            let messageItem: Message? = messageDict[metadata.id] as? Message
+            messageItem?.metadata = metadata
+        } else {
+            if (transcriptItemSet.contains(item.id)) {
+                return
+            }
+            transcriptItemSet.insert(item.id)
+            messageDict[item.id] = item
+            currentList.append(item)
+            if item.contentType == ContentType.typing.rawValue {
+                currentList = removeTypingEvent(arr: currentList)
+                typingEventIndex = currentList.count - 1
+                self.typingTimer?.invalidate()
+                DispatchQueue.main.async {
+                    self.typingTimer = Timer.scheduledTimer(withTimeInterval: 12.0, repeats: false) { _ in
+                        let removedTypingList = self.removeTypingEvent(arr: self.transcriptListPublisher.value)
+                        self.transcriptListPublisher.send(removedTypingList)
+                    }
+                }
+            } else if let message = item as? Message, message.participant == Constants.AGENT {
+                currentList = removeTypingEvent(arr: currentList)
+            }
         }
+
+        transcriptListPublisher.send(currentList)  // Send updated list to all subscribers
+    }
+    
+    private func removeTypingEvent(arr: [TranscriptItem]) -> [TranscriptItem] {
+        var resultArr = arr
+        if typingEventIndex != -1 {
+            resultArr.remove(at: typingEventIndex)
+            typingEventIndex = -1
+            self.typingTimer?.invalidate()
+        }
+        return resultArr
     }
     
     func subscribeToTranscriptList(handleTranscriptList: @escaping ([TranscriptItem]) -> Void) -> AnyCancellable {
@@ -131,6 +166,11 @@ class ChatService : ChatServiceProtocol {
     }
     
     func disconnectChatSession(completion: @escaping (Bool, Error?) -> Void) {
+        if (!connectionDetailsProvider.isChatSessionActive()) {
+            self.websocketManager?.disconnect()
+            self.clearSubscriptionsAndPublishers()
+            return
+        }
         guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
             let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
             completion(false, error)
@@ -167,6 +207,7 @@ class ChatService : ChatServiceProtocol {
                 completion(true, nil)
             case .failure(let error):
                 completion(false, error)
+                // Message failed to send
             }
         }
     }
@@ -482,8 +523,18 @@ class ChatService : ChatServiceProtocol {
         }
     }
     
+    func configure(config: GlobalConfig) {
+        let messageReceiptConfig = config.features.messageReceipts
+        messageReceiptsManager?.throttleTime = messageReceiptConfig.throttleTime
+        messageReceiptsManager?.shouldSendMessageReceipts = messageReceiptConfig.shouldSendMessageReceipts
+    }
     
     func registerNotificationListeners() {
+        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
+            if (self?.connectionDetailsProvider.isChatSessionActive() != nil && self?.connectionDetailsProvider.isChatSessionActive() != false) {
+                self?.getTranscript() {_ in }
+            }
+        }
         NotificationCenter.default.addObserver(forName: .requestNewWsUrl, object: nil, queue: .main) { [weak self] _ in
             if let pToken = self?.connectionDetailsProvider.getChatDetails()?.participantToken {
                 self?.awsClient.createParticipantConnection(participantToken: pToken) { result in
@@ -494,7 +545,14 @@ class ChatService : ChatServiceProtocol {
                             self?.websocketManager?.connect(wsUrl: wsUrl)
                         }
                     case .failure(let error):
+                        if error.localizedDescription == "Access denied" {
+                            self?.updateTranscriptList(with: DummyEndedEvent())
+                            self?.eventPublisher.send(.chatEnded)
+                            self?.websocketManager?.disconnect()
+                            self?.clearSubscriptionsAndPublishers()
+                        }
                         print("CreateParticipantConnection failed \(error)")
+                        
                     }
                 }
             }
@@ -513,6 +571,8 @@ class ChatService : ChatServiceProtocol {
         eventPublisher = PassthroughSubject<ChatEvent, Never>()
         transcriptItemPublisher = PassthroughSubject<TranscriptItem, Never>()
         transcriptListPublisher = CurrentValueSubject<[TranscriptItem], Never>([])
+        transcriptItemSet = Set<String>()
+        messageDict = [:]
     }
     
 }

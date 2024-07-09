@@ -7,9 +7,9 @@ import AWSConnectParticipant
 
 class MockAWSClient: AWSClientProtocol {
     var createParticipantConnectionResult: Result<ConnectionDetails, Error>?
-    var disconnectParticipantConnectionResult: Result<Bool, Error>?
-    var sendMessageResult: Result<Bool, Error>?
-    var sendEventResult: Result<Bool, Error>?
+    var disconnectParticipantConnectionResult: Result<AWSConnectParticipantDisconnectParticipantResponse, Error>?
+    var sendMessageResult: Result<AWSConnectParticipantSendMessageResponse, Error>?
+    var sendEventResult: Result<AWSConnectParticipantSendEventResponse, Error>?
     var getTranscriptResult: Result<AWSConnectParticipantGetTranscriptResponse, Error>?
     var startAttachmentUploadResult: Result<AWSConnectParticipantStartAttachmentUploadResponse, Error>?
     var completeAttachmentUploadResult: Result<AWSConnectParticipantCompleteAttachmentUploadResponse, Error>?
@@ -22,19 +22,19 @@ class MockAWSClient: AWSClientProtocol {
         }
     }
     
-    func disconnectParticipantConnection(connectionToken: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+    func disconnectParticipantConnection(connectionToken: String, completion: @escaping (Result<AWSConnectParticipantDisconnectParticipantResponse, Error>) -> Void) {
         if let result = disconnectParticipantConnectionResult {
             completion(result)
         }
     }
     
-    func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+    func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<AWSConnectParticipantSendMessageResponse, Error>) -> Void) {
         if let result = sendMessageResult {
             completion(result)
         }
     }
     
-    func sendEvent(connectionToken: String, contentType: ContentType, content: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+    func sendEvent(connectionToken: String, contentType: ContentType, content: String, completion: @escaping (Result<AWSConnectParticipantSendEventResponse, Error>) -> Void) {
         if contentType == .typing {
             numTypingEventCalled += 1
         }

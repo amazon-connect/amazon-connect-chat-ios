@@ -24,7 +24,7 @@ class MockWebsocketManager: WebsocketManagerProtocol {
     func formatAndProcessTranscriptItems(_ items: [AWSConnectParticipantItem]) -> [TranscriptItem] {
         // Mock implementation of format and process transcript items
         return items.map { item in
-            return TranscriptItem(timeStamp: item.absoluteTime ?? "", contentType: item.contentType ?? "", serializedContent: ["content": item.content ?? ""])
+            return TranscriptItem(timeStamp: item.absoluteTime ?? "", contentType: item.contentType ?? "", id: item.identifier, serializedContent: ["content": item.content ?? ""])
         }
     }
     

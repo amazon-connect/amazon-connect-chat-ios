@@ -11,19 +11,16 @@ public enum MessageStatus : String {
 
 public protocol MetadataProtocol: TranscriptItemProtocol {
     var status: MessageStatus? { get set }
-    var messageId: String? { get set }
     var eventDirection: MessageDirection? { get set }
 }
 
 public class Metadata: TranscriptItem, MetadataProtocol {
     @Published public var status: MessageStatus?
-    @Published public var messageId: String?
     @Published public var eventDirection: MessageDirection?
     
     init(status: MessageStatus? = nil, messageId: String? = nil, timeStamp: String, contentType: String, eventDirection: MessageDirection? = .Common, serializedContent: [String: Any]) {
         self.status = status
-        self.messageId = messageId
         self.eventDirection = eventDirection
-        super.init(timeStamp: timeStamp, contentType: contentType, serializedContent: serializedContent)
+        super.init(timeStamp: timeStamp, contentType: contentType, id: messageId, serializedContent: serializedContent)
     }
 }

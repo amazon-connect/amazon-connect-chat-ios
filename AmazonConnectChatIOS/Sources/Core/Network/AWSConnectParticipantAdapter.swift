@@ -37,7 +37,7 @@ class AWSConnectParticipantAdapter: AWSConnectParticipantProtocol {
             if let error = task.error {
                 return AWSTask(error: error)
             }
-            return AWSTask(result: nil as AnyObject?)
+            return AWSTask(result: task.result)
         }
     }
 
@@ -49,7 +49,7 @@ class AWSConnectParticipantAdapter: AWSConnectParticipantProtocol {
             if let error = task.error {
                 return AWSTask(error: error)
             }
-            return AWSTask(result: nil as AnyObject?)
+            return AWSTask(result: task.result)
         }
     }
 
@@ -61,7 +61,7 @@ class AWSConnectParticipantAdapter: AWSConnectParticipantProtocol {
             if let error = task.error {
                 return AWSTask(error: error)
             }
-            return AWSTask(result: nil as AnyObject?)
+            return AWSTask(result: task)
         }
     }
 
