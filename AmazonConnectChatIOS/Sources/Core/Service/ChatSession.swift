@@ -228,7 +228,7 @@ public class ChatSession: ChatSessionProtocol {
               !messageItem.text.isEmpty,
               messageItem.messageDirection == .Incoming
         else {
-            print("Could not send \(eventType.rawValue) receipt for \(String(describing: (transcriptItem as? Message)?.text))")
+            SDKLogger.logger.logError("Could not send \(eventType.rawValue) receipt for \(String(describing: (transcriptItem as? Message)?.text))")
             return
         }
         

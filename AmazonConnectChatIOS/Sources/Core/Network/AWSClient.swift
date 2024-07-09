@@ -284,13 +284,13 @@ class AWSClient: AWSClientProtocol {
     func getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Result<AWSConnectParticipantGetTranscriptResponse, Error>) -> Void) {
         connectParticipantClient?.getTranscript(getTranscriptArgs).continueWith { (task) -> AnyObject? in
             if let error = task.error {
-                print("Error in getting transcript: \(error.localizedDescription)")
+                SDKLogger.logger.logError("Error in getting transcript: \(error.localizedDescription)")
                 completion(.failure(error))
                 return nil
             }
             
             guard let result = task.result, let transcriptItems = result.transcript else {
-                print("No result or incorrect type from getTranscript")
+                SDKLogger.logger.logError("No result or incorrect type from getTranscript")
                 let error = NSError(domain: "aws.amazon.com", code: 1001, userInfo: [
                     NSLocalizedDescriptionKey: "Failed to obtain transcript: No result or incorrect type returned from getTranscript."
                 ])

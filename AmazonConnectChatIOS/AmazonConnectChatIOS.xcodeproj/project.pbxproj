@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7E1FA21A2C3DC16D0014C33F /* TranscriptItemUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1FA2192C3DC16D0014C33F /* TranscriptItemUtils.swift */; };
 		7E2336EC2BFE7D7400E6C4B7 /* AWSClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2336E22BFE7D7400E6C4B7 /* AWSClientTests.swift */; };
 		7E2336ED2BFE7D7400E6C4B7 /* MockAWSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2336E32BFE7D7400E6C4B7 /* MockAWSClient.swift */; };
 		7E2336EE2BFE7D7400E6C4B7 /* MockWebSocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2336E42BFE7D7400E6C4B7 /* MockWebSocketManager.swift */; };
@@ -74,6 +75,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7E1FA2192C3DC16D0014C33F /* TranscriptItemUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptItemUtils.swift; sourceTree = "<group>"; };
 		7E2336E22BFE7D7400E6C4B7 /* AWSClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AWSClientTests.swift; sourceTree = "<group>"; };
 		7E2336E32BFE7D7400E6C4B7 /* MockAWSClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockAWSClient.swift; sourceTree = "<group>"; };
 		7E2336E42BFE7D7400E6C4B7 /* MockWebSocketManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockWebSocketManager.swift; sourceTree = "<group>"; };
@@ -291,6 +293,7 @@
 				7E91597A2BC0A92E00821C05 /* Constants.swift */,
 				F747263D2BF4143D002B278E /* MetricsUtils.swift */,
 				F74726512BF6F018002B278E /* Config.swift */,
+				7E1FA2192C3DC16D0014C33F /* TranscriptItemUtils.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -479,6 +482,7 @@
 				F76BB9722C2A48C10005C3EC /* MessageReceiptsManager.swift in Sources */,
 				7ED5DEC22BEAF933001693FC /* TranscriptItem.swift in Sources */,
 				F7B4A1282C1157B0005C7921 /* AttachmentTypes.swift in Sources */,
+				7E1FA21A2C3DC16D0014C33F /* TranscriptItemUtils.swift in Sources */,
 				7ED5DEC62BEB38B8001693FC /* Metadata.swift in Sources */,
 				7E58A6112BBB484D00965327 /* SDKLoggerProtocol.swift in Sources */,
 				7E58A60C2BBB460A00965327 /* HttpClient.swift in Sources */,

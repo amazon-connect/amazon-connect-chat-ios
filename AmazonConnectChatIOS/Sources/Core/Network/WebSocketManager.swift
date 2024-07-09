@@ -98,9 +98,9 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
     
     func handleError(_ error: Error?) {
         if let e = error {
-            print("websocket encountered an error: \(e.localizedDescription)")
+            SDKLogger.logger.logError("websocket encountered an error: \(e.localizedDescription)")
         } else {
-            print("websocket encountered an error")
+            SDKLogger.logger.logError("websocket encountered an error")
         }
         self.onError?(error)
     }
@@ -255,7 +255,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
                         }
                     }
                 } else {
-                    print("Retry connection failed after \(numAttempts) attempts. Restarting the session")
+                    SDKLogger.logger.logError("Retry connection failed after \(numAttempts) attempts. Restarting the session")
                     self.hasActiveReconnection = false
                     if NetworkConnectionManager.shared.checkConnectivity() {
                         DispatchQueue.global(qos: .background).async {
@@ -265,7 +265,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
                     }
                 }
             } else {
-                print("Network connection has been lost. Please restore your network connection to try again.")
+                SDKLogger.logger.logError("Network connection has been lost. Please restore your network connection to try again.")
                 self.pendingNetworkReconnection = true
                 self.hasActiveReconnection = false
             }

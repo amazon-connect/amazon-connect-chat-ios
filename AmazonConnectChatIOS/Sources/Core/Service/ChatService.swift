@@ -5,7 +5,6 @@ import Foundation
 import Combine
 import AWSConnectParticipant
 import UniformTypeIdentifiers
-import UIKit
 
 protocol ChatServiceProtocol {
     func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void)
@@ -227,7 +226,7 @@ class ChatService : ChatServiceProtocol {
             return
         }
         
-        let recentlySentMessage = createDummyMessage(content: message, contentType: contentType.rawValue, status: .Sending)
+        let recentlySentMessage = TranscriptItemUtils.createDummyMessage(content: message, contentType: contentType.rawValue, status: .Sending, displayName: getRecentDisplayName())
         
         self.sendSingleUpdateToClient(for: recentlySentMessage)
         
@@ -254,21 +253,6 @@ class ChatService : ChatServiceProtocol {
             .sorted { $0.timeStamp > $1.timeStamp }
             .first
         return recentCustomerMessage?.displayName ?? ""
-    }
-    
-    private func createDummyMessage(content: String, contentType: String, status: MessageStatus, attachmentId: String? = nil) -> Message {
-        return Message(
-            participant: "CUSTOMER",
-            text: content,
-            contentType: contentType,
-            messageDirection: .Outgoing,
-            timeStamp: "",
-            attachmentId: attachmentId,
-            messageId: UUID().uuidString,
-            displayName: getRecentDisplayName(),
-            serializedContent: [:],
-            metadata: Metadata(status:status, timeStamp: "", contentType: contentType, eventDirection: MessageDirection.Outgoing, serializedContent: [:])
-        )
     }
     
     private func updateMessageId(oldId: String, newId: String) {
@@ -311,8 +295,8 @@ class ChatService : ChatServiceProtocol {
             return
         }
         
-        let recentlySentAttachmentMessage = createDummyMessage(content: file.lastPathComponent, contentType: mimeType!, status: .Sending, attachmentId: UUID().uuidString)
-        
+        let recentlySentAttachmentMessage = TranscriptItemUtils.createDummyMessage(content: file.lastPathComponent, contentType:mimeType!, status: .Sending, attachmentId: UUID().uuidString, displayName: getRecentDisplayName())
+
         self.sendSingleUpdateToClient(for: recentlySentAttachmentMessage)
         
         self.startAttachmentUpload(contentType: mimeType!, attachmentName: fileName, attachmentSizeInBytes: fileSize!) { result in
@@ -656,7 +640,7 @@ class ChatService : ChatServiceProtocol {
                         }
                     case .failure(let error):
                         if error.localizedDescription == "Access denied" {
-                            self?.updateTranscriptDict(with: DummyEndedEvent())
+                            self?.updateTranscriptDict(with: TranscriptItemUtils.createDummyEndedEvent())
                             self?.eventPublisher.send(.chatEnded)
                             self?.websocketManager?.disconnect()
                             self?.clearSubscriptionsAndPublishers()
