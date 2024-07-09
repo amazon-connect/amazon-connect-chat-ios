@@ -8,7 +8,6 @@ public protocol EventProtocol: TranscriptItemProtocol {
     var text: String? { get set }
     var displayName: String? { get set }
     var eventDirection: MessageDirection? { get set }
-//    func copy() -> any EventProtocol
 }
 
 public class Event: TranscriptItem, EventProtocol {
@@ -24,8 +23,27 @@ public class Event: TranscriptItem, EventProtocol {
         self.eventDirection = eventDirection
         super.init(timeStamp: timeStamp, contentType: contentType, id: messageId, serializedContent: serializedContent)
     }
-    
-//    public func copy() -> any EventProtocol {
-//        return Event(text: self.text, timeStamp: self.timeStamp, contentType: self.contentType, messageId: self.id, displayName: self.displayName, participant: self.participant, eventDirection: self.eventDirection, serializedContent: self.serializedContent ?? [:])
-//    }
+}
+
+class DummyEndedEvent: Event {
+    init() {
+        let currentDate = Date()
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        let isoFormatter = ISO8601DateFormatter()
+        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        
+        let currentTime = formatter.string(from: currentDate)
+        
+        let isoTime = isoFormatter.string(from: currentDate)
+        
+        let serizliedContent = [
+            "content": "{\"AbsoluteTime\":\"\(isoTime)\",\"ContentType\":\"application/vnd.amazonaws.connect.event.chat.ended\",\"Id\":\"chat-ended-event\",\"Type\":\"EVENT\",\"InitialContactId\":\"chat-ended-event-id\"}\"]",
+            "topic": "aws/chat",
+            "contentType": "application/json"
+        ];
+        
+        super.init(text: nil, timeStamp: currentTime, contentType: ContentType.ended.rawValue, messageId: "chat-ended-event", serializedContent: serizliedContent)
+    }
 }

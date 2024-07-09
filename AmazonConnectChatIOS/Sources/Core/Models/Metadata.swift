@@ -15,7 +15,6 @@ public enum MessageStatus : String {
 public protocol MetadataProtocol: TranscriptItemProtocol {
     var status: MessageStatus? { get set }
     var eventDirection: MessageDirection? { get set }
-//    func copy() -> any MetadataProtocol
 }
 
 public class Metadata: TranscriptItem, MetadataProtocol {
@@ -28,7 +27,4 @@ public class Metadata: TranscriptItem, MetadataProtocol {
         super.init(timeStamp: timeStamp, contentType: contentType, id: messageId, serializedContent: serializedContent)
     }
     
-//    public func copy() -> any MetadataProtocol {
-//        return Metadata(status: self.status, messageId: self.id, timeStamp: self.timeStamp, contentType: self.contentType, eventDirection: self.eventDirection, serializedContent: self.serializedContent ?? [:])https://github.com/aws-amplify/aws-sdk-ios-spm
-//    }
 }

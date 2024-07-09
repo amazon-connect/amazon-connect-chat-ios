@@ -127,31 +127,6 @@ class ChatServiceTests: XCTestCase {
         XCTAssertEqual(receivedItem?.contentType, "text/plain", "Should receive the correct transcript item")
     }
     
-//    func testSubscribeToTranscriptList() {
-//        var receivedItems: [TranscriptItem] = []
-//        let expectation = self.expectation(description: "Should receive transcript list")
-//        
-//        var isExpectationFulfilled = false
-//        let cancellable = chatService.subscribeToTranscriptList { items in
-//            receivedItems = items
-//            if !isExpectationFulfilled {
-//                expectation.fulfill()
-//                isExpectationFulfilled = true
-//            }
-//        }
-//        
-//        let transcriptItem = TranscriptItem(timeStamp: "timestamp", contentType: "text/plain", id: "12345", serializedContent: ["content": "testContent"])
-//        chatService.transcriptListPublisher.send([transcriptItem])
-//        
-//        waitForExpectations(timeout: 1) { error in
-//            if let error = error {
-//                XCTFail("Expectation failed with error: \(error)")
-//            }
-//            XCTAssertEqual(receivedItems.count, 1, "Should receive one transcript item")
-//            XCTAssertEqual(receivedItems.first?.contentType, "text/plain", "Should receive the correct transcript list")
-//            cancellable.cancel()
-//        }
-//    }
     
     func testCreateChatSession_Success() {
         let chatDetails = createChatDetails()

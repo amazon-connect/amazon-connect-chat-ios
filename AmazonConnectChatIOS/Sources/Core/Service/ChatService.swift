@@ -19,9 +19,9 @@ protocol ChatServiceProtocol {
     func getAttachmentDownloadUrl(attachmentId: String, completion: @escaping (Result<URL, Error>) -> Void)
     func subscribeToEvents(handleEvent: @escaping (ChatEvent) -> Void) -> AnyCancellable
     func subscribeToTranscriptItem(handleTranscriptItem: @escaping (TranscriptItem) -> Void) -> AnyCancellable
-    //    func subscribeToTranscriptList(handleTranscriptList: @escaping ([TranscriptItem]) -> Void) -> AnyCancellable
-    func subscribeToTranscriptDict(handleTranscriptDict: @escaping ([String: TranscriptItem]) -> Void) -> AnyCancellable
+    func subscribeToTranscriptList(handleTranscriptList: @escaping ([TranscriptItem]) -> Void) -> AnyCancellable
     func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void)
+    func configure(config: GlobalConfig)
 }
 
 class ChatService : ChatServiceProtocol {
@@ -34,6 +34,7 @@ class ChatService : ChatServiceProtocol {
     private var eventCancellables = Set<AnyCancellable>()
     private var transcriptItemCancellables = Set<AnyCancellable>()
     private var transcriptListCancellables = Set<AnyCancellable>()
+    private var internalTranscript: [TranscriptItem] = []
     private let connectionDetailsProvider: ConnectionDetailsProviderProtocol
     private var awsClient: AWSClientProtocol
     private var websocketManager: WebsocketManagerProtocol?
@@ -41,12 +42,11 @@ class ChatService : ChatServiceProtocol {
     private var throttleTypingEvent: Bool = false
     private var throttleTypingEventTimer: Timer?
     private var transcriptItemSet = Set<String>()
-    private var messageDict: [String: Message] = [:]
-    var transcriptDictPublisher = CurrentValueSubject<[String: TranscriptItem], Never>([:])
-    private var transcriptDictCancellables = Set<AnyCancellable>()
-    
+    private var typingIndicatorTimer: Timer?
     // Dictionary to map attachment IDs to temporary message IDs
     private var attachmentIdToTempMessageIdMap: [String: String] = [:]
+    private var transcriptDict: [String: TranscriptItem] = [:]
+    
     
     init(awsClient: AWSClientProtocol = AWSClient.shared,
          connectionDetailsProvider: ConnectionDetailsProviderProtocol = ConnectionDetailsProvider.shared,
@@ -93,7 +93,7 @@ class ChatService : ChatServiceProtocol {
             .sink(receiveValue: { [weak self] transcriptItem in
                 self?.updateTranscriptDict(with: transcriptItem)
             })
-            .store(in: &transcriptDictCancellables)
+            .store(in: &transcriptListCancellables)
     }
     
     func subscribeToEvents(handleEvent: @escaping (ChatEvent) -> Void) -> AnyCancellable {
@@ -116,47 +116,45 @@ class ChatService : ChatServiceProtocol {
         return subscription
     }
     
-    func subscribeToTranscriptDict(handleTranscriptDict: @escaping ([String: TranscriptItem]) -> Void) -> AnyCancellable {
-        let subscription = transcriptDictPublisher
+    func subscribeToTranscriptList(handleTranscriptList: @escaping ([TranscriptItem]) -> Void) -> AnyCancellable {
+        let subscription = transcriptListPublisher
             .receive(on: RunLoop.main)
             .sink(receiveValue: { updatedTranscript in
-                handleTranscriptDict(updatedTranscript)
+                handleTranscriptList(updatedTranscript)
             })
-        transcriptDictCancellables.insert(subscription)
+        transcriptListCancellables.insert(subscription)
         return subscription
     }
     
     // Update transcript dictionary and notify subscribers
     private func updateTranscriptDict(with item: TranscriptItem) {
-        var currentDict = transcriptDictPublisher.value
-        
         switch item {
         case let metadata as Metadata:
-            if let messageItem = self.messageDict[metadata.id] {
+            if let messageItem = transcriptDict[metadata.id] as? Message {
                 messageItem.metadata = metadata
-                currentDict[metadata.id] = messageItem
+                transcriptDict[metadata.id] = messageItem
             }
         case let message as Message:
-            removeTypingIndicators()
+            // Remove typing indicators when a new message from the agent is received
+            if message.participant == Constants.AGENT {
+                removeTypingIndicators()
+            }
             if let tempMessageId = attachmentIdToTempMessageIdMap[message.attachmentId ?? ""] {
-                if let tempMessage = currentDict[tempMessageId] as? Message {
-                    updateTemporaryMessage(tempMessage: tempMessage, with: message, in: &currentDict)
+                if let tempMessage = transcriptDict[tempMessageId] as? Message {
+                    updateTemporaryMessage(tempMessage: tempMessage, with: message, in: &transcriptDict)
                 }
                 attachmentIdToTempMessageIdMap.removeValue(forKey: message.attachmentId ?? "")
             } else {
-                currentDict[message.id] = message
-                self.messageDict[message.id] = message
-                transcriptItemPublisher.send(message)
+                transcriptDict[message.id] = message
             }
         case let event as Event:
-            currentDict[event.id] = event
+            handleEvent(event, in: &transcriptDict)
         default:
             break
         }
         
-        transcriptDictPublisher.send(currentDict)  // Send updated dictionary to all subscribers
-        if let updatedItem = currentDict[item.id] {
-            transcriptItemPublisher.send(updatedItem)  // Send the single item update
+        if let updatedItem = transcriptDict[item.id] {
+            self.handleTranscriptItemUpdate(updatedItem)
         }
     }
     
@@ -167,27 +165,59 @@ class ChatService : ChatServiceProtocol {
         tempMessage.contentType = message.contentType
         tempMessage.attachmentId = message.attachmentId
         
-        self.messageDict[message.id] = tempMessage
         currentDict.removeValue(forKey: tempMessage.id)
         currentDict[message.id] = tempMessage
-        transcriptItemPublisher.send(tempMessage)
+        self.handleTranscriptItemUpdate(tempMessage)
     }
     
-    private func removeTypingIndicators() {
-        let currentDict = transcriptDictPublisher.value
-        for (_, item) in currentDict where item is Event && (item as? Event)?.contentType == ContentType.typing.rawValue {
-            if let event = item as? Event {
-                event.contentType = "REMOVE"
-                transcriptItemPublisher.send(event)
-            }
+    private func handleEvent(_ event: Event, in currentDict: inout [String: TranscriptItem]) {
+        if event.contentType == ContentType.typing.rawValue {
+            currentDict[event.id] = event
+            resetTypingIndicatorTimer(after: 12.0)
+        } else {
+            currentDict[event.id] = event
         }
     }
     
+    private func resetTypingIndicatorTimer(after: Double = 0.0) {
+        typingIndicatorTimer?.invalidate()
+        typingIndicatorTimer = Timer.scheduledTimer(withTimeInterval: after, repeats: false) { [weak self] _ in
+            self?.removeTypingIndicators()
+        }
+    }
+    
+    private func removeTypingIndicators() {
+        typingIndicatorTimer?.invalidate()
+        let initialCount = transcriptDict.count
+        
+        for (key, item) in transcriptDict where item is Event && (item as? Event)?.contentType == ContentType.typing.rawValue {
+            transcriptDict.removeValue(forKey: key)
+            internalTranscript.removeAll { $0.id == key }
+        }
+        
+        if transcriptDict.count != initialCount {
+            transcriptListPublisher.send(internalTranscript)
+        }
+    }
+    
+    
     private func sendSingleUpdateToClient(for message : Message){
-        var currentDict = self.transcriptDictPublisher.value
-        currentDict[message.id] = message
-        transcriptDictPublisher.send(currentDict)
-        transcriptItemPublisher.send(message)
+        transcriptDict[message.id] = message
+        self.handleTranscriptItemUpdate(message)
+    }
+    
+    private func handleTranscriptItemUpdate(_ transcriptItem: TranscriptItem) {
+        // Send out individual transcript item
+        self.transcriptItemPublisher.send(transcriptItem)
+        
+        if let index = internalTranscript.firstIndex(where: { $0.id == transcriptItem.id }) {
+            internalTranscript[index] = transcriptItem
+        } else {
+            internalTranscript.append(transcriptItem)
+        }
+        
+        // Send out updated transcipt
+        self.transcriptListPublisher.send(internalTranscript)
     }
     
     func sendMessage(contentType: ContentType, message: String, completion: @escaping (Bool, Error?) -> Void) {
@@ -218,7 +248,8 @@ class ChatService : ChatServiceProtocol {
     }
     
     private func getRecentDisplayName() -> String {
-        let recentCustomerMessage = messageDict.values
+        let recentCustomerMessage = transcriptDict.values
+            .compactMap { $0 as? Message }
             .filter { $0.participant == "CUSTOMER" }
             .sorted { $0.timeStamp > $1.timeStamp }
             .first
@@ -241,13 +272,11 @@ class ChatService : ChatServiceProtocol {
     }
     
     private func updateMessageId(oldId: String, newId: String) {
-        var currentDict = transcriptDictPublisher.value
-        if let message = currentDict[oldId] as? Message {
+        if let message = transcriptDict[oldId] as? Message {
             message.id = newId
             message.metadata?.status = .Sent
-            currentDict.removeValue(forKey: oldId)
-            currentDict[newId] = message
-            transcriptDictPublisher.send(currentDict)
+            transcriptDict.removeValue(forKey: oldId)
+            transcriptDict[newId] = message
             transcriptItemPublisher.send(message)
         }
     }
@@ -282,7 +311,7 @@ class ChatService : ChatServiceProtocol {
             return
         }
         
-        var recentlySentAttachmentMessage = createDummyMessage(content: file.lastPathComponent, contentType: mimeType!, status: .Sending, attachmentId: UUID().uuidString)
+        let recentlySentAttachmentMessage = createDummyMessage(content: file.lastPathComponent, contentType: mimeType!, status: .Sending, attachmentId: UUID().uuidString)
         
         self.sendSingleUpdateToClient(for: recentlySentAttachmentMessage)
         
@@ -466,6 +495,11 @@ class ChatService : ChatServiceProtocol {
         }
     }
     
+    func configure(config: GlobalConfig) {
+        let messageReceiptConfig = config.features.messageReceipts
+        messageReceiptsManager?.throttleTime = messageReceiptConfig.throttleTime
+        messageReceiptsManager?.shouldSendMessageReceipts = messageReceiptConfig.shouldSendMessageReceipts
+    }
     
     func sendMessageReceipt(event: MessageReceiptType, messageId: String, completion: @escaping (Result<Void, Error>) -> Void) {
         guard let messageReceiptsManager = messageReceiptsManager else {
@@ -565,9 +599,8 @@ class ChatService : ChatServiceProtocol {
                 
                 if let websocketManager = self?.websocketManager {
                     let formattedItems = websocketManager.formatAndProcessTranscriptItems(transcriptItems)
-                    print("DEBUG - OUT OF LOOP! \(String(describing: formattedItems))")
                     let transcriptResponse = TranscriptResponse(
-                        initialContactId: response.initialContactId ?? "", // Assuming contactId is part of connectionDetails
+                        initialContactId: response.initialContactId ?? "",
                         nextToken: response.nextToken ?? "", // Handle nextToken if it is available in the response
                         transcript: formattedItems
                     )
@@ -582,7 +615,7 @@ class ChatService : ChatServiceProtocol {
     }
     
     func disconnectChatSession(completion: @escaping (Bool, Error?) -> Void) {
-        if (!self.connectionDetailsProvider.isChatSessionActive()) {
+        if (!connectionDetailsProvider.isChatSessionActive()) {
             self.websocketManager?.disconnect()
             self.clearSubscriptionsAndPublishers()
             return
@@ -622,6 +655,12 @@ class ChatService : ChatServiceProtocol {
                             self?.websocketManager?.connect(wsUrl: wsUrl)
                         }
                     case .failure(let error):
+                        if error.localizedDescription == "Access denied" {
+                            self?.updateTranscriptDict(with: DummyEndedEvent())
+                            self?.eventPublisher.send(.chatEnded)
+                            self?.websocketManager?.disconnect()
+                            self?.clearSubscriptionsAndPublishers()
+                        }
                         print("CreateParticipantConnection failed \(error)")
                     }
                 }
@@ -633,19 +672,15 @@ class ChatService : ChatServiceProtocol {
         eventCancellables.forEach { $0.cancel() }
         transcriptItemCancellables.forEach { $0.cancel() }
         transcriptListCancellables.forEach { $0.cancel() }
-        transcriptDictCancellables.forEach { $0.cancel() }
         
         eventCancellables.removeAll()
         transcriptItemCancellables.removeAll()
         transcriptListCancellables.removeAll()
-        transcriptDictCancellables.removeAll()
         
         eventPublisher = PassthroughSubject<ChatEvent, Never>()
         transcriptItemPublisher = PassthroughSubject<TranscriptItem, Never>()
         transcriptListPublisher = CurrentValueSubject<[TranscriptItem], Never>([])
-        transcriptDictPublisher = CurrentValueSubject<[String: TranscriptItem], Never>([:])
         transcriptItemSet = Set<String>()
-        messageDict = [:]
     }
     
 }

@@ -77,7 +77,6 @@ public protocol ChatSessionProtocol {
     var onConnectionBroken: (() -> Void)? { get set }
     var onMessageReceived: ((TranscriptItem) -> Void)? { get set }
     var onTranscriptUpdated: (([TranscriptItem]) -> Void)? { get set }
-    var onTranscriptItemsRemvoed: (([TranscriptItem]) -> Void)? { get set }
     var onChatEnded: (() -> Void)? { get set }
 }
 
@@ -92,11 +91,8 @@ public class ChatSession: ChatSessionProtocol {
     public var onConnectionBroken: (() -> Void)?
     public var onMessageReceived: ((TranscriptItem) -> Void)?
     public var onTranscriptUpdated: (([TranscriptItem]) -> Void)?
-    public var onTranscriptItemsRemvoed: (([TranscriptItem]) -> Void)?
     public var onChatEnded: (() -> Void)?
-    
-    private var internalTranscript: [TranscriptItem] = []
-    
+        
     /// Initializes a new chat session with a specified chat service.
     /// - Parameter chatService: The chat service to use for managing chat sessions.
     init(chatService: ChatServiceProtocol = ChatService()) {
@@ -112,9 +108,6 @@ public class ChatSession: ChatSessionProtocol {
                 switch event {
                 case .connectionEstablished:
                     ConnectionDetailsProvider.shared.setChatSessionState(isActive: true)
-                    if (ConnectionDetailsProvider.shared.isChatSessionActive()) {
-                        self?.getTranscript() {_ in }
-                    }
                     self?.onConnectionEstablished?()
                 case .connectionBroken:
                     self?.onConnectionBroken?()
@@ -129,70 +122,19 @@ public class ChatSession: ChatSessionProtocol {
             }
         }
         
-        //        messageSubscription = chatService.subscribeToTranscriptItem { [weak self] transcriptItem in
-        //            DispatchQueue.main.async {
-        ////                if let message = transcriptItem as? (any MessageProtocol) {
-        ////                    self?.onMessageReceived?(message.copy() as! TranscriptItem)
-        ////                } else if let event = transcriptItem as? (any EventProtocol) {
-        ////                    self?.onMessageReceived?(event.copy() as! TranscriptItem)
-        ////                } else if let metadata = transcriptItem as? (any MetadataProtocol) {
-        ////                    self?.onMessageReceived?(metadata.copy() as! TranscriptItem)
-        ////                } else {
-        ////                    self?.onMessageReceived?(transcriptItem.copy() as! TranscriptItem)
-        ////                }
-        //
-        //                self?.onMessageReceived?(transcriptItem)
-        //            }
-        //        }
-        //
-        //
-        ////        transcriptSubscription = chatService.subscribeToTranscriptDict { [weak self] transcriptDict in
-        ////            DispatchQueue.main.async {
-        ////                let transcriptList = transcriptDict.values
-        ////                    .sorted { $0.timeStamp < $1.timeStamp }
-        ////                    .map { item in
-        ////                        if let message = item as? (any MessageProtocol) {
-        ////                            return message.copy() as! TranscriptItem
-        ////                        } else if let event = item as? (any EventProtocol) {
-        ////                            return event.copy() as! TranscriptItem
-        ////                        } else if let metadata = item as? (any MetadataProtocol) {
-        ////                            return metadata.copy() as! TranscriptItem
-        ////                        } else {
-        ////                            return item.copy() as! TranscriptItem
-        ////                        }
-        ////                    }
-        ////                if !transcriptList.isEmpty {
-        ////                    self?.onTranscriptUpdated?(transcriptList)
-        ////                }
-        ////            }
-        ////        }
-        ///
-        ///
-        ///
-        
         messageSubscription = chatService.subscribeToTranscriptItem { [weak self] transcriptItem in
             DispatchQueue.main.async {
-                self?.handleTranscriptItemUpdate(transcriptItem)
+                self?.onMessageReceived?(transcriptItem)
             }
         }
         
-    }
-    
-    private func handleTranscriptItemUpdate(_ transcriptItem: TranscriptItem) {
-        if transcriptItem.contentType == "REMOVE" {
-            internalTranscript.removeAll { $0.id == transcriptItem.id }
-            onTranscriptItemsRemvoed?([transcriptItem])
-        } else {
-            if let index = internalTranscript.firstIndex(where: { $0.id == transcriptItem.id }) {
-                print("TEMP : Updating \(transcriptItem.id)")
-                internalTranscript[index] = transcriptItem
-            } else {
-                print("TEMP : Adding \(transcriptItem.id)")
-                internalTranscript.append(transcriptItem)
+        transcriptSubscription = chatService.subscribeToTranscriptList { [weak self] transcriptList in
+            DispatchQueue.main.async {
+                if !transcriptList.isEmpty {
+                    self?.onTranscriptUpdated?(transcriptList)
+                }
             }
-            onTranscriptUpdated?([transcriptItem])
         }
-        
     }
     
     /// Re-establishes subscriptions to various chat-related events.
@@ -207,6 +149,7 @@ public class ChatSession: ChatSessionProtocol {
     /// Configures the chat service with global configuration.
     public func configure(config: GlobalConfig) {
         AWSClient.shared.configure(with: config)
+        chatService.configure(config: config)
     }
     
     /// Connects to a chat session with the given details.
@@ -289,13 +232,13 @@ public class ChatSession: ChatSessionProtocol {
             return
         }
         
-        // Check if the item already has read when sending a read 
+        // Check if the item already has read when sending a read
         if let messageItem = transcriptItem as? Message{
             if eventType == .messageRead && messageItem.metadata?.status == MessageStatus.Read {
                 return
             }
         }
-                
+        
         sendMessageReceipt(event: eventType, messageId: messageItem.id) { result in
             switch result {
             case .success:

@@ -300,9 +300,6 @@ class MockChatService: ChatService {
         return transcriptItemPublisher.sink(receiveValue: handleTranscriptItem)
     }
 
-//    override func subscribeToTranscriptList(handleTranscriptList: @escaping ([TranscriptItem]) -> Void) -> AnyCancellable {
-//        return transcriptListPublisher.sink(receiveValue: handleTranscriptList)
-//    }
 
     override func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void) {
 

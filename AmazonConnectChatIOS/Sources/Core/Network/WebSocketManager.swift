@@ -38,7 +38,6 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
     var onError: ((Error?) -> Void)?
     
     init(wsUrl: URL) {
-        print("THIS IS NEW")
         self.wsUrl = wsUrl
         super.init()
         self.connect()
@@ -341,7 +340,6 @@ extension WebsocketManager: URLSessionWebSocketDelegate {
         print("Websocket connection successfully established")
         self.onConnected?()
         self.isConnected = true
-        print("DEBUB - CONNECTED!")
         self.eventPublisher.send(.connectionEstablished)
         self.sendWebSocketMessage(string: EventTypes.subscribe)
         self.startHeartbeats()

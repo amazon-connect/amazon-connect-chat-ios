@@ -8,7 +8,6 @@ public protocol TranscriptItemProtocol: Identifiable, Equatable, Hashable, Obser
     var timeStamp: String { get set }
     var contentType: String { get set }
     var serializedContent: [String: Any]? { get set }
-//    func copy() -> any TranscriptItemProtocol
 }
 
 public class TranscriptItem: TranscriptItemProtocol {
@@ -34,7 +33,4 @@ public class TranscriptItem: TranscriptItemProtocol {
         hasher.combine(contentType)
     }
     
-//    public func copy() -> any TranscriptItemProtocol {
-//            return TranscriptItem(timeStamp: self.timeStamp, contentType: self.contentType, id: self.id, serializedContent: self.serializedContent)
-//        }
 }
