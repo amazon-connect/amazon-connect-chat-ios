@@ -48,7 +48,6 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
             wsTask.cancel(with: .goingAway, reason: nil)
         }
         if let nonEmptyWsUrl = wsUrl {
-            // self.hasActiveReconnection = false
             self.wsUrl = nonEmptyWsUrl
         }
         if let webSocketUrl = self.wsUrl {
@@ -94,8 +93,6 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
     }
     
     // MARK: - WebSocketDelegate
-    // Background / Foreground Domain=NSPOSIXErrorDomain Code=53 "Software caused connection abort"
-    // Network disconnect = Domain=NSURLErrorDomain Code=-1005 "The network connection was lost."
     func handleError(_ error: Error?) {
         if let nsError = error as? NSError {
             switch (nsError.domain) {

@@ -532,11 +532,6 @@ class ChatService : ChatServiceProtocol {
     }
     
     func registerNotificationListeners() {
-        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
-            if (self?.connectionDetailsProvider.isChatSessionActive() != nil && self?.connectionDetailsProvider.isChatSessionActive() != false) {
-                self?.getTranscript() {_ in }
-            }
-        }
         NotificationCenter.default.addObserver(forName: .requestNewWsUrl, object: nil, queue: .main) { [weak self] _ in
             if let pToken = self?.connectionDetailsProvider.getChatDetails()?.participantToken {
                 self?.awsClient.createParticipantConnection(participantToken: pToken) { result in
