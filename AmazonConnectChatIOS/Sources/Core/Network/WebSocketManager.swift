@@ -266,6 +266,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
         if !ChatSession.shared.isChatSessionActive() {
             return
         }
+        ChatSession.shared.onDeepHeartbeatFailure?()
         if NetworkConnectionManager.shared.checkConnectivity() {
             print("Deep heartbeat missed")
         } else {
