@@ -26,5 +26,4 @@ public class Metadata: TranscriptItem, MetadataProtocol {
         self.eventDirection = eventDirection
         super.init(timeStamp: timeStamp, contentType: contentType, id: messageId, serializedContent: serializedContent)
     }
-    
 }

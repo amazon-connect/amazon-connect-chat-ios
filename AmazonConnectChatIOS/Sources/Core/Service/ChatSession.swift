@@ -79,6 +79,7 @@ public protocol ChatSessionProtocol {
     var onMessageReceived: ((TranscriptItem) -> Void)? { get set }
     var onTranscriptUpdated: (([TranscriptItem]) -> Void)? { get set }
     var onChatEnded: (() -> Void)? { get set }
+    var onDeepHeartbeatFailure: (() -> Void)? { get set }
 }
 
 public class ChatSession: ChatSessionProtocol {
@@ -94,6 +95,7 @@ public class ChatSession: ChatSessionProtocol {
     public var onMessageReceived: ((TranscriptItem) -> Void)?
     public var onTranscriptUpdated: (([TranscriptItem]) -> Void)?
     public var onChatEnded: (() -> Void)?
+    public var onDeepHeartbeatFailure: (() -> Void)?
     
     /// Initializes a new chat session with a specified chat service.
     /// - Parameter chatService: The chat service to use for managing chat sessions.

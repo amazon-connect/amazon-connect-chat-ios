@@ -48,8 +48,8 @@ class ChatService : ChatServiceProtocol {
     
     
     init(awsClient: AWSClientProtocol = AWSClient.shared,
-         connectionDetailsProvider: ConnectionDetailsProviderProtocol = ConnectionDetailsProvider.shared,
-         websocketManagerFactory: @escaping (URL) -> WebsocketManagerProtocol = { WebsocketManager(wsUrl: $0) }) {
+        connectionDetailsProvider: ConnectionDetailsProviderProtocol = ConnectionDetailsProvider.shared,
+        websocketManagerFactory: @escaping (URL) -> WebsocketManagerProtocol = { WebsocketManager(wsUrl: $0) }) {
         self.awsClient = awsClient
         self.connectionDetailsProvider = connectionDetailsProvider
         self.websocketManagerFactory = websocketManagerFactory
@@ -118,16 +118,6 @@ class ChatService : ChatServiceProtocol {
                 handleTranscriptItem(transcriptItem)
             })
         transcriptItemCancellables.insert(subscription)
-        return subscription
-    }
-    
-    func subscribeToTranscriptList(handleTranscriptList: @escaping ([TranscriptItem]) -> Void) -> AnyCancellable {
-        let subscription = transcriptListPublisher
-            .receive(on: RunLoop.main)
-            .sink(receiveValue: { updatedTranscript in
-                handleTranscriptList(updatedTranscript)
-            })
-        transcriptListCancellables.insert(subscription)
         return subscription
     }
     
@@ -232,7 +222,43 @@ class ChatService : ChatServiceProtocol {
         self.transcriptListPublisher.send(internalTranscript)
     }
     
-
+    func subscribeToTranscriptList(handleTranscriptList: @escaping ([TranscriptItem]) -> Void) -> AnyCancellable {
+        let subscription = transcriptListPublisher
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { updatedTranscript in
+                handleTranscriptList(updatedTranscript)
+            })
+        transcriptListCancellables.insert(subscription)
+        return subscription
+    }
+    
+    func disconnectChatSession(completion: @escaping (Bool, Error?) -> Void) {
+        if (!connectionDetailsProvider.isChatSessionActive()) {
+            self.websocketManager?.disconnect()
+            self.clearSubscriptionsAndPublishers()
+            return
+        }
+        guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
+            let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
+            completion(false, error)
+            return
+        }
+        
+        messageReceiptsManager?.invalidateTimer()
+        
+        awsClient.disconnectParticipantConnection(connectionToken: connectionDetails.connectionToken!) { result in
+            switch result {
+            case .success(_):
+                SDKLogger.logger.logDebug("Participant Disconnected")
+                self.eventPublisher.send(.chatEnded)
+                self.websocketManager?.disconnect()
+                self.clearSubscriptionsAndPublishers()
+                completion(true, nil)
+            case .failure(let error):
+                completion(false, error)
+            }
+        }
+    }
     
     func sendMessage(contentType: ContentType, message: String, completion: @escaping (Bool, Error?) -> Void) {
         guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
@@ -280,6 +306,103 @@ class ChatService : ChatServiceProtocol {
         }
     }
     
+    func sendEvent(event: ContentType, content: String?, completion: @escaping (Bool, Error?) -> Void) {
+        guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
+            let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
+            completion(false, error)
+            return
+        }
+        
+        if event == .typing {
+            if !throttleTypingEvent {
+                throttleTypingEvent = true
+                self.throttleTypingEventTimer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: false) { _ in
+                    if self.throttleTypingEvent {
+                        self.throttleTypingEvent = false
+                        self.throttleTypingEventTimer?.invalidate()
+                    }
+                }
+            } else {
+                completion(true, nil)
+                return
+            }
+        }
+        
+        awsClient.sendEvent(connectionToken: connectionDetails.connectionToken!,contentType: event, content: content!) { result in
+            switch result {
+            case .success(_):
+                completion(true, nil)
+            case .failure(let error):
+                completion(false, error)
+            }
+        }
+    }
+    
+    func sendMessageReceipt(event: MessageReceiptType, messageId: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        
+        guard let messageReceiptsManager = messageReceiptsManager else {
+            SDKLogger.logger.logError("messageReceiptsManager is not defined")
+            return
+        }
+
+        messageReceiptsManager.throttleAndSendMessageReceipt(event: event, messageId: messageId) { result in
+            switch result {
+            case .success(let pendingMessageReceipts):
+                self.sendPendingMessageReceipts(pendingMessageReceipts: pendingMessageReceipts) { result in
+                    switch result {
+                    case .success(let messageReceiptType):
+                        switch messageReceiptType {
+                        case .messageDelivered:
+                            SDKLogger.logger.logDebug("Delivered receipt sent for message id: \(String(describing: pendingMessageReceipts.deliveredReceiptMessageId))")
+                            completion(.success(()))
+                            break
+                        case .messageRead:
+                            SDKLogger.logger.logDebug("Read receipt sent for message id: \(String(describing: pendingMessageReceipts.deliveredReceiptMessageId))")
+                            completion(.success(()))
+                            break
+                        }
+                    case .failure(let error):
+                        SDKLogger.logger.logError("Pending message receipts could not be sent: \(String(describing: error))")
+                        completion(.failure(error))
+                        break
+                    }
+                }
+            case .failure(let error):
+                SDKLogger.logger.logError("Error sending message receipt: \(error.localizedDescription)")
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func sendPendingMessageReceipts(pendingMessageReceipts: PendingMessageReceipts, completion: @escaping (Result<MessageReceiptType, Error>) -> Void) {
+        if pendingMessageReceipts.readReceiptMessageId != nil {
+            let content = "{\"messageId\":\"\(pendingMessageReceipts.readReceiptMessageId!)\"}"
+            sendEvent(event: MessageReceiptType.messageRead.toContentType(), content: content) { success, error in
+                DispatchQueue.main.async {
+                    if let error = error {
+                        SDKLogger.logger.logError("Error sending read receipt for message \(pendingMessageReceipts.readReceiptMessageId ?? "unknown"): \(error.localizedDescription)")
+                        completion(.failure(error))
+                    } else {
+                        completion(.success(.messageRead))
+                    }
+                }
+            }
+        }
+        
+        if pendingMessageReceipts.deliveredReceiptMessageId != nil {
+            let content = "{\"messageId\":\"\(pendingMessageReceipts.deliveredReceiptMessageId!)\"}"
+            sendEvent(event: MessageReceiptType.messageDelivered.toContentType(), content: content) { success, error in
+                DispatchQueue.main.async {
+                    if let error = error {
+                        SDKLogger.logger.logError("Error sending delivered receipt for message \(pendingMessageReceipts.deliveredReceiptMessageId!): \(error.localizedDescription)")
+                        completion(.failure(error))
+                    } else {
+                        completion(.success(.messageDelivered))
+                    }
+                }
+            }
+        }
+    }
     
     func sendAttachment(file: URL, completion: @escaping(Bool, Error?) -> Void) {
         var mimeType: String?
@@ -462,109 +585,6 @@ class ChatService : ChatServiceProtocol {
     }
     
     
-    func sendEvent(event: ContentType, content: String?, completion: @escaping (Bool, Error?) -> Void) {
-        guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
-            let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
-            completion(false, error)
-            return
-        }
-        
-        if event == .typing {
-            if !throttleTypingEvent {
-                throttleTypingEvent = true
-                self.throttleTypingEventTimer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: false) { _ in
-                    if self.throttleTypingEvent {
-                        self.throttleTypingEvent = false
-                        self.throttleTypingEventTimer?.invalidate()
-                    }
-                }
-            } else {
-                completion(true, nil)
-                return
-            }
-        }
-        
-        awsClient.sendEvent(connectionToken: connectionDetails.connectionToken!,contentType: event, content: content!) { result in
-            switch result {
-            case .success(_):
-                completion(true, nil)
-            case .failure(let error):
-                completion(false, error)
-            }
-        }
-    }
-    
-    func configure(config: GlobalConfig) {
-        let messageReceiptConfig = config.features.messageReceipts
-        messageReceiptsManager?.throttleTime = messageReceiptConfig.throttleTime
-        messageReceiptsManager?.shouldSendMessageReceipts = messageReceiptConfig.shouldSendMessageReceipts
-    }
-    
-    func sendMessageReceipt(event: MessageReceiptType, messageId: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        guard let messageReceiptsManager = messageReceiptsManager else {
-            SDKLogger.logger.logError("messageReceiptsManager is not defined")
-            return
-        }
-        
-        messageReceiptsManager.throttleAndSendMessageReceipt(event: event, messageId: messageId) { result in
-            switch result {
-            case .success(let pendingMessageReceipts):
-                self.sendPendingMessageReceipts(pendingMessageReceipts: pendingMessageReceipts) { result in
-                    switch result {
-                    case .success(let messageReceiptType):
-                        switch messageReceiptType {
-                        case .messageDelivered:
-                            SDKLogger.logger.logDebug("Delivered receipt sent for message id: \(String(describing: pendingMessageReceipts.deliveredReceiptMessageId))")
-                            completion(.success(()))
-                            break
-                        case .messageRead:
-                            SDKLogger.logger.logDebug("Read receipt sent for message id: \(String(describing: pendingMessageReceipts.deliveredReceiptMessageId))")
-                            completion(.success(()))
-                            break
-                        }
-                    case .failure(let error):
-                        SDKLogger.logger.logError("Pending message receipts could not be sent: \(String(describing: error))")
-                        completion(.failure(error))
-                        break
-                    }
-                }
-            case .failure(let error):
-                SDKLogger.logger.logError("Error sending message receipt: \(error.localizedDescription)")
-                completion(.failure(error))
-            }
-        }
-    }
-    
-    func sendPendingMessageReceipts(pendingMessageReceipts: PendingMessageReceipts, completion: @escaping (Result<MessageReceiptType, Error>) -> Void) {
-        if pendingMessageReceipts.readReceiptMessageId != nil {
-            let content = "{\"messageId\":\"\(pendingMessageReceipts.readReceiptMessageId!)\"}"
-            sendEvent(event: MessageReceiptType.messageRead.toContentType(), content: content) { success, error in
-                DispatchQueue.main.async {
-                    if let error = error {
-                        SDKLogger.logger.logError("Error sending read receipt for message \(pendingMessageReceipts.readReceiptMessageId ?? "unknown"): \(error.localizedDescription)")
-                        completion(.failure(error))
-                    } else {
-                        completion(.success(.messageRead))
-                    }
-                }
-            }
-        }
-        
-        if pendingMessageReceipts.deliveredReceiptMessageId != nil {
-            let content = "{\"messageId\":\"\(pendingMessageReceipts.deliveredReceiptMessageId!)\"}"
-            sendEvent(event: MessageReceiptType.messageDelivered.toContentType(), content: content) { success, error in
-                DispatchQueue.main.async {
-                    if let error = error {
-                        SDKLogger.logger.logError("Error sending delivered receipt for message \(pendingMessageReceipts.deliveredReceiptMessageId!): \(error.localizedDescription)")
-                        completion(.failure(error))
-                    } else {
-                        completion(.success(.messageDelivered))
-                    }
-                }
-            }
-        }
-    }
-    
     func fetchReconnectedTranscript() {
         guard let lastItem = internalTranscript.last(where: { ($0 as? Message)?.metadata?.status != .Failed }) else {
             return
@@ -630,8 +650,6 @@ class ChatService : ChatServiceProtocol {
             switch result {
             case .success(let response):
                 
-                print("RECONNECT TRANSCRIPT : *********** NUMBER OF ITEMS RETRIEVED FROM GETTRANSCRIP \(response.transcript?.count)")
-                
                 guard let transcriptItems = response.transcript else {
                     completion(.failure(NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Transcript items are nil"])))
                     return
@@ -654,35 +672,11 @@ class ChatService : ChatServiceProtocol {
         }
     }
     
-    func disconnectChatSession(completion: @escaping (Bool, Error?) -> Void) {
-        if (!connectionDetailsProvider.isChatSessionActive()) {
-            self.websocketManager?.disconnect()
-            self.clearSubscriptionsAndPublishers()
-            return
-        }
-        
-        guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
-            let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
-            completion(false, error)
-            return
-        }
-        
-        messageReceiptsManager?.invalidateTimer()
-        
-        awsClient.disconnectParticipantConnection(connectionToken: connectionDetails.connectionToken!) { result in
-            switch result {
-            case .success(_):
-                SDKLogger.logger.logDebug("Participant Disconnected")
-                self.eventPublisher.send(.chatEnded)
-                self.websocketManager?.disconnect()
-                self.clearSubscriptionsAndPublishers()
-                completion(true, nil)
-            case .failure(let error):
-                completion(false, error)
-            }
-        }
+    func configure(config: GlobalConfig) {
+        let messageReceiptConfig = config.features.messageReceipts
+        messageReceiptsManager?.throttleTime = messageReceiptConfig.throttleTime
+        messageReceiptsManager?.shouldSendMessageReceipts = messageReceiptConfig.shouldSendMessageReceipts
     }
-    
     
     func registerNotificationListeners() {
         NotificationCenter.default.addObserver(forName: .requestNewWsUrl, object: nil, queue: .main) { [weak self] _ in
@@ -698,8 +692,6 @@ class ChatService : ChatServiceProtocol {
                         if error.localizedDescription == "Access denied" {
                             self?.updateTranscriptDict(with: TranscriptItemUtils.createDummyEndedEvent())
                             self?.eventPublisher.send(.chatEnded)
-                            self?.websocketManager?.disconnect()
-                            self?.clearSubscriptionsAndPublishers()
                         }
                         print("CreateParticipantConnection failed \(error)")
                     }
