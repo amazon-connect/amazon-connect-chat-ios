@@ -34,7 +34,7 @@ public protocol ChatSessionProtocol {
     ///   - content: The event content to send.
     ///   - completion: The completion handler to call when the send operation is complete.
     func sendEvent(event: ContentType, content: String, completion: @escaping (Result<Void, Error>) -> Void)
-    
+
     /// Sends read receipt for a message.
     /// - Parameters:
     ///   - event: The type of the event content (default is .messageRead).
@@ -94,7 +94,7 @@ public class ChatSession: ChatSessionProtocol {
     public var onMessageReceived: ((TranscriptItem) -> Void)?
     public var onTranscriptUpdated: (([TranscriptItem]) -> Void)?
     public var onChatEnded: (() -> Void)?
-        
+    
     /// Initializes a new chat session with a specified chat service.
     /// - Parameter chatService: The chat service to use for managing chat sessions.
     init(chatService: ChatServiceProtocol = ChatService()) {

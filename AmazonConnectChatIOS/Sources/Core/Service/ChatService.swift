@@ -56,7 +56,7 @@ class ChatService : ChatServiceProtocol {
         self.messageReceiptsManager = MessageReceiptsManager()
         self.registerNotificationListeners()
     }
-    
+
     func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void) {
         self.connectionDetailsProvider.updateChatDetails(newDetails: chatDetails)
         awsClient.createParticipantConnection(participantToken: chatDetails.participantToken) { result in
@@ -232,42 +232,6 @@ class ChatService : ChatServiceProtocol {
         self.transcriptListPublisher.send(internalTranscript)
     }
     
-//    private func handleTranscriptItemUpdate(_ transcriptItem: TranscriptItem) {
-//        // Log received item details
-//        SDKLogger.logger.logDebug("handleTranscriptItemUpdate Received transcript item: \(transcriptItem.id) at \(transcriptItem.timeStamp)")
-//        
-//        // Send out individual transcript item
-//        self.transcriptItemPublisher.send(transcriptItem)
-//        
-//        if let index = internalTranscript.firstIndex(where: { $0.id == transcriptItem.id }) {
-//            // Update existing item
-//            SDKLogger.logger.logDebug("handleTranscriptItemUpdate Updating existing item: \(transcriptItem.id)")
-//            internalTranscript[index] = transcriptItem
-//        } else {
-//            // Insert new item based on timestamp comparison
-//            if let firstItem = internalTranscript.first {
-//                SDKLogger.logger.logDebug("handleTranscriptItemUpdate First item in list: \(firstItem.id) at \(firstItem.timeStamp)")
-//                
-//                if transcriptItem.timeStamp < firstItem.timeStamp {
-//                    SDKLogger.logger.logDebug("handleTranscriptItemUpdate Prepending item: \(transcriptItem.id)")
-//                    internalTranscript.insert(transcriptItem, at: 0)
-//                } else {
-//                    SDKLogger.logger.logDebug("handleTranscriptItemUpdate Appending item: \(transcriptItem.id)")
-//                    internalTranscript.append(transcriptItem)
-//                }
-//            } else {
-//                SDKLogger.logger.logDebug("handleTranscriptItemUpdate List is empty, adding first item: \(transcriptItem.id)")
-//                internalTranscript.append(transcriptItem)
-//            }
-//        }
-//        
-//        // Log the updated transcript list
-//        SDKLogger.logger.logDebug("handleTranscriptItemUpdate Updated transcript list: \(internalTranscript.map { "\($0.id) at \($0.timeStamp)" })")
-//        
-//        // Send out updated transcript
-//        self.transcriptListPublisher.send(internalTranscript)
-//    }
-
 
     
     func sendMessage(contentType: ContentType, message: String, completion: @escaping (Bool, Error?) -> Void) {
@@ -453,8 +417,8 @@ class ChatService : ChatServiceProtocol {
             case .failure(let error):
                 completion(.failure(error))
             }
+            }
         }
-    }
     
     func downloadFile(url: URL, filename: String, completion: @escaping (URL?, Error?) -> Void) {
         let downloadTask = urlSession.downloadTask(with: url) { (tempLocalUrl, response, error) in
@@ -473,7 +437,7 @@ class ChatService : ChatServiceProtocol {
             do {
                 let tempDirectory = FileManager.default.temporaryDirectory
                 let tempFilePathUrl = tempDirectory.appendingPathComponent(filename)
-                
+
                 
                 if FileManager.default.fileExists(atPath: tempFilePathUrl.path) {
                     do {
@@ -602,7 +566,7 @@ class ChatService : ChatServiceProtocol {
     }
     
     func fetchReconnectedTranscript() {
-        guard let lastItem = internalTranscript.last else {
+        guard let lastItem = internalTranscript.last(where: { ($0 as? Message)?.metadata?.status != .Failed }) else {
             return
         }
 
@@ -665,8 +629,9 @@ class ChatService : ChatServiceProtocol {
         awsClient.getTranscript(getTranscriptArgs: getTranscriptArgs!) { [weak self] result in
             switch result {
             case .success(let response):
+                
                 print("RECONNECT TRANSCRIPT : *********** NUMBER OF ITEMS RETRIEVED FROM GETTRANSCRIP \(response.transcript?.count)")
-
+                
                 guard let transcriptItems = response.transcript else {
                     completion(.failure(NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Transcript items are nil"])))
                     return
@@ -727,9 +692,6 @@ class ChatService : ChatServiceProtocol {
                     case .success(let connectionDetails):
                         self?.connectionDetailsProvider.updateConnectionDetails(newDetails: connectionDetails)
                         if let wsUrl = URL(string: connectionDetails.websocketUrl ?? "") {
-                            print("===========SENDING RESTABLISHED=============")
-//                            self?.websocketManager?.eventPublisher.send(.connectionReEstablished)
-                            
                             self?.websocketManager?.connect(wsUrl: wsUrl, isReconnect: true)
                         }
                     case .failure(let error):
