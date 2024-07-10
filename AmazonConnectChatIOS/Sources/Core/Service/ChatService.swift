@@ -82,6 +82,8 @@ class ChatService : ChatServiceProtocol {
             .sink(receiveValue: { [weak self] event in
                 if (event == .chatEnded) {
                     self?.messageReceiptsManager?.invalidateTimer()
+                } else if (event == .connectionEstablished) {
+                    self?.getTranscript() {_ in }
                 }
                 if (event == .connectionEstablished){
                     self?.getTranscript{ _ in}

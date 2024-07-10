@@ -29,6 +29,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
     private var deepHeartbeatManager: HeartbeatManager?
     private var wsUrl: URL?
     var isReconnectFlow = false
+
     // Adding few more callbacks
     var onConnected: (() -> Void)?
     var onDisconnected: (() -> Void)?
@@ -134,6 +135,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
     
     func addNetworkNotificationObserver() {
         NotificationCenter.default.addObserver(forName: .networkConnected, object: nil, queue: .main) { _ in
+
             if (ChatSession.shared.isChatSessionActive()) {
                 NotificationCenter.default.post(name: .requestNewWsUrl, object: nil)
             }
@@ -288,6 +290,7 @@ extension WebsocketManager: URLSessionWebSocketDelegate {
         print("Websocket connection successfully established")
         self.onConnected?()
         self.eventPublisher.send(self.isReconnectFlow ? .connectionReEstablished : .connectionEstablished)
+
         self.sendWebSocketMessage(string: EventTypes.subscribe)
         self.startHeartbeats()
     }
@@ -295,6 +298,7 @@ extension WebsocketManager: URLSessionWebSocketDelegate {
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
         self.onDisconnected?()
         self.isReconnectFlow = false
+
         print("WebSocket connection closed")
     }
     

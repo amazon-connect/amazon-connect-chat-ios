@@ -40,7 +40,7 @@ public protocol ChatSessionProtocol {
     ///   - event: The type of the event content (default is .messageRead).
     ///   - transcriptItem: Transcript Item
     func sendMessageReceipt(for transcriptItem: AmazonConnectChatIOS.TranscriptItem, eventType: MessageReceiptType)
-    
+  
     /// Retrieves the chat transcript.
     /// - Parameters:
     ///   - scanDirection: The direction to scan the transcript.
