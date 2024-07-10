@@ -83,6 +83,7 @@ class ChatService : ChatServiceProtocol {
                 if (event == .chatEnded) {
                     self?.messageReceiptsManager?.invalidateTimer()
                 } else if (event == .connectionEstablished) {
+                    ConnectionDetailsProvider.shared.setChatSessionState(isActive: true)
                     self?.getTranscript() {_ in }
                 }
                 if (event == .connectionEstablished){

@@ -16,7 +16,7 @@ class ConnectionDetailsProvider: ConnectionDetailsProviderProtocol {
     static let shared = ConnectionDetailsProvider()
     private var connectionDetails: ConnectionDetails?
     private var chatDetails: ChatDetails?
-    private var isChatActive: Bool = true
+    private var isChatActive: Bool = false
 
     func updateConnectionDetails(newDetails: ConnectionDetails) {
         // Logic to update connection details
