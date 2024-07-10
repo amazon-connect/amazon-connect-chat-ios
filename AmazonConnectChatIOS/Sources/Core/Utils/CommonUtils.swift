@@ -18,7 +18,7 @@ struct CommonUtils {
             return Constants.UNKNOWN
         }
     }
-    
+
     func convertParticipantTypeToString(_ roleValue: Int) -> String {
         switch roleValue {
         case AWSConnectParticipantChatItemType.message.rawValue:

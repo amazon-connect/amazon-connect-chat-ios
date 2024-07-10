@@ -29,7 +29,7 @@ class MockConnectionDetailsProvider: ConnectionDetailsProviderProtocol {
     func isChatSessionActive() -> Bool {
         return isChatActive
     }
-
+    
     func setChatSessionState(isActive: Bool) {
         isChatActive = isActive
     }

@@ -52,7 +52,7 @@ class MockChatService: ChatService {
     var websocketManager: WebsocketManagerProtocol?
 
     override func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void) {
-
+        
         numCreateChatSessionCalled += 1
         if !mockCreateChatSession {
             super.createChatSession(chatDetails: chatDetails, completion: completion)

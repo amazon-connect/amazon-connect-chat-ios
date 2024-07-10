@@ -36,7 +36,7 @@ class APIClientTests: XCTestCase {
         
         
         TestUtils.writeSampleTextToUrl(url: testFileUrl)
-        
+
         apiClient.uploadAttachment(file: testFileUrl, response: startAttachmentUploadResponse!) { success, error in
             if success {
                 let mockHttpClient = self.apiClient.httpClient as! MockHttpClient
@@ -89,12 +89,12 @@ class APIClientTests: XCTestCase {
         startAttachmentUploadResponse?.uploadMetadata = AWSConnectParticipantUploadMetadata()
         
         let testUrl = "https://www.test-endpoint.com"
-        
+
         startAttachmentUploadResponse?.uploadMetadata?.url = testUrl
         
         
         TestUtils.writeSampleTextToUrl(url: testFileUrl)
-        
+
         apiClient.uploadAttachment(file: testFileUrl, response: startAttachmentUploadResponse!) { success, error in
             if success {
                 XCTFail("Expected failure, got unexpected success")

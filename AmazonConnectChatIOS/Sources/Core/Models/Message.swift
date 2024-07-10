@@ -19,7 +19,6 @@ public protocol MessageProtocol: TranscriptItemProtocol {
 }
 
 public class Message: TranscriptItem, MessageProtocol {
-    
     public var participant: String
     public var text: String
     public var messageDirection: MessageDirection?
@@ -78,5 +77,4 @@ public class Message: TranscriptItem, MessageProtocol {
             return nil
         }
     }
-    
 }
