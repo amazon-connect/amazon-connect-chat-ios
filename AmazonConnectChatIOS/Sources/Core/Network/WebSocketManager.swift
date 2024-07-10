@@ -14,12 +14,14 @@ enum EventTypes {
 protocol WebsocketManagerProtocol {
     var eventPublisher: PassthroughSubject<ChatEvent, Never> { get }
     var transcriptPublisher: PassthroughSubject<TranscriptItem, Never> { get }
-    func connect(wsUrl: URL?)
+    func connect(wsUrl: URL?, isReconnect: Bool?)
     func disconnect()
     func formatAndProcessTranscriptItems(_ transcriptItems: [AWSConnectParticipantItem]) -> [TranscriptItem]
 }
 
 class WebsocketManager: NSObject, WebsocketManagerProtocol {
+
+    
     var eventPublisher = PassthroughSubject<ChatEvent, Never>()
     var transcriptPublisher = PassthroughSubject<TranscriptItem, Never>()
     
@@ -32,6 +34,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
     private var pendingNetworkReconnection = false
     private var wsUrl: URL?
     private var intentionalDisconnect = false
+    var isReconnectFlow = false
     // Adding few more callbacks
     var onConnected: (() -> Void)?
     var onDisconnected: (() -> Void)?
@@ -45,7 +48,10 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
         self.addNetworkNotificationObserver()
     }
     
-    func connect(wsUrl: URL? = nil) {
+    func connect(wsUrl: URL? = nil, isReconnect: Bool? = false) {
+        if let isReconnect {
+            self.isReconnectFlow = isReconnect
+        }
         self.intentionalDisconnect = false
         disconnect() // Ensure previous WebSocket tasks are properly closed
         
@@ -340,7 +346,7 @@ extension WebsocketManager: URLSessionWebSocketDelegate {
         print("Websocket connection successfully established")
         self.onConnected?()
         self.isConnected = true
-        self.eventPublisher.send(.connectionEstablished)
+        self.eventPublisher.send(self.isReconnectFlow ? .connectionReEstablished : .connectionEstablished)
         self.sendWebSocketMessage(string: EventTypes.subscribe)
         self.startHeartbeats()
     }
@@ -348,6 +354,7 @@ extension WebsocketManager: URLSessionWebSocketDelegate {
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
         self.onDisconnected?()
         self.isConnected = false
+        self.isReconnectFlow = false
         self.wsUrl = nil
         print("WebSocket connection closed")
     }
@@ -363,16 +370,11 @@ extension WebsocketManager: URLSessionWebSocketDelegate {
         if error != nil {
             handleError(error)
         }
-        
         // Attempt to reconnect with the same URL
-        if !ConnectionDetailsProvider.shared.isChatSessionActive(){
-            DispatchQueue.global(qos: .background).async {
-                self.retryConnection()
-            }
-        } else {
+        if ConnectionDetailsProvider.shared.isChatSessionActive(){
             // Request a new URL if the current one is invalid
-            self.wsUrl = nil
             NotificationCenter.default.post(name: .requestNewWsUrl, object: nil)
+            self.wsUrl = nil
         }
         
         self.intentionalDisconnect = false
@@ -464,7 +466,8 @@ extension WebsocketManager {
         let participantRole = innerJson["ParticipantRole"] as! String
         let messageId = innerJson["Id"] as! String
         let time = innerJson["AbsoluteTime"] as! String
-        
+        let displayName = innerJson["DisplayName"] as! String
+
         var attachmentName: String? = nil
         var contentType: String? = nil
         var attachmentId: String? = nil
@@ -488,6 +491,7 @@ extension WebsocketManager {
             timeStamp: time,
             attachmentId: attachmentId,
             messageId: messageId,
+            displayName: displayName,
             serializedContent: serializedContent
         )
         return message

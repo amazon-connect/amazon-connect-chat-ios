@@ -39,7 +39,7 @@ public protocol ChatSessionProtocol {
     /// - Parameters:
     ///   - event: The type of the event content (default is .messageRead).
     ///   - transcriptItem: Transcript Item
-    func sendReadReceiptIfNeeded(for transcriptItem: AmazonConnectChatIOS.TranscriptItem, eventType: MessageReceiptType)
+    func sendMessageReceipt(for transcriptItem: AmazonConnectChatIOS.TranscriptItem, eventType: MessageReceiptType)
     
     /// Retrieves the chat transcript.
     /// - Parameters:
@@ -49,7 +49,7 @@ public protocol ChatSessionProtocol {
     ///   - nextToken: The token for the next set of results.
     ///   - startPosition: The start position for the transcript.
     ///   - completion: The completion handler to call when the transcript retrieval is complete.
-    func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void)
+    func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: String?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void)
     
     /// Sends an attachment within the chat session.
     /// - Parameters:
@@ -74,6 +74,7 @@ public protocol ChatSessionProtocol {
     func isChatSessionActive() -> Bool
     
     var onConnectionEstablished: (() -> Void)? { get set }
+    var onConnectionReEstablished: (() -> Void)? { get set }
     var onConnectionBroken: (() -> Void)? { get set }
     var onMessageReceived: ((TranscriptItem) -> Void)? { get set }
     var onTranscriptUpdated: (([TranscriptItem]) -> Void)? { get set }
@@ -88,6 +89,7 @@ public class ChatSession: ChatSessionProtocol {
     private var transcriptSubscription: AnyCancellable?
     
     public var onConnectionEstablished: (() -> Void)?
+    public var onConnectionReEstablished: (() -> Void)?
     public var onConnectionBroken: (() -> Void)?
     public var onMessageReceived: ((TranscriptItem) -> Void)?
     public var onTranscriptUpdated: (([TranscriptItem]) -> Void)?
@@ -111,6 +113,8 @@ public class ChatSession: ChatSessionProtocol {
                     self?.onConnectionEstablished?()
                 case .connectionBroken:
                     self?.onConnectionBroken?()
+                case .connectionReEstablished:
+                    self?.onConnectionReEstablished?()
                 case .chatEnded:
                     if (self != nil && ConnectionDetailsProvider.shared.isChatSessionActive() == true) {
                         ConnectionDetailsProvider.shared.setChatSessionState(isActive: false)
@@ -166,10 +170,16 @@ public class ChatSession: ChatSessionProtocol {
         sortOrder: AWSConnectParticipantSortKey? = .ascending,
         maxResults: NSNumber? = 30,
         nextToken: String? = nil,
-        startPosition: AWSConnectParticipantStartPosition? = nil,
+        startPosition: String? = nil,
         completion: @escaping (Result<TranscriptResponse, Error>) -> Void
     ) {
-        chatService.getTranscript(scanDirection: scanDirection, sortOrder: sortOrder, maxResults: maxResults, nextToken: nextToken, startPosition: startPosition) { result in
+        // Construct the start position if provided
+        var awsStartPosition: AWSConnectParticipantStartPosition? = nil
+        if let startPosition = startPosition {
+            awsStartPosition = AWSConnectParticipantStartPosition()
+            awsStartPosition?.identifier = startPosition
+        }
+        chatService.getTranscript(scanDirection: scanDirection, sortOrder: sortOrder, maxResults: maxResults, nextToken: nextToken, startPosition: awsStartPosition) { result in
             DispatchQueue.main.async {
                 completion(result)
             }
@@ -206,8 +216,8 @@ public class ChatSession: ChatSessionProtocol {
         }
     }
     
-    /// Sends read receipt for a message.
-    private func sendMessageReceipt(event: MessageReceiptType, messageId: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    /// Sends receipt for a message.
+    private func sendReceipt(event: MessageReceiptType, messageId: String, completion: @escaping (Result<Void, Error>) -> Void) {
         chatService.sendMessageReceipt(event: event, messageId: messageId) { result in
             DispatchQueue.main.async {
                 switch result {
@@ -222,32 +232,30 @@ public class ChatSession: ChatSessionProtocol {
     }
     
     
-    /// Sends a read receipt if the transcript item is a plain text message
-    public func sendReadReceiptIfNeeded(for transcriptItem: AmazonConnectChatIOS.TranscriptItem, eventType: MessageReceiptType) {
+    /// Sends a read receipt if the transcript item is a plain text message.
+    public func sendMessageReceipt(for transcriptItem: AmazonConnectChatIOS.TranscriptItem, eventType: MessageReceiptType) {
         guard let messageItem = transcriptItem as? Message,
               !messageItem.text.isEmpty,
-              messageItem.messageDirection == .Incoming
-        else {
+              messageItem.messageDirection == .Incoming else {
             SDKLogger.logger.logError("Could not send \(eventType.rawValue) receipt for \(String(describing: (transcriptItem as? Message)?.text))")
             return
         }
         
-        // Check if the item already has read when sending a read
-        if let messageItem = transcriptItem as? Message{
-            if eventType == .messageRead && messageItem.metadata?.status == MessageStatus.Read {
-                return
-            }
+        // Check if the item already has the read status when sending a read receipt
+        if eventType == .messageRead, messageItem.metadata?.status == .Read {
+            return
         }
         
-        sendMessageReceipt(event: eventType, messageId: messageItem.id) { result in
+        sendReceipt(event: eventType, messageId: messageItem.id) { result in
             switch result {
             case .success:
                 print("Sent \(eventType.rawValue) receipt for \(messageItem.text)")
             case .failure(let error):
-                print("Error sending \(eventType.rawValue) Receipt: \(error.localizedDescription)")
+                print("Error sending \(eventType.rawValue) receipt: \(error.localizedDescription)")
             }
         }
     }
+
     
     /// Sends an attachment within the chat session.
     public func sendAttachment(file: URL, completion: @escaping (Result<Void, Error>) -> Void) {

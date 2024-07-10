@@ -18,7 +18,7 @@ struct CommonUtils {
             return Constants.UNKNOWN
         }
     }
-
+    
     func convertParticipantTypeToString(_ roleValue: Int) -> String {
         switch roleValue {
         case AWSConnectParticipantChatItemType.message.rawValue:
@@ -31,5 +31,12 @@ struct CommonUtils {
             return Constants.UNKNOWN
         }
     }
-
+    
+    static func getCurrentISOTime() -> String {
+        let currentDate = Date()
+        let isoFormatter = ISO8601DateFormatter()
+        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds, .withColonSeparatorInTimeZone]
+        return isoFormatter.string(from: currentDate)
+    }
+    
 }

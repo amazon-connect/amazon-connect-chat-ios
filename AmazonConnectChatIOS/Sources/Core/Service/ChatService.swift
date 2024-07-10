@@ -80,10 +80,16 @@ class ChatService : ChatServiceProtocol {
         self.websocketManager?.eventPublisher
             .receive(on: RunLoop.main)
             .sink(receiveValue: { [weak self] event in
-                self?.eventPublisher.send(event)
                 if (event == .chatEnded) {
                     self?.messageReceiptsManager?.invalidateTimer()
                 }
+                if (event == .connectionEstablished){
+                    self?.getTranscript{ _ in}
+                }
+                if (event == .connectionReEstablished){
+                    self?.fetchReconnectedTranscript()
+                }
+                self?.eventPublisher.send(event)
             })
             .store(in: &eventCancellables)
         
@@ -158,8 +164,8 @@ class ChatService : ChatServiceProtocol {
     }
     
     private func updateTemporaryMessage(tempMessage: Message, with message: Message, in currentDict: inout [String: TranscriptItem]) {
-        tempMessage.id = message.id
-        tempMessage.timeStamp = message.timeStamp
+        tempMessage.updateId(message.id)
+        tempMessage.updateTimeStamp(message.timeStamp)
         tempMessage.text = message.text
         tempMessage.contentType = message.contentType
         tempMessage.attachmentId = message.attachmentId
@@ -204,20 +210,65 @@ class ChatService : ChatServiceProtocol {
         transcriptDict[message.id] = message
         self.handleTranscriptItemUpdate(message)
     }
+
     
     private func handleTranscriptItemUpdate(_ transcriptItem: TranscriptItem) {
         // Send out individual transcript item
         self.transcriptItemPublisher.send(transcriptItem)
         
         if let index = internalTranscript.firstIndex(where: { $0.id == transcriptItem.id }) {
+            // Update existing item
             internalTranscript[index] = transcriptItem
         } else {
-            internalTranscript.append(transcriptItem)
+            // Insert new item based on timestamp comparison
+            if let firstItem = internalTranscript.first, transcriptItem.timeStamp < firstItem.timeStamp {
+                internalTranscript.insert(transcriptItem, at: 0)
+            } else {
+                internalTranscript.append(transcriptItem)
+            }
         }
         
-        // Send out updated transcipt
+        // Send out updated transcript
         self.transcriptListPublisher.send(internalTranscript)
     }
+    
+//    private func handleTranscriptItemUpdate(_ transcriptItem: TranscriptItem) {
+//        // Log received item details
+//        SDKLogger.logger.logDebug("handleTranscriptItemUpdate Received transcript item: \(transcriptItem.id) at \(transcriptItem.timeStamp)")
+//        
+//        // Send out individual transcript item
+//        self.transcriptItemPublisher.send(transcriptItem)
+//        
+//        if let index = internalTranscript.firstIndex(where: { $0.id == transcriptItem.id }) {
+//            // Update existing item
+//            SDKLogger.logger.logDebug("handleTranscriptItemUpdate Updating existing item: \(transcriptItem.id)")
+//            internalTranscript[index] = transcriptItem
+//        } else {
+//            // Insert new item based on timestamp comparison
+//            if let firstItem = internalTranscript.first {
+//                SDKLogger.logger.logDebug("handleTranscriptItemUpdate First item in list: \(firstItem.id) at \(firstItem.timeStamp)")
+//                
+//                if transcriptItem.timeStamp < firstItem.timeStamp {
+//                    SDKLogger.logger.logDebug("handleTranscriptItemUpdate Prepending item: \(transcriptItem.id)")
+//                    internalTranscript.insert(transcriptItem, at: 0)
+//                } else {
+//                    SDKLogger.logger.logDebug("handleTranscriptItemUpdate Appending item: \(transcriptItem.id)")
+//                    internalTranscript.append(transcriptItem)
+//                }
+//            } else {
+//                SDKLogger.logger.logDebug("handleTranscriptItemUpdate List is empty, adding first item: \(transcriptItem.id)")
+//                internalTranscript.append(transcriptItem)
+//            }
+//        }
+//        
+//        // Log the updated transcript list
+//        SDKLogger.logger.logDebug("handleTranscriptItemUpdate Updated transcript list: \(internalTranscript.map { "\($0.id) at \($0.timeStamp)" })")
+//        
+//        // Send out updated transcript
+//        self.transcriptListPublisher.send(internalTranscript)
+//    }
+
+
     
     func sendMessage(contentType: ContentType, message: String, completion: @escaping (Bool, Error?) -> Void) {
         guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
@@ -257,7 +308,7 @@ class ChatService : ChatServiceProtocol {
     
     private func updateMessageId(oldId: String, newId: String) {
         if let message = transcriptDict[oldId] as? Message {
-            message.id = newId
+            message.updateId(newId)
             message.metadata?.status = .Sent
             transcriptDict.removeValue(forKey: oldId)
             transcriptDict[newId] = message
@@ -296,7 +347,7 @@ class ChatService : ChatServiceProtocol {
         }
         
         let recentlySentAttachmentMessage = TranscriptItemUtils.createDummyMessage(content: file.lastPathComponent, contentType:mimeType!, status: .Sending, attachmentId: UUID().uuidString, displayName: getRecentDisplayName())
-
+        
         self.sendSingleUpdateToClient(for: recentlySentAttachmentMessage)
         
         self.startAttachmentUpload(contentType: mimeType!, attachmentName: fileName, attachmentSizeInBytes: fileSize!) { result in
@@ -550,6 +601,42 @@ class ChatService : ChatServiceProtocol {
         }
     }
     
+    func fetchReconnectedTranscript() {
+        guard let lastItem = internalTranscript.last else {
+            return
+        }
+
+        // Construct the start position from the last item
+        let startPosition = AWSConnectParticipantStartPosition()
+        startPosition?.identifier = lastItem.id
+
+        // Fetch the transcript starting from the last item
+        fetchTranscriptWith(startPosition: startPosition)
+    }
+
+    private func fetchTranscriptWith(startPosition: AWSConnectParticipantStartPosition?) {
+        self.getTranscript(scanDirection: .forward, startPosition: startPosition) { [weak self] result in
+            switch result {
+            case .success(let transcriptResponse):
+                // Process the received transcript items
+                if let self = self {
+                    if !transcriptResponse.nextToken.isEmpty {
+                        // Continue fetching if there's a next token
+                        var newStartPosition: AWSConnectParticipantStartPosition? = nil
+                        if let lastItem = transcriptResponse.transcript.last {
+                            newStartPosition = AWSConnectParticipantStartPosition()
+                            newStartPosition?.identifier = lastItem.id
+                       }
+                        self.fetchTranscriptWith(startPosition: newStartPosition)
+                    }
+                }
+            case .failure(let error):
+                // Handle error (e.g., log or show an error message)
+                print("Error fetching transcript: \(error.localizedDescription)")
+            }
+        }
+    }
+
     
     func getTranscript(
         scanDirection: AWSConnectParticipantScanDirection? = nil,
@@ -571,11 +658,15 @@ class ChatService : ChatServiceProtocol {
         getTranscriptArgs?.sortOrder = sortOrder ?? .ascending
         getTranscriptArgs?.maxResults = maxResults ?? 30
         getTranscriptArgs?.startPosition = startPosition
+        if ((nextToken?.isEmpty) == false){
+            getTranscriptArgs?.nextToken = nextToken
+        }
         
         awsClient.getTranscript(getTranscriptArgs: getTranscriptArgs!) { [weak self] result in
             switch result {
             case .success(let response):
-                
+                print("RECONNECT TRANSCRIPT : *********** NUMBER OF ITEMS RETRIEVED FROM GETTRANSCRIP \(response.transcript?.count)")
+
                 guard let transcriptItems = response.transcript else {
                     completion(.failure(NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Transcript items are nil"])))
                     return
@@ -636,7 +727,10 @@ class ChatService : ChatServiceProtocol {
                     case .success(let connectionDetails):
                         self?.connectionDetailsProvider.updateConnectionDetails(newDetails: connectionDetails)
                         if let wsUrl = URL(string: connectionDetails.websocketUrl ?? "") {
-                            self?.websocketManager?.connect(wsUrl: wsUrl)
+                            print("===========SENDING RESTABLISHED=============")
+//                            self?.websocketManager?.eventPublisher.send(.connectionReEstablished)
+                            
+                            self?.websocketManager?.connect(wsUrl: wsUrl, isReconnect: true)
                         }
                     case .failure(let error):
                         if error.localizedDescription == "Access denied" {
@@ -665,6 +759,8 @@ class ChatService : ChatServiceProtocol {
         transcriptItemPublisher = PassthroughSubject<TranscriptItem, Never>()
         transcriptListPublisher = CurrentValueSubject<[TranscriptItem], Never>([])
         transcriptItemSet = Set<String>()
+        transcriptDict = [:]
+        internalTranscript = []
     }
     
 }
