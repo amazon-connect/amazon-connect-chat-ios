@@ -26,7 +26,7 @@ public class Message: TranscriptItem, MessageProtocol {
     public var displayName: String?
     @Published public var metadata: (any MetadataProtocol)?
 
-    public init(participant: String, text: String, contentType: String, messageDirection: MessageDirection? = nil, timeStamp: String, attachmentId: String? = nil, messageId: String? = nil,
+    init(participant: String, text: String, contentType: String, messageDirection: MessageDirection? = nil, timeStamp: String, attachmentId: String? = nil, messageId: String? = nil,
                 displayName: String? = nil, serializedContent: [String: Any], metadata: (any MetadataProtocol)? = nil) {
         self.participant = participant
         self.text = text
@@ -51,7 +51,7 @@ public class Message: TranscriptItem, MessageProtocol {
             if attachmentId != nil{
                 return PlainTextContent.decode(from: text)
             }
-            print("Unsupported content type: \(contentType)")
+            SDKLogger.logger.logDebug("Unsupported content type: \(contentType)")
             return nil
         }
     }
@@ -73,7 +73,7 @@ public class Message: TranscriptItem, MessageProtocol {
         case CarouselContent.templateType:
             return CarouselContent.decode(from: text)
         default:
-            print("Unsupported interactive content type: \(genericTemplate.templateType)")
+            SDKLogger.logger.logDebug("Unsupported interactive content type: \(genericTemplate.templateType)")
             return nil
         }
     }

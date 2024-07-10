@@ -42,6 +42,7 @@ public enum WebSocketMessageType: String {
 
 enum ChatEvent {
     case connectionEstablished
+    case connectionReEstablished
     case chatEnded
     case connectionBroken
 }

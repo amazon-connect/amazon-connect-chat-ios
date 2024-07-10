@@ -377,6 +377,13 @@ Callback for when the WebSocket heartbeat is missed.
 var onDeepHeartbeatFailure: (() -> Void)? { get set }
 ```
 --------------------
+#### `ChatSession.onConnectionReEstablished`
+Callback for when the connection is re-established.
+
+```
+var onConnectionReEstablished: (() -> Void)? { get set }
+```
+--------------------
 
 ## Classes and Structs
 

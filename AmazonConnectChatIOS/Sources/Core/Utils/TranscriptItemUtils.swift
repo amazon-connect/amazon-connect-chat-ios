@@ -1,0 +1,33 @@
+import Foundation
+
+struct TranscriptItemUtils {
+    
+    static func createDummyEndedEvent() -> Event {
+        let isoTime = CommonUtils.getCurrentISOTime()
+        
+        let serializedContent = [
+            "content": "{\"AbsoluteTime\":\"\(isoTime)\",\"ContentType\":\"application/vnd.amazonaws.connect.event.chat.ended\",\"Id\":\"chat-ended-event\",\"Type\":\"EVENT\",\"InitialContactId\":\"chat-ended-event-id\"}",
+            "topic": "aws/chat",
+            "contentType": "application/json"
+        ]
+        
+        return Event(text: nil, timeStamp: isoTime, contentType: ContentType.ended.rawValue, messageId: "chat-ended-event", serializedContent: serializedContent)
+    }
+    
+    static func createDummyMessage(content: String, contentType: String, status: MessageStatus, attachmentId: String? = nil, displayName: String) -> Message {
+        let isoTime = CommonUtils.getCurrentISOTime()
+        
+        return Message(
+            participant: "CUSTOMER",
+            text: content,
+            contentType: contentType,
+            messageDirection: .Outgoing,
+            timeStamp: isoTime,
+            attachmentId: attachmentId,
+            messageId: UUID().uuidString,
+            displayName: displayName,
+            serializedContent: [:],
+            metadata: Metadata(status: status, timeStamp: isoTime, contentType: contentType, eventDirection: .Outgoing, serializedContent: [:])
+        )
+    }
+}

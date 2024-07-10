@@ -220,7 +220,7 @@ class ChatSessionTests: XCTestCase {
         sortOrder: AWSConnectParticipantSortKey?,
         maxResults: NSNumber?,
         nextToken: String?,
-        startPosition: AWSConnectParticipantStartPosition?,
+        startPosition: String?,
         expectedResult: Result<TranscriptResponse, Error>
     ) {
         var receivedError: Error?

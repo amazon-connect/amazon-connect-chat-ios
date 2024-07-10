@@ -75,8 +75,8 @@ class ChatServiceTests: XCTestCase {
         mockAWSClient.createParticipantConnectionResult = .success(connectionDetails)
         mockConnectionDetailsProvider.updateChatDetails(newDetails: chatDetails)
         
-        let expectationEvent = expectation(description: "Should receive event")
-        let expectationTranscript = expectation(description: "Should receive transcript item")
+        let expectationEvent = XCTestExpectation(description: "Should receive event")
+        let expectationTranscript = XCTestExpectation(description: "Should receive transcript item")
         
         var receivedEvent: ChatEvent?
         var receivedTranscriptItem: TranscriptItem?
@@ -95,18 +95,21 @@ class ChatServiceTests: XCTestCase {
             XCTAssertTrue(success, "Chat session should be created successfully")
             XCTAssertNil(error, "Error should be nil")
             
-            // Simulate WebSocket events
             self.mockWebsocketManager.eventPublisher.send(.connectionEstablished)
-            let transcriptItem = TranscriptItem(timeStamp: "timestamp", contentType: "text/plain", id: "12345" ,serializedContent: ["content": "testContent"])
+            let transcriptItem = Event(text: "Joined event", timeStamp: "timestamp", contentType: "joined", messageId: "1234", serializedContent: [:])
             self.mockWebsocketManager.transcriptPublisher.send(transcriptItem)
         }
         
-        waitForExpectations(timeout: 1) { error in
-            if let error = error {
-                XCTFail("Expectation failed with error: \(error)")
-            }
+        // Wait for expectations
+        let waiter = XCTWaiter()
+        let result = waiter.wait(for: [expectationEvent, expectationTranscript], timeout: 1.0)
+        
+        switch result {
+        case .completed:
             XCTAssertEqual(receivedEvent, .connectionEstablished, "Should receive the correct event")
-            XCTAssertEqual(receivedTranscriptItem?.contentType, "text/plain", "Should receive the correct transcript item")
+            XCTAssertEqual(receivedTranscriptItem?.contentType, "joined", "Should receive the correct transcript item")
+        default:
+            XCTFail("Test failed with result: \(result)")
         }
         
         eventCancellable.cancel()
@@ -195,7 +198,7 @@ class ChatServiceTests: XCTestCase {
     
     func testDisconnectChatSession_Failure() {
         mockAWSClient.disconnectParticipantConnectionResult = .failure(expectedError)
-        
+        mockConnectionDetailsProvider.mockConnectionDetails = createConnectionDetails() // Ensure connection details are provided
         let expectation = self.expectation(description: "Chat session disconnection should fail")
 
         chatService.disconnectChatSession { success, error in

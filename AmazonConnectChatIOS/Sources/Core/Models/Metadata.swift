@@ -3,13 +3,13 @@
 
 import Foundation
 
-public enum MessageStatus : String {
-    case Delivered = "Delivered"
-    case Read = "Read"
-    case Sending = "Sending"
-    case Failed = "Failed"
-    case Sent = "Sent"
-    case Unknown = ""     // Leaving it empty as in case of unknown as it would not render anythin on UI if customer is relying on Enum values
+public enum MessageStatus {
+    case Delivered
+    case Read
+    case Sending
+    case Failed
+    case Sent
+    case Unknown // Leaving it empty as in case of unknown as it would not render anythin on UI if customer is relying on Enum values
 }
 
 public protocol MetadataProtocol: TranscriptItemProtocol {

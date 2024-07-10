@@ -5,14 +5,14 @@ import Foundation
 
 public protocol TranscriptItemProtocol: Identifiable, Equatable, Hashable, ObservableObject {
     var id: String { get }
-    var timeStamp: String { get set }
+    var timeStamp: String { get }
     var contentType: String { get set }
     var serializedContent: [String: Any]? { get set }
 }
 
 public class TranscriptItem: TranscriptItemProtocol {
-    public var id: String
-    public var timeStamp: String
+    public private(set) var id: String
+    public private(set) var timeStamp: String
     public var contentType: String
     public var serializedContent: [String: Any]?
 
@@ -31,5 +31,14 @@ public class TranscriptItem: TranscriptItemProtocol {
         hasher.combine(id)
         hasher.combine(timeStamp)
         hasher.combine(contentType)
+    }
+    
+    // Internal methods to update id and timeStamp
+    internal func updateId(_ newId: String) {
+        self.id = newId
+    }
+    
+    internal func updateTimeStamp(_ newTimeStamp: String) {
+        self.timeStamp = newTimeStamp
     }
 }
