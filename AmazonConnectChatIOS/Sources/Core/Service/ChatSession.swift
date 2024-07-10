@@ -41,6 +41,8 @@ public protocol ChatSessionProtocol {
     ///   - messageId: The ID of the message to acknowledge.
     ///   - completion: The completion handler to call when the send operation is complete.
     func sendMessageReceipt(event: MessageReceiptType, messageId: String, completion: @escaping (Result<Void, Error>) -> Void)
+    
+    func sendReadReceiptIfNeeded(for transcriptItem: AmazonConnectChatIOS.TranscriptItem, eventType: MessageReceiptType)
 
     /// Retrieves the chat transcript.
     /// - Parameters:
@@ -79,6 +81,7 @@ public protocol ChatSessionProtocol {
     var onMessageReceived: ((TranscriptItem) -> Void)? { get set }
     var onTranscriptUpdated: (([TranscriptItem]) -> Void)? { get set }
     var onChatEnded: (() -> Void)? { get set }
+    var onDeepHeartbeatFailure: (() -> Void)? { get set }
 }
 
 public class ChatSession: ChatSessionProtocol {
@@ -93,6 +96,7 @@ public class ChatSession: ChatSessionProtocol {
     public var onMessageReceived: ((TranscriptItem) -> Void)?
     public var onTranscriptUpdated: (([TranscriptItem]) -> Void)?
     public var onChatEnded: (() -> Void)?
+    public var onDeepHeartbeatFailure: (() -> Void)?
     
     /// Initializes a new chat session with a specified chat service.
     /// - Parameter chatService: The chat service to use for managing chat sessions.
@@ -204,6 +208,33 @@ public class ChatSession: ChatSessionProtocol {
     public func sendEvent(event: ContentType, content: String, completion: @escaping (Result<Void, Error>) -> Void) {
         chatService.sendEvent(event: event, content: content) { [weak self] success, error in
             self?.handleCompletion(success: success, error: error, completion: completion)
+        }
+    }
+    
+    /// Sends a read receipt if the transcript item is a plain text message
+    public func sendReadReceiptIfNeeded(for transcriptItem: AmazonConnectChatIOS.TranscriptItem, eventType: MessageReceiptType) {
+        guard let messageItem = transcriptItem as? Message,
+              !messageItem.text.isEmpty,
+              messageItem.messageDirection == .Incoming
+        else {
+            SDKLogger.logger.logError("Could not send \(eventType.rawValue) receipt for \(String(describing: (transcriptItem as? Message)?.text))")
+            return
+        }
+        
+        // Check if the item already has read when sending a read
+        if let messageItem = transcriptItem as? Message{
+            if eventType == .messageRead && messageItem.metadata?.status == MessageStatus.Read {
+                return
+            }
+        }
+        
+        sendMessageReceipt(event: eventType, messageId: messageItem.id) { result in
+            switch result {
+            case .success:
+                print("Sent \(eventType.rawValue) receipt for \(messageItem.text)")
+            case .failure(let error):
+                print("Error sending \(eventType.rawValue) Receipt: \(error.localizedDescription)")
+            }
         }
     }
     

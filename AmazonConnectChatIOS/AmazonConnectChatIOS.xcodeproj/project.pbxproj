@@ -61,6 +61,7 @@
 		F7B4A1382C15649B005C7921 /* MockHttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B4A1372C15649B005C7921 /* MockHttpClient.swift */; };
 		F7B4A13A2C17AE43005C7921 /* TestUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B4A1392C17AE43005C7921 /* TestUtils.swift */; };
 		F7B4A13C2C17E3C3005C7921 /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B4A13B2C17E3C3005C7921 /* MockURLSession.swift */; };
+		F7BE6CC82C3E1CC500E7A88A /* WebSocketErrorCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7BE6CC72C3E1CC500E7A88A /* WebSocketErrorCodes.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -131,6 +132,7 @@
 		F7B4A1372C15649B005C7921 /* MockHttpClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHttpClient.swift; sourceTree = "<group>"; };
 		F7B4A1392C17AE43005C7921 /* TestUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestUtils.swift; sourceTree = "<group>"; };
 		F7B4A13B2C17E3C3005C7921 /* MockURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLSession.swift; sourceTree = "<group>"; };
+		F7BE6CC72C3E1CC500E7A88A /* WebSocketErrorCodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketErrorCodes.swift; sourceTree = "<group>"; };
 		FA5FA5BCFCE22047DCA91060 /* Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests.debug.xcconfig"; path = "Target Support Files/Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests/Pods-AmazonConnectChatIOS-AmazonConnectChatIOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		FCB565490D66D6F8C4BB3C09 /* Pods-AmazonConnectChatIOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AmazonConnectChatIOS.release.xcconfig"; path = "Target Support Files/Pods-AmazonConnectChatIOS/Pods-AmazonConnectChatIOS.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -268,6 +270,7 @@
 				7ED5DEC32BEAFD42001693FC /* Event.swift */,
 				7ED5DEC52BEB38B8001693FC /* Metadata.swift */,
 				F7B4A1272C1157B0005C7921 /* AttachmentTypes.swift */,
+				F7BE6CC72C3E1CC500E7A88A /* WebSocketErrorCodes.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -552,6 +555,7 @@
 				7E58A5FC2BB605F300965327 /* MessageContent.swift in Sources */,
 				7E57F6542BC7762900B25623 /* ConnectionDetailsProvider.swift in Sources */,
 				7E58A6292BBE415700965327 /* ChatService.swift in Sources */,
+				F7BE6CC82C3E1CC500E7A88A /* WebSocketErrorCodes.swift in Sources */,
 				7E58A60E2BBB460A00965327 /* CommonUtils.swift in Sources */,
 				7ED5DEC42BEAFD42001693FC /* Event.swift in Sources */,
 				7E58A60A2BBB460A00965327 /* HttpMethod.swift in Sources */,

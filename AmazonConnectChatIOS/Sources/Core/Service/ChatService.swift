@@ -81,6 +81,8 @@ class ChatService : ChatServiceProtocol {
                 self?.eventPublisher.send(event)
                 if (event == .chatEnded) {
                     self?.messageReceiptsManager?.invalidateTimer()
+                } else if (event == .connectionEstablished) {
+                    self?.getTranscript() {_ in }
                 }
             })
             .store(in: &eventCancellables)
@@ -530,11 +532,6 @@ class ChatService : ChatServiceProtocol {
     }
     
     func registerNotificationListeners() {
-        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
-            if (self?.connectionDetailsProvider.isChatSessionActive() != nil && self?.connectionDetailsProvider.isChatSessionActive() != false) {
-                self?.getTranscript() {_ in }
-            }
-        }
         NotificationCenter.default.addObserver(forName: .requestNewWsUrl, object: nil, queue: .main) { [weak self] _ in
             if let pToken = self?.connectionDetailsProvider.getChatDetails()?.participantToken {
                 self?.awsClient.createParticipantConnection(participantToken: pToken) { result in
@@ -548,8 +545,6 @@ class ChatService : ChatServiceProtocol {
                         if error.localizedDescription == "Access denied" {
                             self?.updateTranscriptList(with: DummyEndedEvent())
                             self?.eventPublisher.send(.chatEnded)
-                            self?.websocketManager?.disconnect()
-                            self?.clearSubscriptionsAndPublishers()
                         }
                         print("CreateParticipantConnection failed \(error)")
                         
