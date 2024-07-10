@@ -7,11 +7,10 @@ import AWSConnectParticipant
 @testable import AmazonConnectChatIOS
 
 class MockWebsocketManager: WebsocketManagerProtocol {
-    
     var eventPublisher = PassthroughSubject<ChatEvent, Never>()
     var transcriptPublisher = PassthroughSubject<TranscriptItem, Never>()
     
-    func connect(wsUrl: URL?) {
+    func connect(wsUrl: URL?,isReconnect: Bool? = false) {
         // Simulate connection logic if needed
         SDKLogger.logger.logDebug("MockWebsocketManager: Connected to \(String(describing: wsUrl))")
     }
