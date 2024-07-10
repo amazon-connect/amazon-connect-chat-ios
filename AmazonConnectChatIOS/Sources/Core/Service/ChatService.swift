@@ -81,6 +81,8 @@ class ChatService : ChatServiceProtocol {
                 self?.eventPublisher.send(event)
                 if (event == .chatEnded) {
                     self?.messageReceiptsManager?.invalidateTimer()
+                } else if (event == .connectionEstablished) {
+                    self?.getTranscript() {_ in }
                 }
             })
             .store(in: &eventCancellables)
@@ -548,8 +550,6 @@ class ChatService : ChatServiceProtocol {
                         if error.localizedDescription == "Access denied" {
                             self?.updateTranscriptList(with: DummyEndedEvent())
                             self?.eventPublisher.send(.chatEnded)
-                            self?.websocketManager?.disconnect()
-                            self?.clearSubscriptionsAndPublishers()
                         }
                         print("CreateParticipantConnection failed \(error)")
                         

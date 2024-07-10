@@ -25,13 +25,9 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
     
     private var websocketTask: URLSessionWebSocketTask?
     private var session: URLSession?
-    var isConnected = false
     private var heartbeatManager: HeartbeatManager?
     private var deepHeartbeatManager: HeartbeatManager?
-    private var hasActiveReconnection = false
-    private var pendingNetworkReconnection = false
     private var wsUrl: URL?
-    private var intentionalDisconnect = false
     // Adding few more callbacks
     var onConnected: (() -> Void)?
     var onDisconnected: (() -> Void)?
@@ -46,14 +42,13 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
     }
     
     func connect(wsUrl: URL? = nil) {
-        self.intentionalDisconnect = false
         disconnect() // Ensure previous WebSocket tasks are properly closed
         
         if let wsTask = self.websocketTask {
             wsTask.cancel(with: .goingAway, reason: nil)
         }
         if let nonEmptyWsUrl = wsUrl {
-            self.hasActiveReconnection = false
+            // self.hasActiveReconnection = false
             self.wsUrl = nonEmptyWsUrl
         }
         if let webSocketUrl = self.wsUrl {
@@ -99,8 +94,30 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
     }
     
     // MARK: - WebSocketDelegate
-    
+    // Background / Foreground Domain=NSPOSIXErrorDomain Code=53 "Software caused connection abort"
+    // Network disconnect = Domain=NSURLErrorDomain Code=-1005 "The network connection was lost."
     func handleError(_ error: Error?) {
+        if let nsError = error as? NSError {
+            switch (nsError.domain) {
+            case NSPOSIXErrorDomain:
+                if (nsError.code == WebSocketErrorCodes.SOFTWARE_ABORT.rawValue) {
+                    NotificationCenter.default.post(name: .requestNewWsUrl, object: nil)
+                }
+                break
+            case NSURLErrorDomain:
+                if (nsError.code == WebSocketErrorCodes.NETWORK_DISCONNECTED.rawValue) {
+                    SDKLogger.logger.logDebug("WebSocket disconnected due to lost network connection")
+                } else if (nsError.code == WebSocketErrorCodes.BAD_SERVER_RESPONSE.rawValue) {
+                    NotificationCenter.default.post(name: .requestNewWsUrl, object: nil)
+                }
+                break
+            default:
+                SDKLogger.logger.logDebug("DEBUG - DOMAIN: \(nsError.domain)")
+                SDKLogger.logger.logDebug("DEBUG - CODE: \(nsError.code)")
+                SDKLogger.logger.logDebug("DEBUG - DESCRIPTION: \(nsError.localizedDescription)")
+            }
+        }
+        
         if let e = error {
             print("websocket encountered an error: \(e.localizedDescription)")
         } else {
@@ -110,16 +127,14 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
     }
     
     func disconnect() {
-        self.intentionalDisconnect = true
         websocketTask?.cancel(with: .goingAway, reason: nil)
         websocketTask = nil
     }
     
     func addNetworkNotificationObserver() {
         NotificationCenter.default.addObserver(forName: .networkConnected, object: nil, queue: .main) { [weak self] _ in
-            if (self?.pendingNetworkReconnection == true) {
-                self?.pendingNetworkReconnection = false
-                self?.retryConnection()
+            if (ChatSession.shared.isChatSessionActive()) {
+                NotificationCenter.default.post(name: .requestNewWsUrl, object: nil)
             }
         }
     }
@@ -209,61 +224,9 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
     }
     
     // MARK: - Reconnection / State Management
-    
     private func getRetryDelay(numAttempts: Double) -> Double {
         let calculatedDelay = pow(2, numAttempts) * 2;
         return calculatedDelay <= 30 ? calculatedDelay : 30
-    }
-    
-    func retryConnection() {
-        if !self.hasActiveReconnection {
-            self.hasActiveReconnection = true
-            var numAttempts = 0.0
-            var numOfflineChecks = 0.0
-            var timer: Timer?
-            
-            func retry() {
-                if self.wsUrl == nil {
-                    return
-                }
-                timer?.invalidate()
-                if numOfflineChecks < 5 {
-                    if numAttempts < 5 {
-                        DispatchQueue.main.async {
-                            timer = Timer.scheduledTimer(withTimeInterval: self.getRetryDelay(numAttempts: max(numAttempts, numOfflineChecks)), repeats: false) { _ in
-                                if NetworkConnectionManager.shared.checkConnectivity() {
-                                    numOfflineChecks = 0
-                                    if self.isConnected {
-                                        print("Connected successfully on attempt \(numAttempts)")
-                                        timer?.invalidate()
-                                        self.hasActiveReconnection = false
-                                        numAttempts = 0.0
-                                    } else {
-                                        print("Attempting websocket re-connect... attempt \(numAttempts)")
-                                        self.connect()
-                                        numAttempts += 1
-                                        retry()
-                                    }
-                                } else {
-                                    print("Device is not connected to the internet, retrying... attempt \(numOfflineChecks)")
-                                    numOfflineChecks += 1
-                                    numAttempts = 0
-                                    retry()
-                                }
-                            }
-                        }
-                    } else {
-                        print("Retry connection failed after \(numAttempts) attempts. Please re-start chat session.")
-                        self.hasActiveReconnection = false
-                    }
-                } else {
-                    print("Network connection has been lost. Please restore your network connection to try again.")
-                    self.pendingNetworkReconnection = true
-                    self.hasActiveReconnection = false
-                }
-            }
-            retry()
-        }
     }
     
     // MARK: - Heartbeat Logic
@@ -292,7 +255,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
     }
     
     func onHeartbeatMissed() {
-        if !self.isConnected {
+        if !ChatSession.shared.isChatSessionActive() {
             return
         }
         if NetworkConnectionManager.shared.checkConnectivity() {
@@ -300,11 +263,10 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
         } else {
             print("Device is not connected to the internet")
         }
-        retryConnection()
     }
     
     func onDeepHeartbeatMissed() {
-        if !self.isConnected {
+        if !ChatSession.shared.isChatSessionActive() {
             return
         }
         if NetworkConnectionManager.shared.checkConnectivity() {
@@ -313,7 +275,6 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
             print("Device is not connected to the internet")
         }
         self.eventPublisher.send(.connectionBroken)
-        retryConnection()
     }
 }
 
@@ -325,7 +286,6 @@ extension WebsocketManager: URLSessionWebSocketDelegate {
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
         print("Websocket connection successfully established")
         self.onConnected?()
-        self.isConnected = true
         self.eventPublisher.send(.connectionEstablished)
         self.sendWebSocketMessage(string: EventTypes.subscribe)
         self.startHeartbeats()
@@ -333,7 +293,6 @@ extension WebsocketManager: URLSessionWebSocketDelegate {
     
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
         self.onDisconnected?()
-        self.isConnected = false
         print("WebSocket connection closed")
     }
     
@@ -344,20 +303,10 @@ extension WebsocketManager: URLSessionWebSocketDelegate {
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         print("WebSocket connection completed with error.")
         self.onDisconnected?()
-        self.isConnected = false
         if error != nil {
             handleError(error)
         }
-        guard let response = task.response as? HTTPURLResponse else {
-            print("Failed to parse HTTPURLResponse")
-            return
-        }
-        if ConnectionDetailsProvider.shared.isChatSessionActive() {
-            NotificationCenter.default.post(name: .requestNewWsUrl, object: nil)
-            self.wsUrl = nil
-        }
 
-        self.intentionalDisconnect = false
     }
 }
 
