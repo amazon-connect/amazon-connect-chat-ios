@@ -279,7 +279,7 @@ class ChatService : ChatServiceProtocol {
             case .success(let response):
                 MetricsClient.shared.triggerCountMetric(metricName: .SendMessage)
                 if let id = response.identifier {
-                    self.updateMessageId(oldId: recentlySentMessage.id, newId: id)
+                    self.updatePlaceholderMessage(oldId: recentlySentMessage.id, newId: id)
                 }
                 completion(true, nil)
             case .failure(let error):
@@ -299,13 +299,21 @@ class ChatService : ChatServiceProtocol {
         return recentCustomerMessage?.displayName ?? ""
     }
     
-    private func updateMessageId(oldId: String, newId: String) {
-        if let message = transcriptDict[oldId] as? Message {
-            message.updateId(newId)
-            message.metadata?.status = .Sent
-            transcriptDict.removeValue(forKey: oldId)
-            transcriptDict[newId] = message
-            transcriptItemPublisher.send(message)
+    private func updatePlaceholderMessage(oldId: String, newId: String) {
+        if let placeholderMessage = transcriptDict[oldId] as? Message {
+            if transcriptDict[newId] != nil {
+                transcriptDict.removeValue(forKey: oldId)
+                internalTranscript.removeAll { $0.id == oldId }
+                // Send out updated transcript
+                self.transcriptListPublisher.send(internalTranscript)
+            } else {
+                // Update the placeholder message's ID to the new ID
+                placeholderMessage.updateId(newId)
+                placeholderMessage.metadata?.status = .Sent
+                transcriptDict.removeValue(forKey: oldId)
+                transcriptDict[newId] = placeholderMessage
+            }
+            transcriptItemPublisher.send(placeholderMessage)
         }
     }
     
