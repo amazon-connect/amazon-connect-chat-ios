@@ -87,7 +87,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
                 case .string(let text):
                     print("Received text in receiveMessage()")
                     self?.handleWebsocketTextEvent(text: text)
-                case .data(let data):
+                case .data(_):
                     print("Received data from websocket")
                 @unknown default:
                     print("Received an unknown message type, which is not handled.")

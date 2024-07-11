@@ -36,7 +36,7 @@ class MetricsManager {
                         self.metricList = []
                         self.isMonitoring = false
                         self.timer?.invalidate()
-                    case .failure(let error):
+                    case .failure(_):
                         if self.shouldRetry {
                             self.shouldRetry = false
                         } else {

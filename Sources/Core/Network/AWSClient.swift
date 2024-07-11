@@ -289,7 +289,7 @@ class AWSClient: AWSClientProtocol {
                 return nil
             }
             
-            guard let result = task.result, let transcriptItems = result.transcript else {
+            guard let result = task.result else {
                 SDKLogger.logger.logError("No result or incorrect type from getTranscript")
                 let error = NSError(domain: "aws.amazon.com", code: 1001, userInfo: [
                     NSLocalizedDescriptionKey: "Failed to obtain transcript: No result or incorrect type returned from getTranscript."
