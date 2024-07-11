@@ -1,0 +1,530 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.10 (swiftlang-5.10.0.13 clang-1500.3.9.4)
+// swift-module-flags: -target arm64-apple-ios15.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-bare-slash-regex -module-name AmazonConnectChatIOS
+import AWSConnectParticipant
+import AWSCore
+@_exported import AmazonConnectChatIOS
+import Combine
+import Foundation
+import Network
+import OSLog
+import Swift
+import UniformTypeIdentifiers
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+import os
+public enum WebSocketErrorCodes : Swift.Int {
+  case NETWORK_DISCONNECTED
+  case BAD_SERVER_RESPONSE
+  case SOFTWARE_ABORT
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public struct ConnectionDetails {
+}
+public struct Constants {
+  public static let QUICK_REPLY: Swift.String
+  public static let LIST_PICKER: Swift.String
+  public static let PANEL: Swift.String
+  public static let TIME_PICKER: Swift.String
+  public static let CAROUSEL: Swift.String
+}
+public class TranscriptResponse : Swift.Equatable {
+  public static func == (lhs: AmazonConnectChatIOS.TranscriptResponse, rhs: AmazonConnectChatIOS.TranscriptResponse) -> Swift.Bool
+  final public let initialContactId: Swift.String
+  final public let nextToken: Swift.String
+  public var transcript: [AmazonConnectChatIOS.TranscriptItem]
+  public init(initialContactId: Swift.String, nextToken: Swift.String, transcript: [AmazonConnectChatIOS.TranscriptItem])
+  @objc deinit
+}
+public protocol ChatSessionProtocol {
+  func configure(config: AmazonConnectChatIOS.GlobalConfig)
+  func connect(chatDetails: AmazonConnectChatIOS.ChatDetails, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  func disconnect(completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  func sendMessage(contentType: AmazonConnectChatIOS.ContentType, message: Swift.String, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  func sendEvent(event: AmazonConnectChatIOS.ContentType, content: Swift.String, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  func sendMessageReceipt(for transcriptItem: AmazonConnectChatIOS.TranscriptItem, eventType: AmazonConnectChatIOS.MessageReceiptType)
+  func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: Foundation.NSNumber?, nextToken: Swift.String?, startPosition: Swift.String?, completion: @escaping (Swift.Result<AmazonConnectChatIOS.TranscriptResponse, any Swift.Error>) -> Swift.Void)
+  func sendAttachment(file: Foundation.URL, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  func downloadAttachment(attachmentId: Swift.String, filename: Swift.String, completion: @escaping (Swift.Result<Foundation.URL, any Swift.Error>) -> Swift.Void)
+  func getAttachmentDownloadUrl(attachmentId: Swift.String, completion: @escaping (Swift.Result<Foundation.URL, any Swift.Error>) -> Swift.Void)
+  func isChatSessionActive() -> Swift.Bool
+  var onConnectionEstablished: (() -> Swift.Void)? { get set }
+  var onConnectionReEstablished: (() -> Swift.Void)? { get set }
+  var onConnectionBroken: (() -> Swift.Void)? { get set }
+  var onMessageReceived: ((AmazonConnectChatIOS.TranscriptItem) -> Swift.Void)? { get set }
+  var onTranscriptUpdated: (([AmazonConnectChatIOS.TranscriptItem]) -> Swift.Void)? { get set }
+  var onChatEnded: (() -> Swift.Void)? { get set }
+  var onDeepHeartbeatFailure: (() -> Swift.Void)? { get set }
+}
+@_hasMissingDesignatedInitializers public class ChatSession : AmazonConnectChatIOS.ChatSessionProtocol {
+  public static let shared: any AmazonConnectChatIOS.ChatSessionProtocol
+  public var onConnectionEstablished: (() -> Swift.Void)?
+  public var onConnectionReEstablished: (() -> Swift.Void)?
+  public var onConnectionBroken: (() -> Swift.Void)?
+  public var onMessageReceived: ((AmazonConnectChatIOS.TranscriptItem) -> Swift.Void)?
+  public var onTranscriptUpdated: (([AmazonConnectChatIOS.TranscriptItem]) -> Swift.Void)?
+  public var onChatEnded: (() -> Swift.Void)?
+  public var onDeepHeartbeatFailure: (() -> Swift.Void)?
+  public func isChatSessionActive() -> Swift.Bool
+  public func configure(config: AmazonConnectChatIOS.GlobalConfig)
+  public func connect(chatDetails: AmazonConnectChatIOS.ChatDetails, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  public func getTranscript(scanDirection: AWSConnectParticipantScanDirection? = .backward, sortOrder: AWSConnectParticipantSortKey? = .ascending, maxResults: Foundation.NSNumber? = 30, nextToken: Swift.String? = nil, startPosition: Swift.String? = nil, completion: @escaping (Swift.Result<AmazonConnectChatIOS.TranscriptResponse, any Swift.Error>) -> Swift.Void)
+  public func disconnect(completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  public func sendMessage(contentType: AmazonConnectChatIOS.ContentType, message: Swift.String, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  public func sendEvent(event: AmazonConnectChatIOS.ContentType, content: Swift.String, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  public func sendMessageReceipt(for transcriptItem: AmazonConnectChatIOS.TranscriptItem, eventType: AmazonConnectChatIOS.MessageReceiptType)
+  public func sendAttachment(file: Foundation.URL, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  public func downloadAttachment(attachmentId: Swift.String, filename: Swift.String, completion: @escaping (Swift.Result<Foundation.URL, any Swift.Error>) -> Swift.Void)
+  public func getAttachmentDownloadUrl(attachmentId: Swift.String, completion: @escaping (Swift.Result<Foundation.URL, any Swift.Error>) -> Swift.Void)
+  @objc deinit
+}
+public protocol MessageContent {
+  static func decode(from text: Swift.String) -> (any AmazonConnectChatIOS.MessageContent)?
+}
+public struct PlainTextContent : AmazonConnectChatIOS.MessageContent {
+  public let text: Swift.String
+  public init(text: Swift.String)
+  public static func decode(from text: Swift.String) -> (any AmazonConnectChatIOS.MessageContent)?
+}
+public struct GenericInteractiveTemplate : Swift.Decodable {
+  public let templateType: Swift.String
+  public init(from decoder: any Swift.Decoder) throws
+}
+public protocol InteractiveContent : AmazonConnectChatIOS.MessageContent {
+  static var templateType: Swift.String { get }
+}
+public struct QuickReplyElement : Swift.Codable {
+  public let title: Swift.String
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct QuickReplyContentData : Swift.Codable {
+  public let title: Swift.String
+  public let subtitle: Swift.String?
+  public let elements: [AmazonConnectChatIOS.QuickReplyElement]
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct QuickReplyData : Swift.Codable {
+  public let content: AmazonConnectChatIOS.QuickReplyContentData
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct QuickReplyTemplate : Swift.Codable {
+  public let templateType: Swift.String
+  public let version: Swift.String
+  public let data: AmazonConnectChatIOS.QuickReplyData
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct QuickReplyContent : AmazonConnectChatIOS.InteractiveContent {
+  public static let templateType: Swift.String
+  public let title: Swift.String
+  public let subtitle: Swift.String?
+  public let options: [Swift.String]
+  public static func decode(from text: Swift.String) -> (any AmazonConnectChatIOS.MessageContent)?
+}
+public struct ListPickerElement : Swift.Codable, Swift.Hashable, Swift.Equatable {
+  public let title: Swift.String
+  public let subtitle: Swift.String?
+  public let imageType: Swift.String?
+  public let imageData: Swift.String?
+  public func hash(into hasher: inout Swift.Hasher)
+  public static func == (a: AmazonConnectChatIOS.ListPickerElement, b: AmazonConnectChatIOS.ListPickerElement) -> Swift.Bool
+  public func encode(to encoder: any Swift.Encoder) throws
+  public var hashValue: Swift.Int {
+    get
+  }
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct ListPickerContentData : Swift.Codable {
+  public let title: Swift.String
+  public let subtitle: Swift.String?
+  public let imageType: Swift.String?
+  public let imageData: Swift.String?
+  public let elements: [AmazonConnectChatIOS.ListPickerElement]
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct ListPickerData : Swift.Codable {
+  public let content: AmazonConnectChatIOS.ListPickerContentData
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct ListPickerTemplate : Swift.Codable {
+  public let templateType: Swift.String
+  public let version: Swift.String
+  public let data: AmazonConnectChatIOS.ListPickerData
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct ListPickerContent : AmazonConnectChatIOS.InteractiveContent {
+  public static let templateType: Swift.String
+  public let title: Swift.String
+  public let subtitle: Swift.String?
+  public let imageUrl: Swift.String?
+  public let options: [AmazonConnectChatIOS.ListPickerElement]
+  public static func decode(from text: Swift.String) -> (any AmazonConnectChatIOS.MessageContent)?
+}
+public struct PanelElement : Swift.Codable {
+  public let title: Swift.String
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct PanelContentData : Swift.Codable {
+  public let title: Swift.String
+  public let subtitle: Swift.String?
+  public let imageType: Swift.String?
+  public let imageData: Swift.String?
+  public let imageDescription: Swift.String?
+  public let elements: [AmazonConnectChatIOS.PanelElement]
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct PanelReplyMessage : Swift.Codable {
+  public let title: Swift.String
+  public let subtitle: Swift.String?
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct PanelData : Swift.Codable {
+  public let replyMessage: AmazonConnectChatIOS.PanelReplyMessage?
+  public let content: AmazonConnectChatIOS.PanelContentData
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct PanelTemplate : Swift.Codable {
+  public let templateType: Swift.String
+  public let version: Swift.String
+  public let data: AmazonConnectChatIOS.PanelData
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct PanelContent : AmazonConnectChatIOS.InteractiveContent {
+  public static let templateType: Swift.String
+  public let title: Swift.String
+  public let subtitle: Swift.String?
+  public let imageUrl: Swift.String?
+  public let imageDescription: Swift.String?
+  public let options: [AmazonConnectChatIOS.PanelElement]
+  public static func decode(from text: Swift.String) -> (any AmazonConnectChatIOS.MessageContent)?
+}
+public struct TimeSlot : Swift.Codable {
+  public let date: Swift.String
+  public let duration: Swift.Int
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct Location : Swift.Codable {
+  public let latitude: Swift.Double
+  public let longitude: Swift.Double
+  public let title: Swift.String
+  public let radius: Swift.Int?
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct TimePickerContentData : Swift.Codable {
+  public let title: Swift.String
+  public let subtitle: Swift.String?
+  public let timeZoneOffset: Swift.Int?
+  public let location: AmazonConnectChatIOS.Location?
+  public let timeslots: [AmazonConnectChatIOS.TimeSlot]
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct TimePickerReplyMessage : Swift.Codable {
+  public let title: Swift.String?
+  public let subtitle: Swift.String?
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct TimePickerData : Swift.Codable {
+  public let replyMessage: AmazonConnectChatIOS.TimePickerReplyMessage?
+  public let content: AmazonConnectChatIOS.TimePickerContentData
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct TimePickerTemplate : Swift.Codable {
+  public let templateType: Swift.String
+  public let version: Swift.String
+  public let data: AmazonConnectChatIOS.TimePickerData
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct TimePickerContent : AmazonConnectChatIOS.InteractiveContent {
+  public static let templateType: Swift.String
+  public let title: Swift.String
+  public let subtitle: Swift.String?
+  public let timeZoneOffset: Swift.Int?
+  public let location: AmazonConnectChatIOS.Location?
+  public let timeslots: [AmazonConnectChatIOS.TimeSlot]
+  public static func decode(from text: Swift.String) -> (any AmazonConnectChatIOS.MessageContent)?
+}
+public struct CarouselElement : Swift.Codable {
+  public let templateIdentifier: Swift.String
+  public let templateType: Swift.String
+  public let version: Swift.String
+  public let data: AmazonConnectChatIOS.PanelData
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct CarouselContentData : Swift.Codable {
+  public let title: Swift.String
+  public let elements: [AmazonConnectChatIOS.CarouselElement]
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct CarouselData : Swift.Codable {
+  public let content: AmazonConnectChatIOS.CarouselContentData
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct CarouselTemplate : Swift.Codable {
+  public let templateType: Swift.String
+  public let version: Swift.String
+  public let data: AmazonConnectChatIOS.CarouselData
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct CarouselContent : AmazonConnectChatIOS.InteractiveContent {
+  public static let templateType: Swift.String
+  public let title: Swift.String
+  public let elements: [AmazonConnectChatIOS.CarouselElement]
+  public static func decode(from text: Swift.String) -> (any AmazonConnectChatIOS.MessageContent)?
+}
+public protocol EventProtocol : AmazonConnectChatIOS.TranscriptItemProtocol {
+  var participant: Swift.String? { get set }
+  var text: Swift.String? { get set }
+  var displayName: Swift.String? { get set }
+  var eventDirection: AmazonConnectChatIOS.MessageDirection? { get set }
+}
+@_hasMissingDesignatedInitializers public class Event : AmazonConnectChatIOS.TranscriptItem, AmazonConnectChatIOS.EventProtocol {
+  public var participant: Swift.String?
+  public var text: Swift.String?
+  public var displayName: Swift.String?
+  public var eventDirection: AmazonConnectChatIOS.MessageDirection?
+  @objc deinit
+}
+public protocol TranscriptItemProtocol : Combine.ObservableObject, Swift.Hashable, Swift.Identifiable {
+  var id: Swift.String { get }
+  var timeStamp: Swift.String { get }
+  var contentType: Swift.String { get set }
+  var serializedContent: [Swift.String : Any]? { get set }
+}
+public class TranscriptItem : AmazonConnectChatIOS.TranscriptItemProtocol {
+  public var id: Swift.String {
+    get
+  }
+  public var timeStamp: Swift.String {
+    get
+  }
+  public var contentType: Swift.String
+  public var serializedContent: [Swift.String : Any]?
+  public init(timeStamp: Swift.String, contentType: Swift.String, id: Swift.String?, serializedContent: [Swift.String : Any]?)
+  public static func == (lhs: AmazonConnectChatIOS.TranscriptItem, rhs: AmazonConnectChatIOS.TranscriptItem) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public typealias ID = Swift.String
+  public typealias ObjectWillChangePublisher = Combine.ObservableObjectPublisher
+  @objc deinit
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public enum AttachmentTypes : Swift.String {
+  case csv
+  case doc
+  case docx
+  case heic
+  case jpg
+  case mov
+  case mp4
+  case pdf
+  case png
+  case ppt
+  case pptx
+  case rtf
+  case txt
+  case wav
+  case xls
+  case xlsx
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public enum MessageStatus {
+  case Delivered
+  case Read
+  case Sending
+  case Failed
+  case Sent
+  case Unknown
+  public static func == (a: AmazonConnectChatIOS.MessageStatus, b: AmazonConnectChatIOS.MessageStatus) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public protocol MetadataProtocol : AmazonConnectChatIOS.TranscriptItemProtocol {
+  var status: AmazonConnectChatIOS.MessageStatus? { get set }
+  var eventDirection: AmazonConnectChatIOS.MessageDirection? { get set }
+}
+@_hasMissingDesignatedInitializers public class Metadata : AmazonConnectChatIOS.TranscriptItem, AmazonConnectChatIOS.MetadataProtocol {
+  @Combine.Published @_projectedValueProperty($status) public var status: AmazonConnectChatIOS.MessageStatus? {
+    get
+    @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
+    set
+    @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
+    _modify
+  }
+  public var $status: Combine.Published<AmazonConnectChatIOS.MessageStatus?>.Publisher {
+    get
+    @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
+    set
+  }
+  @Combine.Published @_projectedValueProperty($eventDirection) public var eventDirection: AmazonConnectChatIOS.MessageDirection? {
+    get
+    @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
+    set
+    @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
+    _modify
+  }
+  public var $eventDirection: Combine.Published<AmazonConnectChatIOS.MessageDirection?>.Publisher {
+    get
+    @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
+    set
+  }
+  @objc deinit
+}
+public enum MessageDirection {
+  case Outgoing
+  case Incoming
+  case Common
+  public static func == (a: AmazonConnectChatIOS.MessageDirection, b: AmazonConnectChatIOS.MessageDirection) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public protocol MessageProtocol : AmazonConnectChatIOS.TranscriptItemProtocol {
+  var participant: Swift.String { get set }
+  var text: Swift.String { get set }
+  var contentType: Swift.String { get set }
+  var displayName: Swift.String? { get set }
+  var messageDirection: AmazonConnectChatIOS.MessageDirection? { get set }
+  var metadata: (any AmazonConnectChatIOS.MetadataProtocol)? { get set }
+}
+@_hasMissingDesignatedInitializers public class Message : AmazonConnectChatIOS.TranscriptItem, AmazonConnectChatIOS.MessageProtocol {
+  public var participant: Swift.String
+  public var text: Swift.String
+  public var messageDirection: AmazonConnectChatIOS.MessageDirection?
+  public var attachmentId: Swift.String?
+  public var displayName: Swift.String?
+  @Combine.Published @_projectedValueProperty($metadata) public var metadata: (any AmazonConnectChatIOS.MetadataProtocol)? {
+    get
+    @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
+    set
+    @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
+    _modify
+  }
+  public var $metadata: Combine.Published<(any AmazonConnectChatIOS.MetadataProtocol)?>.Publisher {
+    get
+    @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
+    set
+  }
+  public var content: (any AmazonConnectChatIOS.MessageContent)? {
+    get
+  }
+  @objc deinit
+}
+public struct GlobalConfig {
+  public var region: AWSCore.AWSRegionType
+  public var features: AmazonConnectChatIOS.Features
+  public static var defaultRegion: AWSCore.AWSRegionType {
+    get
+  }
+  public init(region: AWSCore.AWSRegionType = defaultRegion, features: AmazonConnectChatIOS.Features = .defaultFeatures)
+}
+public struct Features {
+  public var messageReceipts: AmazonConnectChatIOS.MessageReceipts
+  public static var defaultFeatures: AmazonConnectChatIOS.Features {
+    get
+  }
+  public init(messageReceipts: AmazonConnectChatIOS.MessageReceipts = .defaultReceipts)
+}
+public struct MessageReceipts {
+  public var shouldSendMessageReceipts: Swift.Bool
+  public var throttleTime: Swift.Double
+  public static var defaultReceipts: AmazonConnectChatIOS.MessageReceipts {
+    get
+  }
+  public init(shouldSendMessageReceipts: Swift.Bool, throttleTime: Swift.Double)
+}
+public struct ChatDetails {
+  public init(contactId: Swift.String? = nil, participantId: Swift.String? = nil, participantToken: Swift.String)
+}
+public struct ChatSessionOptions {
+}
+public enum ContentType : Swift.String {
+  case typing
+  case connectionAcknowledged
+  case messageDelivered
+  case messageRead
+  case metaData
+  case joined
+  case left
+  case ended
+  case plainText
+  case richText
+  case interactiveText
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public enum MessageReceiptType : Swift.String {
+  case messageDelivered
+  case messageRead
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public enum WebSocketMessageType : Swift.String {
+  case message
+  case event
+  case attachment
+  case messageMetadata
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+extension AmazonConnectChatIOS.WebSocketErrorCodes : Swift.Equatable {}
+extension AmazonConnectChatIOS.WebSocketErrorCodes : Swift.Hashable {}
+extension AmazonConnectChatIOS.WebSocketErrorCodes : Swift.RawRepresentable {}
+extension AmazonConnectChatIOS.AttachmentTypes : Swift.Equatable {}
+extension AmazonConnectChatIOS.AttachmentTypes : Swift.Hashable {}
+extension AmazonConnectChatIOS.AttachmentTypes : Swift.RawRepresentable {}
+extension AmazonConnectChatIOS.MessageStatus : Swift.Equatable {}
+extension AmazonConnectChatIOS.MessageStatus : Swift.Hashable {}
+extension AmazonConnectChatIOS.MessageDirection : Swift.Equatable {}
+extension AmazonConnectChatIOS.MessageDirection : Swift.Hashable {}
+extension AmazonConnectChatIOS.ContentType : Swift.Equatable {}
+extension AmazonConnectChatIOS.ContentType : Swift.Hashable {}
+extension AmazonConnectChatIOS.ContentType : Swift.RawRepresentable {}
+extension AmazonConnectChatIOS.MessageReceiptType : Swift.Equatable {}
+extension AmazonConnectChatIOS.MessageReceiptType : Swift.Hashable {}
+extension AmazonConnectChatIOS.MessageReceiptType : Swift.RawRepresentable {}
+extension AmazonConnectChatIOS.WebSocketMessageType : Swift.Equatable {}
+extension AmazonConnectChatIOS.WebSocketMessageType : Swift.Hashable {}
+extension AmazonConnectChatIOS.WebSocketMessageType : Swift.RawRepresentable {}

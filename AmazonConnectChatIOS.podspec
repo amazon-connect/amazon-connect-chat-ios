@@ -7,7 +7,7 @@ Pod::Spec.new do |spec|
   spec.summary       = 'Amazon Connect Chat SDK for iOS ...'
   spec.source        = { :git => 'https://github.com/amazon-connect/amazon-connect-chat-ios', :tag => 'v0.0.10-beta' }
   spec.platform      = :ios, '15.0'
-  spec.source_files  = "Sources/**/*.{swift}"
+  spec.source_files  = "Sources/Core/**/*.{swift}"
   spec.dependency 'AWSConnectParticipant'
   spec.swift_version = "5.10"
 end
