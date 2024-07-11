@@ -1,0 +1,6 @@
+framework module AWSPolly {
+  umbrella header "AWSPolly.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,266 @@
+{
+  "ABIRoot": {
+    "kind": "Root",
+    "name": "TopLevel",
+    "printedName": "TopLevel",
+    "children": [
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "AWSCore",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "AWSDDLog",
+        "printedName": "AWSDDLog",
+        "children": [
+          {
+            "kind": "Function",
+            "name": "add",
+            "printedName": "add(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "AWSCore.AWSDDLogger?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AWSDDLogger",
+                    "printedName": "AWSCore.AWSDDLogger",
+                    "usr": "c:objc(pl)AWSDDLogger"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:So8AWSDDLogC7AWSCoreE3addyySo11AWSDDLogger_pSgFZ",
+            "mangledName": "$sSo8AWSDDLogC7AWSCoreE3addyySo11AWSDDLogger_pSgFZ",
+            "moduleName": "AWSCore",
+            "static": true,
+            "deprecated": true,
+            "declAttributes": [
+              "Final",
+              "Available",
+              "RawDocComment"
+            ],
+            "isFromExtension": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "add",
+            "printedName": "add(_:with:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "AWSCore.AWSDDLogger?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AWSDDLogger",
+                    "printedName": "AWSCore.AWSDDLogger",
+                    "usr": "c:objc(pl)AWSDDLogger"
+                  }
+                ],
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AWSDDLogLevel",
+                "printedName": "AWSCore.AWSDDLogLevel",
+                "usr": "c:@E@AWSDDLogLevel"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:So8AWSDDLogC7AWSCoreE3add_4withySo11AWSDDLogger_pSg_So0A5LevelVtFZ",
+            "mangledName": "$sSo8AWSDDLogC7AWSCoreE3add_4withySo11AWSDDLogger_pSg_So0A5LevelVtFZ",
+            "moduleName": "AWSCore",
+            "static": true,
+            "deprecated": true,
+            "declAttributes": [
+              "Available",
+              "RawDocComment"
+            ],
+            "isFromExtension": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "add",
+            "printedName": "add(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "AWSCore.AWSDDLogger?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AWSDDLogger",
+                    "printedName": "AWSCore.AWSDDLogger",
+                    "usr": "c:objc(pl)AWSDDLogger"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:So8AWSDDLogC7AWSCoreE3addyySo11AWSDDLogger_pSgF",
+            "mangledName": "$sSo8AWSDDLogC7AWSCoreE3addyySo11AWSDDLogger_pSgF",
+            "moduleName": "AWSCore",
+            "deprecated": true,
+            "declAttributes": [
+              "Available",
+              "RawDocComment"
+            ],
+            "isFromExtension": true,
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "add",
+            "printedName": "add(_:with:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "AWSCore.AWSDDLogger?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AWSDDLogger",
+                    "printedName": "AWSCore.AWSDDLogger",
+                    "usr": "c:objc(pl)AWSDDLogger"
+                  }
+                ],
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AWSDDLogLevel",
+                "printedName": "AWSCore.AWSDDLogLevel",
+                "usr": "c:@E@AWSDDLogLevel"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:So8AWSDDLogC7AWSCoreE3add_4withySo11AWSDDLogger_pSg_So0A5LevelVtF",
+            "mangledName": "$sSo8AWSDDLogC7AWSCoreE3add_4withySo11AWSDDLogger_pSg_So0A5LevelVtF",
+            "moduleName": "AWSCore",
+            "deprecated": true,
+            "declAttributes": [
+              "Available",
+              "RawDocComment"
+            ],
+            "isFromExtension": true,
+            "funcSelfKind": "NonMutating"
+          }
+        ],
+        "declKind": "Class",
+        "usr": "c:objc(cs)AWSDDLog",
+        "moduleName": "AWSCore",
+        "isOpen": true,
+        "objc_name": "AWSDDLog",
+        "declAttributes": [
+          "ObjC",
+          "SynthesizedProtocol",
+          "Sendable",
+          "Dynamic"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "isExternal": true,
+        "inheritsConvenienceInitializers": true,
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP",
+            "mangledName": "$ss8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ",
+            "mangledName": "$sSQ"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH",
+            "mangledName": "$sSH"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP",
+            "mangledName": "$ss7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObservingPublishing",
+            "printedName": "_KeyValueCodingAndObservingPublishing",
+            "usr": "s:10Foundation37_KeyValueCodingAndObservingPublishingP",
+            "mangledName": "$s10Foundation37_KeyValueCodingAndObservingPublishingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "_KeyValueCodingAndObserving",
+            "printedName": "_KeyValueCodingAndObserving",
+            "usr": "s:10Foundation27_KeyValueCodingAndObservingP",
+            "mangledName": "$s10Foundation27_KeyValueCodingAndObservingP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP",
+            "mangledName": "$ss23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP",
+            "mangledName": "$ss28CustomDebugStringConvertibleP"
+          }
+        ]
+      }
+    ],
+    "json_format_version": 8
+  },
+  "ConstValues": []
+}

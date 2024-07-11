@@ -1,0 +1,6 @@
+framework module AWSConnectParticipant {
+  umbrella header "AWSConnectParticipant.h"
+
+  export *
+  module * { export * }
+}

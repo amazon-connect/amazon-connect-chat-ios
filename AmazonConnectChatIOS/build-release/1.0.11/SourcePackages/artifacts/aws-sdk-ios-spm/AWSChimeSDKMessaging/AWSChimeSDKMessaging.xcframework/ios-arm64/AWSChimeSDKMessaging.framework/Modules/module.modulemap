@@ -1,0 +1,6 @@
+framework module AWSChimeSDKMessaging {
+  umbrella header "AWSChimeSDKMessaging.h"
+
+  export *
+  module * { export * }
+}

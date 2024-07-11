@@ -1,0 +1,11 @@
+framework module AmazonConnectChatIOS {
+  umbrella header "AmazonConnectChatIOS.h"
+  export *
+
+  module * { export * }
+}
+
+module AmazonConnectChatIOS.Swift {
+  header "AmazonConnectChatIOS-Swift.h"
+  requires objc
+}

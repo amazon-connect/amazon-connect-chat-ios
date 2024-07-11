@@ -1,0 +1,11 @@
+framework module AWSLocationXCF {
+  umbrella header "AWSLocationXCF.h"
+
+  export *
+  module * { export * }
+}
+
+module AWSLocationXCF.Swift {
+  header "AWSLocationXCF-Swift.h"
+  requires objc
+}

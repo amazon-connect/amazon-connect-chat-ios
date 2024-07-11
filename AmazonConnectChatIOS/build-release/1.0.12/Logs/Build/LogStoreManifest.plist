@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>logFormatVersion</key>
+	<integer>10</integer>
+	<key>logs</key>
+	<dict>
+		<key>BA93D15A-E7F5-447D-B3ED-AEB32002CA4F</key>
+		<dict>
+			<key>className</key>
+			<string>IDECommandLineBuildLog</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
+			<key>fileName</key>
+			<string>BA93D15A-E7F5-447D-B3ED-AEB32002CA4F.xcactivitylog</string>
+			<key>hasPrimaryLog</key>
+			<true/>
+			<key>primaryObservable</key>
+			<dict>
+				<key>highLevelStatus</key>
+				<string>S</string>
+				<key>totalNumberOfAnalyzerIssues</key>
+				<integer>0</integer>
+				<key>totalNumberOfErrors</key>
+				<integer>0</integer>
+				<key>totalNumberOfTestFailures</key>
+				<integer>0</integer>
+				<key>totalNumberOfWarnings</key>
+				<integer>0</integer>
+			</dict>
+			<key>schemeIdentifier-containerName</key>
+			<string>AmazonConnectChatIOSDemo project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>AmazonConnectChatIOSDemo</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Cleaning workspace AmazonConnectChatIOS with scheme AmazonConnectChatIOSDemo and configuration Release</string>
+			<key>timeStartedRecording</key>
+			<real>742252131.72230697</real>
+			<key>timeStoppedRecording</key>
+			<real>742252132.68634999</real>
+			<key>title</key>
+			<string>Cleaning workspace AmazonConnectChatIOS with scheme AmazonConnectChatIOSDemo and configuration Release</string>
+			<key>uniqueIdentifier</key>
+			<string>BA93D15A-E7F5-447D-B3ED-AEB32002CA4F</string>
+		</dict>
+		<key>EC16AA29-2C30-4770-9324-D1EC020664F0</key>
+		<dict>
+			<key>className</key>
+			<string>IDECommandLineBuildLog</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
+			<key>fileName</key>
+			<string>EC16AA29-2C30-4770-9324-D1EC020664F0.xcactivitylog</string>
+			<key>hasPrimaryLog</key>
+			<true/>
+			<key>primaryObservable</key>
+			<dict>
+				<key>highLevelStatus</key>
+				<string>S</string>
+				<key>totalNumberOfAnalyzerIssues</key>
+				<integer>0</integer>
+				<key>totalNumberOfErrors</key>
+				<integer>0</integer>
+				<key>totalNumberOfTestFailures</key>
+				<integer>0</integer>
+				<key>totalNumberOfWarnings</key>
+				<integer>0</integer>
+			</dict>
+			<key>schemeIdentifier-containerName</key>
+			<string>AmazonConnectChatIOSDemo project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>AmazonConnectChatIOSDemo</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Cleaning workspace AmazonConnectChatIOS with scheme AmazonConnectChatIOSDemo and configuration Release</string>
+			<key>timeStartedRecording</key>
+			<real>742328311.41291499</real>
+			<key>timeStoppedRecording</key>
+			<real>742328312.344365</real>
+			<key>title</key>
+			<string>Cleaning workspace AmazonConnectChatIOS with scheme AmazonConnectChatIOSDemo and configuration Release</string>
+			<key>uniqueIdentifier</key>
+			<string>EC16AA29-2C30-4770-9324-D1EC020664F0</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

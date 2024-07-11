@@ -1,0 +1,6 @@
+framework module AWSRekognition {
+  umbrella header "AWSRekognition.h"
+
+  export *
+  module * { export * }
+}

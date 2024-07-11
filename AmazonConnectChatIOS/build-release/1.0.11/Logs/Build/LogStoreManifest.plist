@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>logFormatVersion</key>
+	<integer>10</integer>
+	<key>logs</key>
+	<dict>
+		<key>1868C09E-3D81-46D6-AE3C-95C927DDF36D</key>
+		<dict>
+			<key>className</key>
+			<string>IDECommandLineBuildLog</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
+			<key>fileName</key>
+			<string>1868C09E-3D81-46D6-AE3C-95C927DDF36D.xcactivitylog</string>
+			<key>hasPrimaryLog</key>
+			<true/>
+			<key>primaryObservable</key>
+			<dict>
+				<key>highLevelStatus</key>
+				<string>S</string>
+				<key>totalNumberOfAnalyzerIssues</key>
+				<integer>0</integer>
+				<key>totalNumberOfErrors</key>
+				<integer>0</integer>
+				<key>totalNumberOfTestFailures</key>
+				<integer>0</integer>
+				<key>totalNumberOfWarnings</key>
+				<integer>0</integer>
+			</dict>
+			<key>schemeIdentifier-containerName</key>
+			<string>AmazonConnectChatIOSDemo project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>AmazonConnectChatIOSDemo</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Cleaning workspace AmazonConnectChatIOS with scheme AmazonConnectChatIOSDemo and configuration Release</string>
+			<key>timeStartedRecording</key>
+			<real>742251539.01033998</real>
+			<key>timeStoppedRecording</key>
+			<real>742251539.86841094</real>
+			<key>title</key>
+			<string>Cleaning workspace AmazonConnectChatIOS with scheme AmazonConnectChatIOSDemo and configuration Release</string>
+			<key>uniqueIdentifier</key>
+			<string>1868C09E-3D81-46D6-AE3C-95C927DDF36D</string>
+		</dict>
+	</dict>
+</dict>
+</plist>
