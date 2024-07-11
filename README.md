@@ -21,7 +21,7 @@ The Amazon Connect Chat SDK for iOS is a Swift library that gives you the power 
 ## Installation Steps
 There are three options to install the Amazon Connect Chat SDK for iOS to your xCode project:
 
-1. Install via [Cocoapods](https://cocoapods.org/)
+### Install via [Cocoapods](https://cocoapods.org/)
 
 In your `Podfile`:
 ```
@@ -33,13 +33,29 @@ In your `Podfile`:
 ```
 Then run `pod install` in your project's root directory
 
-2. Install via [Swift Package Manager](https://www.swift.org/documentation/package-manager/)
-    * Open your project in Xcode
-    * Go to **File > Add Package Dependencies...**
-    * In the field **Enter package repository URL**, enter “https://github.com/amazon-connect/amazon-connect-chat-ios".
-    * Select the desired target project and click **Add Package**
+### Install via [Swift Package Manager](https://www.swift.org/documentation/package-manager/)
+ * Open your project in Xcode
+ * Go to **File > Add Package Dependencies...**
+ * In the field **Enter package repository URL**, enter “https://github.com/amazon-connect/amazon-connect-chat-ios".
+ * Select the desired target project and click **Add Package**
 
-3. Download binaries directly from the Amazon Connect Chat SDK for iOS GitHub Releases page
+### Download Binaries Directly from GitHub Releases
+
+1. Go to the [Amazon Connect Chat SDK for iOS GitHub Releases](https://github.com/amazon-connect/amazon-connect-chat-ios/releases) page.
+2. Download the latest release of the `AmazonConnectChatIOS.xcframework`.
+3. Unzip the downloaded file, if necessary.
+4. Drag and drop the `AmazonConnectChatIOS.xcframework` into your Xcode project.
+
+#### How to Import the XCFramework
+
+Once you have added the `AmazonConnectChatIOS.xcframework` to your project, you need to import it into your code. Here are the steps:
+
+1. **Import the Framework in Your Swift Code**:
+    ```swift
+    import AmazonConnectChatIOS
+    ```
+
+By following these steps, you can integrate the Amazon Connect Chat SDK for iOS into your project using CocoaPods, Swift Package Manager, or by directly adding the XCFramework. Make sure to follow the specific installation instructions for each method to ensure a smooth setup process.
 
 ## Getting Started
 
