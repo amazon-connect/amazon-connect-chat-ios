@@ -32,7 +32,7 @@ jobs:
     - name: Clean and Build SDK
       run: |
         echo "::group::Clean and Build SDK"
-        xcodebuild clean -workspace AmazonConnectChatIOS.xcworkspace \
+        xcodebuild clean -project AmazonConnectChatIOS.xcodeproj \
                          -scheme AmazonConnectChatIOS \
                          -sdk iphonesimulator \
                          -configuration Debug \
@@ -41,7 +41,7 @@ jobs:
     - name: Run Unit Tests
       run: |
         echo "::group::Run Unit Tests"
-        xcodebuild test -workspace AmazonConnectChatIOS.xcworkspace \
+        xcodebuild test -project AmazonConnectChatIOS.xcodeproj \
                         -scheme AmazonConnectChatIOS \
                         -sdk iphonesimulator \
                         -destination 'platform=iOS Simulator,name=iPhone 12,OS=latest' \
