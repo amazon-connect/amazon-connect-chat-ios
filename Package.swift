@@ -1,26 +1,32 @@
-// swift-tools-version: 5.9
-// The swift-tools-version declares the minimum version of Swift required to build this package.
-
+// swift-tools-version:5.6
 import PackageDescription
 
 let package = Package(
-    name: "AmazonConnectChatIOS",	
+    name: "AmazonConnectChatIOS",
     platforms: [
-        .iOS(.v13)
+        .iOS(.v15)
     ],
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "AmazonConnectChatIOS",
-            targets: ["AmazonConnectChatIOS"]),
+            targets: ["AmazonConnectChatIOS"]
+        ),
+    ],
+    dependencies: [
+        .package(url: "https://github.com/aws-amplify/aws-sdk-ios-spm", from: "2.36.4")
     ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "AmazonConnectChatIOS"),
-        .testTarget(
-            name: "AmazonConnectChatIOSTests",
-            dependencies: ["AmazonConnectChatIOS"]),
+            name: "AmazonConnectChatIOS",
+            dependencies: [
+                .product(name: "AWSCore", package: "aws-sdk-ios-spm"),
+                .product(name: "AWSConnectParticipant", package: "aws-sdk-ios-spm")
+            ],
+            path: "Sources"
+            ),
+        .binaryTarget(
+            name: "AmazonConnectChatIOSSDK",
+            path: "./Sources/AmazonConnectChatIOS.xcframework"
+        )
     ]
 )
