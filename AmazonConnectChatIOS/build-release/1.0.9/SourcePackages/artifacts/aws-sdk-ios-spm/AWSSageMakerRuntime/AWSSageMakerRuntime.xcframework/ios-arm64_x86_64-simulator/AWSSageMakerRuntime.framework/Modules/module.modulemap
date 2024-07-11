@@ -1,6 +1,0 @@
-framework module AWSSageMakerRuntime {
-  umbrella header "AWSSageMakerRuntime.h"
-
-  export *
-  module * { export * }
-}

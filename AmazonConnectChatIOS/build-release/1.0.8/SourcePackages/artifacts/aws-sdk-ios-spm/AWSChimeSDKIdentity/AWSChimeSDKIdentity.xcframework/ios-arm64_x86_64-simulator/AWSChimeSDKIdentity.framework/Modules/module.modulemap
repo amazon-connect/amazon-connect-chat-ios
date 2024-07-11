@@ -1,6 +1,0 @@
-framework module AWSChimeSDKIdentity {
-  umbrella header "AWSChimeSDKIdentity.h"
-
-  export *
-  module * { export * }
-}

@@ -1,6 +1,0 @@
-framework module AWSKinesisVideoArchivedMedia {
-  umbrella header "AWSKinesisVideoArchivedMedia.h"
-
-  export *
-  module * { export * }
-}
