@@ -1,6 +1,0 @@
-framework module AWSTranscribe {
-  umbrella header "AWSTranscribe.h"
-
-  export *
-  module * { export * }
-}

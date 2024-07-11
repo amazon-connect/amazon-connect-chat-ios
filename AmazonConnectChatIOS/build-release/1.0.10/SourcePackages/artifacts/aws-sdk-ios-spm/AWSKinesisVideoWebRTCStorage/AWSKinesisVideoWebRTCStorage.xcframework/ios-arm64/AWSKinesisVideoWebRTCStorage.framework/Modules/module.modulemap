@@ -1,6 +1,0 @@
-framework module AWSKinesisVideoWebRTCStorage {
-  umbrella header "AWSKinesisVideoWebRTCStorage.h"
-
-  export *
-  module * { export * }
-}

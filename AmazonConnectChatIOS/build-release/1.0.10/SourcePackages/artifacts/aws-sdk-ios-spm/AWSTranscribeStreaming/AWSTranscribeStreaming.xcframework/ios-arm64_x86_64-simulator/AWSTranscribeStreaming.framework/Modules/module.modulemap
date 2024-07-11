@@ -1,6 +1,0 @@
-framework module AWSTranscribeStreaming {
-  umbrella header "AWSTranscribeStreaming.h"
-
-  export *
-  module * { export * }
-}
