@@ -21,12 +21,6 @@ jobs:
       with:
         xcode-version: 'latest'
 
-    - name: Install CocoaPods
-      run: sudo gem install cocoapods
-
-    - name: Install Pods
-      run: pod install
-
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
