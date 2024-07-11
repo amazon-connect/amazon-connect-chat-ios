@@ -1,0 +1,6 @@
+framework module AWSLex {
+  umbrella header "AWSLex.h"
+
+  export *
+  module * { export * }
+}

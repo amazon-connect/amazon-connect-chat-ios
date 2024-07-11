@@ -1,0 +1,1285 @@
+{
+  "ABIRoot": {
+    "kind": "Root",
+    "name": "TopLevel",
+    "printedName": "TopLevel",
+    "children": [
+      {
+        "kind": "Import",
+        "name": "CoreLocation",
+        "printedName": "CoreLocation",
+        "declKind": "Import",
+        "moduleName": "AWSLocationXCF",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "AWSLocationXCF",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "AWSCore",
+        "printedName": "AWSCore",
+        "declKind": "Import",
+        "moduleName": "AWSLocationXCF",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "AWSLocationXCF",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "TrackingError",
+        "printedName": "TrackingError",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "errorType",
+            "printedName": "errorType",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ErrorType",
+                "printedName": "AWSLocationXCF.TrackingError.ErrorType",
+                "usr": "s:14AWSLocationXCF13TrackingErrorV0D4TypeO"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:14AWSLocationXCF13TrackingErrorV9errorTypeAC0dF0Ovp",
+            "mangledName": "$s14AWSLocationXCF13TrackingErrorV9errorTypeAC0dF0Ovp",
+            "moduleName": "AWSLocationXCF",
+            "declAttributes": [
+              "HasStorage",
+              "AccessControl"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ErrorType",
+                    "printedName": "AWSLocationXCF.TrackingError.ErrorType",
+                    "usr": "s:14AWSLocationXCF13TrackingErrorV0D4TypeO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:14AWSLocationXCF13TrackingErrorV9errorTypeAC0dF0Ovg",
+                "mangledName": "$s14AWSLocationXCF13TrackingErrorV9errorTypeAC0dF0Ovg",
+                "moduleName": "AWSLocationXCF",
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "message",
+            "printedName": "message",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:14AWSLocationXCF13TrackingErrorV7messageSSvp",
+            "mangledName": "$s14AWSLocationXCF13TrackingErrorV7messageSSvp",
+            "moduleName": "AWSLocationXCF",
+            "declAttributes": [
+              "HasStorage",
+              "AccessControl"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:14AWSLocationXCF13TrackingErrorV7messageSSvg",
+                "mangledName": "$s14AWSLocationXCF13TrackingErrorV7messageSSvg",
+                "moduleName": "AWSLocationXCF",
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "recoverySuggestion",
+            "printedName": "recoverySuggestion",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:14AWSLocationXCF13TrackingErrorV18recoverySuggestionSSvp",
+            "mangledName": "$s14AWSLocationXCF13TrackingErrorV18recoverySuggestionSSvp",
+            "moduleName": "AWSLocationXCF",
+            "declAttributes": [
+              "HasStorage",
+              "AccessControl"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:14AWSLocationXCF13TrackingErrorV18recoverySuggestionSSvg",
+                "mangledName": "$s14AWSLocationXCF13TrackingErrorV18recoverySuggestionSSvg",
+                "moduleName": "AWSLocationXCF",
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "TypeDecl",
+            "name": "ErrorType",
+            "printedName": "ErrorType",
+            "children": [
+              {
+                "kind": "Var",
+                "name": "invalidTrackerName",
+                "printedName": "invalidTrackerName",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AWSLocationXCF.TrackingError.ErrorType.Type) -> AWSLocationXCF.TrackingError.ErrorType",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ErrorType",
+                        "printedName": "AWSLocationXCF.TrackingError.ErrorType",
+                        "usr": "s:14AWSLocationXCF13TrackingErrorV0D4TypeO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AWSLocationXCF.TrackingError.ErrorType.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorType",
+                            "printedName": "AWSLocationXCF.TrackingError.ErrorType",
+                            "usr": "s:14AWSLocationXCF13TrackingErrorV0D4TypeO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:14AWSLocationXCF13TrackingErrorV0D4TypeO18invalidTrackerNameyA2EmF",
+                "mangledName": "$s14AWSLocationXCF13TrackingErrorV0D4TypeO18invalidTrackerNameyA2EmF",
+                "moduleName": "AWSLocationXCF",
+                "declAttributes": [
+                  "RawDocComment"
+                ]
+              },
+              {
+                "kind": "Var",
+                "name": "trackerAlreadyStarted",
+                "printedName": "trackerAlreadyStarted",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AWSLocationXCF.TrackingError.ErrorType.Type) -> AWSLocationXCF.TrackingError.ErrorType",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ErrorType",
+                        "printedName": "AWSLocationXCF.TrackingError.ErrorType",
+                        "usr": "s:14AWSLocationXCF13TrackingErrorV0D4TypeO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AWSLocationXCF.TrackingError.ErrorType.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorType",
+                            "printedName": "AWSLocationXCF.TrackingError.ErrorType",
+                            "usr": "s:14AWSLocationXCF13TrackingErrorV0D4TypeO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:14AWSLocationXCF13TrackingErrorV0D4TypeO21trackerAlreadyStartedyA2EmF",
+                "mangledName": "$s14AWSLocationXCF13TrackingErrorV0D4TypeO21trackerAlreadyStartedyA2EmF",
+                "moduleName": "AWSLocationXCF",
+                "declAttributes": [
+                  "RawDocComment"
+                ]
+              },
+              {
+                "kind": "Var",
+                "name": "unauthorized",
+                "printedName": "unauthorized",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AWSLocationXCF.TrackingError.ErrorType.Type) -> AWSLocationXCF.TrackingError.ErrorType",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ErrorType",
+                        "printedName": "AWSLocationXCF.TrackingError.ErrorType",
+                        "usr": "s:14AWSLocationXCF13TrackingErrorV0D4TypeO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AWSLocationXCF.TrackingError.ErrorType.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorType",
+                            "printedName": "AWSLocationXCF.TrackingError.ErrorType",
+                            "usr": "s:14AWSLocationXCF13TrackingErrorV0D4TypeO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:14AWSLocationXCF13TrackingErrorV0D4TypeO12unauthorizedyA2EmF",
+                "mangledName": "$s14AWSLocationXCF13TrackingErrorV0D4TypeO12unauthorizedyA2EmF",
+                "moduleName": "AWSLocationXCF",
+                "declAttributes": [
+                  "RawDocComment"
+                ]
+              },
+              {
+                "kind": "Var",
+                "name": "serviceError",
+                "printedName": "serviceError",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AWSLocationXCF.TrackingError.ErrorType.Type) -> (Swift.Error) -> AWSLocationXCF.TrackingError.ErrorType",
+                    "children": [
+                      {
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(Swift.Error) -> AWSLocationXCF.TrackingError.ErrorType",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorType",
+                            "printedName": "AWSLocationXCF.TrackingError.ErrorType",
+                            "usr": "s:14AWSLocationXCF13TrackingErrorV0D4TypeO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Error",
+                            "printedName": "Swift.Error",
+                            "usr": "s:s5ErrorP"
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AWSLocationXCF.TrackingError.ErrorType.Type",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ErrorType",
+                            "printedName": "AWSLocationXCF.TrackingError.ErrorType",
+                            "usr": "s:14AWSLocationXCF13TrackingErrorV0D4TypeO"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "EnumElement",
+                "usr": "s:14AWSLocationXCF13TrackingErrorV0D4TypeO07serviceD0yAEs0D0_pcAEmF",
+                "mangledName": "$s14AWSLocationXCF13TrackingErrorV0D4TypeO07serviceD0yAEs0D0_pcAEmF",
+                "moduleName": "AWSLocationXCF",
+                "declAttributes": [
+                  "RawDocComment"
+                ]
+              }
+            ],
+            "declKind": "Enum",
+            "usr": "s:14AWSLocationXCF13TrackingErrorV0D4TypeO",
+            "mangledName": "$s14AWSLocationXCF13TrackingErrorV0D4TypeO",
+            "moduleName": "AWSLocationXCF",
+            "declAttributes": [
+              "AccessControl"
+            ]
+          }
+        ],
+        "declKind": "Struct",
+        "usr": "s:14AWSLocationXCF13TrackingErrorV",
+        "mangledName": "$s14AWSLocationXCF13TrackingErrorV",
+        "moduleName": "AWSLocationXCF",
+        "declAttributes": [
+          "AccessControl",
+          "RawDocComment"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP",
+            "mangledName": "$ss5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP",
+            "mangledName": "$ss8SendableP"
+          }
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "TrackingListener",
+        "printedName": "TrackingListener",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "onDataPublished",
+            "printedName": "onDataPublished",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AWSLocationXCF.TrackingListener.Type) -> (AWSLocationXCF.TrackingPublishedEvent) -> AWSLocationXCF.TrackingListener",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AWSLocationXCF.TrackingPublishedEvent) -> AWSLocationXCF.TrackingListener",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "TrackingListener",
+                        "printedName": "AWSLocationXCF.TrackingListener",
+                        "usr": "s:14AWSLocationXCF16TrackingListenerO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "TrackingPublishedEvent",
+                        "printedName": "AWSLocationXCF.TrackingPublishedEvent",
+                        "usr": "s:14AWSLocationXCF22TrackingPublishedEventV"
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AWSLocationXCF.TrackingListener.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "TrackingListener",
+                        "printedName": "AWSLocationXCF.TrackingListener",
+                        "usr": "s:14AWSLocationXCF16TrackingListenerO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:14AWSLocationXCF16TrackingListenerO15onDataPublishedyAcA0cG5EventVcACmF",
+            "mangledName": "$s14AWSLocationXCF16TrackingListenerO15onDataPublishedyAcA0cG5EventVcACmF",
+            "moduleName": "AWSLocationXCF",
+            "declAttributes": [
+              "RawDocComment"
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "onDataPublicationError",
+            "printedName": "onDataPublicationError",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AWSLocationXCF.TrackingListener.Type) -> (AWSLocationXCF.TrackingError) -> AWSLocationXCF.TrackingListener",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AWSLocationXCF.TrackingError) -> AWSLocationXCF.TrackingListener",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "TrackingListener",
+                        "printedName": "AWSLocationXCF.TrackingListener",
+                        "usr": "s:14AWSLocationXCF16TrackingListenerO"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "TrackingError",
+                        "printedName": "AWSLocationXCF.TrackingError",
+                        "usr": "s:14AWSLocationXCF13TrackingErrorV"
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AWSLocationXCF.TrackingListener.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "TrackingListener",
+                        "printedName": "AWSLocationXCF.TrackingListener",
+                        "usr": "s:14AWSLocationXCF16TrackingListenerO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:14AWSLocationXCF16TrackingListenerO22onDataPublicationErroryAcA0cH0VcACmF",
+            "mangledName": "$s14AWSLocationXCF16TrackingListenerO22onDataPublicationErroryAcA0cH0VcACmF",
+            "moduleName": "AWSLocationXCF",
+            "declAttributes": [
+              "RawDocComment"
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "onStop",
+            "printedName": "onStop",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AWSLocationXCF.TrackingListener.Type) -> AWSLocationXCF.TrackingListener",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "TrackingListener",
+                    "printedName": "AWSLocationXCF.TrackingListener",
+                    "usr": "s:14AWSLocationXCF16TrackingListenerO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AWSLocationXCF.TrackingListener.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "TrackingListener",
+                        "printedName": "AWSLocationXCF.TrackingListener",
+                        "usr": "s:14AWSLocationXCF16TrackingListenerO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:14AWSLocationXCF16TrackingListenerO6onStopyA2CmF",
+            "mangledName": "$s14AWSLocationXCF16TrackingListenerO6onStopyA2CmF",
+            "moduleName": "AWSLocationXCF",
+            "declAttributes": [
+              "RawDocComment"
+            ]
+          }
+        ],
+        "declKind": "Enum",
+        "usr": "s:14AWSLocationXCF16TrackingListenerO",
+        "mangledName": "$s14AWSLocationXCF16TrackingListenerO",
+        "moduleName": "AWSLocationXCF",
+        "declAttributes": [
+          "AccessControl",
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "CoreLocation",
+        "printedName": "CoreLocation",
+        "declKind": "Import",
+        "moduleName": "AWSLocationXCF",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "AWSLocationTrackerDelegate",
+        "printedName": "AWSLocationTrackerDelegate",
+        "children": [
+          {
+            "kind": "Function",
+            "name": "requestLocation",
+            "printedName": "requestLocation()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:14AWSLocationXCF0A15TrackerDelegateP15requestLocationyyF",
+            "mangledName": "$s14AWSLocationXCF0A15TrackerDelegateP15requestLocationyyF",
+            "moduleName": "AWSLocationXCF",
+            "genericSig": "<τ_0_0 where τ_0_0 : AWSLocationXCF.AWSLocationTrackerDelegate>",
+            "sugared_genericSig": "<Self where Self : AWSLocationXCF.AWSLocationTrackerDelegate>",
+            "protocolReq": true,
+            "declAttributes": [
+              "RawDocComment"
+            ],
+            "reqNewWitnessTableEntry": true,
+            "funcSelfKind": "NonMutating"
+          }
+        ],
+        "declKind": "Protocol",
+        "usr": "s:14AWSLocationXCF0A15TrackerDelegateP",
+        "mangledName": "$s14AWSLocationXCF0A15TrackerDelegateP",
+        "moduleName": "AWSLocationXCF",
+        "genericSig": "<τ_0_0 : AnyObject>",
+        "sugared_genericSig": "<Self : AnyObject>",
+        "declAttributes": [
+          "AccessControl",
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "TrackerOptions",
+        "printedName": "TrackerOptions",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "customDeviceId",
+            "printedName": "customDeviceId",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:14AWSLocationXCF14TrackerOptionsV14customDeviceIdSSSgvp",
+            "mangledName": "$s14AWSLocationXCF14TrackerOptionsV14customDeviceIdSSSgvp",
+            "moduleName": "AWSLocationXCF",
+            "declAttributes": [
+              "HasStorage",
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:14AWSLocationXCF14TrackerOptionsV14customDeviceIdSSSgvg",
+                "mangledName": "$s14AWSLocationXCF14TrackerOptionsV14customDeviceIdSSSgvg",
+                "moduleName": "AWSLocationXCF",
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "retrieveLocationFrequency",
+            "printedName": "retrieveLocationFrequency",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Double",
+                "printedName": "Swift.Double",
+                "usr": "s:Sd"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:14AWSLocationXCF14TrackerOptionsV25retrieveLocationFrequencySdvp",
+            "mangledName": "$s14AWSLocationXCF14TrackerOptionsV25retrieveLocationFrequencySdvp",
+            "moduleName": "AWSLocationXCF",
+            "declAttributes": [
+              "HasStorage",
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:14AWSLocationXCF14TrackerOptionsV25retrieveLocationFrequencySdvg",
+                "mangledName": "$s14AWSLocationXCF14TrackerOptionsV25retrieveLocationFrequencySdvg",
+                "moduleName": "AWSLocationXCF",
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "emitLocationFrequency",
+            "printedName": "emitLocationFrequency",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Double",
+                "printedName": "Swift.Double",
+                "usr": "s:Sd"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:14AWSLocationXCF14TrackerOptionsV21emitLocationFrequencySdvp",
+            "mangledName": "$s14AWSLocationXCF14TrackerOptionsV21emitLocationFrequencySdvp",
+            "moduleName": "AWSLocationXCF",
+            "declAttributes": [
+              "HasStorage",
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:14AWSLocationXCF14TrackerOptionsV21emitLocationFrequencySdvg",
+                "mangledName": "$s14AWSLocationXCF14TrackerOptionsV21emitLocationFrequencySdvg",
+                "moduleName": "AWSLocationXCF",
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Constructor",
+            "name": "init",
+            "printedName": "init(customDeviceId:retrieveLocationFrequency:emitLocationFrequency:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "TrackerOptions",
+                "printedName": "AWSLocationXCF.TrackerOptions",
+                "usr": "s:14AWSLocationXCF14TrackerOptionsV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.Double?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.Double?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Double",
+                    "printedName": "Swift.Double",
+                    "usr": "s:Sd"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "s:14AWSLocationXCF14TrackerOptionsV14customDeviceId25retrieveLocationFrequency04emitiJ0ACSSSg_SdSgAHtcfc",
+            "mangledName": "$s14AWSLocationXCF14TrackerOptionsV14customDeviceId25retrieveLocationFrequency04emitiJ0ACSSSg_SdSgAHtcfc",
+            "moduleName": "AWSLocationXCF",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "init_kind": "Designated"
+          }
+        ],
+        "declKind": "Struct",
+        "usr": "s:14AWSLocationXCF14TrackerOptionsV",
+        "mangledName": "$s14AWSLocationXCF14TrackerOptionsV",
+        "moduleName": "AWSLocationXCF",
+        "declAttributes": [
+          "AccessControl",
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "TrackingPublishedEvent",
+        "printedName": "TrackingPublishedEvent",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "request",
+            "printedName": "request",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AWSLocationBatchUpdateDevicePositionRequest",
+                "printedName": "AWSLocationXCF.AWSLocationBatchUpdateDevicePositionRequest",
+                "usr": "c:objc(cs)AWSLocationBatchUpdateDevicePositionRequest"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:14AWSLocationXCF22TrackingPublishedEventV7requestSo0A32BatchUpdateDevicePositionRequestCvp",
+            "mangledName": "$s14AWSLocationXCF22TrackingPublishedEventV7requestSo0A32BatchUpdateDevicePositionRequestCvp",
+            "moduleName": "AWSLocationXCF",
+            "declAttributes": [
+              "HasStorage",
+              "AccessControl"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AWSLocationBatchUpdateDevicePositionRequest",
+                    "printedName": "AWSLocationXCF.AWSLocationBatchUpdateDevicePositionRequest",
+                    "usr": "c:objc(cs)AWSLocationBatchUpdateDevicePositionRequest"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:14AWSLocationXCF22TrackingPublishedEventV7requestSo0A32BatchUpdateDevicePositionRequestCvg",
+                "mangledName": "$s14AWSLocationXCF22TrackingPublishedEventV7requestSo0A32BatchUpdateDevicePositionRequestCvg",
+                "moduleName": "AWSLocationXCF",
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "response",
+            "printedName": "response",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AWSLocationBatchUpdateDevicePositionResponse",
+                "printedName": "AWSLocationXCF.AWSLocationBatchUpdateDevicePositionResponse",
+                "usr": "c:objc(cs)AWSLocationBatchUpdateDevicePositionResponse"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:14AWSLocationXCF22TrackingPublishedEventV8responseSo0A33BatchUpdateDevicePositionResponseCvp",
+            "mangledName": "$s14AWSLocationXCF22TrackingPublishedEventV8responseSo0A33BatchUpdateDevicePositionResponseCvp",
+            "moduleName": "AWSLocationXCF",
+            "declAttributes": [
+              "HasStorage",
+              "AccessControl"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AWSLocationBatchUpdateDevicePositionResponse",
+                    "printedName": "AWSLocationXCF.AWSLocationBatchUpdateDevicePositionResponse",
+                    "usr": "c:objc(cs)AWSLocationBatchUpdateDevicePositionResponse"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:14AWSLocationXCF22TrackingPublishedEventV8responseSo0A33BatchUpdateDevicePositionResponseCvg",
+                "mangledName": "$s14AWSLocationXCF22TrackingPublishedEventV8responseSo0A33BatchUpdateDevicePositionResponseCvg",
+                "moduleName": "AWSLocationXCF",
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          }
+        ],
+        "declKind": "Struct",
+        "usr": "s:14AWSLocationXCF22TrackingPublishedEventV",
+        "mangledName": "$s14AWSLocationXCF22TrackingPublishedEventV",
+        "moduleName": "AWSLocationXCF",
+        "declAttributes": [
+          "AccessControl",
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "AWSLocationXCF",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "CoreLocation",
+        "printedName": "CoreLocation",
+        "declKind": "Import",
+        "moduleName": "AWSLocationXCF",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "AWSLocationTracker",
+        "printedName": "AWSLocationTracker",
+        "children": [
+          {
+            "kind": "Constructor",
+            "name": "init",
+            "printedName": "init(trackerName:region:credentialsProvider:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AWSLocationTracker",
+                "printedName": "AWSLocationXCF.AWSLocationTracker",
+                "usr": "s:14AWSLocationXCF0A7TrackerC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AWSRegionType",
+                "printedName": "AWSCore.AWSRegionType",
+                "usr": "c:@E@AWSRegionType"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AWSCredentialsProvider",
+                "printedName": "AWSCore.AWSCredentialsProvider",
+                "usr": "c:objc(pl)AWSCredentialsProvider"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "s:14AWSLocationXCF0A7TrackerC11trackerName6region19credentialsProviderACSS_So13AWSRegionTypeVSo014AWSCredentialsH0_ptcfc",
+            "mangledName": "$s14AWSLocationXCF0A7TrackerC11trackerName6region19credentialsProviderACSS_So13AWSRegionTypeVSo014AWSCredentialsH0_ptcfc",
+            "moduleName": "AWSLocationXCF",
+            "declAttributes": [
+              "Convenience",
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "init_kind": "Convenience"
+          },
+          {
+            "kind": "Function",
+            "name": "startTracking",
+            "printedName": "startTracking(delegate:options:listener:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Result",
+                "printedName": "Swift.Result<(), AWSLocationXCF.TrackingError>",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "TrackingError",
+                    "printedName": "AWSLocationXCF.TrackingError",
+                    "usr": "s:14AWSLocationXCF13TrackingErrorV"
+                  }
+                ],
+                "usr": "s:s6ResultO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AWSLocationTrackerDelegate",
+                "printedName": "AWSLocationXCF.AWSLocationTrackerDelegate",
+                "usr": "s:14AWSLocationXCF0A15TrackerDelegateP"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "AWSLocationXCF.TrackerOptions?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "TrackerOptions",
+                    "printedName": "AWSLocationXCF.TrackerOptions",
+                    "usr": "s:14AWSLocationXCF14TrackerOptionsV"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "((AWSLocationXCF.TrackingListener) -> ())?",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AWSLocationXCF.TrackingListener) -> ()",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "TrackingListener",
+                        "printedName": "AWSLocationXCF.TrackingListener",
+                        "usr": "s:14AWSLocationXCF16TrackingListenerO"
+                      }
+                    ]
+                  }
+                ],
+                "hasDefaultArg": true,
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:14AWSLocationXCF0A7TrackerC13startTracking8delegate7options8listeners6ResultOyytAA0E5ErrorVGAA0aC8Delegate_p_AA0C7OptionsVSgyAA0E8ListenerOcSgtF",
+            "mangledName": "$s14AWSLocationXCF0A7TrackerC13startTracking8delegate7options8listeners6ResultOyytAA0E5ErrorVGAA0aC8Delegate_p_AA0C7OptionsVSgyAA0E8ListenerOcSgtF",
+            "moduleName": "AWSLocationXCF",
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "interceptLocationsRetrieved",
+            "printedName": "interceptLocationsRetrieved(_:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[CoreLocation.CLLocation]",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CLLocation",
+                    "printedName": "CoreLocation.CLLocation",
+                    "usr": "c:objc(cs)CLLocation"
+                  }
+                ],
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:14AWSLocationXCF0A7TrackerC27interceptLocationsRetrievedyySaySo10CLLocationCGF",
+            "mangledName": "$s14AWSLocationXCF0A7TrackerC27interceptLocationsRetrievedyySaySo10CLLocationCGF",
+            "moduleName": "AWSLocationXCF",
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "isTracking",
+            "printedName": "isTracking()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:14AWSLocationXCF0A7TrackerC10isTrackingSbyF",
+            "mangledName": "$s14AWSLocationXCF0A7TrackerC10isTrackingSbyF",
+            "moduleName": "AWSLocationXCF",
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "stopTracking",
+            "printedName": "stopTracking()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:14AWSLocationXCF0A7TrackerC12stopTrackingyyF",
+            "mangledName": "$s14AWSLocationXCF0A7TrackerC12stopTrackingyyF",
+            "moduleName": "AWSLocationXCF",
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          }
+        ],
+        "declKind": "Class",
+        "usr": "s:14AWSLocationXCF0A7TrackerC",
+        "mangledName": "$s14AWSLocationXCF0A7TrackerC",
+        "moduleName": "AWSLocationXCF",
+        "declAttributes": [
+          "AccessControl",
+          "RawDocComment"
+        ],
+        "hasMissingDesignatedInitializers": true
+      }
+    ],
+    "json_format_version": 8
+  },
+  "ConstValues": [
+    {
+      "filePath": "\/Users\/runner\/work\/aws-sdk-ios\/aws-sdk-ios\/AWSLocation\/AWSLocationTracker\/EmitLocationsOperation.swift",
+      "kind": "IntegerLiteral",
+      "offset": 715,
+      "length": 2,
+      "value": "60"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/aws-sdk-ios\/aws-sdk-ios\/AWSLocation\/AWSLocationTracker\/EmitLocationsOperation.swift",
+      "kind": "IntegerLiteral",
+      "offset": 718,
+      "length": 2,
+      "value": "60"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/aws-sdk-ios\/aws-sdk-ios\/AWSLocation\/AWSLocationTracker\/EmitLocationsOperation.swift",
+      "kind": "IntegerLiteral",
+      "offset": 822,
+      "length": 2,
+      "value": "10"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/aws-sdk-ios\/aws-sdk-ios\/AWSLocation\/AWSLocationTracker\/EmitLocationsOperation.swift",
+      "kind": "BooleanLiteral",
+      "offset": 1424,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/aws-sdk-ios\/aws-sdk-ios\/AWSLocation\/AWSLocationTracker\/EmitLocationsOperation.swift",
+      "kind": "StringLiteral",
+      "offset": 610,
+      "length": 22,
+      "value": "\"AWSLocationXCF.EmitLocationsOperation\""
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/aws-sdk-ios\/aws-sdk-ios\/AWSLocation\/AWSLocationTracker\/Utils\/AsynchronousOperation.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1328,
+      "length": 9,
+      "value": "1"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/aws-sdk-ios\/aws-sdk-ios\/AWSLocation\/AWSLocationTracker\/Utils\/AsynchronousOperation.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1351,
+      "length": 8,
+      "value": "2"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/aws-sdk-ios\/aws-sdk-ios\/AWSLocation\/AWSLocationTracker\/Utils\/AsynchronousOperation.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1328,
+      "length": 9,
+      "value": "1"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/aws-sdk-ios\/aws-sdk-ios\/AWSLocation\/AWSLocationTracker\/Utils\/AsynchronousOperation.swift",
+      "kind": "IntegerLiteral",
+      "offset": 1351,
+      "length": 8,
+      "value": "2"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/aws-sdk-ios\/aws-sdk-ios\/AWSLocation\/AWSLocationTracker\/Utils\/AsynchronousOperation.swift",
+      "kind": "StringLiteral",
+      "offset": 1457,
+      "length": 51,
+      "value": "\"com.amazonaws.amplify.AsynchronousOperation.state\""
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/aws-sdk-ios\/aws-sdk-ios\/AWSLocation\/AWSLocationTracker\/TrackerOptions.swift",
+      "kind": "IntegerLiteral",
+      "offset": 718,
+      "length": 2,
+      "value": "30"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/aws-sdk-ios\/aws-sdk-ios\/AWSLocation\/AWSLocationTracker\/TrackerOptions.swift",
+      "kind": "IntegerLiteral",
+      "offset": 795,
+      "length": 3,
+      "value": "300"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/aws-sdk-ios\/aws-sdk-ios\/AWSLocation\/AWSLocationTracker\/AWSLocationTracker.swift",
+      "kind": "Array",
+      "offset": 1284,
+      "length": 2,
+      "value": "[]"
+    },
+    {
+      "filePath": "\/Users\/runner\/work\/aws-sdk-ios\/aws-sdk-ios\/AWSLocation\/AWSLocationTracker\/AWSLocationTracker.swift",
+      "kind": "BooleanLiteral",
+      "offset": 1399,
+      "length": 5,
+      "value": "false"
+    }
+  ]
+}

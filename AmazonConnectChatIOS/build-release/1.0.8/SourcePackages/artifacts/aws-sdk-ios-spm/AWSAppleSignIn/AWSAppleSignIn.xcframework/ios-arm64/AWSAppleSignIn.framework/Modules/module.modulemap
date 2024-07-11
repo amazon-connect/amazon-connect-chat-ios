@@ -1,0 +1,6 @@
+framework module AWSAppleSignIn {
+  umbrella header "AWSAppleSignIn.h"
+
+  export *
+  module * { export * }
+}

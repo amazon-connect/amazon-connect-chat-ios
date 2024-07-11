@@ -1,0 +1,48 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.7.2 effective-4.2 (swiftlang-5.7.2.135.5 clang-1400.0.29.51)
+// swift-module-flags: -target arm64-apple-ios12.0 -enable-objc-interop -enable-library-evolution -swift-version 4.2 -enforce-exclusivity=checked -O -module-name AWSLocationXCF
+// swift-module-flags-ignorable: -enable-bare-slash-regex
+import AWSCore
+@_exported import AWSLocationXCF
+import CoreLocation
+import Foundation
+import Swift
+import _Concurrency
+import _StringProcessing
+public struct TrackingError : Swift.Error {
+  public let errorType: AWSLocationXCF.TrackingError.ErrorType
+  public let message: Swift.String
+  public let recoverySuggestion: Swift.String
+  public enum ErrorType {
+    case invalidTrackerName
+    case trackerAlreadyStarted
+    case unauthorized
+    case serviceError(Swift.Error)
+  }
+}
+public enum TrackingListener {
+  case onDataPublished(AWSLocationXCF.TrackingPublishedEvent)
+  case onDataPublicationError(AWSLocationXCF.TrackingError)
+  case onStop
+}
+public protocol AWSLocationTrackerDelegate : AnyObject {
+  func requestLocation()
+}
+public struct TrackerOptions {
+  public let customDeviceId: Swift.String?
+  public let retrieveLocationFrequency: Foundation.TimeInterval
+  public let emitLocationFrequency: Foundation.TimeInterval
+  public init(customDeviceId: Swift.String? = nil, retrieveLocationFrequency: Foundation.TimeInterval? = nil, emitLocationFrequency: Foundation.TimeInterval? = nil)
+}
+public struct TrackingPublishedEvent {
+  public let request: AWSLocationXCF.AWSLocationBatchUpdateDevicePositionRequest
+  public let response: AWSLocationXCF.AWSLocationBatchUpdateDevicePositionResponse
+}
+@_hasMissingDesignatedInitializers public class AWSLocationTracker {
+  convenience public init(trackerName: Swift.String, region: AWSCore.AWSRegionType, credentialsProvider: AWSCore.AWSCredentialsProvider)
+  public func startTracking(delegate: AWSLocationXCF.AWSLocationTrackerDelegate, options: AWSLocationXCF.TrackerOptions? = nil, listener: ((AWSLocationXCF.TrackingListener) -> Swift.Void)? = nil) -> Swift.Result<Swift.Void, AWSLocationXCF.TrackingError>
+  public func interceptLocationsRetrieved(_ locations: [CoreLocation.CLLocation])
+  public func isTracking() -> Swift.Bool
+  public func stopTracking()
+  @objc deinit
+}

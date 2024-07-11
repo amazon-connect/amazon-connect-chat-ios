@@ -1,0 +1,24 @@
+{
+  "source": "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Views/ChatMessageView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "This message type is not supported yet, Please use serialized content to parse it and build UI"
+      },
+      {
+        "comment": "",
+        "key": "Unsupported message type, View is missing"
+      },
+      {
+        "comment": "",
+        "key": "%@"
+      },
+      {
+        "comment": "",
+        "key": "Metadata: %@"
+      }
+    ]
+  },
+  "version": 1
+}

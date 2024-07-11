@@ -1,0 +1,51 @@
+version: "Apple Swift version 5.9.2 (swiftlang-5.9.2.2.56 clang-1500.1.0.2.5)"
+options: "4e12cf9b73bcf170cf1f98c84242ba26a6764916c5f8c9b202029019142f23ea"
+build_start_time: [1720476711, 945601000]
+build_end_time: [1720476718, 306870000]
+inputs:
+  "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/ChatApp.swift": [1720386723, 667192369]
+  "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Common/AppDelegate.swift": [1720386723, 667389244]
+  "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Common/Config.swift": [1720464887, 940542750]
+  "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Common/SceneDelegate.swift": [1720386723, 667637245]
+  "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Models/ChatManager.swift": [1720465584, 288031807]
+  ? "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Models/CreateStartChatRequest.swift"
+  : [1720386723, 668098079]
+  ? "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Models/CreateStartChatResponse.swift"
+  : [1720386723, 668220121]
+  ? "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Models/InstanceConfig.swift"
+  : [1720464859, 286927406]
+  ? "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Models/NetworkConnectionManager.swift"
+  : [1720386723, 668485205]
+  ? "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Models/NetworkManager.swift"
+  : [1720390613, 468517113]
+  "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Models/Notifications.swift": [1720386723, 669585292]
+  "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Utils/CommonUtils.swift": [1720387377, 154805374]
+  ? "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Utils/Network/DefaultHttpClient.swift"
+  : [1720386723, 670838504]
+  ? "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Utils/Network/HttpClient.swift"
+  : [1720386723, 670989046]
+  ? "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Utils/Network/HttpHeader.swift"
+  : [1720386723, 671151629]
+  ? "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Utils/Network/HttpMethod.swift"
+  : [1720386723, 671309838]
+  ? "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Views/AttachmentButton.swift"
+  : [1720388143, 772547146]
+  ? "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Views/AttachmentMessageView.swift"
+  : [1720463052, 714930807]
+  ? "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Views/AttachmentTextView.swift"
+  : [1720420376, 117679534]
+  ? "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Views/ChatMessageView.swift"
+  : [1720463054, 116216665]
+  "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Views/ChatView.swift": [1720458499, 531021936]
+  "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Views/ContentView.swift": [1720465407, 890142831]
+  "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Views/FloatingButton.swift": [1720386723, 672565842]
+  ? "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Views/ListPickerContentView.swift"
+  : [1720386723, 672857592]
+  ? "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Views/QuickReplyContentView.swift"
+  : [1720386723, 673033718]
+  "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Views/TestView.swift": [1720386723, 673222218]
+  ? "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Views/TypingIndicator.swift"
+  : [1720422833, 679772652]
+  "/Users/rajatttt/Mobile/release/AmazonConnectChatIOS/src/AmazonConnectChatIOS/AmazonConnectChatIOSDemo/Views/UIView.swift": [1720386723, 673452635]
+  ? "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build-release/1.0.7/Build/Intermediates.noindex/AmazonConnectChatIOSDemo.build/Release-iphoneos/AmazonConnectChatIOSDemo.build/DerivedSources/GeneratedAssetSymbols.swift"
+  : [1720476711, 934941920]

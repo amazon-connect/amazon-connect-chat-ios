@@ -1,0 +1,6 @@
+framework module AWSKMS {
+  umbrella header "AWSKMS.h"
+
+  export *
+  module * { export * }
+}

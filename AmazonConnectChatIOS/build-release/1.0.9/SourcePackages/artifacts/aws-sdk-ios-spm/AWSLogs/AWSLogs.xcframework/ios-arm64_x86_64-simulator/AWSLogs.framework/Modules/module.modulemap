@@ -1,0 +1,6 @@
+framework module AWSLogs {
+  umbrella header "AWSLogs.h"
+
+  export *
+  module * { export * }
+}

@@ -64,6 +64,7 @@
 		F7B4A13A2C17AE43005C7921 /* TestUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B4A1392C17AE43005C7921 /* TestUtils.swift */; };
 		F7B4A13C2C17E3C3005C7921 /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B4A13B2C17E3C3005C7921 /* MockURLSession.swift */; };
 		F7BE6CC82C3E1CC500E7A88A /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -669,6 +670,7 @@
 		};
 		7E58A5E92BB5F3DA00965327 /* Debug */ = {
 			isa = XCBuildConfiguration;
+
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -701,6 +703,7 @@
 		};
 		7E58A5EA2BB5F3DA00965327 /* Release */ = {
 			isa = XCBuildConfiguration;
+
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -733,6 +736,7 @@
 		};
 		7E58A5EC2BB5F3DA00965327 /* Debug */ = {
 			isa = XCBuildConfiguration;
+
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -752,6 +756,7 @@
 		};
 		7E58A5ED2BB5F3DA00965327 /* Release */ = {
 			isa = XCBuildConfiguration;
+
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;

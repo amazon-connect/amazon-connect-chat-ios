@@ -1,0 +1,74 @@
+{
+  "buildCommand" : {
+    "command" : "build",
+    "skipDependencies" : false,
+    "style" : "buildOnly"
+  },
+  "configuredTargets" : [
+    {
+      "guid" : "dc70494b577077d51802da8e3d063678b0e6bbb96a8577cf0fa4a5bd82e75b4f"
+    }
+  ],
+  "containerPath" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/AmazonConnectChatIOS.xcworkspace",
+  "continueBuildingAfterErrors" : false,
+  "enableIndexBuildArena" : false,
+  "hideShellScriptEnvironment" : false,
+  "parameters" : {
+    "action" : "build",
+    "activeArchitecture" : "undefined_arch",
+    "activeRunDestination" : {
+      "disableOnlyActiveArch" : true,
+      "platform" : "iphoneos",
+      "sdk" : "iphoneos17.2",
+      "sdkVariant" : "iphoneos",
+      "supportedArchitectures" : [
+        "armv4t",
+        "armv5",
+        "armv6",
+        "armv7",
+        "armv7f",
+        "armv7s",
+        "armv7k",
+        "arm64",
+        "arm64e"
+      ],
+      "targetArchitecture" : "undefined_arch"
+    },
+    "arenaInfo" : {
+      "buildIntermediatesPath" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build-release/1.0.9/Build/Intermediates.noindex",
+      "buildProductsPath" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build-release/1.0.9/Build/Products",
+      "derivedDataPath" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build-release/1.0.9",
+      "indexDataStoreFolderPath" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build-release/1.0.9/Index.noindex/DataStore",
+      "indexEnableDataStore" : true,
+      "indexPCHPath" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build-release/1.0.9/Index.noindex/PrecompiledHeaders",
+      "pchPath" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build-release/1.0.9/Build/Intermediates.noindex/PrecompiledHeaders"
+    },
+    "configurationName" : "Release",
+    "overrides" : {
+      "commandLine" : {
+        "table" : {
+          "CODE_SIGNING_ALLOWED" : "NO",
+          "CODE_SIGNING_REQUIRED" : "NO",
+          "SDKROOT" : "iphoneos17.2"
+        }
+      },
+      "synthesized" : {
+        "table" : {
+          "ACTION" : "build",
+          "CLANG_COVERAGE_MAPPING" : "YES",
+          "CLANG_PROFILE_DATA_DIRECTORY" : "/Users/rajatttt/Mobile/release/amazon-connect-chat-ios/AmazonConnectChatIOS/build-release/1.0.9/Build/ProfileData",
+          "COLOR_DIAGNOSTICS" : "YES",
+          "diagnostic_message_length" : "206",
+          "ENABLE_PREVIEWS" : "NO",
+          "ENABLE_XOJIT_PREVIEWS" : "NO"
+        }
+      }
+    }
+  },
+  "schemeCommand" : "launch",
+  "showNonLoggedProgress" : true,
+  "useDryRun" : false,
+  "useImplicitDependencies" : true,
+  "useLegacyBuildLocations" : false,
+  "useParallelTargets" : true
+}

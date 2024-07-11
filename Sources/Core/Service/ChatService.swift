@@ -316,7 +316,6 @@ class ChatService : ChatServiceProtocol {
             transcriptItemPublisher.send(placeholderMessage)
         }
     }
-
     
     func sendEvent(event: ContentType, content: String?, completion: @escaping (Bool, Error?) -> Void) {
         guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
