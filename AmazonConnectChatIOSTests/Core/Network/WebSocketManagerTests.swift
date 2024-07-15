@@ -79,7 +79,7 @@ class WebsocketManagerTests: XCTestCase {
     }
     
     func testReceiveEvent_Joined() {
-        let expectation = self.expectation(description: "WebSocket Message Received")
+        let expectation = self.expectation(description: "WebSocket Joined Event Received")
         let participant = "CUSTOMER"
         let text = "Test"
 
@@ -98,7 +98,7 @@ class WebsocketManagerTests: XCTestCase {
     }
     
     func testReceiveEvent_Left() {
-        let expectation = self.expectation(description: "WebSocket Message Received")
+        let expectation = self.expectation(description: "WebSocket Left Event Received")
         let participant = "CUSTOMER"
         let text = "Test"
 
@@ -117,7 +117,7 @@ class WebsocketManagerTests: XCTestCase {
     }
     
     func testReceiveEvent_Typing() {
-        let expectation = self.expectation(description: "WebSocket Message Received")
+        let expectation = self.expectation(description: "WebSocket Typing Event Received")
         let participant = "CUSTOMER"
         let text = "Test"
 
@@ -136,7 +136,7 @@ class WebsocketManagerTests: XCTestCase {
     }
     
     func testReceiveEvent_Ended() {
-        let expectation = self.expectation(description: "WebSocket Message Received")
+        let expectation = self.expectation(description: "WebSocket End Event Received")
         let participant = "CUSTOMER"
         let text = "Test"
 
@@ -155,7 +155,7 @@ class WebsocketManagerTests: XCTestCase {
     }
     
     func testReceiveAttachment() {
-        let expectation = self.expectation(description: "WebSocket Message Received")
+        let expectation = self.expectation(description: "WebSocket Attachment Received")
 
         mockWebSocketTask.mockReceiveResult = .success(.string(createSampleWebSocketAttachmentString()))
         websocketManager.transcriptPublisher.sink { item in
@@ -172,7 +172,7 @@ class WebsocketManagerTests: XCTestCase {
     }
     
     func testReceiveMetadata() {
-        let expectation = self.expectation(description: "WebSocket Message Received")
+        let expectation = self.expectation(description: "WebSocket Metadata Received")
 
         mockWebSocketTask.mockReceiveResult = .success(.string(createSampleMetadataString()))
         websocketManager.transcriptPublisher.sink { item in
