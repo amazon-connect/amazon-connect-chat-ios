@@ -11,6 +11,13 @@ enum EventTypes {
     static let deepHeartbeat = "{\"topic\": \"aws/ping\"}"
 }
 
+protocol WebSocketTask {
+    func send(_ message: URLSessionWebSocketTask.Message, completionHandler: @escaping (Error?) -> Void)
+    func receive(completionHandler: @escaping (Result<URLSessionWebSocketTask.Message, Error>) -> Void)
+    func resume()
+    func cancel(with closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?)
+}
+
 protocol WebsocketManagerProtocol {
     var eventPublisher: PassthroughSubject<ChatEvent, Never> { get }
     var transcriptPublisher: PassthroughSubject<TranscriptItem, Never> { get }
@@ -19,15 +26,17 @@ protocol WebsocketManagerProtocol {
     func formatAndProcessTranscriptItems(_ transcriptItems: [AWSConnectParticipantItem]) -> [TranscriptItem]
 }
 
+extension URLSessionWebSocketTask: WebSocketTask {}
+
 class WebsocketManager: NSObject, WebsocketManagerProtocol {
     var eventPublisher = PassthroughSubject<ChatEvent, Never>()
     var transcriptPublisher = PassthroughSubject<TranscriptItem, Never>()
     
-    private var websocketTask: URLSessionWebSocketTask?
     private var session: URLSession?
-    private var heartbeatManager: HeartbeatManager?
-    private var deepHeartbeatManager: HeartbeatManager?
     private var wsUrl: URL?
+    var heartbeatManager: HeartbeatManager?
+    var deepHeartbeatManager: HeartbeatManager?
+    var websocketTask: WebSocketTask?
     var isReconnectFlow = false
 
     // Adding few more callbacks
@@ -77,7 +86,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
         }
     }
     
-    private func receiveMessage() {
+    func receiveMessage() {
         websocketTask?.receive { [weak self] result in
             switch result {
             case .failure(let error):
