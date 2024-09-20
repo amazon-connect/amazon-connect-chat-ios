@@ -1,4 +1,4 @@
-### Bug Description:
+### Bug Description
 *Desribe the bug you are seeing*
 
 ---
