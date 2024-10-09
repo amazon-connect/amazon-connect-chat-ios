@@ -93,10 +93,10 @@ From here, you are now ready to interact with the chat via the `ChatSession` obj
 
 The Amazon Connect Chat SDK for iOS provides two methods to receive messages.
 
-1. Use [ChatSession.onTranscriptUpdated](chatsessionontranscriptupdated)
+1. Use [ChatSession.onTranscriptUpdated](#chatsessionontranscriptupdated)
   * This event will pass back the entire transcript every time the transcript is updated. This will return the transcript via an array of [TranscriptItem](#transcriptitem)
 
-2. Use [ChatSession.onMessageReceived](#chatsessionontranscriptupdated)
+2. Use [ChatSession.onMessageReceived](#chatsessiononmessagereceived)
   * This event will pass back each message that is received by the WebSocket.  The event handler will be passed a single [TranscriptItem](#transcriptitem).
 
 ## API List
