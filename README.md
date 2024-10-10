@@ -59,7 +59,7 @@ By following these steps, you can integrate the Amazon Connect Chat SDK for iOS 
 
 ## Getting Started
 
-The first step to leveraging the Amazon Connect Chat SDK after installation is to import the library into your file. The first step is to call the StartChatContact API and pass the response details into the SDK’s ChatSession object.  Here are some examples of how we would set this up in Swift. For reference, you can visit the [iOSChatExample demo](https://github.com/amazon-connect/amazon-connect-chat-ui-examples/tree/master/mobileChatExamples/iOSChatExample) within the [Amazon Connect Chat UI Examples](https://github.com/amazon-connect/amazon-connect-chat-ui-examples/tree/master) GitHub repository.
+The first step to leveraging the Amazon Connect Chat SDK after installation is to import the library into your file. Next, let's call the StartChatContact API and pass the response details into the SDK’s ChatSession object.  Here is an [example](https://github.com/amazon-connect/amazon-connect-chat-ui-examples/blob/master/mobileChatExamples/iOSChatExample/AmazonConnectChatIOSDemo/Models/ChatManager.swift#L137C18-L137C34) of how we would set this up in Swift. For reference, you can visit the [iOSChatExample demo](https://github.com/amazon-connect/amazon-connect-chat-ui-examples/tree/master/mobileChatExamples/iOSChatExample) within the [Amazon Connect Chat UI Examples](https://github.com/amazon-connect/amazon-connect-chat-ui-examples/tree/master) GitHub repository.
 
 The majority of the SDKs functionality will be accessed through the ChatSession object. In order to use this object in the file, we have to first import the AmazonConnectChatIOS library via:
 
@@ -93,10 +93,10 @@ From here, you are now ready to interact with the chat via the `ChatSession` obj
 
 The Amazon Connect Chat SDK for iOS provides two methods to receive messages.
 
-1. Use [ChatSession.onTranscriptUpdated](chatsessionontranscriptupdated)
+1. Use [ChatSession.onTranscriptUpdated](#chatsessionontranscriptupdated)
   * This event will pass back the entire transcript every time the transcript is updated. This will return the transcript via an array of [TranscriptItem](#transcriptitem)
 
-2. Use [ChatSession.onMessageReceived](#chatsessionontranscriptupdated)
+2. Use [ChatSession.onMessageReceived](#chatsessiononmessagereceived)
   * This event will pass back each message that is received by the WebSocket.  The event handler will be passed a single [TranscriptItem](#transcriptitem).
 
 ## API List
