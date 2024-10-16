@@ -34,7 +34,7 @@ public class SDKLogger: SDKLoggerProtocol {
         os_log("%{public}@", log: osLog, type: .error, message())
     }
     
-    public static func configure(_ logger: SDKLoggerProtocol) {
+    public static func configureLogger(_ logger: SDKLoggerProtocol) {
         SDKLogger.logger = logger
     }
 }
