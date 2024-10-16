@@ -5,35 +5,38 @@ import Foundation
 import OSLog
 
 
-class SDKLogger: SDKLoggerProtocol {
+public class SDKLogger: SDKLoggerProtocol {
     
-    static let logger = SDKLogger()
+    static var logger: SDKLoggerProtocol = SDKLogger()
     private let osLog: OSLog
     
     private init() {
         osLog = OSLog(subsystem: Bundle.main.bundleIdentifier ?? "SDK.DefaultSubsystem", category: "SDKLogging")
     }
     
-    func logVerbose(_ message: @autoclosure () -> String) {
+    public func logVerbose(_ message: @autoclosure () -> String) {
         os_log("%{public}@", log: osLog, type: .default, message())
     }
     
-    func logInfo(_ message: @autoclosure () -> String) {
+    public func logInfo(_ message: @autoclosure () -> String) {
         os_log("%{public}@", log: osLog, type: .info, message())
     }
     
-    func logDebug(_ message: @autoclosure () -> String) {
+    public func logDebug(_ message: @autoclosure () -> String) {
         os_log("%{public}@", log: osLog, type: .debug, message())
     }
     
-    func logFault(_ message: @autoclosure () -> String) {
+    public func logFault(_ message: @autoclosure () -> String) {
         os_log("%{public}@", log: osLog, type: .fault, message())
     }
     
-    func logError(_ message: @autoclosure () -> String) {
+    public func logError(_ message: @autoclosure () -> String) {
         os_log("%{public}@", log: osLog, type: .error, message())
     }
     
+    public static func configure(_ logger: SDKLoggerProtocol) {
+        SDKLogger.logger = logger
+    }
 }
 
 

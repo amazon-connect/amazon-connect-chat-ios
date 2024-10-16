@@ -3,7 +3,7 @@
 
 import Foundation
 
-protocol SDKLoggerProtocol {
+public protocol SDKLoggerProtocol {
     func logVerbose(
         _ message: @autoclosure () -> String
     )
