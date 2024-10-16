@@ -9,6 +9,7 @@
   * [GlobalConfig](#globalconfig)
     * [GlobalConfig.init](#globalconfiginit)
     * [Updating configuration](#updating-configuration)
+  * [SDKLogger](#sdklogger)
   * [ChatSession APIs](#chatsession-apis)
   * [ChatSession Events](#chatsession-events)
   * [Classes and Structs](#classes-and-structs)
@@ -136,6 +137,41 @@ If you have set the `GlobalConfig` object or want to update the configurations, 
 ```
 let globalConfig = GlobalConfig(region: .USEast1)
 chatSession.configure(config: globalConfig)
+```
+
+### SDKLogger
+The `SDKLogger` class is responsible for logging relevant runtime information to the console which is useful for debugging purposes. The `SDKLogger` will log key events such as establishing a connection or failures such as failing to send a message.
+
+#### `SDKLogger.configure`
+This API will allow you to override the SDK's built-in logger with your own [SDKLoggerProtocol](#sdkloggerprotocol) implementation. This is especially useful in cases where you would want to store logs for debugging purposes. Attaching these logs to issues filed in this project will greatly expedite the resolution process.
+
+```
+public static func configureLogger(_ logger: SDKLoggerProtocol) {
+    SDKLogger.logger = logger
+}
+```
+
+#### SDKLoggerProtocol
+The SDKLoggerProtocol is a protocol used for the `SDKLogger`.  Users can override the `SDKLogger` with any class that implements SDKLoggerProtocol.
+
+```
+public protocol SDKLoggerProtocol {
+    func logVerbose(
+        _ message: @autoclosure () -> String
+    )
+    func logInfo(
+        _ message: @autoclosure () -> String
+    )
+    func logDebug(
+        _ message: @autoclosure () -> String
+    )
+    func logFault(
+        _ message: @autoclosure () -> String
+    )
+    func logError(
+        _ message: @autoclosure () -> String
+    )
+}
 ```
 
 --------------------
