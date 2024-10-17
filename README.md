@@ -106,21 +106,23 @@ The Amazon Connect Chat SDK for iOS provides two methods to receive messages.
 The `GlobalConfig` object is used to configure both the AWS ConnectParticipant client as well as some of the chat behavior.
 
 #### `GlobalConfig.init`
-The initializer for the `GlobalConfig` object takes in the `AWSRegionType` and the enabled `Features`
+The initializer for the `GlobalConfig` object takes in the `AWSRegionType`, the enabled `Features` and `disableCSM` flag to disable metrics.
 
 ```
 public struct GlobalConfig {
     public var region: AWSRegionType
     public var features: Features
+    public var disableCsm: Bool
 
     public static var defaultRegion: AWSRegionType {
         return Constants.DEFAULT_REGION
     }
 
     // Initializes a new global configuration with optional custom settings or defaults
-    public init(region: AWSRegionType = defaultRegion, features: Features = .defaultFeatures) {
+    public init(region: AWSRegionType = defaultRegion, features: Features = .defaultFeatures, disableCsm: Bool = false) {
         self.region = region
         self.features = features
+        self.disableCsm = disableCsm
     }
 }
 ```
