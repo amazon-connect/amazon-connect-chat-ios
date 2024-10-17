@@ -17,7 +17,12 @@ class MetricsClient {
         self.metricsManager = MetricsManager(endpointUrl: MetricsUtils().getMetricsEndpoint())
     }
     
+    func configureMetricsManager(config: GlobalConfig){
+        metricsManager.configure(config: config)
+    }
+    
     func triggerCountMetric(metricName: MetricName) {
         metricsManager.addCountMetric(metricName: metricName)
     }
 }
+

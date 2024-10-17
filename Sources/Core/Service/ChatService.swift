@@ -687,6 +687,7 @@ class ChatService : ChatServiceProtocol {
         let messageReceiptConfig = config.features.messageReceipts
         messageReceiptsManager?.throttleTime = messageReceiptConfig.throttleTime
         messageReceiptsManager?.shouldSendMessageReceipts = messageReceiptConfig.shouldSendMessageReceipts
+        MetricsClient.shared.configureMetricsManager(config: config)
     }
     
     func registerNotificationListeners() {

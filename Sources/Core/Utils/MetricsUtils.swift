@@ -6,7 +6,6 @@ import Foundation
 import AWSConnectParticipant
 
 struct MetricsUtils {
-    private let config = Config()
     
     func getCurrentMetricTimestamp() -> String {
         let formatter = ISO8601DateFormatter()
@@ -17,14 +16,7 @@ struct MetricsUtils {
     }
 
     func getMetricsEndpoint() -> String {
-        if config.isDevMode {
-            return "https://f9cskafqk3.execute-api.us-west-2.amazonaws.com/devo/put-metrics"
-        } else {
-            return "https://ieluqbvv.telemetry.connect.us-west-2.amazonaws.com/prod/put-metrics"
-        }
+        return "https://ieluqbvv.telemetry.connect.us-west-2.amazonaws.com/prod/put-metrics"
     }
     
-    func isCsmDisabled() -> Bool {
-        return config.disableCsm
-    }
 }
