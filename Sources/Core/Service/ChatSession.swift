@@ -239,7 +239,6 @@ public class ChatSession: ChatSessionProtocol {
         guard let messageItem = transcriptItem as? Message,
               !messageItem.text.isEmpty,
               messageItem.messageDirection == .Incoming else {
-            SDKLogger.logger.logError("Could not send \(eventType.rawValue) receipt for \(String(describing: (transcriptItem as? Message)?.text))")
             return
         }
         
