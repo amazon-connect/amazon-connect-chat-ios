@@ -1,6 +1,7 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.10 (swiftlang-5.10.0.13 clang-1500.3.9.4)
+// swift-compiler-version: Apple Swift version 6.0 effective-5.10 (swiftlang-6.0.0.9.10 clang-1600.0.26.2)
 // swift-module-flags: -target x86_64-apple-ios15.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-bare-slash-regex -module-name AmazonConnectChatIOS
+// swift-module-flags-ignorable: -no-verify-emitted-module-interface
 import AWSConnectParticipant
 import AWSCore
 @_exported import AmazonConnectChatIOS
@@ -328,7 +329,9 @@ public class TranscriptItem : AmazonConnectChatIOS.TranscriptItemProtocol {
   public init(timeStamp: Swift.String, contentType: Swift.String, id: Swift.String?, serializedContent: [Swift.String : Any]?)
   public static func == (lhs: AmazonConnectChatIOS.TranscriptItem, rhs: AmazonConnectChatIOS.TranscriptItem) -> Swift.Bool
   public func hash(into hasher: inout Swift.Hasher)
+  @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
   public typealias ID = Swift.String
+  @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
   public typealias ObjectWillChangePublisher = Combine.ObservableObjectPublisher
   @objc deinit
   public var hashValue: Swift.Int {
@@ -402,6 +405,13 @@ public protocol MetadataProtocol : AmazonConnectChatIOS.TranscriptItemProtocol {
   }
   @objc deinit
 }
+public protocol SDKLoggerProtocol {
+  func logVerbose(_ message: @autoclosure () -> Swift.String)
+  func logInfo(_ message: @autoclosure () -> Swift.String)
+  func logDebug(_ message: @autoclosure () -> Swift.String)
+  func logFault(_ message: @autoclosure () -> Swift.String)
+  func logError(_ message: @autoclosure () -> Swift.String)
+}
 public enum MessageDirection {
   case Outgoing
   case Incoming
@@ -446,10 +456,11 @@ public protocol MessageProtocol : AmazonConnectChatIOS.TranscriptItemProtocol {
 public struct GlobalConfig {
   public var region: AWSCore.AWSRegionType
   public var features: AmazonConnectChatIOS.Features
+  public var disableCsm: Swift.Bool
   public static var defaultRegion: AWSCore.AWSRegionType {
     get
   }
-  public init(region: AWSCore.AWSRegionType = defaultRegion, features: AmazonConnectChatIOS.Features = .defaultFeatures)
+  public init(region: AWSCore.AWSRegionType = defaultRegion, features: AmazonConnectChatIOS.Features = .defaultFeatures, disableCsm: Swift.Bool = false)
 }
 public struct Features {
   public var messageReceipts: AmazonConnectChatIOS.MessageReceipts
@@ -465,6 +476,15 @@ public struct MessageReceipts {
     get
   }
   public init(shouldSendMessageReceipts: Swift.Bool, throttleTime: Swift.Double)
+}
+@_hasMissingDesignatedInitializers public class SDKLogger : AmazonConnectChatIOS.SDKLoggerProtocol {
+  public func logVerbose(_ message: @autoclosure () -> Swift.String)
+  public func logInfo(_ message: @autoclosure () -> Swift.String)
+  public func logDebug(_ message: @autoclosure () -> Swift.String)
+  public func logFault(_ message: @autoclosure () -> Swift.String)
+  public func logError(_ message: @autoclosure () -> Swift.String)
+  public static func configureLogger(_ logger: any AmazonConnectChatIOS.SDKLoggerProtocol)
+  @objc deinit
 }
 public struct ChatDetails {
   public init(contactId: Swift.String? = nil, participantId: Swift.String? = nil, participantToken: Swift.String)
