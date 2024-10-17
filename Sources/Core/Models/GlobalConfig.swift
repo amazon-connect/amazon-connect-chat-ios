@@ -8,15 +8,17 @@ import AWSCore
 public struct GlobalConfig {
     public var region: AWSRegionType
     public var features: Features
+    public var disableCsm: Bool
 
     public static var defaultRegion: AWSRegionType {
         return Constants.DEFAULT_REGION
     }
 
     // Initializes a new global configuration with optional custom settings or defaults
-    public init(region: AWSRegionType = defaultRegion, features: Features = .defaultFeatures) {
+    public init(region: AWSRegionType = defaultRegion, features: Features = .defaultFeatures, disableCsm: Bool = false) {
         self.region = region
         self.features = features
+        self.disableCsm = disableCsm
     }
 }
 

@@ -49,7 +49,6 @@
 		F747263E2BF4143D002B278E /* MetricsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F747263D2BF4143D002B278E /* MetricsUtils.swift */; };
 		F74726442BF418F0002B278E /* MetricsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74726432BF418F0002B278E /* MetricsClient.swift */; };
 		F74726472BF41948002B278E /* MetricsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74726462BF41948002B278E /* MetricsManager.swift */; };
-		F74726522BF6F018002B278E /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74726512BF6F018002B278E /* Config.swift */; };
 		F76BB94D2C1898BE0005C3EC /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76BB94C2C1898BE0005C3EC /* APIClient.swift */; };
 		F76BB9532C18F84D0005C3EC /* MockAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76BB9522C18F84D0005C3EC /* MockAPIClient.swift */; };
 		F76BB9562C1900480005C3EC /* APIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76BB9552C1900480005C3EC /* APIClientTests.swift */; };
@@ -63,8 +62,7 @@
 		F7B4A1382C15649B005C7921 /* MockHttpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B4A1372C15649B005C7921 /* MockHttpClient.swift */; };
 		F7B4A13A2C17AE43005C7921 /* TestUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B4A1392C17AE43005C7921 /* TestUtils.swift */; };
 		F7B4A13C2C17E3C3005C7921 /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B4A13B2C17E3C3005C7921 /* MockURLSession.swift */; };
-		F7BE6CC82C3E1CC500E7A88A /* BuildFile in Sources */ = {isa = PBXBuildFile; };
-
+		F7BE6CC82C3E1CC500E7A88A /* (null) in Sources */ = {isa = PBXBuildFile; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -119,7 +117,6 @@
 		F747263D2BF4143D002B278E /* MetricsUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsUtils.swift; sourceTree = "<group>"; };
 		F74726432BF418F0002B278E /* MetricsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsClient.swift; sourceTree = "<group>"; };
 		F74726462BF41948002B278E /* MetricsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsManager.swift; sourceTree = "<group>"; };
-		F74726512BF6F018002B278E /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		F76BB94C2C1898BE0005C3EC /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		F76BB9522C18F84D0005C3EC /* MockAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAPIClient.swift; sourceTree = "<group>"; };
 		F76BB9552C1900480005C3EC /* APIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientTests.swift; sourceTree = "<group>"; };
@@ -297,7 +294,6 @@
 				7E58A6082BBB460900965327 /* CommonUtils.swift */,
 				7E91597A2BC0A92E00821C05 /* Constants.swift */,
 				F747263D2BF4143D002B278E /* MetricsUtils.swift */,
-				F74726512BF6F018002B278E /* Config.swift */,
 				7E1FA2192C3DC16D0014C33F /* TranscriptItemUtils.swift */,
 			);
 			path = Utils;
@@ -473,7 +469,6 @@
 				7E57F6522BC7758C00B25623 /* ConnectionDetails.swift in Sources */,
 				F76BB94D2C1898BE0005C3EC /* APIClient.swift in Sources */,
 				7E58A6092BBB460A00965327 /* DefaultHttpClient.swift in Sources */,
-				F74726522BF6F018002B278E /* Config.swift in Sources */,
 				7E91597B2BC0A92E00821C05 /* Constants.swift in Sources */,
 				7E58A5F92BB605F300965327 /* TranscriptResponse.swift in Sources */,
 				7E58A6232BBDDBF900965327 /* ChatSession.swift in Sources */,
@@ -481,7 +476,7 @@
 				7E58A5FC2BB605F300965327 /* MessageContent.swift in Sources */,
 				7E57F6542BC7762900B25623 /* ConnectionDetailsProvider.swift in Sources */,
 				7E58A6292BBE415700965327 /* ChatService.swift in Sources */,
-				F7BE6CC82C3E1CC500E7A88A /* BuildFile in Sources */,
+				F7BE6CC82C3E1CC500E7A88A /* (null) in Sources */,
 				7E58A60E2BBB460A00965327 /* CommonUtils.swift in Sources */,
 				7ED5DEC42BEAFD42001693FC /* Event.swift in Sources */,
 				7E58A60A2BBB460A00965327 /* HttpMethod.swift in Sources */,
@@ -670,7 +665,6 @@
 		};
 		7E58A5E92BB5F3DA00965327 /* Debug */ = {
 			isa = XCBuildConfiguration;
-
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -703,7 +697,6 @@
 		};
 		7E58A5EA2BB5F3DA00965327 /* Release */ = {
 			isa = XCBuildConfiguration;
-
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -736,7 +729,6 @@
 		};
 		7E58A5EC2BB5F3DA00965327 /* Debug */ = {
 			isa = XCBuildConfiguration;
-
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -756,7 +748,6 @@
 		};
 		7E58A5ED2BB5F3DA00965327 /* Release */ = {
 			isa = XCBuildConfiguration;
-
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;

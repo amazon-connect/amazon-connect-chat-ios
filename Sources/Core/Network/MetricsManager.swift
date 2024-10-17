@@ -10,17 +10,22 @@ class MetricsManager {
     private var metricList: [Metric]
     private var isMonitoring: Bool = false
     private var shouldRetry: Bool = true
+    private var isCsmDisabled: Bool = false
 
     init(endpointUrl: String) {
         self.endpointUrl = endpointUrl
         self.metricList = []
-        if !MetricsUtils().isCsmDisabled() {
-            monitorAndSendMetrics()
-        }
     }
     
     deinit {
         self.timer?.invalidate()
+    }
+    
+    func configure(config: GlobalConfig){
+        isCsmDisabled = config.disableCsm
+        if !isCsmDisabled {
+            monitorAndSendMetrics()
+        }
     }
     
     private func monitorAndSendMetrics() {
@@ -76,7 +81,7 @@ class MetricsManager {
     }
     
     func addMetric(metric: Metric) {
-        if MetricsUtils().isCsmDisabled() {
+        if isCsmDisabled {
             return
         }
         
