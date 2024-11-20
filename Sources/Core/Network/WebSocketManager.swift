@@ -199,38 +199,39 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
                 return nil
             }
             switch type {
-            case .message:
-                return self.handleMessage(innerJson, json)
-            case .event:
-                guard let eventTypeString = innerJson["ContentType"] as? String, let eventType = ContentType(rawValue: eventTypeString) else {
-                    print("Unknown event type \(String(describing: innerJson["ContentType"]))")
-                    return nil
-                }
-                
-                switch eventType {
-                case .joined:
-                    // Handle participant joined event
-                    return handleParticipantEvent(innerJson, json)
-                case .left:
-                    // Handle participant left event
-                    return handleParticipantEvent(innerJson, json)
-                case .typing:
-                    // Handle typing event
-                    return handleTyping(innerJson, json)
-                case .ended:
-                    // Handle chat ended event
-                    return handleChatEnded(innerJson, json)
-                default:
-                    print("Unknown event: \(String(describing: eventType))")
-                }
-            case .attachment:
-                return handleAttachment(innerJson, json)
-            case .messageMetadata:
-                return handleMetadata(innerJson, json)
+                case .message:
+                    return self.handleMessage(innerJson, json)
+                case .event:
+                    guard let eventTypeString = innerJson["ContentType"] as? String, let eventType = ContentType(rawValue: eventTypeString) else {
+                        print("Unknown event type \(String(describing: innerJson["ContentType"]))")
+                        return nil
+                    }
+                    
+                    switch eventType {
+                    case .joined:
+                        // Handle participant joined event
+                        return handleParticipantEvent(innerJson, json)
+                    case .left:
+                        // Handle participant left event
+                        return handleParticipantEvent(innerJson, json)
+                    case .typing:
+                        // Handle typing event
+                        return handleTyping(innerJson, json)
+                    case .ended:
+                        // Handle chat ended event
+                        return handleChatEnded(innerJson, json)
+                    default:
+                        print("Unknown event: \(String(describing: eventType))")
+                    }
+                case .attachment:
+                    return handleAttachment(innerJson, json)
+                case .messageMetadata:
+                    return handleMetadata(innerJson, json)
             }
-            
+            print("Unknown message type: \(String(describing: type))")
             return nil
         }
+        print("Unable to parse json: \(String(describing: content))")
         return nil
     }
     
@@ -365,22 +366,25 @@ extension WebsocketManager {
                 return nil
             }
             
-            // Wrap the JSON string
-            let wrappedMessageString = "{\"content\":\"\(messageContentString.replacingOccurrences(of: "\"", with: "\\\""))\"}"
-            
-            // Deserialize back to JSON object
-            if let jsonData = wrappedMessageString.data(using: .utf8),
-               let json = try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any] {
-                // Process the JSON content and return a TranscriptItem
-                let transcriptItem = self.processJsonContentAndGetItem(json)
-                if let validItem = transcriptItem {
-                    transcriptPublisher.send(validItem)
-                }
+            // Wrap the JSON string properly as a nested object
+            let wrappedMessage: [String: Any] = [
+                "content": messageContentString
+            ]
 
-                return transcriptItem
-            }
-            
+            if let wrappedJsonData = try? JSONSerialization.data(withJSONObject: wrappedMessage, options: []),
+               let json = try? JSONSerialization.jsonObject(with: wrappedJsonData, options: []) as? [String: Any] {
+                   // Process the JSON content and return a TranscriptItem
+                   let transcriptItem = self.processJsonContentAndGetItem(json)
+                   if let validItem = transcriptItem {
+                       transcriptPublisher.send(validItem)
+                   }
+
+                   return transcriptItem
+               }
+
+            print("Failed to wrap and deserialize JSON.")
             return nil
+
         }
     }
 
@@ -389,12 +393,10 @@ extension WebsocketManager {
     func handleMessage(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {
         let participantRole = innerJson["ParticipantRole"] as! String
         let messageId = innerJson["Id"] as! String
-        var messageText = innerJson["Content"] as! String
+        let messageText = innerJson["Content"] as! String
         let displayName = innerJson["DisplayName"] as! String
         let time = innerJson["AbsoluteTime"] as! String
 
-        // Workaround for Attributed string to enable newline
-        messageText = messageText.replacingOccurrences(of: "\n", with: "\\\n")
         
         return Message(
             participant: participantRole,
