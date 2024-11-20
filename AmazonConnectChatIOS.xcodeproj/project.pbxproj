@@ -41,6 +41,7 @@
 		7E78DCFD2C3C93DB00D5351A /* AWSConnectParticipant in Frameworks */ = {isa = PBXBuildFile; productRef = 7E78DCFC2C3C93DB00D5351A /* AWSConnectParticipant */; };
 		7E78DCFF2C3C93DB00D5351A /* AWSCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7E78DCFE2C3C93DB00D5351A /* AWSCore */; };
 		7E91597B2BC0A92E00821C05 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E91597A2BC0A92E00821C05 /* Constants.swift */; };
+		7EAED4CB2CEDD4340091F65E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 7EAED4CA2CEDD4340091F65E /* PrivacyInfo.xcprivacy */; };
 		7EC0A21B2BC79D7B00DB47F4 /* WebSocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EC0A21A2BC79D7A00DB47F4 /* WebSocketManager.swift */; };
 		7ED5DEC22BEAF933001693FC /* TranscriptItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED5DEC12BEAF933001693FC /* TranscriptItem.swift */; };
 		7ED5DEC42BEAFD42001693FC /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED5DEC32BEAFD42001693FC /* Event.swift */; };
@@ -109,6 +110,7 @@
 		7E58A6262BBDDE4A00965327 /* AWSClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWSClient.swift; sourceTree = "<group>"; };
 		7E58A6282BBE415700965327 /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
 		7E91597A2BC0A92E00821C05 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		7EAED4CA2CEDD4340091F65E /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		7EC0A21A2BC79D7A00DB47F4 /* WebSocketManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocketManager.swift; sourceTree = "<group>"; };
 		7ED5DEC12BEAF933001693FC /* TranscriptItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptItem.swift; sourceTree = "<group>"; };
 		7ED5DEC32BEAFD42001693FC /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
@@ -233,6 +235,7 @@
 		7E58A5EE2BB5F71500965327 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				7EAED4CA2CEDD4340091F65E /* PrivacyInfo.xcprivacy */,
 				7E58A5EF2BB5F71E00965327 /* Core */,
 			);
 			path = Sources;
@@ -448,6 +451,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7EAED4CB2CEDD4340091F65E /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -543,6 +547,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -609,6 +614,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -666,6 +672,7 @@
 		7E58A5E92BB5F3DA00965327 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -698,6 +705,7 @@
 		7E58A5EA2BB5F3DA00965327 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
