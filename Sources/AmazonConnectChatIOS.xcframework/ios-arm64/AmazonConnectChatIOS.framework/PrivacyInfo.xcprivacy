@@ -1,0 +1,19 @@
+{
+  "data": [
+    {
+      "type": "attachments",
+      "purpose": [
+        "app_functionality"
+      ],
+      "optional": true,
+      "linked": false
+    }
+  ],
+  "thirdPartyDataSharing": {
+    "sharedData": [],
+    "thirdPartyIdentifiers": []
+  },
+  "dataDeclarationVersions": {
+    "version": "1.0"
+  }
+}
