@@ -239,6 +239,7 @@ class ChatService : ChatServiceProtocol {
         if (!connectionDetailsProvider.isChatSessionActive()) {
             self.websocketManager?.disconnect()
             self.clearSubscriptionsAndPublishers()
+            completion(true, nil)
             return
         }
         guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
