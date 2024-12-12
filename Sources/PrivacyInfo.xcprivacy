@@ -1,19 +1,27 @@
-{
-  "data": [
-    {
-      "type": "attachments",
-      "purpose": [
-        "app_functionality"
-      ],
-      "optional": true,
-      "linked": false
-    }
-  ],
-  "thirdPartyDataSharing": {
-    "sharedData": [],
-    "thirdPartyIdentifiers": []
-  },
-  "dataDeclarationVersions": {
-    "version": "1.0"
-  }
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>NSPrivacyTracking</key>
+    <false/>
+    <key>NSPrivacyTrackingDomains</key>
+    <array/>
+    <key>NSPrivacyCollectedDataTypes</key>
+    <array>
+        <dict>
+            <key>type</key>
+            <string>attachments</string>
+            <key>purpose</key>
+            <array>
+                <string>app_functionality</string>
+            </array>
+            <key>optional</key>
+            <true/>
+            <key>linked</key>
+            <false/>
+        </dict>
+    </array>
+    <key>NSPrivacyAccessedAPITypes</key>
+    <array/>
+</dict>
+</plist>
