@@ -47,6 +47,9 @@ Then run `pod install` in your project's root directory
 3. Unzip the downloaded file, if necessary.
 4. Drag and drop the `AmazonConnectChatIOS.xcframework` into your Xcode project.
 
+>⚠️ Important: Please remember to add 'AWSCore' and 'AWSConnectParticipant' from [AWS IOS SDK](https://github.com/aws-amplify/aws-sdk-ios) while using binaries.
+
+
 #### How to Import the XCFramework
 
 Once you have added the `AmazonConnectChatIOS.xcframework` to your project, you need to import it into your code. Here are the steps:
