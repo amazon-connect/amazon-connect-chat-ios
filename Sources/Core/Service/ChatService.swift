@@ -128,6 +128,7 @@ class ChatService : ChatServiceProtocol {
     private func updateTranscriptDict(with item: TranscriptItem) {
         switch item {
         case let metadata as Metadata:
+            // metadata.id here refers to messageId attatched to a metadata
             if let messageItem = transcriptDict[metadata.id] as? Message {
                 messageItem.metadata = metadata
                 transcriptDict[metadata.id] = messageItem
@@ -237,10 +238,12 @@ class ChatService : ChatServiceProtocol {
     
     func disconnectChatSession(completion: @escaping (Bool, Error?) -> Void) {
         if (!connectionDetailsProvider.isChatSessionActive()) {
-            self.websocketManager?.disconnect()
+            self.websocketManager?.disconnect(reason: "Session inactive")
             self.clearSubscriptionsAndPublishers()
+            completion(true, nil)
             return
         }
+        
         guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
             let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
             completion(false, error)
@@ -254,7 +257,7 @@ class ChatService : ChatServiceProtocol {
             case .success(_):
                 SDKLogger.logger.logDebug("Participant Disconnected")
                 self.eventPublisher.send(.chatEnded)
-                self.websocketManager?.disconnect()
+                self.websocketManager?.disconnect(reason: "Participant Disconnected")
                 self.clearSubscriptionsAndPublishers()
                 completion(true, nil)
             case .failure(let error):
