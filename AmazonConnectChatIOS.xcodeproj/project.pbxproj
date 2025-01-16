@@ -38,8 +38,8 @@
 		7E58A6232BBDDBF900965327 /* ChatSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E58A6222BBDDBF900965327 /* ChatSession.swift */; };
 		7E58A6272BBDDE4A00965327 /* AWSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E58A6262BBDDE4A00965327 /* AWSClient.swift */; };
 		7E58A6292BBE415700965327 /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E58A6282BBE415700965327 /* ChatService.swift */; };
-		7E78DCFD2C3C93DB00D5351A /* AWSConnectParticipant in Frameworks */ = {isa = PBXBuildFile; productRef = 7E78DCFC2C3C93DB00D5351A /* AWSConnectParticipant */; settings = {ATTRIBUTES = (Required, ); }; };
-		7E78DCFF2C3C93DB00D5351A /* AWSCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7E78DCFE2C3C93DB00D5351A /* AWSCore */; };
+		7E5D95ED2D399850005E20AC /* AWSConnectParticipant in Frameworks */ = {isa = PBXBuildFile; productRef = 7E5D95EC2D399850005E20AC /* AWSConnectParticipant */; };
+		7E5D95EF2D399850005E20AC /* AWSCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7E5D95EE2D399850005E20AC /* AWSCore */; };
 		7E91597B2BC0A92E00821C05 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E91597A2BC0A92E00821C05 /* Constants.swift */; };
 		7EAED4CB2CEDD4340091F65E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 7EAED4CA2CEDD4340091F65E /* PrivacyInfo.xcprivacy */; };
 		7EC0A21B2BC79D7B00DB47F4 /* WebSocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EC0A21A2BC79D7A00DB47F4 /* WebSocketManager.swift */; };
@@ -139,8 +139,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7E78DCFD2C3C93DB00D5351A /* AWSConnectParticipant in Frameworks */,
-				7E78DCFF2C3C93DB00D5351A /* AWSCore in Frameworks */,
+				7E5D95ED2D399850005E20AC /* AWSConnectParticipant in Frameworks */,
+				7E5D95EF2D399850005E20AC /* AWSCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -381,8 +381,8 @@
 			);
 			name = AmazonConnectChatIOS;
 			packageProductDependencies = (
-				7E78DCFC2C3C93DB00D5351A /* AWSConnectParticipant */,
-				7E78DCFE2C3C93DB00D5351A /* AWSCore */,
+				7E5D95EC2D399850005E20AC /* AWSConnectParticipant */,
+				7E5D95EE2D399850005E20AC /* AWSCore */,
 			);
 			productName = AmazonConnectChatIOS;
 			productReference = 7E58A5D42BB5F3DA00965327 /* AmazonConnectChatIOS.framework */;
@@ -434,7 +434,7 @@
 			);
 			mainGroup = 7E58A5CA2BB5F3DA00965327;
 			packageReferences = (
-				7E78DCFB2C3C93DB00D5351A /* XCRemoteSwiftPackageReference "aws-sdk-ios-spm" */,
+				7E5D95EB2D399850005E20AC /* XCRemoteSwiftPackageReference "aws-sdk-ios-spm" */,
 			);
 			productRefGroup = 7E58A5D52BB5F3DA00965327 /* Products */;
 			projectDirPath = "";
@@ -806,25 +806,25 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		7E78DCFB2C3C93DB00D5351A /* XCRemoteSwiftPackageReference "aws-sdk-ios-spm" */ = {
+		7E5D95EB2D399850005E20AC /* XCRemoteSwiftPackageReference "aws-sdk-ios-spm" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/aws-amplify/aws-sdk-ios-spm";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.36.3;
+				minimumVersion = 2.40.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		7E78DCFC2C3C93DB00D5351A /* AWSConnectParticipant */ = {
+		7E5D95EC2D399850005E20AC /* AWSConnectParticipant */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7E78DCFB2C3C93DB00D5351A /* XCRemoteSwiftPackageReference "aws-sdk-ios-spm" */;
+			package = 7E5D95EB2D399850005E20AC /* XCRemoteSwiftPackageReference "aws-sdk-ios-spm" */;
 			productName = AWSConnectParticipant;
 		};
-		7E78DCFE2C3C93DB00D5351A /* AWSCore */ = {
+		7E5D95EE2D399850005E20AC /* AWSCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7E78DCFB2C3C93DB00D5351A /* XCRemoteSwiftPackageReference "aws-sdk-ios-spm" */;
+			package = 7E5D95EB2D399850005E20AC /* XCRemoteSwiftPackageReference "aws-sdk-ios-spm" */;
 			productName = AWSCore;
 		};
 /* End XCSwiftPackageProductDependency section */
