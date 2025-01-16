@@ -20,6 +20,7 @@ extension HttpHeader {
         case contentLength = "Content-Length"
         case contentDisposition = "Content-Disposition"
         case amzMetaAccountId = "x-amz-meta-account_id"
+        case amzExpctedBucketOwner = "x-amz-expected-bucket-owner"
     }
 }
 

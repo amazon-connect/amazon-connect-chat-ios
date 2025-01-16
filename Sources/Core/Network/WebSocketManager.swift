@@ -22,7 +22,7 @@ protocol WebsocketManagerProtocol {
     var eventPublisher: PassthroughSubject<ChatEvent, Never> { get }
     var transcriptPublisher: PassthroughSubject<TranscriptItem, Never> { get }
     func connect(wsUrl: URL?, isReconnect: Bool?)
-    func disconnect()
+    func disconnect(reason: String?)
     func formatAndProcessTranscriptItems(_ transcriptItems: [AWSConnectParticipantItem]) -> [TranscriptItem]
 }
 
@@ -31,7 +31,8 @@ extension URLSessionWebSocketTask: WebSocketTask {}
 class WebsocketManager: NSObject, WebsocketManagerProtocol {
     var eventPublisher = PassthroughSubject<ChatEvent, Never>()
     var transcriptPublisher = PassthroughSubject<TranscriptItem, Never>()
-    
+    private var latestParticipantJoinedTimestamp: String?
+
     private var session: URLSession?
     private var wsUrl: URL?
     var heartbeatManager: HeartbeatManager?
@@ -56,7 +57,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
         if let isReconnect {
             self.isReconnectFlow = isReconnect
         }
-        disconnect() // Ensure previous WebSocket tasks are properly closed
+        disconnect(reason: "Connecting...") // Ensure previous WebSocket tasks are properly closed
         
         if let wsTask = self.websocketTask {
             wsTask.cancel(with: .goingAway, reason: nil)
@@ -90,11 +91,11 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
         websocketTask?.receive { [weak self] result in
             switch result {
             case .failure(let error):
-                print("Failed to receive message: \(error)")
+                print("Failed to receive message, Websocket connection might be closed: \(error)")
             case .success(let message):
                 switch message {
                 case .string(let text):
-                    print("Received text in receiveMessage()")
+                    print("Received text in receiveMessage() \(text)")
                     self?.handleWebsocketTextEvent(text: text)
                 case .data(_):
                     print("Received data from websocket")
@@ -111,7 +112,8 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
         if let nsError = error as? NSError {
             switch (nsError.domain) {
             case NSPOSIXErrorDomain:
-                if (nsError.code == WebSocketErrorCodes.SOFTWARE_ABORT.rawValue) {
+                if (nsError.code == WebSocketErrorCodes.SOFTWARE_ABORT.rawValue
+                    || nsError.code == WebSocketErrorCodes.OPERATION_TIMED_OUT.rawValue) {
                     NotificationCenter.default.post(name: .requestNewWsUrl, object: nil)
                 }
                 break
@@ -137,14 +139,16 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
         self.onError?(error)
     }
     
-    func disconnect() {
-        websocketTask?.cancel(with: .goingAway, reason: nil)
+    func disconnect(reason: String?) {
+        resetHeartbeatManagers()
+        let reasonData = reason?.data(using: .utf8)
+        websocketTask?.cancel(with: .goingAway, reason: reasonData)
         websocketTask = nil
     }
+
     
     func addNetworkNotificationObserver() {
         NotificationCenter.default.addObserver(forName: .networkConnected, object: nil, queue: .main) { _ in
-
             if (ChatSession.shared.isChatSessionActive()) {
                 NotificationCenter.default.post(name: .requestNewWsUrl, object: nil)
             }
@@ -210,6 +214,12 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
                     switch eventType {
                     case .joined:
                         // Handle participant joined event
+                        // Update latestParticipantJoinedTimestamp
+                        if let timestamp = innerJson["AbsoluteTime"] as? String {
+                            if latestParticipantJoinedTimestamp == nil || timestamp > (latestParticipantJoinedTimestamp ?? "") {
+                                latestParticipantJoinedTimestamp = timestamp
+                            }
+                        }
                         return handleParticipantEvent(innerJson, json)
                     case .left:
                         // Handle participant left event
@@ -306,23 +316,20 @@ extension WebsocketManager: URLSessionWebSocketDelegate {
     }
     
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
-        self.onDisconnected?()
-        self.isReconnectFlow = false
+          let reasonString = reason.flatMap { String(data: $0, encoding: .utf8) } ?? "No reason provided"
+          print("WebSocket closed with code: \(closeCode) and reason: \(reasonString)")
+          self.onDisconnected?()
+          self.isReconnectFlow = false
+      }
 
-        print("WebSocket connection closed")
-    }
-    
-    // Foregrounded
-    //  - see if websocket is connected, if it isn't we try reconnecting
-    //  - Call get transcript
-    
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        print("WebSocket connection completed with error.")
-        self.onDisconnected?()
-        if error != nil {
+        if let error = error {
+            print("WebSocket connection completed with error: \(error.localizedDescription)")
             handleError(error)
+        } else {
+            print("WebSocket task completed successfully without errors.")
         }
-
+        self.onDisconnected?()
     }
 }
 
@@ -378,7 +385,6 @@ extension WebsocketManager {
                    if let validItem = transcriptItem {
                        transcriptPublisher.send(validItem)
                    }
-
                    return transcriptItem
                }
 
@@ -479,10 +485,18 @@ extension WebsocketManager {
     
     func handleChatEnded(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {
         let time = innerJson["AbsoluteTime"] as! String
-        self.eventPublisher.send(.chatEnded)
-        let messageId = innerJson["Id"] as! String
-        resetHeartbeatManagers()
+        
+        // Check if the event belongs to a previous transcript
+        let isOlderEvent = latestParticipantJoinedTimestamp != nil && time < latestParticipantJoinedTimestamp!
 
+        if !isOlderEvent {
+            // Current session event: Reset state and update session
+            resetHeartbeatManagers()
+            eventPublisher.send(.chatEnded)
+            ConnectionDetailsProvider.shared.setChatSessionState(isActive: false)
+        }
+        
+        let messageId = innerJson["Id"] as! String
         return Event(
             timeStamp: time,
             contentType: innerJson["ContentType"] as! String,

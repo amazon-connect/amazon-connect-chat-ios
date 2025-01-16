@@ -111,17 +111,13 @@ public class ChatSession: ChatSessionProtocol {
             DispatchQueue.main.async {
                 switch event {
                 case .connectionEstablished:
-                    ConnectionDetailsProvider.shared.setChatSessionState(isActive: true)
                     self?.onConnectionEstablished?()
                 case .connectionBroken:
                     self?.onConnectionBroken?()
                 case .connectionReEstablished:
                     self?.onConnectionReEstablished?()
                 case .chatEnded:
-                    if (self != nil && ConnectionDetailsProvider.shared.isChatSessionActive() == true) {
-                        ConnectionDetailsProvider.shared.setChatSessionState(isActive: false)
-                        self?.onChatEnded?()
-                    }
+                    self?.onChatEnded?()
                 default:
                     break
                 }
@@ -195,6 +191,7 @@ public class ChatSession: ChatSessionProtocol {
                 if success {
                     self.onChatEnded?()
                     self.cleanupSubscriptions()
+                    ConnectionDetailsProvider.shared.setChatSessionState(isActive: false)
                     completion(.success(()))
                 } else if let error = error {
                     SDKLogger.logger.logError("Error disconnecting chat session: \(error.localizedDescription)")

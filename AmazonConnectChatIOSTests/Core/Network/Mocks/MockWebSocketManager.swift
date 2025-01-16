@@ -15,7 +15,7 @@ class MockWebsocketManager: WebsocketManagerProtocol {
         SDKLogger.logger.logDebug("MockWebsocketManager: Connected to \(String(describing: wsUrl))")
     }
     
-    func disconnect() {
+    func disconnect(reason: String?) {
         // Simulate disconnection logic if needed
         SDKLogger.logger.logDebug("MockWebsocketManager: Disconnected")
     }
