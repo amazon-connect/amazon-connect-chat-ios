@@ -46,7 +46,7 @@ jobs:
 
     - name: Set Up Simulator
       run: |
-        xcrun instruments -w 'iPhone 14 (16.4)' || sleep 15
+        xcrun instruments -w 'iPhone 16' || sleep 15
         echo "iOS Simulator is ready."
         
     - name: Clean and Build SDK
