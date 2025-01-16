@@ -38,7 +38,7 @@
 		7E58A6232BBDDBF900965327 /* ChatSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E58A6222BBDDBF900965327 /* ChatSession.swift */; };
 		7E58A6272BBDDE4A00965327 /* AWSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E58A6262BBDDE4A00965327 /* AWSClient.swift */; };
 		7E58A6292BBE415700965327 /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E58A6282BBE415700965327 /* ChatService.swift */; };
-		7E78DCFD2C3C93DB00D5351A /* AWSConnectParticipant in Frameworks */ = {isa = PBXBuildFile; productRef = 7E78DCFC2C3C93DB00D5351A /* AWSConnectParticipant */; };
+		7E78DCFD2C3C93DB00D5351A /* AWSConnectParticipant in Frameworks */ = {isa = PBXBuildFile; productRef = 7E78DCFC2C3C93DB00D5351A /* AWSConnectParticipant */; settings = {ATTRIBUTES = (Required, ); }; };
 		7E78DCFF2C3C93DB00D5351A /* AWSCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7E78DCFE2C3C93DB00D5351A /* AWSCore */; };
 		7E91597B2BC0A92E00821C05 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E91597A2BC0A92E00821C05 /* Constants.swift */; };
 		7EAED4CB2CEDD4340091F65E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 7EAED4CA2CEDD4340091F65E /* PrivacyInfo.xcprivacy */; };
