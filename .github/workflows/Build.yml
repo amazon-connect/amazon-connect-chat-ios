@@ -31,26 +31,40 @@ jobs:
 
     - name: Clear Swift Package Cache
       run: rm -rf ~/Library/Caches/org.swift.swiftpm
-      
+
+
+    - name: Resolve Dependencies
+      run: |
+        echo "::group::Resolving Dependencies"
+        swift package resolve
+        echo "::endgroup::"
+
     - name: Clean Derived Data
       run: |
         echo "::group::Cleaning Derived Data"
         rm -rf ~/Library/Developer/Xcode/DerivedData
         echo "::endgroup::"
 
-    - name: Resolve Dependencies
+    - name: Build Dependencies
       run: |
-        echo "::group::Resolving Dependencies"
-        xcodebuild -resolvePackageDependencies
-        echo "::endgroup::"
-        
-    - name: List Available Simulators
-      run: xcrun simctl list
+        xcodebuild -resolvePackageDependencies \
+        -scheme AmazonConnectChatIOS \
+        -destination "platform=iOS Simulator,name=iPhone 14,OS=latest" \
+        -derivedDataPath ./DerivedData
 
-    - name: Set Up Simulator
+    - name: Build Framework
       run: |
-        xcrun instruments -w 'iPhone 16' || sleep 15
-        echo "iOS Simulator is ready."
+        xcodebuild clean build \
+        -scheme AmazonConnectChatIOS \
+        -destination "platform=iOS Simulator,name=iPhone 14,OS=latest" \
+        -derivedDataPath ./DerivedData
+
+    - name: Run Tests
+      run: |
+        xcodebuild test \
+        -scheme AmazonConnectChatIOS \
+        -destination "platform=iOS Simulator,name=iPhone 14,OS=latest" \
+        -derivedDataPath ./DerivedData
         
     - name: Clean and Build SDK
       run: |
