@@ -28,6 +28,18 @@ jobs:
 
     - name: Install xcpretty
       run: gem install xcpretty
+      
+    - name: Clean Derived Data
+      run: |
+        echo "::group::Cleaning Derived Data"
+        rm -rf ~/Library/Developer/Xcode/DerivedData
+        echo "::endgroup::"
+
+    - name: Resolve Dependencies
+      run: |
+        echo "::group::Resolving Dependencies"
+        xcodebuild -resolvePackageDependencies
+        echo "::endgroup::"
 
     - name: Clean and Build SDK
       run: |
@@ -36,8 +48,9 @@ jobs:
                          -scheme AmazonConnectChatIOS \
                          -sdk iphonesimulator \
                          -configuration Debug \
-                         build
+                         build 2>&1 | xcpretty --color --simple
         echo "::endgroup::"
+        
     - name: Run Unit Tests
       run: |
         echo "::group::Run Unit Tests"
