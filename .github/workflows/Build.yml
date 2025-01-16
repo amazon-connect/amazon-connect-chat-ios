@@ -28,6 +28,9 @@ jobs:
 
     - name: Install xcpretty
       run: gem install xcpretty
+
+    - name: Clear Swift Package Cache
+      run: rm -rf ~/Library/Caches/org.swift.swiftpm
       
     - name: Clean Derived Data
       run: |
