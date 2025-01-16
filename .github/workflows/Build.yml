@@ -40,6 +40,9 @@ jobs:
         echo "::group::Resolving Dependencies"
         xcodebuild -resolvePackageDependencies
         echo "::endgroup::"
+        
+    - name: List Available Simulators
+      run: xcrun simctl list
 
     - name: Set Up Simulator
       run: |
@@ -62,10 +65,9 @@ jobs:
       run: |
         echo "::group::Running Unit Tests"
         set -e
-        xcodebuild test -project AmazonConnectChatIOS.xcodeproj \
-                        -scheme AmazonConnectChatIOS \
+        xcodebuild test -scheme AmazonConnectChatIOS \
                         -sdk iphonesimulator \
-                        -destination 'platform=iOS Simulator,name=iPhone 12,OS=latest' \
+                        -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
                         -configuration Debug \
                         -enableCodeCoverage YES \
                         2>&1 | tee xcodebuild.log | xcpretty --color --simple
