@@ -46,5 +46,6 @@ jobs:
                         -destination 'platform=iOS Simulator,name=iPhone 12,OS=latest' \
                         -configuration Debug \
                         -enableCodeCoverage YES \
+                        -testPlan AmazonConnectChatIOS.xctestplan \
                         2>&1 | xcpretty --color --simple
         echo "::endgroup::"
