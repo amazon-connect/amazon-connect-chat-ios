@@ -41,8 +41,7 @@ jobs:
     - name: Run Unit Tests
       run: |
         echo "::group::Run Unit Tests"
-        xcodebuild test -project AmazonConnectChatIOS.xcodeproj \
-                        -scheme AmazonConnectChatIOS \
+        xcodebuild test -scheme AmazonConnectChatIOS \
                         -sdk iphonesimulator \
                         -destination 'platform=iOS Simulator,name=iPhone 12,OS=latest' \
                         -configuration Debug \
