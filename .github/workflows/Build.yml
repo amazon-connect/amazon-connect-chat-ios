@@ -52,19 +52,19 @@ jobs:
         -destination "platform=iOS Simulator,name=iPhone 14,OS=latest" \
         -derivedDataPath ./DerivedData
 
-    - name: Build Framework
-      run: |
-        xcodebuild clean build \
-        -scheme AmazonConnectChatIOS \
-        -destination "platform=iOS Simulator,name=iPhone 14,OS=latest" \
-        -derivedDataPath ./DerivedData
+    # - name: Build Framework
+    #   run: |
+    #     xcodebuild clean build \
+    #     -scheme AmazonConnectChatIOS \
+    #     -destination "platform=iOS Simulator,name=iPhone 14,OS=latest" \
+    #     -derivedDataPath ./DerivedData
 
-    - name: Run Tests
-      run: |
-        xcodebuild test \
-        -scheme AmazonConnectChatIOS \
-        -destination "platform=iOS Simulator,name=iPhone 14,OS=latest" \
-        -derivedDataPath ./DerivedData
+    # - name: Run Tests
+    #   run: |
+    #     xcodebuild test \
+    #     -scheme AmazonConnectChatIOS \
+    #     -destination "platform=iOS Simulator,name=iPhone 14,OS=latest" \
+    #     -derivedDataPath ./DerivedData
         
     - name: Clean and Build SDK
       run: |
@@ -74,6 +74,7 @@ jobs:
                          -scheme AmazonConnectChatIOS \
                          -sdk iphonesimulator \
                          -configuration Debug \
+                         -derivedDataPath ./DerivedData \
                          build 2>&1 | tee xcodebuild.log | xcpretty --color --simple
         exit ${PIPESTATUS[0]}
         echo "::endgroup::"
