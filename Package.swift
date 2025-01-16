@@ -13,7 +13,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/aws-amplify/aws-sdk-ios-spm", from: "2.36.4")
+        .package(url: "https://github.com/aws-amplify/aws-sdk-ios-spm", from: "2.40.0")
     ],
     targets: [
         .target(
