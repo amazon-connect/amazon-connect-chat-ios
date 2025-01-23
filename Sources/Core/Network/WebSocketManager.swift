@@ -31,7 +31,6 @@ extension URLSessionWebSocketTask: WebSocketTask {}
 class WebsocketManager: NSObject, WebsocketManagerProtocol {
     var eventPublisher = PassthroughSubject<ChatEvent, Never>()
     var transcriptPublisher = PassthroughSubject<TranscriptItem, Never>()
-    private var latestParticipantJoinedTimestamp: String?
 
     private var session: URLSession?
     private var wsUrl: URL?
@@ -214,12 +213,6 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
                     switch eventType {
                     case .joined:
                         // Handle participant joined event
-                        // Update latestParticipantJoinedTimestamp
-                        if let timestamp = innerJson["AbsoluteTime"] as? String {
-                            if latestParticipantJoinedTimestamp == nil || timestamp > (latestParticipantJoinedTimestamp ?? "") {
-                                latestParticipantJoinedTimestamp = timestamp
-                            }
-                        }
                         return handleParticipantEvent(innerJson, json)
                     case .left:
                         // Handle participant left event
@@ -310,7 +303,6 @@ extension WebsocketManager: URLSessionWebSocketDelegate {
         print("Websocket connection successfully established")
         self.onConnected?()
         self.eventPublisher.send(self.isReconnectFlow ? .connectionReEstablished : .connectionEstablished)
-
         self.sendWebSocketMessage(string: EventTypes.subscribe)
         self.startHeartbeats()
     }
@@ -363,7 +355,8 @@ extension WebsocketManager {
                 "Content": item.content ?? "",
                 "Type": CommonUtils().convertParticipantTypeToString(item.types.rawValue),
                 "DisplayName": item.displayName ?? "",
-                "Attachments": attachmentsArray
+                "Attachments": attachmentsArray,
+                "IsFromPastSession": true // Mark all these items as coming from a past session
             ]
             
             // Serialize the dictionary to JSON string
@@ -485,11 +478,9 @@ extension WebsocketManager {
     
     func handleChatEnded(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {
         let time = innerJson["AbsoluteTime"] as! String
-        
-        // Check if the event belongs to a previous transcript
-        let isOlderEvent = latestParticipantJoinedTimestamp != nil && time < latestParticipantJoinedTimestamp!
+        let isFromPastSession = innerJson["IsFromPastSession"] as? Bool ?? false
 
-        if !isOlderEvent {
+        if !isFromPastSession {
             // Current session event: Reset state and update session
             resetHeartbeatManagers()
             eventPublisher.send(.chatEnded)
