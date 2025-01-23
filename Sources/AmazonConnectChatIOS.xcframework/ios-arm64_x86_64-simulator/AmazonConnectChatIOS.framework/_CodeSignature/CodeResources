@@ -6,7 +6,7 @@
 	<dict>
 		<key>Headers/AmazonConnectChatIOS-Swift.h</key>
 		<data>
-		RIQO75LH1sSNQEq6b2AEgKSaWmo=
+		6zKaCm+jdxkmN/PQZnhaLAnDInk=
 		</data>
 		<key>Headers/AmazonConnectChatIOS.h</key>
 		<data>
@@ -14,39 +14,39 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		LJE/cDUaZ/XKguszV8dxiWC2F98=
+		2t59QsW38j7JG+PfB2T4XlO8uuU=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
-		jSqJKfQ4YHJb+oSKW71m3lc3FpI=
+		vAQWsJ91QjYUVhbrq6Nc640Bwj4=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
-		BEnX2mqJeOQdH+Q8INDtq1hitUU=
+		XtPVyM/aH2SgdiZZaMlHfJOGEVA=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
 		<data>
-		5ieLaieFpYxxMh5CgrrQEWCuFCQ=
+		4G3XqeOUbEt+iCUUoS1M/shF8tM=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		BEnX2mqJeOQdH+Q8INDtq1hitUU=
+		XtPVyM/aH2SgdiZZaMlHfJOGEVA=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
-		jSqJKfQ4YHJb+oSKW71m3lc3FpI=
+		vAQWsJ91QjYUVhbrq6Nc640Bwj4=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
-		lYuO3TgIrwUEG2EKsxH9i8NGYFg=
+		S/B8/iyEwMNxw6mNbgv/t8oAlpc=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<data>
-		oi2+VhS09ubbyWrJBWw6iVNdIJ0=
+		V7w6RVSzO0We4nb8qbL/tLM/v7U=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		lYuO3TgIrwUEG2EKsxH9i8NGYFg=
+		S/B8/iyEwMNxw6mNbgv/t8oAlpc=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -54,7 +54,7 @@
 		</data>
 		<key>PrivacyInfo.xcprivacy</key>
 		<data>
-		/G2WsDs0uow9H3N5Uu3bSSvHlTo=
+		iCydYQCtqVIRYP9m8BNv4zN8BHo=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -63,7 +63,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			OPncct+GYu4tXW6ZtCSOrX80o5Kmmzh6+c3PTNJ1SNI=
+			/qxOxvjD+2X1n4zfe8g4UNHohw3j1mqRy212DX+1adI=
 			</data>
 		</dict>
 		<key>Headers/AmazonConnectChatIOS.h</key>
@@ -77,56 +77,56 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			kan/VP+EC+eSLV1xMVA3SPdZy7u40kMl6a5p9LkcAQY=
+			UqowHiArzBGWaBQpigjNsVA0mH6moa13UAajgnoR+tc=
 			</data>
 		</dict>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			nxIwQDmjg0H0fW4rCfxABPRypfBpVe5chaUJ0aIdrQg=
+			DtcyktA3EOs6sCj1q5enyQw854z0qeiVQHw/P6/Vsg8=
 			</data>
 		</dict>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			t0vynXKH4JHeuAh5IfCq9YcytiK1QagtOqOvRdZ/OLw=
+			bDkPKo8AYeGfAVvjvDWmBsCFiSc9jsJKXzhTS7w6IOU=
 			</data>
 		</dict>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			nxIwQDmjg0H0fW4rCfxABPRypfBpVe5chaUJ0aIdrQg=
+			DtcyktA3EOs6sCj1q5enyQw854z0qeiVQHw/P6/Vsg8=
 			</data>
 		</dict>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			kan/VP+EC+eSLV1xMVA3SPdZy7u40kMl6a5p9LkcAQY=
+			UqowHiArzBGWaBQpigjNsVA0mH6moa13UAajgnoR+tc=
 			</data>
 		</dict>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			AeSJLZmXTke0ep0oghFom3X/COaTqfNYSm49/4Vu6Gw=
+			QfcpOd2Em0CVvrUzNuGdbI+AbknRSuDCIt8ojW08j7w=
 			</data>
 		</dict>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			C/1WCiS3PCBKh+IN9arbcpj6FAd8+1S2e/eH5P5qs4Y=
+			pksD8FyFzJmTviSPfSwT47xO+dLDh4e19scZ4ZkDWUE=
 			</data>
 		</dict>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			AeSJLZmXTke0ep0oghFom3X/COaTqfNYSm49/4Vu6Gw=
+			QfcpOd2Em0CVvrUzNuGdbI+AbknRSuDCIt8ojW08j7w=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
@@ -140,7 +140,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			DXt0L2Ta/gdYtn6ppzqkKBEmbWYYbkp8qXCbYRn2kp8=
+			8KrtHhdXOzY5sakPtTGEvtcu5HlZfxqzFKiAvQk/RMk=
 			</data>
 		</dict>
 	</dict>

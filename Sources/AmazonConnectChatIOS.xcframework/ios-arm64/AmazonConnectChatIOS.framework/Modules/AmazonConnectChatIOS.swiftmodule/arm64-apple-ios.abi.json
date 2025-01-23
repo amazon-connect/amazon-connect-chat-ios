@@ -1,8 +1,8 @@
 {
   "ABIRoot": {
     "kind": "Root",
-    "name": "TopLevel",
-    "printedName": "TopLevel",
+    "name": "AmazonConnectChatIOS",
+    "printedName": "AmazonConnectChatIOS",
     "children": [
       {
         "kind": "TypeDecl",
@@ -121,6 +121,43 @@
             "moduleName": "AmazonConnectChatIOS"
           },
           {
+            "kind": "Var",
+            "name": "OPERATION_TIMED_OUT",
+            "printedName": "OPERATION_TIMED_OUT",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AmazonConnectChatIOS.WebSocketErrorCodes.Type) -> AmazonConnectChatIOS.WebSocketErrorCodes",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "WebSocketErrorCodes",
+                    "printedName": "AmazonConnectChatIOS.WebSocketErrorCodes",
+                    "usr": "s:20AmazonConnectChatIOS19WebSocketErrorCodesO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AmazonConnectChatIOS.WebSocketErrorCodes.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "WebSocketErrorCodes",
+                        "printedName": "AmazonConnectChatIOS.WebSocketErrorCodes",
+                        "usr": "s:20AmazonConnectChatIOS19WebSocketErrorCodesO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:20AmazonConnectChatIOS19WebSocketErrorCodesO19OPERATION_TIMED_OUTyA2CmF",
+            "mangledName": "$s20AmazonConnectChatIOS19WebSocketErrorCodesO19OPERATION_TIMED_OUTyA2CmF",
+            "moduleName": "AmazonConnectChatIOS"
+          },
+          {
             "kind": "Constructor",
             "name": "init",
             "printedName": "init(rawValue:)",
@@ -205,6 +242,20 @@
         "conformances": [
           {
             "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
             "name": "Equatable",
             "printedName": "Equatable",
             "usr": "s:SQ",
@@ -261,6 +312,22 @@
         "moduleName": "AmazonConnectChatIOS",
         "declAttributes": [
           "AccessControl"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          }
         ]
       },
       {
@@ -561,6 +628,22 @@
         "moduleName": "AmazonConnectChatIOS",
         "declAttributes": [
           "AccessControl"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          }
         ]
       },
       {
@@ -874,6 +957,20 @@
           "AccessControl"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
           {
             "kind": "Conformance",
             "name": "Equatable",
@@ -2644,6 +2741,22 @@
         "declAttributes": [
           "AccessControl",
           "RawDocComment"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          }
         ]
       },
       {
@@ -4374,6 +4487,20 @@
         "conformances": [
           {
             "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
             "name": "ChatSessionProtocol",
             "printedName": "ChatSessionProtocol",
             "usr": "s:20AmazonConnectChatIOS0C15SessionProtocolP",
@@ -4465,6 +4592,22 @@
         "declAttributes": [
           "AccessControl",
           "RawDocComment"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          }
         ]
       },
       {
@@ -4591,6 +4734,20 @@
         "conformances": [
           {
             "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
             "name": "MessageContent",
             "printedName": "MessageContent",
             "usr": "s:20AmazonConnectChatIOS14MessageContentP",
@@ -4685,6 +4842,20 @@
         "conformances": [
           {
             "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
             "name": "Decodable",
             "printedName": "Decodable",
             "usr": "s:Se",
@@ -4753,6 +4924,20 @@
           "RawDocComment"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
           {
             "kind": "Conformance",
             "name": "MessageContent",
@@ -4872,6 +5057,20 @@
           "RawDocComment"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
           {
             "kind": "Conformance",
             "name": "Decodable",
@@ -5119,6 +5318,20 @@
         "conformances": [
           {
             "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
             "name": "Decodable",
             "printedName": "Decodable",
             "usr": "s:Se",
@@ -5242,6 +5455,20 @@
           "AccessControl"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
           {
             "kind": "Conformance",
             "name": "Decodable",
@@ -5455,6 +5682,20 @@
           "AccessControl"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
           {
             "kind": "Conformance",
             "name": "Decodable",
@@ -5733,6 +5974,20 @@
           "AccessControl"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
           {
             "kind": "Conformance",
             "name": "InteractiveContent",
@@ -6137,6 +6392,20 @@
         "conformances": [
           {
             "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
             "name": "Decodable",
             "printedName": "Decodable",
             "usr": "s:Se",
@@ -6516,6 +6785,20 @@
         "conformances": [
           {
             "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
             "name": "Decodable",
             "printedName": "Decodable",
             "usr": "s:Se",
@@ -6639,6 +6922,20 @@
           "AccessControl"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
           {
             "kind": "Conformance",
             "name": "Decodable",
@@ -6852,6 +7149,20 @@
           "AccessControl"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
           {
             "kind": "Conformance",
             "name": "Decodable",
@@ -7192,6 +7503,20 @@
         "conformances": [
           {
             "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
             "name": "InteractiveContent",
             "printedName": "InteractiveContent",
             "usr": "s:20AmazonConnectChatIOS18InteractiveContentP",
@@ -7316,6 +7641,20 @@
           "RawDocComment"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
           {
             "kind": "Conformance",
             "name": "Decodable",
@@ -7743,6 +8082,20 @@
         "conformances": [
           {
             "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
             "name": "Decodable",
             "printedName": "Decodable",
             "usr": "s:Se",
@@ -7928,6 +8281,20 @@
         "conformances": [
           {
             "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
             "name": "Decodable",
             "printedName": "Decodable",
             "usr": "s:Se",
@@ -8111,6 +8478,20 @@
           "AccessControl"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
           {
             "kind": "Conformance",
             "name": "Decodable",
@@ -8324,6 +8705,20 @@
           "AccessControl"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
           {
             "kind": "Conformance",
             "name": "Decodable",
@@ -8723,6 +9118,20 @@
         "conformances": [
           {
             "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
             "name": "InteractiveContent",
             "printedName": "InteractiveContent",
             "usr": "s:20AmazonConnectChatIOS18InteractiveContentP",
@@ -8891,6 +9300,20 @@
           "RawDocComment"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
           {
             "kind": "Conformance",
             "name": "Decodable",
@@ -9164,6 +9587,20 @@
           "AccessControl"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
           {
             "kind": "Conformance",
             "name": "Decodable",
@@ -9531,6 +9968,20 @@
         "conformances": [
           {
             "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
             "name": "Decodable",
             "printedName": "Decodable",
             "usr": "s:Se",
@@ -9732,6 +10183,20 @@
         "conformances": [
           {
             "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
             "name": "Decodable",
             "printedName": "Decodable",
             "usr": "s:Se",
@@ -9915,6 +10380,20 @@
           "AccessControl"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
           {
             "kind": "Conformance",
             "name": "Decodable",
@@ -10128,6 +10607,20 @@
           "AccessControl"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
           {
             "kind": "Conformance",
             "name": "Decodable",
@@ -10527,6 +11020,20 @@
         "conformances": [
           {
             "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
             "name": "InteractiveContent",
             "printedName": "InteractiveContent",
             "usr": "s:20AmazonConnectChatIOS18InteractiveContentP",
@@ -10785,6 +11292,20 @@
         "conformances": [
           {
             "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
             "name": "Decodable",
             "printedName": "Decodable",
             "usr": "s:Se",
@@ -10970,6 +11491,20 @@
         "conformances": [
           {
             "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
             "name": "Decodable",
             "printedName": "Decodable",
             "usr": "s:Se",
@@ -11093,6 +11628,20 @@
           "AccessControl"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
           {
             "kind": "Conformance",
             "name": "Decodable",
@@ -11306,6 +11855,20 @@
           "AccessControl"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
           {
             "kind": "Conformance",
             "name": "Decodable",
@@ -11523,6 +12086,20 @@
           "AccessControl"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
           {
             "kind": "Conformance",
             "name": "InteractiveContent",
@@ -12085,6 +12662,20 @@
         "conformances": [
           {
             "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
             "name": "TranscriptItemProtocol",
             "printedName": "TranscriptItemProtocol",
             "usr": "s:20AmazonConnectChatIOS22TranscriptItemProtocolP",
@@ -12568,6 +13159,124 @@
           {
             "kind": "Constructor",
             "name": "init",
+            "printedName": "init(text:timeStamp:contentType:messageId:displayName:participant:eventDirection:serializedContent:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Event",
+                "printedName": "AmazonConnectChatIOS.Event",
+                "usr": "s:20AmazonConnectChatIOS5EventC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "AmazonConnectChatIOS.MessageDirection?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MessageDirection",
+                    "printedName": "AmazonConnectChatIOS.MessageDirection",
+                    "usr": "s:20AmazonConnectChatIOS16MessageDirectionO"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Dictionary",
+                "printedName": "[Swift.String : Any]",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ProtocolComposition",
+                    "printedName": "Any"
+                  }
+                ],
+                "usr": "s:SD"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "s:20AmazonConnectChatIOS5EventC4text9timeStamp11contentType9messageId11displayName11participant14eventDirection17serializedContentACSSSg_S3SA2lA07MessageQ0OSgSDySSypGtcfc",
+            "mangledName": "$s20AmazonConnectChatIOS5EventC4text9timeStamp11contentType9messageId11displayName11participant14eventDirection17serializedContentACSSSg_S3SA2lA07MessageQ0OSgSDySSypGtcfc",
+            "moduleName": "AmazonConnectChatIOS",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "init_kind": "Designated"
+          },
+          {
+            "kind": "Constructor",
+            "name": "init",
             "printedName": "init(timeStamp:contentType:id:serializedContent:)",
             "children": [
               {
@@ -12650,7 +13359,6 @@
           "AccessControl"
         ],
         "superclassUsr": "s:20AmazonConnectChatIOS14TranscriptItemC",
-        "hasMissingDesignatedInitializers": true,
         "superclassNames": [
           "AmazonConnectChatIOS.TranscriptItem"
         ],
@@ -12661,6 +13369,20 @@
             "printedName": "EventProtocol",
             "usr": "s:20AmazonConnectChatIOS13EventProtocolP",
             "mangledName": "$s20AmazonConnectChatIOS13EventProtocolP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
           },
           {
             "kind": "Conformance",
@@ -13114,6 +13836,20 @@
           "AccessControl"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
           {
             "kind": "Conformance",
             "name": "ObservableObject",
@@ -13655,6 +14391,20 @@
           "AccessControl"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
           {
             "kind": "Conformance",
             "name": "TranscriptItemProtocol",
@@ -14413,6 +15163,20 @@
         "conformances": [
           {
             "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
             "name": "Equatable",
             "printedName": "Equatable",
             "usr": "s:SQ",
@@ -14803,6 +15567,20 @@
         "conformances": [
           {
             "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
             "name": "Equatable",
             "printedName": "Equatable",
             "usr": "s:SQ",
@@ -15063,6 +15841,20 @@
           "AccessControl"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
           {
             "kind": "Conformance",
             "name": "TranscriptItemProtocol",
@@ -15568,6 +16360,103 @@
           {
             "kind": "Constructor",
             "name": "init",
+            "printedName": "init(status:messageId:timeStamp:contentType:eventDirection:serializedContent:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Metadata",
+                "printedName": "AmazonConnectChatIOS.Metadata",
+                "usr": "s:20AmazonConnectChatIOS8MetadataC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "AmazonConnectChatIOS.MessageStatus?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MessageStatus",
+                    "printedName": "AmazonConnectChatIOS.MessageStatus",
+                    "usr": "s:20AmazonConnectChatIOS13MessageStatusO"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "AmazonConnectChatIOS.MessageDirection?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MessageDirection",
+                    "printedName": "AmazonConnectChatIOS.MessageDirection",
+                    "usr": "s:20AmazonConnectChatIOS16MessageDirectionO"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Dictionary",
+                "printedName": "[Swift.String : Any]",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ProtocolComposition",
+                    "printedName": "Any"
+                  }
+                ],
+                "usr": "s:SD"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "s:20AmazonConnectChatIOS8MetadataC6status9messageId9timeStamp11contentType14eventDirection17serializedContentAcA13MessageStatusOSg_SSSgS2SAA0qN0OSgSDySSypGtcfc",
+            "mangledName": "$s20AmazonConnectChatIOS8MetadataC6status9messageId9timeStamp11contentType14eventDirection17serializedContentAcA13MessageStatusOSg_SSSgS2SAA0qN0OSgSDySSypGtcfc",
+            "moduleName": "AmazonConnectChatIOS",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "init_kind": "Designated"
+          },
+          {
+            "kind": "Constructor",
+            "name": "init",
             "printedName": "init(timeStamp:contentType:id:serializedContent:)",
             "children": [
               {
@@ -15650,7 +16539,6 @@
           "AccessControl"
         ],
         "superclassUsr": "s:20AmazonConnectChatIOS14TranscriptItemC",
-        "hasMissingDesignatedInitializers": true,
         "superclassNames": [
           "AmazonConnectChatIOS.TranscriptItem"
         ],
@@ -15661,6 +16549,20 @@
             "printedName": "MetadataProtocol",
             "usr": "s:20AmazonConnectChatIOS16MetadataProtocolP",
             "mangledName": "$s20AmazonConnectChatIOS16MetadataProtocolP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
           },
           {
             "kind": "Conformance",
@@ -15961,6 +16863,22 @@
         "moduleName": "AmazonConnectChatIOS",
         "declAttributes": [
           "AccessControl"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          }
         ]
       },
       {
@@ -16241,6 +17159,20 @@
           "AccessControl"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
           {
             "kind": "Conformance",
             "name": "Equatable",
@@ -16892,6 +17824,20 @@
           "AccessControl"
         ],
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
           {
             "kind": "Conformance",
             "name": "TranscriptItemProtocol",
@@ -17665,6 +18611,145 @@
             ]
           },
           {
+            "kind": "Constructor",
+            "name": "init",
+            "printedName": "init(participant:text:contentType:messageDirection:timeStamp:attachmentId:messageId:displayName:serializedContent:metadata:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Message",
+                "printedName": "AmazonConnectChatIOS.Message",
+                "usr": "s:20AmazonConnectChatIOS7MessageC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "AmazonConnectChatIOS.MessageDirection?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MessageDirection",
+                    "printedName": "AmazonConnectChatIOS.MessageDirection",
+                    "usr": "s:20AmazonConnectChatIOS16MessageDirectionO"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Dictionary",
+                "printedName": "[Swift.String : Any]",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ProtocolComposition",
+                    "printedName": "Any"
+                  }
+                ],
+                "usr": "s:SD"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "(any AmazonConnectChatIOS.MetadataProtocol)?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MetadataProtocol",
+                    "printedName": "any AmazonConnectChatIOS.MetadataProtocol",
+                    "usr": "s:20AmazonConnectChatIOS16MetadataProtocolP"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "s:20AmazonConnectChatIOS7MessageC11participant4text11contentType16messageDirection9timeStamp12attachmentId0jO011displayName17serializedContent8metadataACSS_S2SAA0eK0OSgS2SSgA2QSDySSypGAA16MetadataProtocol_pSgtcfc",
+            "mangledName": "$s20AmazonConnectChatIOS7MessageC11participant4text11contentType16messageDirection9timeStamp12attachmentId0jO011displayName17serializedContent8metadataACSS_S2SAA0eK0OSgS2SSgA2QSDySSypGAA16MetadataProtocol_pSgtcfc",
+            "moduleName": "AmazonConnectChatIOS",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "init_kind": "Designated"
+          },
+          {
             "kind": "Var",
             "name": "content",
             "printedName": "content",
@@ -17805,7 +18890,6 @@
           "AccessControl"
         ],
         "superclassUsr": "s:20AmazonConnectChatIOS14TranscriptItemC",
-        "hasMissingDesignatedInitializers": true,
         "superclassNames": [
           "AmazonConnectChatIOS.TranscriptItem"
         ],
@@ -17816,6 +18900,20 @@
             "printedName": "MessageProtocol",
             "usr": "s:20AmazonConnectChatIOS15MessageProtocolP",
             "mangledName": "$s20AmazonConnectChatIOS15MessageProtocolP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
           },
           {
             "kind": "Conformance",
@@ -18253,6 +19351,22 @@
         "moduleName": "AmazonConnectChatIOS",
         "declAttributes": [
           "AccessControl"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          }
         ]
       },
       {
@@ -18423,6 +19537,22 @@
         "moduleName": "AmazonConnectChatIOS",
         "declAttributes": [
           "AccessControl"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          }
         ]
       },
       {
@@ -18683,6 +19813,22 @@
         "moduleName": "AmazonConnectChatIOS",
         "declAttributes": [
           "AccessControl"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          }
         ]
       },
       {
@@ -18952,6 +20098,20 @@
         "conformances": [
           {
             "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
             "name": "SDKLoggerProtocol",
             "printedName": "SDKLoggerProtocol",
             "usr": "s:20AmazonConnectChatIOS17SDKLoggerProtocolP",
@@ -19103,6 +20263,22 @@
         "moduleName": "AmazonConnectChatIOS",
         "declAttributes": [
           "AccessControl"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          }
         ]
       },
       {
@@ -19115,6 +20291,22 @@
         "moduleName": "AmazonConnectChatIOS",
         "declAttributes": [
           "AccessControl"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          }
         ]
       },
       {
@@ -19650,6 +20842,20 @@
         "conformances": [
           {
             "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
             "name": "Equatable",
             "printedName": "Equatable",
             "usr": "s:SQ",
@@ -19847,6 +21053,20 @@
         ],
         "enumRawTypeName": "String",
         "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
           {
             "kind": "Conformance",
             "name": "Equatable",
@@ -20122,6 +21342,20 @@
         "conformances": [
           {
             "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
             "name": "Equatable",
             "printedName": "Equatable",
             "usr": "s:SQ",
@@ -20193,6 +21427,20 @@
           },
           {
             "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
             "name": "Equatable",
             "printedName": "Equatable",
             "usr": "s:SQ",
@@ -20247,1099 +21495,700 @@
   },
   "ConstValues": [
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/WebSocketErrorCodes.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/WebSocketErrorCodes.swift",
       "kind": "IntegerLiteral",
       "offset": 181,
       "length": 5,
       "value": "-1005"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/WebSocketErrorCodes.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/WebSocketErrorCodes.swift",
       "kind": "IntegerLiteral",
       "offset": 218,
       "length": 5,
       "value": "-1011"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/WebSocketErrorCodes.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/WebSocketErrorCodes.swift",
       "kind": "IntegerLiteral",
       "offset": 250,
       "length": 2,
       "value": "53"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/WebSocketErrorCodes.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/WebSocketErrorCodes.swift",
       "kind": "IntegerLiteral",
-      "offset": 181,
-      "length": 1,
-      "value": "-1005"
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/WebSocketErrorCodes.swift",
-      "kind": "IntegerLiteral",
-      "offset": 218,
-      "length": 1,
-      "value": "-1011"
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/WebSocketErrorCodes.swift",
-      "kind": "IntegerLiteral",
-      "offset": 250,
+      "offset": 284,
       "length": 2,
-      "value": "53"
+      "value": "60"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/WebSocketErrorCodes.swift",
-      "kind": "IntegerLiteral",
-      "offset": 181,
-      "length": 1,
-      "value": "-1005"
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/WebSocketErrorCodes.swift",
-      "kind": "IntegerLiteral",
-      "offset": 218,
-      "length": 1,
-      "value": "-1011"
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/WebSocketErrorCodes.swift",
-      "kind": "IntegerLiteral",
-      "offset": 250,
-      "length": 2,
-      "value": "53"
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/DefaultHttpClient.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/DefaultHttpClient.swift",
       "kind": "Array",
       "offset": 390,
       "length": 45,
       "value": "[400, 403, 408, 429, 500, 502, 503, 504, 509]"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/DefaultHttpClient.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/DefaultHttpClient.swift",
       "kind": "IntegerLiteral",
       "offset": 463,
       "length": 1,
       "value": "2"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/DefaultHttpClient.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/DefaultHttpClient.swift",
       "kind": "StringLiteral",
       "offset": 9898,
       "length": 13,
       "value": "\"en_US_POSIX\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/DefaultHttpClient.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/DefaultHttpClient.swift",
       "kind": "IntegerLiteral",
       "offset": 9967,
       "length": 1,
       "value": "0"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/DefaultHttpClient.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/DefaultHttpClient.swift",
       "kind": "StringLiteral",
       "offset": 10001,
       "length": 32,
       "value": "\"yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
       "kind": "StringLiteral",
       "offset": 212,
       "length": 23,
       "value": "\"AWSConnectParticipant\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
       "kind": "Array",
       "offset": 270,
       "length": 39,
       "value": "[\"WEBSOCKET\", \"CONNECTION_CREDENTIALS\"]"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
       "kind": "StringLiteral",
       "offset": 333,
       "length": 7,
       "value": "\"AGENT\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
       "kind": "StringLiteral",
       "offset": 367,
       "length": 10,
       "value": "\"CUSTOMER\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
       "kind": "StringLiteral",
       "offset": 402,
       "length": 8,
       "value": "\"SYSTEM\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
       "kind": "StringLiteral",
       "offset": 436,
       "length": 9,
       "value": "\"UNKNOWN\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
       "kind": "StringLiteral",
       "offset": 471,
       "length": 9,
       "value": "\"MESSAGE\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
       "kind": "StringLiteral",
       "offset": 509,
       "length": 12,
       "value": "\"ATTACHMENT\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
       "kind": "StringLiteral",
       "offset": 545,
       "length": 7,
       "value": "\"EVENT\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
       "kind": "FloatLiteral",
       "offset": 600,
       "length": 3,
       "value": "5.0"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
       "kind": "StringLiteral",
       "offset": 698,
       "length": 12,
       "value": "\"QuickReply\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
       "kind": "StringLiteral",
       "offset": 747,
       "length": 12,
       "value": "\"ListPicker\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
       "kind": "StringLiteral",
       "offset": 790,
       "length": 7,
       "value": "\"Panel\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
       "kind": "StringLiteral",
       "offset": 834,
       "length": 12,
       "value": "\"TimePicker\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
       "kind": "StringLiteral",
       "offset": 880,
       "length": 10,
       "value": "\"Carousel\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/TranscriptResponse.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/TranscriptResponse.swift",
       "kind": "StringLiteral",
       "offset": 814,
       "length": 18,
       "value": "\"InitialContactId\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/TranscriptResponse.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/TranscriptResponse.swift",
       "kind": "StringLiteral",
       "offset": 858,
       "length": 11,
       "value": "\"NextToken\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/TranscriptResponse.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/TranscriptResponse.swift",
       "kind": "StringLiteral",
       "offset": 896,
       "length": 12,
       "value": "\"Transcript\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/TranscriptResponse.swift",
-      "kind": "StringLiteral",
-      "offset": 814,
-      "length": 18,
-      "value": "\"InitialContactId\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/TranscriptResponse.swift",
-      "kind": "StringLiteral",
-      "offset": 858,
-      "length": 11,
-      "value": "\"NextToken\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/TranscriptResponse.swift",
-      "kind": "StringLiteral",
-      "offset": 896,
-      "length": 12,
-      "value": "\"Transcript\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatSession.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatSession.swift",
       "kind": "IntegerLiteral",
-      "offset": 8328,
+      "offset": 8014,
       "length": 2,
       "value": "30"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/AWSClient.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/AWSClient.swift",
       "kind": "StringLiteral",
       "offset": 10594,
       "length": 2,
       "value": "\"\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/ConnectionDetailsProvider.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/ConnectionDetailsProvider.swift",
       "kind": "BooleanLiteral",
       "offset": 735,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "Array",
       "offset": 2109,
       "length": 2,
       "value": "[]"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "Array",
       "offset": 2537,
       "length": 2,
       "value": "[]"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "BooleanLiteral",
       "offset": 2841,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "Dictionary",
       "offset": 3123,
       "length": 3,
       "value": "[]"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "Dictionary",
       "offset": 3186,
       "length": 3,
       "value": "[]"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "FloatLiteral",
-      "offset": 8959,
+      "offset": 9035,
       "length": 3,
       "value": "0.0"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/Event.swift",
-      "kind": "StringLiteral",
-      "offset": 371,
-      "length": 5,
-      "value": "\"AmazonConnectChatIOS.Event\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/HeartbeatManager.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/HeartbeatManager.swift",
       "kind": "BooleanLiteral",
       "offset": 216,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/MessageReceiptsManager.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/MessageReceiptsManager.swift",
       "kind": "IntegerLiteral",
       "offset": 1612,
       "length": 1,
       "value": "3"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/MessageReceiptsManager.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/MessageReceiptsManager.swift",
       "kind": "BooleanLiteral",
       "offset": 1656,
       "length": 4,
       "value": "true"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
       "kind": "StringLiteral",
       "offset": 183,
       "length": 10,
       "value": "\"text\/csv\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
       "kind": "StringLiteral",
       "offset": 209,
       "length": 20,
       "value": "\"application\/msword\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
       "kind": "StringLiteral",
       "offset": 246,
       "length": 73,
       "value": "\"application\/vnd.openxmlformats-officedocument.wordprocessingml.document\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
       "kind": "StringLiteral",
       "offset": 336,
       "length": 12,
       "value": "\"image\/heic\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
       "kind": "StringLiteral",
       "offset": 365,
       "length": 12,
       "value": "\"image\/jpeg\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
       "kind": "StringLiteral",
       "offset": 393,
       "length": 17,
       "value": "\"video\/quicktime\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
       "kind": "StringLiteral",
       "offset": 426,
       "length": 11,
       "value": "\"video\/mp4\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
       "kind": "StringLiteral",
       "offset": 453,
       "length": 17,
       "value": "\"application\/pdf\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
       "kind": "StringLiteral",
       "offset": 486,
       "length": 11,
       "value": "\"image\/png\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
       "kind": "StringLiteral",
       "offset": 513,
       "length": 31,
       "value": "\"application\/vnd.ms-powerpoint\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
       "kind": "StringLiteral",
       "offset": 561,
       "length": 75,
       "value": "\"application\/vnd.openxmlformats-officedocument.presentationml.presentation\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
       "kind": "StringLiteral",
       "offset": 652,
       "length": 17,
       "value": "\"application\/rtf\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
       "kind": "StringLiteral",
       "offset": 685,
       "length": 12,
       "value": "\"text\/plain\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
       "kind": "StringLiteral",
       "offset": 713,
       "length": 11,
       "value": "\"audio\/wav\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
       "kind": "StringLiteral",
       "offset": 740,
       "length": 26,
       "value": "\"application\/vnd.ms-excel\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
       "kind": "StringLiteral",
       "offset": 783,
       "length": 67,
       "value": "\"application\/vnd.openxmlformats-officedocument.spreadsheetml.sheet\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
-      "kind": "StringLiteral",
-      "offset": 183,
-      "length": 10,
-      "value": "\"text\/csv\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
-      "kind": "StringLiteral",
-      "offset": 209,
-      "length": 20,
-      "value": "\"application\/msword\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
-      "kind": "StringLiteral",
-      "offset": 246,
-      "length": 73,
-      "value": "\"application\/vnd.openxmlformats-officedocument.wordprocessingml.document\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
-      "kind": "StringLiteral",
-      "offset": 336,
-      "length": 12,
-      "value": "\"image\/heic\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
-      "kind": "StringLiteral",
-      "offset": 365,
-      "length": 12,
-      "value": "\"image\/jpeg\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
-      "kind": "StringLiteral",
-      "offset": 393,
-      "length": 17,
-      "value": "\"video\/quicktime\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
-      "kind": "StringLiteral",
-      "offset": 426,
-      "length": 11,
-      "value": "\"video\/mp4\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
-      "kind": "StringLiteral",
-      "offset": 453,
-      "length": 17,
-      "value": "\"application\/pdf\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
-      "kind": "StringLiteral",
-      "offset": 486,
-      "length": 11,
-      "value": "\"image\/png\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
-      "kind": "StringLiteral",
-      "offset": 513,
-      "length": 31,
-      "value": "\"application\/vnd.ms-powerpoint\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
-      "kind": "StringLiteral",
-      "offset": 561,
-      "length": 75,
-      "value": "\"application\/vnd.openxmlformats-officedocument.presentationml.presentation\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
-      "kind": "StringLiteral",
-      "offset": 652,
-      "length": 17,
-      "value": "\"application\/rtf\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
-      "kind": "StringLiteral",
-      "offset": 685,
-      "length": 12,
-      "value": "\"text\/plain\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
-      "kind": "StringLiteral",
-      "offset": 713,
-      "length": 11,
-      "value": "\"audio\/wav\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
-      "kind": "StringLiteral",
-      "offset": 740,
-      "length": 26,
-      "value": "\"application\/vnd.ms-excel\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/AttachmentTypes.swift",
-      "kind": "StringLiteral",
-      "offset": 783,
-      "length": 67,
-      "value": "\"application\/vnd.openxmlformats-officedocument.spreadsheetml.sheet\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/Metadata.swift",
-      "kind": "StringLiteral",
-      "offset": 546,
-      "length": 8,
-      "value": "\"AmazonConnectChatIOS.Metadata\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/Notifications.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/Notifications.swift",
       "kind": "StringLiteral",
       "offset": 248,
       "length": 18,
       "value": "\"networkConnected\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/Notifications.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/Notifications.swift",
       "kind": "StringLiteral",
       "offset": 323,
       "length": 21,
       "value": "\"networkDisconnected\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/Notifications.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/Notifications.swift",
       "kind": "StringLiteral",
       "offset": 432,
       "length": 17,
       "value": "\"requestNewWsUrl\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/NetworkConnectionManager.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/NetworkConnectionManager.swift",
       "kind": "BooleanLiteral",
       "offset": 371,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/NetworkConnectionManager.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/NetworkConnectionManager.swift",
       "kind": "BooleanLiteral",
       "offset": 409,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
       "kind": "StringLiteral",
       "offset": 233,
       "length": 18,
       "value": "\"Content-Encoding\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
       "kind": "StringLiteral",
       "offset": 279,
       "length": 14,
       "value": "\"Content-Type\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
       "kind": "StringLiteral",
       "offset": 318,
       "length": 17,
       "value": "\"x-aws-waf-token\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
       "kind": "StringLiteral",
       "offset": 361,
       "length": 14,
       "value": "\"X-Amz-Bearer\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
       "kind": "StringLiteral",
       "offset": 415,
       "length": 31,
       "value": "\"x-amz-meta-initial_contact_id\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
       "kind": "StringLiteral",
       "offset": 479,
       "length": 23,
       "value": "\"x-amz-meta-contact_id\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
       "kind": "StringLiteral",
       "offset": 540,
       "length": 28,
       "value": "\"x-amz-meta-organization_id\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
       "kind": "StringLiteral",
       "offset": 591,
       "length": 11,
       "value": "\"x-amz-acl\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
       "kind": "StringLiteral",
       "offset": 632,
       "length": 16,
       "value": "\"Content-Length\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
       "kind": "StringLiteral",
       "offset": 683,
       "length": 21,
       "value": "\"Content-Disposition\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
       "kind": "StringLiteral",
       "offset": 737,
       "length": 23,
       "value": "\"x-amz-meta-account_id\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
       "kind": "StringLiteral",
-      "offset": 233,
-      "length": 18,
-      "value": "\"Content-Encoding\""
+      "offset": 798,
+      "length": 29,
+      "value": "\"x-amz-expected-bucket-owner\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
       "kind": "StringLiteral",
-      "offset": 279,
-      "length": 14,
-      "value": "\"Content-Type\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
-      "kind": "StringLiteral",
-      "offset": 318,
-      "length": 17,
-      "value": "\"x-aws-waf-token\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
-      "kind": "StringLiteral",
-      "offset": 361,
-      "length": 14,
-      "value": "\"X-Amz-Bearer\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
-      "kind": "StringLiteral",
-      "offset": 415,
-      "length": 31,
-      "value": "\"x-amz-meta-initial_contact_id\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
-      "kind": "StringLiteral",
-      "offset": 479,
-      "length": 23,
-      "value": "\"x-amz-meta-contact_id\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
-      "kind": "StringLiteral",
-      "offset": 540,
-      "length": 28,
-      "value": "\"x-amz-meta-organization_id\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
-      "kind": "StringLiteral",
-      "offset": 591,
-      "length": 11,
-      "value": "\"x-amz-acl\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
-      "kind": "StringLiteral",
-      "offset": 632,
-      "length": 16,
-      "value": "\"Content-Length\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
-      "kind": "StringLiteral",
-      "offset": 683,
-      "length": 21,
-      "value": "\"Content-Disposition\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
-      "kind": "StringLiteral",
-      "offset": 737,
-      "length": 23,
-      "value": "\"x-amz-meta-account_id\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
-      "kind": "StringLiteral",
-      "offset": 850,
+      "offset": 917,
       "length": 9,
       "value": "\"amz-1.0\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
       "kind": "StringLiteral",
-      "offset": 891,
+      "offset": 958,
       "length": 18,
       "value": "\"Application\/json\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
-      "kind": "StringLiteral",
-      "offset": 850,
-      "length": 9,
-      "value": "\"amz-1.0\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
-      "kind": "StringLiteral",
-      "offset": 891,
-      "length": 18,
-      "value": "\"Application\/json\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/Message.swift",
-      "kind": "StringLiteral",
-      "offset": 553,
-      "length": 7,
-      "value": "\"AmazonConnectChatIOS.Message\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/GlobalConfig.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/GlobalConfig.swift",
       "kind": "BooleanLiteral",
       "offset": 579,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/WebSocketManager.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/WebSocketManager.swift",
       "kind": "StringLiteral",
       "offset": 218,
       "length": 76,
       "value": "\"{\"topic\": \"aws\/subscribe\", \"content\": {\"topics\": [\"aws\/chat\"]}})\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/WebSocketManager.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/WebSocketManager.swift",
       "kind": "StringLiteral",
       "offset": 322,
       "length": 32,
       "value": "\"{\"topic\": \"aws\/heartbeat\"}\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/WebSocketManager.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/WebSocketManager.swift",
       "kind": "StringLiteral",
       "offset": 386,
       "length": 27,
       "value": "\"{\"topic\": \"aws\/ping\"}\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/WebSocketManager.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/WebSocketManager.swift",
       "kind": "BooleanLiteral",
-      "offset": 1600,
+      "offset": 1611,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/WebSocketManager.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/WebSocketManager.swift",
       "kind": "BooleanLiteral",
-      "offset": 2006,
+      "offset": 2017,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/WebSocketManager.swift",
-      "kind": "StringLiteral",
-      "offset": 1181,
-      "length": 16,
-      "value": "\"AmazonConnectChatIOS.WebsocketManager\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/MetricsManager.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/MetricsManager.swift",
       "kind": "BooleanLiteral",
       "offset": 348,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/MetricsManager.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/MetricsManager.swift",
       "kind": "BooleanLiteral",
       "offset": 390,
       "length": 4,
       "value": "true"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/MetricsManager.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/MetricsManager.swift",
       "kind": "BooleanLiteral",
       "offset": 433,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
       "kind": "StringLiteral",
       "offset": 182,
       "length": 48,
       "value": "\"application\/vnd.amazonaws.connect.event.typing\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
       "kind": "StringLiteral",
       "offset": 265,
       "length": 65,
       "value": "\"application\/vnd.amazonaws.connect.event.connection.acknowledged\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
       "kind": "StringLiteral",
       "offset": 359,
       "length": 59,
       "value": "\"application\/vnd.amazonaws.connect.event.message.delivered\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
       "kind": "StringLiteral",
       "offset": 442,
       "length": 54,
       "value": "\"application\/vnd.amazonaws.connect.event.message.read\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
       "kind": "StringLiteral",
       "offset": 517,
       "length": 58,
       "value": "\"application\/vnd.amazonaws.connect.event.message.metadata\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
       "kind": "StringLiteral",
       "offset": 594,
       "length": 60,
       "value": "\"application\/vnd.amazonaws.connect.event.participant.joined\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
       "kind": "StringLiteral",
       "offset": 671,
       "length": 58,
       "value": "\"application\/vnd.amazonaws.connect.event.participant.left\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
       "kind": "StringLiteral",
       "offset": 747,
       "length": 52,
       "value": "\"application\/vnd.amazonaws.connect.event.chat.ended\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
       "kind": "StringLiteral",
       "offset": 821,
       "length": 12,
       "value": "\"text\/plain\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
       "kind": "StringLiteral",
       "offset": 854,
       "length": 15,
       "value": "\"text\/markdown\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
       "kind": "StringLiteral",
       "offset": 897,
       "length": 55,
       "value": "\"application\/vnd.amazonaws.connect.message.interactive\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
-      "kind": "StringLiteral",
-      "offset": 182,
-      "length": 48,
-      "value": "\"application\/vnd.amazonaws.connect.event.typing\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
-      "kind": "StringLiteral",
-      "offset": 265,
-      "length": 65,
-      "value": "\"application\/vnd.amazonaws.connect.event.connection.acknowledged\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
-      "kind": "StringLiteral",
-      "offset": 359,
-      "length": 59,
-      "value": "\"application\/vnd.amazonaws.connect.event.message.delivered\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
-      "kind": "StringLiteral",
-      "offset": 442,
-      "length": 54,
-      "value": "\"application\/vnd.amazonaws.connect.event.message.read\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
-      "kind": "StringLiteral",
-      "offset": 517,
-      "length": 58,
-      "value": "\"application\/vnd.amazonaws.connect.event.message.metadata\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
-      "kind": "StringLiteral",
-      "offset": 594,
-      "length": 60,
-      "value": "\"application\/vnd.amazonaws.connect.event.participant.joined\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
-      "kind": "StringLiteral",
-      "offset": 671,
-      "length": 58,
-      "value": "\"application\/vnd.amazonaws.connect.event.participant.left\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
-      "kind": "StringLiteral",
-      "offset": 747,
-      "length": 52,
-      "value": "\"application\/vnd.amazonaws.connect.event.chat.ended\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
-      "kind": "StringLiteral",
-      "offset": 821,
-      "length": 12,
-      "value": "\"text\/plain\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
-      "kind": "StringLiteral",
-      "offset": 854,
-      "length": 15,
-      "value": "\"text\/markdown\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
-      "kind": "StringLiteral",
-      "offset": 897,
-      "length": 55,
-      "value": "\"application\/vnd.amazonaws.connect.message.interactive\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
       "kind": "StringLiteral",
       "offset": 1025,
       "length": 59,
       "value": "\"application\/vnd.amazonaws.connect.event.message.delivered\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
       "kind": "StringLiteral",
       "offset": 1108,
       "length": 54,
       "value": "\"application\/vnd.amazonaws.connect.event.message.read\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
-      "kind": "StringLiteral",
-      "offset": 1025,
-      "length": 59,
-      "value": "\"application\/vnd.amazonaws.connect.event.message.delivered\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
-      "kind": "StringLiteral",
-      "offset": 1108,
-      "length": 54,
-      "value": "\"application\/vnd.amazonaws.connect.event.message.read\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
       "kind": "StringLiteral",
       "offset": 1441,
       "length": 9,
       "value": "\"MESSAGE\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
       "kind": "StringLiteral",
       "offset": 1468,
       "length": 7,
       "value": "\"EVENT\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
       "kind": "StringLiteral",
       "offset": 1498,
       "length": 12,
       "value": "\"ATTACHMENT\""
     },
     {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
-      "kind": "StringLiteral",
-      "offset": 1538,
-      "length": 17,
-      "value": "\"MESSAGEMETADATA\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
-      "kind": "StringLiteral",
-      "offset": 1441,
-      "length": 9,
-      "value": "\"MESSAGE\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
-      "kind": "StringLiteral",
-      "offset": 1468,
-      "length": 7,
-      "value": "\"EVENT\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
-      "kind": "StringLiteral",
-      "offset": 1498,
-      "length": 12,
-      "value": "\"ATTACHMENT\""
-    },
-    {
-      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "filePath": "\/Users\/rajatttt\/Mobile\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
       "kind": "StringLiteral",
       "offset": 1538,
       "length": 17,
