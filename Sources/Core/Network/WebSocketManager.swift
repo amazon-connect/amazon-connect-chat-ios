@@ -4,6 +4,7 @@
 import Foundation
 import AWSConnectParticipant
 import Combine
+import UIKit
 
 enum EventTypes {
     static let subscribe = "{\"topic\": \"aws/subscribe\", \"content\": {\"topics\": [\"aws/chat\"]}})"
@@ -50,6 +51,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
         self.connect()
         self.initializeHeartbeatManagers()
         self.addNetworkNotificationObserver()
+        self.addLifecycleObservers()
     }
     
     func connect(wsUrl: URL? = nil, isReconnect: Bool? = false) {
@@ -148,6 +150,21 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
     
     func addNetworkNotificationObserver() {
         NotificationCenter.default.addObserver(forName: .networkConnected, object: nil, queue: .main) { _ in
+            if (ChatSession.shared.isChatSessionActive()) {
+                NotificationCenter.default.post(name: .requestNewWsUrl, object: nil)
+            }
+        }
+    }
+    
+    func addLifecycleObservers() {
+        NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main) {
+            [weak self] notification in
+            if (ChatSession.shared.isChatSessionActive()) {
+                self?.disconnect(reason: "App backgrounded")
+            }
+        }
+        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) {
+            [weak self] notification in
             if (ChatSession.shared.isChatSessionActive()) {
                 NotificationCenter.default.post(name: .requestNewWsUrl, object: nil)
             }
