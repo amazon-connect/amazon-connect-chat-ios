@@ -9,6 +9,8 @@ import UniformTypeIdentifiers
 protocol ChatServiceProtocol {
     func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void)
     func disconnectChatSession(completion: @escaping (Bool, Error?) -> Void)
+    func suspendWebSocketConnection()
+    func resumeWebSocketConnection()
     func sendMessage(contentType: ContentType, message: String, completion: @escaping (Bool, Error?) -> Void)
     func sendEvent(event: ContentType, content: String?, completion: @escaping (Bool, Error?) -> Void)
     func sendMessageReceipt(event: MessageReceiptType, messageId: String, completion: @escaping (Result<Void, Error>) -> Void)
@@ -264,6 +266,16 @@ class ChatService : ChatServiceProtocol {
                 completion(false, error)
             }
         }
+    }
+    
+    func suspendWebSocketConnection() {
+        SDKLogger.logger.logDebug("Suspending WebSocket connections")
+        self.websocketManager?.suspendWebSocketConnection()
+    }
+    
+    func resumeWebSocketConnection() {
+        SDKLogger.logger.logDebug("Resuming WebSocket connections")
+        self.websocketManager?.resumeWebSocketConnection()
     }
     
     func sendMessage(contentType: ContentType, message: String, completion: @escaping (Bool, Error?) -> Void) {

@@ -4,6 +4,7 @@
 import Foundation
 import AWSConnectParticipant
 import Combine
+import UIKit
 
 enum EventTypes {
     static let subscribe = "{\"topic\": \"aws/subscribe\", \"content\": {\"topics\": [\"aws/chat\"]}})"
@@ -24,6 +25,8 @@ protocol WebsocketManagerProtocol {
     func connect(wsUrl: URL?, isReconnect: Bool?)
     func disconnect(reason: String?)
     func formatAndProcessTranscriptItems(_ transcriptItems: [AWSConnectParticipantItem]) -> [TranscriptItem]
+    func suspendWebSocketConnection()
+    func resumeWebSocketConnection()
 }
 
 extension URLSessionWebSocketTask: WebSocketTask {}
@@ -38,6 +41,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
     var deepHeartbeatManager: HeartbeatManager?
     var websocketTask: WebSocketTask?
     var isReconnectFlow = false
+    var isSuspended = false
 
     // Adding few more callbacks
     var onConnected: (() -> Void)?
@@ -50,6 +54,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
         self.connect()
         self.initializeHeartbeatManagers()
         self.addNetworkNotificationObserver()
+        self.addLifecycleObservers()
     }
     
     func connect(wsUrl: URL? = nil, isReconnect: Bool? = false) {
@@ -113,14 +118,14 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
             case NSPOSIXErrorDomain:
                 if (nsError.code == WebSocketErrorCodes.SOFTWARE_ABORT.rawValue
                     || nsError.code == WebSocketErrorCodes.OPERATION_TIMED_OUT.rawValue) {
-                    NotificationCenter.default.post(name: .requestNewWsUrl, object: nil)
+                    self.reestablishConnectionIfChatActive()
                 }
                 break
             case NSURLErrorDomain:
                 if (nsError.code == WebSocketErrorCodes.NETWORK_DISCONNECTED.rawValue) {
                     SDKLogger.logger.logDebug("WebSocket disconnected due to lost network connection")
                 } else if (nsError.code == WebSocketErrorCodes.BAD_SERVER_RESPONSE.rawValue) {
-                    NotificationCenter.default.post(name: .requestNewWsUrl, object: nil)
+                    self.reestablishConnectionIfChatActive()
                 }
                 break
             default:
@@ -144,13 +149,50 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
         websocketTask?.cancel(with: .goingAway, reason: reasonData)
         websocketTask = nil
     }
+    
+    func suspendWebSocketConnection() {
+        self.isSuspended = true
+        self.disconnect(reason: "WebSocket suspended")
+    }
+    
+    func resumeWebSocketConnection() {
+        self.isSuspended = false
+        self.reestablishConnectionIfChatActive()
+    }
+    
+    func reestablishConnectionIfChatActive() {
+        if !ChatSession.shared.isChatSessionActive() {
+            print("WebSocket reconnection aborted due to inactive chat session")
+            return
+        }
+        if !NetworkConnectionManager.shared.checkConnectivity() {
+            print("WebSocket reconnection aborted due to missing network connectivity")
+            return
+        }
+        if self.isSuspended {
+            print("WebSocket reconnection aborted due to suspended websocket connection")
+            return
+        }
+        NotificationCenter.default.post(name: .requestNewWsUrl, object: nil)
+    }
 
     
     func addNetworkNotificationObserver() {
         NotificationCenter.default.addObserver(forName: .networkConnected, object: nil, queue: .main) { _ in
+            self.reestablishConnectionIfChatActive()
+        }
+    }
+    
+    func addLifecycleObservers() {
+        NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main) {
+            [weak self] notification in
             if (ChatSession.shared.isChatSessionActive()) {
-                NotificationCenter.default.post(name: .requestNewWsUrl, object: nil)
+                self?.disconnect(reason: "App backgrounded")
             }
+        }
+        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) {
+            [weak self] notification in
+            self?.reestablishConnectionIfChatActive()
         }
     }
     

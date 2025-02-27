@@ -21,6 +21,14 @@ public protocol ChatSessionProtocol {
     /// - Parameter completion: The completion handler to call when the disconnect operation is complete.
     func disconnect(completion: @escaping (Result<Void, Error>) -> Void)
     
+    /// Disconnects the websocket and suspends reconnection attempts.
+    /// - Parameter completion: The completion handler to call when the suspend operation is complete.
+    func suspendWebSocketConnection()
+    
+    /// Resumes a suspended websocket and attempts to reconnect.
+    /// - Parameter completion: The completion handler to call when the resume operation is complete.
+    func resumeWebSocketConnection()
+    
     /// Sends a message within the chat session.
     /// - Parameters:
     ///   - contentType: The type of the message content.
@@ -199,6 +207,14 @@ public class ChatSession: ChatSessionProtocol {
                 }
             }
         }
+    }
+    
+    public func suspendWebSocketConnection() {
+        chatService.suspendWebSocketConnection()
+    }
+    
+    public func resumeWebSocketConnection() {
+        chatService.resumeWebSocketConnection()
     }
     
     /// Sends a message within the chat session.
