@@ -10,6 +10,7 @@ class MockChatService: ChatService {
     var mockCreateChatSession = true
     var mockDisconnectChatSession = true
     var mockSendMessage = true
+    var mockResendFailedMessage = true
     var mockSendEvent = true
     var mockSendMessageReceipt = true
     var mockSendPendingMessageReceipts = true
@@ -24,6 +25,7 @@ class MockChatService: ChatService {
     var numCreateChatSessionCalled = 0
     var numDisconnectChatSessionCalled = 0
     var numSendMessageCalled = 0
+    var numResendFailedMessageCalled = 0
     var numSendEventCalled = 0
     var numSendMessageReceiptCalled = 0
     var numSendPendingMessageReceiptsCalled = 0
@@ -38,6 +40,7 @@ class MockChatService: ChatService {
     var createChatSessionResult: Result<Void, Error>?
     var disconnectChatSessionResult: Result<Void, Error>?
     var sendMessageResult: Result<Void, Error>?
+    var resendFailedMessageResult: Result<Void, Error>?
     var sendEventResult: (Bool, Error?)?
     var sendMessageReceiptResult: Result<Void, Error>?
     var sendPendingMessageReceiptsResult: Result<AmazonConnectChatIOS.MessageReceiptType, Error>?
@@ -103,6 +106,26 @@ class MockChatService: ChatService {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             if let result = self.sendMessageResult {
+                switch result {
+                case .success:
+                    completion(true, nil)
+                case .failure(let error):
+                    completion(false, error)
+                }
+            }
+        }
+    }
+    
+    override func resendFailedMessage(messageId: String, completion: @escaping (Bool, Error?) -> Void) {
+        
+        numSendMessageCalled += 1
+        if !mockSendMessage {
+            super.resendFailedMessage(messageId: messageId, completion: completion)
+            return
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            if let result = self.resendFailedMessageResult {
                 switch result {
                 case .success:
                     completion(true, nil)

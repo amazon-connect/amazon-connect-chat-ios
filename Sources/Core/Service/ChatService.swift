@@ -12,6 +12,7 @@ protocol ChatServiceProtocol {
     func suspendWebSocketConnection()
     func resumeWebSocketConnection()
     func sendMessage(contentType: ContentType, message: String, completion: @escaping (Bool, Error?) -> Void)
+    func resendFailedMessage(messageId: String, completion: @escaping (Bool, Error?) -> Void)
     func sendEvent(event: ContentType, content: String?, completion: @escaping (Bool, Error?) -> Void)
     func sendMessageReceipt(event: MessageReceiptType, messageId: String, completion: @escaping (Result<Void, Error>) -> Void)
     func sendPendingMessageReceipts(pendingMessageReceipts: PendingMessageReceipts, completion: @escaping (Result<MessageReceiptType, Error>) -> Void)
@@ -23,6 +24,7 @@ protocol ChatServiceProtocol {
     func subscribeToTranscriptList(handleTranscriptList: @escaping ([TranscriptItem]) -> Void) -> AnyCancellable
     func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void)
     func configure(config: GlobalConfig)
+    func getConnectionDetailsProvider() -> ConnectionDetailsProviderProtocol
 }
 
 class ChatService : ChatServiceProtocol {
@@ -47,6 +49,7 @@ class ChatService : ChatServiceProtocol {
     // Dictionary to map attachment IDs to temporary message IDs
     private var attachmentIdToTempMessageIdMap: [String: String] = [:]
     private var transcriptDict: [String: TranscriptItem] = [:]
+    private var tempMessageIdToFileUrl: [String: URL] = [:]
     
     
     init(awsClient: AWSClientProtocol = AWSClient.shared,
@@ -332,6 +335,36 @@ class ChatService : ChatServiceProtocol {
         }
     }
     
+    func resendFailedMessage(messageId: String, completion: @escaping (Bool, Error?) -> Void) {
+        let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unable to find the failed message"])
+        
+        // cannot retry if old message didn't exist or fail to be sent
+        guard let oldMessage = transcriptDict[messageId] as? Message,
+           let status = oldMessage.metadata?.status,
+           [.Failed, .Unknown].contains(status) else {
+            completion(false, error)
+            return
+        }
+
+        // remove failed message from transcript & transcript dict
+        internalTranscript.removeAll { $0.id == messageId }
+        transcriptDict.removeValue(forKey: messageId)
+        // Send out updated transcript with old message removed
+        self.transcriptListPublisher.send(internalTranscript)
+
+        // as the next step, attempt to resend the message based on its type
+        // if old message is an attachment
+        if let attachmentUrl = tempMessageIdToFileUrl[messageId] {
+            self.sendAttachment(file: attachmentUrl, completion: completion)
+        } else {
+            if let contentType = ContentType(rawValue: oldMessage.contentType) {
+                self.sendMessage(contentType: contentType, message: oldMessage.text, completion: completion)
+            } else {
+                completion(false, error)
+            }
+        }
+    }
+    
     func sendEvent(event: ContentType, content: String?, completion: @escaping (Bool, Error?) -> Void) {
         guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
             let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
@@ -459,19 +492,47 @@ class ChatService : ChatServiceProtocol {
             return
         }
         
+        let tempDirectory = FileManager.default.temporaryDirectory
+        let tempFilePathUrl = tempDirectory.appendingPathComponent(fileName)
+        if file != tempFilePathUrl {
+            if (FileManager.default.fileExists(atPath: tempFilePathUrl.path)) {
+                do {
+                    // Delete the existing file
+                    try FileManager.default.removeItem(at: tempFilePathUrl)
+                    print("Existing file deleted successfully.")
+                } catch {
+                    print("Error deleting existing file: \(error)")
+                    completion(false, error)
+                    return
+                }
+            }
+            do {
+                try FileManager.default.copyItem(at: file, to: tempFilePathUrl)
+            } catch let error {
+                completion(false, error)
+            }
+        }
+        
         let recentlySentAttachmentMessage = TranscriptItemUtils.createDummyMessage(content: file.lastPathComponent, contentType:mimeType!, status: .Sending, attachmentId: UUID().uuidString, displayName: getRecentDisplayName())
         
+        tempMessageIdToFileUrl[recentlySentAttachmentMessage.id] = tempFilePathUrl
         self.sendSingleUpdateToClient(for: recentlySentAttachmentMessage)
         
         self.startAttachmentUpload(contentType: mimeType!, attachmentName: fileName, attachmentSizeInBytes: fileSize!) { result in
             switch result {
             case .success(let response):
-                // Update the dictionary with actual attachementId
+                // Update the dictionary with actual attachmentId
                 self.attachmentIdToTempMessageIdMap[response.attachmentId!] = recentlySentAttachmentMessage.id
                 self.apiClient.uploadAttachment(file: file, response: response) { success, error in
                     if success {
                         self.completeAttachmentUpload(attachmentIds: [response.attachmentId!]) { success, error in
                             if success {
+                                do {
+                                    // Delete the existing file
+                                    try FileManager.default.removeItem(at: tempFilePathUrl)
+                                } catch {
+                                    print("Error deleting existing file after successful upload: \(error)")
+                                }
                                 completion(true, nil)
                             } else {
                                 self.handleAttachmentUploadFailure(message: recentlySentAttachmentMessage, error: error)
@@ -703,6 +764,10 @@ class ChatService : ChatServiceProtocol {
         messageReceiptsManager?.throttleTime = messageReceiptConfig.throttleTime
         messageReceiptsManager?.shouldSendMessageReceipts = messageReceiptConfig.shouldSendMessageReceipts
         MetricsClient.shared.configureMetricsManager(config: config)
+    }
+    
+    func getConnectionDetailsProvider() -> any ConnectionDetailsProviderProtocol {
+        return connectionDetailsProvider
     }
     
     func registerNotificationListeners() {
