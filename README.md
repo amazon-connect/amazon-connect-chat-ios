@@ -230,6 +230,23 @@ func disconnect(completion: @escaping (Result<Void, Error>) -> Void)
 
 --------------------
 
+#### `ChatSession.suspendWebSocketConnection`
+Disconnects the websocket and suspends reconnection attempts.
+
+```
+func suspendWebSocketConnection()
+```
+
+--------------------
+
+#### `ChatSession.resumeWebSocketConnection`
+Resumes a suspended websocket and attempts to reconnect.
+```
+func resumeWebSocketConnection()
+```
+
+--------------------
+
 #### `ChatSession.sendMessage`
 Sends a message within the chat session.
 
