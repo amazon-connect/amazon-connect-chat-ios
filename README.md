@@ -195,6 +195,16 @@ func configure(config: GlobalConfig)
 
 --------------------
 
+#### `ChatSession.getConnectionDetailsProvider`
+Returns a `ConnectionDetailsProvider` object that includes connection details.
+
+```
+fun getConnectionDetailsProvider(): ConnectionDetailsProvider
+```
+* Return type: [ConnectionDetailsProvider](#connectiondetailsprovider)
+
+--------------------
+
 #### `ChatSession.connect`
 Attempts to connect to a chat session with the given details.
 
@@ -390,6 +400,20 @@ func getAttachmentDownloadUrl(attachmentId: String, completion: @escaping (Resul
 
 --------------------
 
+
+#### `ChatSession.resendFailedMessage`
+Retry a text message or attachment that failed to be sent.
+
+```
+func resendFailedMessage(messageId: String, completion: @escaping (Result<Void, Error>) -> Void)
+```
+
+* `messageId`
+  * messageId The Id of the message that failed to be sent.
+  * Type: `String`
+  
+--------------------
+
 #### `ChatSession.isChatSessionActive`
 Returns a boolean indicating whether the chat session is still active.
 
@@ -530,6 +554,63 @@ public struct ChatDetails {
 * `participantToken`
   * Participant token received via [StartChatContact](https://docs.aws.amazon.com/connect/latest/APIReference/API_StartChatContact.html) response
   * Type: `String`
+  
+---------------------
+### ConnectionDetailsProvider
+
+```
+public protocol ConnectionDetailsProviderProtocol {
+    func updateChatDetails(newDetails: ChatDetails)
+    func getConnectionDetails() -> ConnectionDetails?
+    func updateConnectionDetails(newDetails: ConnectionDetails)
+    func getChatDetails() -> ChatDetails?
+    func isChatSessionActive() -> Bool
+    func setChatSessionState(isActive: Bool) -> Void
+}
+```
+* `updateChatDetails`
+  * Updates chat details
+  * newDetails
+    * Type: `ChatDetails`
+* `getConnectionDetails`
+  * Gets connection details received via [CreateParticipantConnection](https://docs.aws.amazon.com/connect/latest/APIReference/API_connect-participant_CreateParticipantConnection.html) response
+  * Return type: [ConnectionDetails](#connectiondetails)
+* `updateConnectionDetails`
+  * Updates connection details 
+  * newDetails
+    * Type: [ConnectionDetails](#connectiondetails)
+* `getChatDetails`
+  * Gets chat details
+  * Return type: `ChatDetails`
+* `isChatSessionActive`
+  * Gets chat session active state
+  * Return type: Boolean
+* `setChatSessionState`
+  * Sets chat session state
+  * isActive
+    * Type: Boolean
+
+---------------------
+
+### ConnectionDetails
+
+```
+public struct ConnectionDetails {
+    public func getWebsocketUrl() -> String?
+    public func getConnectionToken() -> String?
+    public func getExpiry() -> Date?
+}
+```
+* `getWebsocketUrl`
+  * Returns URL of the websocket received via [CreateParticipantConnection](https://docs.aws.amazon.com/connect/latest/APIReference/API_connect-participant_CreateParticipantConnection.html) response
+  * Return type: `String`
+* `getConnectionToken`
+  * Returns connection token received via [CreateParticipantConnection](https://docs.aws.amazon.com/connect/latest/APIReference/API_connect-participant_CreateParticipantConnection.html) response
+  * Return type: `String`
+* `getExpiry`
+  * Returns expiration of the token received via [CreateParticipantConnection](https://docs.aws.amazon.com/connect/latest/APIReference/API_connect-participant_CreateParticipantConnection.html) response
+  * Return type: `Date`
+
 ---------------------
 ### ContentType
 

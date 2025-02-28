@@ -169,6 +169,44 @@ class ChatSessionTests: XCTestCase {
         performSendMessageTest(contentType: .plainText, message: "Test Message", expectedResult: .failure(expectedError))
     }
     
+    // Helper method for resendFailedMessage tests
+    func performResendFailedMessageTest(messageId: String, expectedResult: Result<Void, Error>) {
+        var receivedError: Error?
+        
+        let expectation = XCTestExpectation(description: "SendMessageTest")
+        
+        mockChatService.resendFailedMessageResult = expectedResult
+        chatSession.resendFailedMessage(messageId: messageId) { result in
+            switch result {
+            case .success:
+                expectation.fulfill()
+            case .failure(let error):
+                receivedError = error
+                expectation.fulfill()
+            }
+        }
+        
+        let waiterResult = XCTWaiter().wait(for: [expectation], timeout: 1)
+        XCTAssertEqual(waiterResult, .completed, "Expectation should be fulfilled")
+        
+        switch expectedResult {
+        case .success:
+            XCTAssertNil(receivedError, "Error should be nil on successful message send")
+        case .failure(let expectedError):
+            XCTAssertEqual(receivedError as NSError?, expectedError as NSError?, "Should receive the expected error")
+        }
+    }
+    
+    // Test the successful testResendFailedMessage scenario
+    func testResendFailedMessage_Success() {
+        performResendFailedMessageTest(messageId: "TestMessageId", expectedResult: .success(()))
+    }
+    
+    // Test the unsuccessful testResendFailedMessage scenario
+    func testResendFailedMessage_Failure() {
+        let expectedError = NSError(domain: "TestDomain", code: 1, userInfo: nil)
+        performResendFailedMessageTest(messageId: "TestMessageId", expectedResult: .failure(expectedError))
+    }
     
     // Helper method for send event tests
     func performSendEventTest(eventType: ContentType, content: String, expectedResult: (Bool, Error?)?) {
@@ -201,7 +239,6 @@ class ChatSessionTests: XCTestCase {
             }
         }
     }
-    
     
     // Test the successful sendEvent scenario
     func testSendEvent_Success() {
