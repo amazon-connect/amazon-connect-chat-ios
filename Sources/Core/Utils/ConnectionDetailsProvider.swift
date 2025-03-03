@@ -3,7 +3,7 @@
 
 import Foundation
 
-protocol ConnectionDetailsProviderProtocol {
+public protocol ConnectionDetailsProviderProtocol {
     func updateChatDetails(newDetails: ChatDetails)
     func getConnectionDetails() -> ConnectionDetails?
     func updateConnectionDetails(newDetails: ConnectionDetails)

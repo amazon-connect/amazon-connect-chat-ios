@@ -11,6 +11,9 @@ public protocol ChatSessionProtocol {
     /// - Parameter config: The global configuration to use.
     func configure(config: GlobalConfig)
     
+    /// Gets connectionDetailsProvider
+    func getConnectionDetailsProvider() -> ConnectionDetailsProviderProtocol
+    
     /// Attempts to connect to a chat session with the given details.
     /// - Parameters:
     ///   - chatDetails: The details of the chat session to connect to.
@@ -35,6 +38,12 @@ public protocol ChatSessionProtocol {
     ///   - message: The message to send.
     ///   - completion: The completion handler to call when the send operation is complete.
     func sendMessage(contentType: ContentType, message: String, completion: @escaping (Result<Void, Error>) -> Void)
+    
+    /// Retry a text message or attachment that failed to be sent.
+    /// - Parameters:
+    ///   - messageId: The Id of the message that failed to be sent.
+    ///   - completion: The completion handler to call when the send operation is complete.
+    func resendFailedMessage(messageId: String, completion: @escaping (Result<Void, Error>) -> Void)
     
     /// Sends an event within the chat session.
     /// - Parameters:
@@ -162,6 +171,10 @@ public class ChatSession: ChatSessionProtocol {
         chatService.configure(config: config)
     }
     
+    public func getConnectionDetailsProvider() -> ConnectionDetailsProviderProtocol {
+        return chatService.getConnectionDetailsProvider()
+    }
+    
     /// Connects to a chat session with the given details.
     public func connect(chatDetails: ChatDetails, completion: @escaping (Result<Void, Error>) -> Void) {
         reestablishSubscriptions() // Re-establish subscriptions whenever a new chat session is initiated
@@ -224,6 +237,13 @@ public class ChatSession: ChatSessionProtocol {
         }
     }
     
+    /// Retry a message that failed to be sent.
+    public func resendFailedMessage(messageId: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        chatService.resendFailedMessage(messageId: messageId) { [weak self] success, error in
+            self?.handleCompletion(success: success, error: error, completion: completion)
+        }
+    }
+    
     /// Sends an event within the chat session.
     public func sendEvent(event: ContentType, content: String, completion: @escaping (Result<Void, Error>) -> Void) {
         chatService.sendEvent(event: event, content: content) { [weak self] success, error in
@@ -251,7 +271,7 @@ public class ChatSession: ChatSessionProtocol {
     public func sendMessageReceipt(for transcriptItem: AmazonConnectChatIOS.TranscriptItem, eventType: MessageReceiptType) {
         guard let messageItem = transcriptItem as? Message,
               !messageItem.text.isEmpty,
-              messageItem.messageDirection == .Incoming else {
+            messageItem.participant != Constants.CUSTOMER else {
             return
         }
         
