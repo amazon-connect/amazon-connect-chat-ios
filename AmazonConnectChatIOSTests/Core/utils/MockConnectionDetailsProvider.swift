@@ -33,4 +33,10 @@ class MockConnectionDetailsProvider: ConnectionDetailsProviderProtocol {
     func setChatSessionState(isActive: Bool) {
         isChatActive = isActive
     }
+    
+    func reset() {
+        mockConnectionDetails = nil
+        mockChatDetails = nil
+        isChatActive = true
+    }
 }

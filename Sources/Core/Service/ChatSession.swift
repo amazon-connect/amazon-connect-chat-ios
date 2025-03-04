@@ -90,6 +90,8 @@ public protocol ChatSessionProtocol {
     /// Returns a boolean indicating whether the chat session is still active.
     func isChatSessionActive() -> Bool
     
+    func reset() -> Void
+    
     var onConnectionEstablished: (() -> Void)? { get set }
     var onConnectionReEstablished: (() -> Void)? { get set }
     var onConnectionBroken: (() -> Void)? { get set }
@@ -314,6 +316,12 @@ public class ChatSession: ChatSessionProtocol {
                 completion(result)
             }
         }
+    }
+    
+    public func reset() {
+        chatService.reset()
+        self.cleanupSubscriptions()
+        ConnectionDetailsProvider.shared.setChatSessionState(isActive: false)
     }
     
     /// Cleans up subscriptions when the chat session is deinitialized.

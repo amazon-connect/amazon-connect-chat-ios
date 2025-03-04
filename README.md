@@ -240,6 +240,15 @@ func disconnect(completion: @escaping (Result<Void, Error>) -> Void)
 
 --------------------
 
+#### `ChatSession.reset`
+Resets the ChatSession object which will disconnect the webSocket and remove all session related data.
+
+```
+func reset()
+```
+
+--------------------
+
 #### `ChatSession.suspendWebSocketConnection`
 Disconnects the websocket and suspends reconnection attempts.
 
