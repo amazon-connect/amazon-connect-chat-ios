@@ -40,7 +40,6 @@ struct CommonUtils {
     }
     
     static func getLibraryVersion() -> String {
-        // Update manually per release
         return "1.0.6"
     }
 }
