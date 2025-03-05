@@ -9,8 +9,8 @@ import UniformTypeIdentifiers
 protocol ChatServiceProtocol {
     func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void)
     func disconnectChatSession(completion: @escaping (Bool, Error?) -> Void)
-    func suspendWebSocketConnection()
-    func resumeWebSocketConnection()
+    func suspendWebSocketConnection() -> Void
+    func resumeWebSocketConnection() -> Void
     func sendMessage(contentType: ContentType, message: String, completion: @escaping (Bool, Error?) -> Void)
     func resendFailedMessage(messageId: String, completion: @escaping (Bool, Error?) -> Void)
     func sendEvent(event: ContentType, content: String?, completion: @escaping (Bool, Error?) -> Void)
@@ -25,6 +25,7 @@ protocol ChatServiceProtocol {
     func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void)
     func configure(config: GlobalConfig)
     func getConnectionDetailsProvider() -> ConnectionDetailsProviderProtocol
+    func reset() -> Void
 }
 
 class ChatService : ChatServiceProtocol {
@@ -34,13 +35,13 @@ class ChatService : ChatServiceProtocol {
     var urlSession = URLSession(configuration: .default)
     var apiClient: APIClientProtocol = APIClient.shared
     var messageReceiptsManager: MessageReceiptsManagerProtocol?
+    var websocketManager: WebsocketManagerProtocol?
+    var internalTranscript: [TranscriptItem] = []
     private var eventCancellables = Set<AnyCancellable>()
     private var transcriptItemCancellables = Set<AnyCancellable>()
     private var transcriptListCancellables = Set<AnyCancellable>()
-    private var internalTranscript: [TranscriptItem] = []
     private let connectionDetailsProvider: ConnectionDetailsProviderProtocol
     private var awsClient: AWSClientProtocol
-    private var websocketManager: WebsocketManagerProtocol?
     private var websocketManagerFactory: (URL) -> WebsocketManagerProtocol
     private var throttleTypingEvent: Bool = false
     private var throttleTypingEventTimer: Timer?
@@ -279,6 +280,16 @@ class ChatService : ChatServiceProtocol {
     func resumeWebSocketConnection() {
         SDKLogger.logger.logDebug("Resuming WebSocket connections")
         self.websocketManager?.resumeWebSocketConnection()
+    }
+    
+    func reset() {
+        self.websocketManager?.disconnect(reason: "Participant Disconnected")
+        self.clearSubscriptionsAndPublishers()
+        self.messageReceiptsManager?.reset()
+        connectionDetailsProvider.reset()
+        self.attachmentIdToTempMessageIdMap = [:]
+        self.transcriptDict = [:]
+        self.tempMessageIdToFileUrl = [:]
     }
     
     func sendMessage(contentType: ContentType, message: String, completion: @escaping (Bool, Error?) -> Void) {

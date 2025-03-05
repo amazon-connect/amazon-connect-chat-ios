@@ -11,6 +11,7 @@ protocol MessageReceiptsManagerProtocol {
     func throttleAndSendMessageReceipt(event: MessageReceiptType, messageId: String, completion: @escaping (Result<PendingMessageReceipts, Error>) -> Void)
     func invalidateTimer() -> Void
     func handleMessageReceipt(event: MessageReceiptType, messageId: String)
+    func reset() -> Void
 }
 
 struct PendingMessageReceipts {
@@ -96,5 +97,11 @@ class MessageReceiptsManager: MessageReceiptsManagerProtocol {
             pendingMessageReceipts.readReceiptMessageId = messageId
             break
         }
+    }
+    
+    func reset() {
+        self.readReceiptSet.removeAll()
+        self.deliveredReceiptSet.removeAll()
+        self.pendingMessageReceipts.clear()
     }
 }

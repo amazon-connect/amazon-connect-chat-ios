@@ -975,6 +975,44 @@ class ChatServiceTests: XCTestCase {
         
         waitForExpectations(timeout: 1.0, handler: nil)
     }
+    
+    func testReset_Success() {
+        // Ensure connectionToken is defined
+        XCTAssertEqual(chatService.getConnectionDetailsProvider().getConnectionDetails()?.connectionToken, "mockConnectionToken")
+        
+        // establish websocket connection and verify websocket is connected
+        chatService.websocketManager = mockWebsocketManager
+        let chatDetails = createChatDetails()
+        chatService.createChatSession(chatDetails: chatDetails) { success, error in
+            XCTAssertTrue(success, "Chat session should be created successfully")
+            XCTAssertNil(error, "Error should be nil")
+        }
+        XCTAssertTrue(mockWebsocketManager.mockConnectionStatus)
+        
+        // Add message into transcript
+        let message = "Test message"
+        let contentType = ContentType.plainText
+        mockAWSClient.sendMessageResult = .success(AWSConnectParticipantSendMessageResponse())
+        
+        let expectation = self.expectation(description: "Message should be sent successfully")
+        
+        chatService.sendMessage(contentType: contentType, message: message) { success, error in
+            XCTAssertTrue(success, "Message should be sent successfully")
+            XCTAssertNil(error, "Error should be nil")
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 1)
+        
+        XCTAssertEqual(chatService.internalTranscript.count, 1)
+        
+        // Execute reset
+        chatService.reset()
+        
+        // Validate connection token, websocket status and internalTranscript are reset.
+        XCTAssertNil(chatService.getConnectionDetailsProvider().getConnectionDetails()?.connectionToken)
+        XCTAssertFalse(mockWebsocketManager.mockConnectionStatus)
+        XCTAssertEqual(chatService.internalTranscript.count, 0)
+    }
 }
 
 extension ChatServiceTests {

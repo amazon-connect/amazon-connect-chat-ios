@@ -114,6 +114,7 @@ class AWSClient: AWSClientProtocol {
         self.region = AWSRegionType(rawValue: config.region.rawValue) ?? Constants.DEFAULT_REGION
         
         let participantService = AWSServiceConfiguration(region: self.region, credentialsProvider: credentials)
+        participantService?.addUserAgentProductToken("AmazonConnect-Mobile Chat-iOS SDK/\(CommonUtils.getLibraryVersion())")
         
         AWSConnectParticipant.register(with: participantService!, forKey: Constants.AWSConnectParticipantKey)
         

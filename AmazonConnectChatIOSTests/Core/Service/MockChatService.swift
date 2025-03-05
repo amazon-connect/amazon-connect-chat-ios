@@ -52,8 +52,6 @@ class MockChatService: ChatService {
     var completeAttachmentUploadResult: (Bool, Error?)?
     var getTranscriptResult: Result<TranscriptResponse, Error>?
 
-    var websocketManager: WebsocketManagerProtocol?
-
     override func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void) {
         
         numCreateChatSessionCalled += 1

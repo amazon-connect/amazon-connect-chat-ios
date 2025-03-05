@@ -10,6 +10,7 @@ public protocol ConnectionDetailsProviderProtocol {
     func getChatDetails() -> ChatDetails?
     func isChatSessionActive() -> Bool
     func setChatSessionState(isActive: Bool) -> Void
+    func reset() -> Void
 }
 
 class ConnectionDetailsProvider: ConnectionDetailsProviderProtocol {
@@ -42,6 +43,12 @@ class ConnectionDetailsProvider: ConnectionDetailsProviderProtocol {
     
     func setChatSessionState(isActive: Bool) -> Void {
         self.isChatActive = isActive
+    }
+    
+    func reset() {
+        self.connectionDetails = nil
+        self.chatDetails = nil
+        self.isChatActive = false
     }
 
     // Additional logic to handle connection details lifecycle
