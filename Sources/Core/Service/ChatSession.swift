@@ -25,12 +25,13 @@ public protocol ChatSessionProtocol {
     func disconnect(completion: @escaping (Result<Void, Error>) -> Void)
     
     /// Disconnects the websocket and suspends reconnection attempts.
-    /// - Parameter completion: The completion handler to call when the suspend operation is complete.
-    func suspendWebSocketConnection()
+    func suspendWebSocketConnection() -> Void
     
     /// Resumes a suspended websocket and attempts to reconnect.
-    /// - Parameter completion: The completion handler to call when the resume operation is complete.
-    func resumeWebSocketConnection()
+    func resumeWebSocketConnection() -> Void
+
+    /// Resets the ChatSession state which will disconnect the webSocket and remove all session related data without disconnecting the participant from the chat contact.
+    func reset() -> Void
     
     /// Sends a message within the chat session.
     /// - Parameters:
@@ -89,8 +90,6 @@ public protocol ChatSessionProtocol {
     
     /// Returns a boolean indicating whether the chat session is still active.
     func isChatSessionActive() -> Bool
-    
-    func reset() -> Void
     
     var onConnectionEstablished: (() -> Void)? { get set }
     var onConnectionReEstablished: (() -> Void)? { get set }
