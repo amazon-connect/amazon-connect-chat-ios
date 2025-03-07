@@ -39,4 +39,7 @@ struct CommonUtils {
         return isoFormatter.string(from: currentDate)
     }
     
+    static func getLibraryVersion() -> String {
+        return "1.0.6"
+    }
 }
