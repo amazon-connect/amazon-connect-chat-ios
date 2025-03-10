@@ -398,7 +398,8 @@ extension WebsocketManager {
                 "Type": CommonUtils().convertParticipantTypeToString(item.types.rawValue),
                 "DisplayName": item.displayName ?? "",
                 "Attachments": attachmentsArray,
-                "IsFromPastSession": true // Mark all these items as coming from a past session
+                "IsFromPastSession": true, // Mark all these items as coming from a past session
+                "MessageMetadata": CommonUtils().convertMessageMetadataToDict(item.messageMetadata)
             ]
             
             // Serialize the dictionary to JSON string
@@ -446,7 +447,8 @@ extension WebsocketManager {
             timeStamp: time,
             messageId: messageId,
             displayName: displayName,
-            serializedContent: serializedContent
+            serializedContent: serializedContent,
+            metadata: (innerJson["MessageMetadata"] != nil) ? handleMetadata(innerJson, serializedContent) as? (any MetadataProtocol) : nil
         )
     }
     

@@ -32,6 +32,23 @@ struct CommonUtils {
         }
     }
     
+    func convertMessageMetadataToDict(_ messageMetadata: AWSConnectParticipantMessageMetadata?) -> [String: Any] {
+        guard let messageId = messageMetadata?.messageId else {
+            return [:]
+        }
+        
+        return [
+            "MessageId": messageId,
+            "Receipts": messageMetadata?.receipts?.compactMap { receipt in
+                return [
+                    "ReadTimestamp": receipt.readTimestamp ?? "",
+                    "DeliveredTimestamp": receipt.deliveredTimestamp ?? "",
+                    "RecipientParticipantId": receipt.recipientParticipantId ?? ""
+                ]
+            } ?? []
+        ]
+    }
+    
     static func getCurrentISOTime() -> String {
         let currentDate = Date()
         let isoFormatter = ISO8601DateFormatter()
