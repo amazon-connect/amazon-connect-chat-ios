@@ -16,6 +16,7 @@ public enum ContentType: String {
     case plainText = "text/plain"
     case richText = "text/markdown"
     case interactiveText = "application/vnd.amazonaws.connect.message.interactive"
+    case interactiveResponse = "application/vnd.amazonaws.connect.message.interactive.response"
 }
 
 public enum MessageReceiptType: String {
