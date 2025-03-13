@@ -41,9 +41,9 @@ struct CommonUtils {
             "MessageId": messageId,
             "Receipts": messageMetadata?.receipts?.compactMap { receipt in
                 return [
-                    "ReadTimestamp": receipt.readTimestamp ?? "",
-                    "DeliveredTimestamp": receipt.deliveredTimestamp ?? "",
-                    "RecipientParticipantId": receipt.recipientParticipantId ?? ""
+                    "ReadTimestamp": receipt.readTimestamp ?? nil,
+                    "DeliveredTimestamp": receipt.deliveredTimestamp ?? nil,
+                    "RecipientParticipantId": receipt.recipientParticipantId ?? nil
                 ]
             } ?? []
         ]
@@ -57,6 +57,6 @@ struct CommonUtils {
     }
     
     static func getLibraryVersion() -> String {
-        return "1.0.6"
+        return "1.0.7"
     }
 }
