@@ -10,6 +10,7 @@ import Foundation
 import Network
 import OSLog
 import Swift
+import UIKit
 import UniformTypeIdentifiers
 import _Concurrency
 import _StringProcessing
@@ -27,6 +28,9 @@ public enum WebSocketErrorCodes : Swift.Int {
   }
 }
 public struct ConnectionDetails {
+  public func getWebsocketUrl() -> Swift.String?
+  public func getConnectionToken() -> Swift.String?
+  public func getExpiry() -> Foundation.Date?
 }
 public struct Constants {
   public static let QUICK_REPLY: Swift.String
@@ -45,9 +49,14 @@ public class TranscriptResponse : Swift.Equatable {
 }
 public protocol ChatSessionProtocol {
   func configure(config: AmazonConnectChatIOS.GlobalConfig)
+  func getConnectionDetailsProvider() -> any AmazonConnectChatIOS.ConnectionDetailsProviderProtocol
   func connect(chatDetails: AmazonConnectChatIOS.ChatDetails, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
   func disconnect(completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  func suspendWebSocketConnection()
+  func resumeWebSocketConnection()
+  func reset()
   func sendMessage(contentType: AmazonConnectChatIOS.ContentType, message: Swift.String, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  func resendFailedMessage(messageId: Swift.String, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
   func sendEvent(event: AmazonConnectChatIOS.ContentType, content: Swift.String, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
   func sendMessageReceipt(for transcriptItem: AmazonConnectChatIOS.TranscriptItem, eventType: AmazonConnectChatIOS.MessageReceiptType)
   func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: Foundation.NSNumber?, nextToken: Swift.String?, startPosition: Swift.String?, completion: @escaping (Swift.Result<AmazonConnectChatIOS.TranscriptResponse, any Swift.Error>) -> Swift.Void)
@@ -74,15 +83,20 @@ public protocol ChatSessionProtocol {
   public var onDeepHeartbeatFailure: (() -> Swift.Void)?
   public func isChatSessionActive() -> Swift.Bool
   public func configure(config: AmazonConnectChatIOS.GlobalConfig)
+  public func getConnectionDetailsProvider() -> any AmazonConnectChatIOS.ConnectionDetailsProviderProtocol
   public func connect(chatDetails: AmazonConnectChatIOS.ChatDetails, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
   public func getTranscript(scanDirection: AWSConnectParticipantScanDirection? = .backward, sortOrder: AWSConnectParticipantSortKey? = .ascending, maxResults: Foundation.NSNumber? = 30, nextToken: Swift.String? = nil, startPosition: Swift.String? = nil, completion: @escaping (Swift.Result<AmazonConnectChatIOS.TranscriptResponse, any Swift.Error>) -> Swift.Void)
   public func disconnect(completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  public func suspendWebSocketConnection()
+  public func resumeWebSocketConnection()
   public func sendMessage(contentType: AmazonConnectChatIOS.ContentType, message: Swift.String, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  public func resendFailedMessage(messageId: Swift.String, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
   public func sendEvent(event: AmazonConnectChatIOS.ContentType, content: Swift.String, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
   public func sendMessageReceipt(for transcriptItem: AmazonConnectChatIOS.TranscriptItem, eventType: AmazonConnectChatIOS.MessageReceiptType)
   public func sendAttachment(file: Foundation.URL, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
   public func downloadAttachment(attachmentId: Swift.String, filename: Swift.String, completion: @escaping (Swift.Result<Foundation.URL, any Swift.Error>) -> Swift.Void)
   public func getAttachmentDownloadUrl(attachmentId: Swift.String, completion: @escaping (Swift.Result<Foundation.URL, any Swift.Error>) -> Swift.Void)
+  public func reset()
   @objc deinit
 }
 public protocol MessageContent {
@@ -299,6 +313,15 @@ public struct CarouselContent : AmazonConnectChatIOS.InteractiveContent {
   public let elements: [AmazonConnectChatIOS.CarouselElement]
   public static func decode(from text: Swift.String) -> (any AmazonConnectChatIOS.MessageContent)?
 }
+public protocol ConnectionDetailsProviderProtocol {
+  func updateChatDetails(newDetails: AmazonConnectChatIOS.ChatDetails)
+  func getConnectionDetails() -> AmazonConnectChatIOS.ConnectionDetails?
+  func updateConnectionDetails(newDetails: AmazonConnectChatIOS.ConnectionDetails)
+  func getChatDetails() -> AmazonConnectChatIOS.ChatDetails?
+  func isChatSessionActive() -> Swift.Bool
+  func setChatSessionState(isActive: Swift.Bool)
+  func reset()
+}
 public protocol EventProtocol : AmazonConnectChatIOS.TranscriptItemProtocol {
   var participant: Swift.String? { get set }
   var text: Swift.String? { get set }
@@ -505,6 +528,7 @@ public enum ContentType : Swift.String {
   case plainText
   case richText
   case interactiveText
+  case interactiveResponse
   public init?(rawValue: Swift.String)
   public typealias RawValue = Swift.String
   public var rawValue: Swift.String {
