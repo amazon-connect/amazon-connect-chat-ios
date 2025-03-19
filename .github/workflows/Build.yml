@@ -29,15 +29,15 @@ jobs:
     - name: Install xcpretty
       run: gem install xcpretty
 
-    # - name: Clean and Build SDK
-    #   run: |
-    #     echo "::group::Clean and Build SDK"
-    #     xcodebuild clean -project AmazonConnectChatIOS.xcodeproj \
-    #                      -scheme AmazonConnectChatIOS \
-    #                      -sdk iphonesimulator \
-    #                      -configuration Debug \
-    #                      build
-    #     echo "::endgroup::"
+    - name: Clean and Build SDK
+      run: |
+        echo "::group::Clean and Build SDK"
+        xcodebuild clean -project AmazonConnectChatIOS.xcodeproj \
+                         -scheme AmazonConnectChatIOS \
+                         -sdk iphonesimulator \
+                         -configuration Debug \
+                         build
+        echo "::endgroup::"
     - name: Run Unit Tests
       run: |
         echo "::group::Run Unit Tests"
