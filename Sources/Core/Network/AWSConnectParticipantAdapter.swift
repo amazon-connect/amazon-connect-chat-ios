@@ -61,7 +61,7 @@ class AWSConnectParticipantAdapter: AWSConnectParticipantProtocol {
             if let error = task.error {
                 return AWSTask(error: error)
             }
-            return AWSTask(result: task)
+            return AWSTask(result: task.result)
         }
     }
 
