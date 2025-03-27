@@ -92,9 +92,6 @@ class ChatService : ChatServiceProtocol {
                     ConnectionDetailsProvider.shared.setChatSessionState(isActive: true)
                     self?.getTranscript() {_ in }
                 }
-                if (event == .connectionEstablished){
-                    self?.getTranscript{ _ in}
-                }
                 if (event == .connectionReEstablished){
                     self?.fetchReconnectedTranscript()
                 }
