@@ -17,6 +17,22 @@ public enum ContentType: String {
     case richText = "text/markdown"
     case interactiveText = "application/vnd.amazonaws.connect.message.interactive"
     case interactiveResponse = "application/vnd.amazonaws.connect.message.interactive.response"
+    case authenticationInitiated = "application/vnd.amazonaws.connect.event.authentication.initiated"
+    case authenticationSuccessful = "application/vnd.amazonaws.connect.event.authentication.succeeded"
+    case authenticationFailed = "application/vnd.amazonaws.connect.event.authentication.failed"
+    case authenticationTimeout = "application/vnd.amazonaws.connect.event.authentication.timeout"
+    case authenticationExpired = "application/vnd.amazonaws.connect.event.authentication.expired"
+    case authenticationCanceled = "application/vnd.amazonaws.connect.event.authentication.cancelled"
+    case participantDisplayNameUpdated = "application/vnd.amazonaws.connect.event.participant.displayname.updated"
+    case participantActive = "application/vnd.amazonaws.connect.event.participant.active"
+    case participantInactive = "application/vnd.amazonaws.connect.event.participant.inactive"
+    case transferSucceeded = "application/vnd.amazonaws.connect.event.transfer.succeeded"
+    case transferFailed = "application/vnd.amazonaws.connect.event.transfer.failed"
+    case participantIdle = "application/vnd.amazonaws.connect.event.participant.idle"
+    case participantReturned = "application/vnd.amazonaws.connect.event.participant.returned"
+    case participantInvited = "application/vnd.amazonaws.connect.event.participant.invited"
+    case autoDisconnection = "application/vnd.amazonaws.connect.event.participant.autodisconnection"
+    case chatRehydrated = "application/vnd.amazonaws.connect.event.chat.rehydrated"
 }
 
 public enum MessageReceiptType: String {
