@@ -22,7 +22,7 @@ public enum ContentType: String {
     case authenticationFailed = "application/vnd.amazonaws.connect.event.authentication.failed"
     case authenticationTimeout = "application/vnd.amazonaws.connect.event.authentication.timeout"
     case authenticationExpired = "application/vnd.amazonaws.connect.event.authentication.expired"
-    case authenticationCanceled = "application/vnd.amazonaws.connect.event.authentication.cancelled"
+    case authenticationCancelled = "application/vnd.amazonaws.connect.event.authentication.cancelled"
     case participantDisplayNameUpdated = "application/vnd.amazonaws.connect.event.participant.displayname.updated"
     case participantActive = "application/vnd.amazonaws.connect.event.participant.active"
     case participantInactive = "application/vnd.amazonaws.connect.event.participant.inactive"
