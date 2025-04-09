@@ -708,7 +708,7 @@ public struct TranscriptData {
   * The current in-memory transcript list.
   * Type: Array of `TranscriptItem`
 * `previousTranscriptNextToken`
-  * This is a next token that is used as a `getTranscript` argument to retrieve older messages.  This will be `nil` if there are no more available messages to fetch.
+  * This is a next token that is used as a `getTranscript` argument to retrieve older messages.  This will be `nil` if there are no more available messages to fetch from the top of the currently loaded transcript.
   * Type: `String`
 
 --------
