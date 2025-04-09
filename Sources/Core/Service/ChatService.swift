@@ -756,9 +756,23 @@ class ChatService : ChatServiceProtocol {
                     return
                 }
                 
-                if getTranscriptArgs?.scanDirection == .backward {
+                let isStartPositionDefined = getTranscriptArgs?.startPosition != nil &&
+                    (getTranscriptArgs?.startPosition?.identifier != nil ||
+                     getTranscriptArgs?.startPosition?.absoluteTime != nil ||
+                     getTranscriptArgs?.startPosition?.mostRecent != nil
+                    )
+                
+                // Ignore setting previousTranscriptNextToken if items aren't going from newest -> oldest.
+                // We also ignore if getTranscript is called with a start position but returns empty transcript
+                // since that is indicative of an invalid StartPosition.
+                if getTranscriptArgs?.scanDirection == .backward || (isStartPositionDefined && transcriptItems.isEmpty) {
                     if let isInternalTranscriptEmpty = self?.internalTranscript.isEmpty, isInternalTranscriptEmpty || transcriptItems.isEmpty {
                         self?.previousTranscriptNextToken = response.nextToken
+                        
+                        // If the returned list is empty, we should still update subscribers with updated previousTranscriptNextToken
+                        if let internalTranscript = self?.internalTranscript, transcriptItems.isEmpty {
+                            self?.transcriptListPublisher.send(TranscriptData(transcriptList: internalTranscript, previousTranscriptNextToken: self?.previousTranscriptNextToken))
+                        }
                     } else {
                         let oldestTranscriptItem = getTranscriptArgs?.sortOrder == .ascending ? transcriptItems.first : transcriptItems.last
                         let oldestInternalTranscriptItem = self?.internalTranscript.first
