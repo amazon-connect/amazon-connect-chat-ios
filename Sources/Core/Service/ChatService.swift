@@ -692,6 +692,15 @@ class ChatService : ChatServiceProtocol {
         // Fetch the transcript starting from the last item
         fetchTranscriptWith(startPosition: startPosition)
     }
+    
+    private func isItemInInternalTranscript(Id: String) -> Bool {
+        for item in internalTranscript.reversed() {
+            if item.id == Id {
+                return true
+            }
+        }
+        return false
+    }
 
     private func fetchTranscriptWith(startPosition: AWSConnectParticipantStartPosition?) {
         self.getTranscript(scanDirection: .forward, startPosition: startPosition) { [weak self] result in
@@ -699,13 +708,10 @@ class ChatService : ChatServiceProtocol {
             case .success(let transcriptResponse):
                 // Process the received transcript items
                 if let self = self {
-                    if !transcriptResponse.nextToken.isEmpty {
-                        // Continue fetching if there's a next token
-                        var newStartPosition: AWSConnectParticipantStartPosition? = nil
-                        if let lastItem = transcriptResponse.transcript.last {
-                            newStartPosition = AWSConnectParticipantStartPosition()
-                            newStartPosition?.identifier = lastItem.id
-                       }
+                    if let lastItem = transcriptResponse.transcript.last, !(transcriptResponse.nextToken.isEmpty || isItemInInternalTranscript(Id: lastItem.id)) {
+                        // Continue fetching if there are more messages to fetch.
+                        var newStartPosition = AWSConnectParticipantStartPosition()                      
+                        newStartPosition?.identifier = lastItem.id
                         self.fetchTranscriptWith(startPosition: newStartPosition)
                     }
                 }
