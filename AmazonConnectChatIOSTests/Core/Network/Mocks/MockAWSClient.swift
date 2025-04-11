@@ -15,6 +15,7 @@ class MockAWSClient: AWSClientProtocol {
     var completeAttachmentUploadResult: Result<AWSConnectParticipantCompleteAttachmentUploadResponse, Error>?
     var getAttachmentResult: Result<AWSConnectParticipantGetAttachmentResponse, Error>?
     var numTypingEventCalled: Int = 0
+    var numGetTranscriptCalled: Int = 0
 
     func createParticipantConnection(participantToken: String, completion: @escaping (Result<ConnectionDetails, Error>) -> Void) {
         if let result = createParticipantConnectionResult {
@@ -44,6 +45,7 @@ class MockAWSClient: AWSClientProtocol {
     }
     
     func getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Result<AWSConnectParticipantGetTranscriptResponse, Error>) -> Void) {
+        numGetTranscriptCalled += 1
         if let result = getTranscriptResult {
             completion(result)
         }
