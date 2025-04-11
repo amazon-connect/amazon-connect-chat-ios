@@ -21403,6 +21403,598 @@
             "moduleName": "AmazonConnectChatIOS"
           },
           {
+            "kind": "Var",
+            "name": "authenticationInitiated",
+            "printedName": "authenticationInitiated",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AmazonConnectChatIOS.ContentType.Type) -> AmazonConnectChatIOS.ContentType",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContentType",
+                    "printedName": "AmazonConnectChatIOS.ContentType",
+                    "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AmazonConnectChatIOS.ContentType.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContentType",
+                        "printedName": "AmazonConnectChatIOS.ContentType",
+                        "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:20AmazonConnectChatIOS11ContentTypeO23authenticationInitiatedyA2CmF",
+            "mangledName": "$s20AmazonConnectChatIOS11ContentTypeO23authenticationInitiatedyA2CmF",
+            "moduleName": "AmazonConnectChatIOS"
+          },
+          {
+            "kind": "Var",
+            "name": "authenticationSuccessful",
+            "printedName": "authenticationSuccessful",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AmazonConnectChatIOS.ContentType.Type) -> AmazonConnectChatIOS.ContentType",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContentType",
+                    "printedName": "AmazonConnectChatIOS.ContentType",
+                    "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AmazonConnectChatIOS.ContentType.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContentType",
+                        "printedName": "AmazonConnectChatIOS.ContentType",
+                        "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:20AmazonConnectChatIOS11ContentTypeO24authenticationSuccessfulyA2CmF",
+            "mangledName": "$s20AmazonConnectChatIOS11ContentTypeO24authenticationSuccessfulyA2CmF",
+            "moduleName": "AmazonConnectChatIOS"
+          },
+          {
+            "kind": "Var",
+            "name": "authenticationFailed",
+            "printedName": "authenticationFailed",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AmazonConnectChatIOS.ContentType.Type) -> AmazonConnectChatIOS.ContentType",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContentType",
+                    "printedName": "AmazonConnectChatIOS.ContentType",
+                    "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AmazonConnectChatIOS.ContentType.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContentType",
+                        "printedName": "AmazonConnectChatIOS.ContentType",
+                        "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:20AmazonConnectChatIOS11ContentTypeO20authenticationFailedyA2CmF",
+            "mangledName": "$s20AmazonConnectChatIOS11ContentTypeO20authenticationFailedyA2CmF",
+            "moduleName": "AmazonConnectChatIOS"
+          },
+          {
+            "kind": "Var",
+            "name": "authenticationTimeout",
+            "printedName": "authenticationTimeout",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AmazonConnectChatIOS.ContentType.Type) -> AmazonConnectChatIOS.ContentType",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContentType",
+                    "printedName": "AmazonConnectChatIOS.ContentType",
+                    "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AmazonConnectChatIOS.ContentType.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContentType",
+                        "printedName": "AmazonConnectChatIOS.ContentType",
+                        "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:20AmazonConnectChatIOS11ContentTypeO21authenticationTimeoutyA2CmF",
+            "mangledName": "$s20AmazonConnectChatIOS11ContentTypeO21authenticationTimeoutyA2CmF",
+            "moduleName": "AmazonConnectChatIOS"
+          },
+          {
+            "kind": "Var",
+            "name": "authenticationExpired",
+            "printedName": "authenticationExpired",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AmazonConnectChatIOS.ContentType.Type) -> AmazonConnectChatIOS.ContentType",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContentType",
+                    "printedName": "AmazonConnectChatIOS.ContentType",
+                    "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AmazonConnectChatIOS.ContentType.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContentType",
+                        "printedName": "AmazonConnectChatIOS.ContentType",
+                        "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:20AmazonConnectChatIOS11ContentTypeO21authenticationExpiredyA2CmF",
+            "mangledName": "$s20AmazonConnectChatIOS11ContentTypeO21authenticationExpiredyA2CmF",
+            "moduleName": "AmazonConnectChatIOS"
+          },
+          {
+            "kind": "Var",
+            "name": "authenticationCancelled",
+            "printedName": "authenticationCancelled",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AmazonConnectChatIOS.ContentType.Type) -> AmazonConnectChatIOS.ContentType",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContentType",
+                    "printedName": "AmazonConnectChatIOS.ContentType",
+                    "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AmazonConnectChatIOS.ContentType.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContentType",
+                        "printedName": "AmazonConnectChatIOS.ContentType",
+                        "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:20AmazonConnectChatIOS11ContentTypeO23authenticationCancelledyA2CmF",
+            "mangledName": "$s20AmazonConnectChatIOS11ContentTypeO23authenticationCancelledyA2CmF",
+            "moduleName": "AmazonConnectChatIOS"
+          },
+          {
+            "kind": "Var",
+            "name": "participantDisplayNameUpdated",
+            "printedName": "participantDisplayNameUpdated",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AmazonConnectChatIOS.ContentType.Type) -> AmazonConnectChatIOS.ContentType",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContentType",
+                    "printedName": "AmazonConnectChatIOS.ContentType",
+                    "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AmazonConnectChatIOS.ContentType.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContentType",
+                        "printedName": "AmazonConnectChatIOS.ContentType",
+                        "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:20AmazonConnectChatIOS11ContentTypeO29participantDisplayNameUpdatedyA2CmF",
+            "mangledName": "$s20AmazonConnectChatIOS11ContentTypeO29participantDisplayNameUpdatedyA2CmF",
+            "moduleName": "AmazonConnectChatIOS"
+          },
+          {
+            "kind": "Var",
+            "name": "participantActive",
+            "printedName": "participantActive",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AmazonConnectChatIOS.ContentType.Type) -> AmazonConnectChatIOS.ContentType",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContentType",
+                    "printedName": "AmazonConnectChatIOS.ContentType",
+                    "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AmazonConnectChatIOS.ContentType.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContentType",
+                        "printedName": "AmazonConnectChatIOS.ContentType",
+                        "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:20AmazonConnectChatIOS11ContentTypeO17participantActiveyA2CmF",
+            "mangledName": "$s20AmazonConnectChatIOS11ContentTypeO17participantActiveyA2CmF",
+            "moduleName": "AmazonConnectChatIOS"
+          },
+          {
+            "kind": "Var",
+            "name": "participantInactive",
+            "printedName": "participantInactive",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AmazonConnectChatIOS.ContentType.Type) -> AmazonConnectChatIOS.ContentType",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContentType",
+                    "printedName": "AmazonConnectChatIOS.ContentType",
+                    "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AmazonConnectChatIOS.ContentType.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContentType",
+                        "printedName": "AmazonConnectChatIOS.ContentType",
+                        "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:20AmazonConnectChatIOS11ContentTypeO19participantInactiveyA2CmF",
+            "mangledName": "$s20AmazonConnectChatIOS11ContentTypeO19participantInactiveyA2CmF",
+            "moduleName": "AmazonConnectChatIOS"
+          },
+          {
+            "kind": "Var",
+            "name": "transferSucceeded",
+            "printedName": "transferSucceeded",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AmazonConnectChatIOS.ContentType.Type) -> AmazonConnectChatIOS.ContentType",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContentType",
+                    "printedName": "AmazonConnectChatIOS.ContentType",
+                    "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AmazonConnectChatIOS.ContentType.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContentType",
+                        "printedName": "AmazonConnectChatIOS.ContentType",
+                        "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:20AmazonConnectChatIOS11ContentTypeO17transferSucceededyA2CmF",
+            "mangledName": "$s20AmazonConnectChatIOS11ContentTypeO17transferSucceededyA2CmF",
+            "moduleName": "AmazonConnectChatIOS"
+          },
+          {
+            "kind": "Var",
+            "name": "transferFailed",
+            "printedName": "transferFailed",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AmazonConnectChatIOS.ContentType.Type) -> AmazonConnectChatIOS.ContentType",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContentType",
+                    "printedName": "AmazonConnectChatIOS.ContentType",
+                    "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AmazonConnectChatIOS.ContentType.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContentType",
+                        "printedName": "AmazonConnectChatIOS.ContentType",
+                        "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:20AmazonConnectChatIOS11ContentTypeO14transferFailedyA2CmF",
+            "mangledName": "$s20AmazonConnectChatIOS11ContentTypeO14transferFailedyA2CmF",
+            "moduleName": "AmazonConnectChatIOS"
+          },
+          {
+            "kind": "Var",
+            "name": "participantIdle",
+            "printedName": "participantIdle",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AmazonConnectChatIOS.ContentType.Type) -> AmazonConnectChatIOS.ContentType",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContentType",
+                    "printedName": "AmazonConnectChatIOS.ContentType",
+                    "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AmazonConnectChatIOS.ContentType.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContentType",
+                        "printedName": "AmazonConnectChatIOS.ContentType",
+                        "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:20AmazonConnectChatIOS11ContentTypeO15participantIdleyA2CmF",
+            "mangledName": "$s20AmazonConnectChatIOS11ContentTypeO15participantIdleyA2CmF",
+            "moduleName": "AmazonConnectChatIOS"
+          },
+          {
+            "kind": "Var",
+            "name": "participantReturned",
+            "printedName": "participantReturned",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AmazonConnectChatIOS.ContentType.Type) -> AmazonConnectChatIOS.ContentType",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContentType",
+                    "printedName": "AmazonConnectChatIOS.ContentType",
+                    "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AmazonConnectChatIOS.ContentType.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContentType",
+                        "printedName": "AmazonConnectChatIOS.ContentType",
+                        "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:20AmazonConnectChatIOS11ContentTypeO19participantReturnedyA2CmF",
+            "mangledName": "$s20AmazonConnectChatIOS11ContentTypeO19participantReturnedyA2CmF",
+            "moduleName": "AmazonConnectChatIOS"
+          },
+          {
+            "kind": "Var",
+            "name": "participantInvited",
+            "printedName": "participantInvited",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AmazonConnectChatIOS.ContentType.Type) -> AmazonConnectChatIOS.ContentType",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContentType",
+                    "printedName": "AmazonConnectChatIOS.ContentType",
+                    "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AmazonConnectChatIOS.ContentType.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContentType",
+                        "printedName": "AmazonConnectChatIOS.ContentType",
+                        "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:20AmazonConnectChatIOS11ContentTypeO18participantInvitedyA2CmF",
+            "mangledName": "$s20AmazonConnectChatIOS11ContentTypeO18participantInvitedyA2CmF",
+            "moduleName": "AmazonConnectChatIOS"
+          },
+          {
+            "kind": "Var",
+            "name": "autoDisconnection",
+            "printedName": "autoDisconnection",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AmazonConnectChatIOS.ContentType.Type) -> AmazonConnectChatIOS.ContentType",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContentType",
+                    "printedName": "AmazonConnectChatIOS.ContentType",
+                    "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AmazonConnectChatIOS.ContentType.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContentType",
+                        "printedName": "AmazonConnectChatIOS.ContentType",
+                        "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:20AmazonConnectChatIOS11ContentTypeO17autoDisconnectionyA2CmF",
+            "mangledName": "$s20AmazonConnectChatIOS11ContentTypeO17autoDisconnectionyA2CmF",
+            "moduleName": "AmazonConnectChatIOS"
+          },
+          {
+            "kind": "Var",
+            "name": "chatRehydrated",
+            "printedName": "chatRehydrated",
+            "children": [
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(AmazonConnectChatIOS.ContentType.Type) -> AmazonConnectChatIOS.ContentType",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContentType",
+                    "printedName": "AmazonConnectChatIOS.ContentType",
+                    "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "AmazonConnectChatIOS.ContentType.Type",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContentType",
+                        "printedName": "AmazonConnectChatIOS.ContentType",
+                        "usr": "s:20AmazonConnectChatIOS11ContentTypeO"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "declKind": "EnumElement",
+            "usr": "s:20AmazonConnectChatIOS11ContentTypeO14chatRehydratedyA2CmF",
+            "mangledName": "$s20AmazonConnectChatIOS11ContentTypeO14chatRehydratedyA2CmF",
+            "moduleName": "AmazonConnectChatIOS"
+          },
+          {
             "kind": "Constructor",
             "name": "init",
             "printedName": "init(rawValue:)",
@@ -22393,7 +22985,7 @@
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "FloatLiteral",
-      "offset": 9366,
+      "offset": 9247,
       "length": 3,
       "value": "0.0"
     },
@@ -22820,42 +23412,154 @@
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
       "kind": "StringLiteral",
-      "offset": 1121,
+      "offset": 1084,
+      "length": 66,
+      "value": "\"application\/vnd.amazonaws.connect.event.authentication.initiated\""
+    },
+    {
+      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "kind": "StringLiteral",
+      "offset": 1187,
+      "length": 66,
+      "value": "\"application\/vnd.amazonaws.connect.event.authentication.succeeded\""
+    },
+    {
+      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "kind": "StringLiteral",
+      "offset": 1286,
+      "length": 63,
+      "value": "\"application\/vnd.amazonaws.connect.event.authentication.failed\""
+    },
+    {
+      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "kind": "StringLiteral",
+      "offset": 1383,
+      "length": 64,
+      "value": "\"application\/vnd.amazonaws.connect.event.authentication.timeout\""
+    },
+    {
+      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "kind": "StringLiteral",
+      "offset": 1481,
+      "length": 64,
+      "value": "\"application\/vnd.amazonaws.connect.event.authentication.expired\""
+    },
+    {
+      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "kind": "StringLiteral",
+      "offset": 1581,
+      "length": 66,
+      "value": "\"application\/vnd.amazonaws.connect.event.authentication.cancelled\""
+    },
+    {
+      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "kind": "StringLiteral",
+      "offset": 1689,
+      "length": 73,
+      "value": "\"application\/vnd.amazonaws.connect.event.participant.displayname.updated\""
+    },
+    {
+      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "kind": "StringLiteral",
+      "offset": 1792,
+      "length": 60,
+      "value": "\"application\/vnd.amazonaws.connect.event.participant.active\""
+    },
+    {
+      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "kind": "StringLiteral",
+      "offset": 1884,
+      "length": 62,
+      "value": "\"application\/vnd.amazonaws.connect.event.participant.inactive\""
+    },
+    {
+      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "kind": "StringLiteral",
+      "offset": 1976,
+      "length": 60,
+      "value": "\"application\/vnd.amazonaws.connect.event.transfer.succeeded\""
+    },
+    {
+      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "kind": "StringLiteral",
+      "offset": 2063,
+      "length": 57,
+      "value": "\"application\/vnd.amazonaws.connect.event.transfer.failed\""
+    },
+    {
+      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "kind": "StringLiteral",
+      "offset": 2148,
+      "length": 58,
+      "value": "\"application\/vnd.amazonaws.connect.event.participant.idle\""
+    },
+    {
+      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "kind": "StringLiteral",
+      "offset": 2238,
+      "length": 62,
+      "value": "\"application\/vnd.amazonaws.connect.event.participant.returned\""
+    },
+    {
+      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "kind": "StringLiteral",
+      "offset": 2331,
+      "length": 61,
+      "value": "\"application\/vnd.amazonaws.connect.event.participant.invited\""
+    },
+    {
+      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "kind": "StringLiteral",
+      "offset": 2422,
+      "length": 71,
+      "value": "\"application\/vnd.amazonaws.connect.event.participant.autodisconnection\""
+    },
+    {
+      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "kind": "StringLiteral",
+      "offset": 2520,
+      "length": 57,
+      "value": "\"application\/vnd.amazonaws.connect.event.chat.rehydrated\""
+    },
+    {
+      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
+      "kind": "StringLiteral",
+      "offset": 2650,
       "length": 59,
       "value": "\"application\/vnd.amazonaws.connect.event.message.delivered\""
     },
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
       "kind": "StringLiteral",
-      "offset": 1204,
+      "offset": 2733,
       "length": 54,
       "value": "\"application\/vnd.amazonaws.connect.event.message.read\""
     },
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
       "kind": "StringLiteral",
-      "offset": 1537,
+      "offset": 3066,
       "length": 9,
       "value": "\"MESSAGE\""
     },
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
       "kind": "StringLiteral",
-      "offset": 1564,
+      "offset": 3093,
       "length": 7,
       "value": "\"EVENT\""
     },
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
       "kind": "StringLiteral",
-      "offset": 1594,
+      "offset": 3123,
       "length": 12,
       "value": "\"ATTACHMENT\""
     },
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/ChatEvent.swift",
       "kind": "StringLiteral",
-      "offset": 1634,
+      "offset": 3163,
       "length": 17,
       "value": "\"MESSAGEMETADATA\""
     }

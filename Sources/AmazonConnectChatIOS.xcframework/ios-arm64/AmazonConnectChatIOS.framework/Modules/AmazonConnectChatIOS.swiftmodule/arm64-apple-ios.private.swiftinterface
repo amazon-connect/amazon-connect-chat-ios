@@ -529,6 +529,22 @@ public enum ContentType : Swift.String {
   case richText
   case interactiveText
   case interactiveResponse
+  case authenticationInitiated
+  case authenticationSuccessful
+  case authenticationFailed
+  case authenticationTimeout
+  case authenticationExpired
+  case authenticationCancelled
+  case participantDisplayNameUpdated
+  case participantActive
+  case participantInactive
+  case transferSucceeded
+  case transferFailed
+  case participantIdle
+  case participantReturned
+  case participantInvited
+  case autoDisconnection
+  case chatRehydrated
   public init?(rawValue: Swift.String)
   public typealias RawValue = Swift.String
   public var rawValue: Swift.String {
