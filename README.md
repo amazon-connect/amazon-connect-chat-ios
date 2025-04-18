@@ -461,10 +461,10 @@ var onMessageReceived: ((TranscriptItem) -> Void)? { get set }
 --------------------
 
 #### `ChatSession.onTranscriptUpdated`
-Callback for when the transcript is updated. See [TranscriptItem](#transcriptitem)
+Callback for when the transcript is updated. See [TranscriptData](#transcriptdata)
 
 ```
-var onTranscriptUpdated: (([TranscriptItem]) -> Void)? { get set }
+var onTranscriptUpdated: ((TranscriptData) -> Void)? { get set }
 ```
 
 --------------------
@@ -693,6 +693,23 @@ public class TranscriptItem: TranscriptItemProtocol {
 * `serializedContent`
   * The raw JSON format of the received WebSocket message
   * Type: Array of `String: Any`
+
+--------
+### TranscriptData
+This is the object that is passed back to the registered [ChatSession.onTranscriptUpdated](#chatsessionontranscriptupdated) event handler
+
+```
+public struct TranscriptData {
+    public let transcriptList: [TranscriptItem]
+    public let previousTranscriptNextToken: String?
+}
+```
+* `transcriptList`
+  * The current in-memory transcript list.
+  * Type: Array of `TranscriptItem`
+* `previousTranscriptNextToken`
+  * This is a next token that is used as a `getTranscript` argument to retrieve older messages.  This will be `nil` if there are no more available messages to fetch from the top of the currently loaded transcript.
+  * Type: `String`
 
 --------
 ### Message (extends [TranscriptItem](#transcriptitem))

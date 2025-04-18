@@ -57,6 +57,6 @@ struct CommonUtils {
     }
     
     static func getLibraryVersion() -> String {
-        return "1.0.7"
+        return "2.0.0"
     }
 }

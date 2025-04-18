@@ -132,7 +132,7 @@ class ChatServiceTests: XCTestCase {
         
         var isExpectationFulfilled = false
         let cancellable = chatService.subscribeToTranscriptList { items in
-            receivedItems = items
+            receivedItems = items.transcriptList
             if !isExpectationFulfilled {
                 expectation.fulfill()
                 isExpectationFulfilled = true
@@ -140,7 +140,7 @@ class ChatServiceTests: XCTestCase {
         }
         
         let transcriptItem = TranscriptItem(timeStamp: "timestamp", contentType: "text/plain", id: "12345", serializedContent: ["content": "testContent"])
-        chatService.transcriptListPublisher.send([transcriptItem])
+        chatService.transcriptListPublisher.send(TranscriptData(transcriptList: [transcriptItem], previousTranscriptNextToken: nil))
         
         waitForExpectations(timeout: 1) { error in
             if let error = error {
@@ -546,6 +546,7 @@ class ChatServiceTests: XCTestCase {
         
         let response = AWSConnectParticipantGetTranscriptResponse()!
         response.transcript = [transcriptItem!]
+        response.nextToken = "testToken"
         
         mockAWSClient.getTranscriptResult = .success(response)
         
@@ -562,6 +563,7 @@ class ChatServiceTests: XCTestCase {
                 case .success(let transcriptResponse):
                     XCTAssertEqual(transcriptResponse.transcript.count, 1, "Retrieved items should match expected items count")
                     XCTAssertEqual(transcriptResponse.transcript.first?.serializedContent?["content"] as! String, "testContent", "Retrieved content should match expected content")
+                    XCTAssertEqual(self.chatService.previousTranscriptNextToken, response.nextToken, "previousTranscriptNextToken should be set to the response's nextToken")
                 case .failure(let error):
                     XCTFail("Unexpected failure: \(error)")
                 }
@@ -610,7 +612,7 @@ class ChatServiceTests: XCTestCase {
         
         waitForExpectations(timeout: 1)
     }
-    
+
     func testfetchReconnectedTranscript_Success() {
         let chatDetails = createChatDetails()
         
@@ -638,6 +640,129 @@ class ChatServiceTests: XCTestCase {
             // Expect getTranscript to be called once since transcript response ID is the same as internal transcript ID
             XCTAssertEqual(self.mockAWSClient.numGetTranscriptCalled, 1)
             expectation.fulfill()
+        }
+        
+        waitForExpectations(timeout: 1)
+    }
+    
+    func testGetTranscript_previousNextTokenUpdate_wontUpdateOnNewerMessage() {
+        let chatDetails = createChatDetails()
+        
+        mockAWSClient.createParticipantConnectionResult = .success(createConnectionDetails())
+        
+        let transcriptItem = AWSConnectParticipantItem()
+        transcriptItem?.absoluteTime = "2025-04-01T20:38:15.204Z"
+        transcriptItem!.content = "testContent"
+        
+        let response = AWSConnectParticipantGetTranscriptResponse()!
+        response.transcript = [transcriptItem!]
+        response.nextToken = "testToken"
+        
+        chatService.internalTranscript.append(TranscriptItem(timeStamp: "2024-04-01T20:38:15.204Z", contentType: "text/plain", id: "1234", serializedContent: nil))
+        
+        mockAWSClient.getTranscriptResult = .success(response)
+        
+        let expectation = self.expectation(description: "Transcript should be retrieved successfully")
+        
+        // Create the chat session to ensure WebSocket is set up
+        chatService.createChatSession(chatDetails: chatDetails) { success, error in
+            XCTAssertTrue(success, "Chat session should be created successfully")
+            XCTAssertNil(error, "Error should be nil")
+            
+            // Get the transcript after the chat session is created
+            self.chatService.getTranscript(scanDirection: .backward, sortOrder: .ascending, maxResults: 15, nextToken: nil, startPosition: nil) { result in
+                switch result {
+                case .success(let transcriptResponse):
+                    XCTAssertEqual(transcriptResponse.transcript.count, 1, "Retrieved items should match expected items count")
+                    XCTAssertEqual(transcriptResponse.transcript.first?.serializedContent?["content"] as! String, "testContent", "Retrieved content should match expected content")
+                    XCTAssertEqual(self.chatService.previousTranscriptNextToken, nil)
+                case .failure(let error):
+                    XCTFail("Unexpected failure: \(error)")
+                }
+                expectation.fulfill()
+            }
+        }
+        
+        waitForExpectations(timeout: 1)
+    }
+    
+    func testGetTranscript_previousNextTokenUpdate_updateOnOlderMessage() {
+        let chatDetails = createChatDetails()
+        
+        mockAWSClient.createParticipantConnectionResult = .success(createConnectionDetails())
+        
+        let transcriptItem = AWSConnectParticipantItem()
+        transcriptItem?.absoluteTime = "2024-04-01T20:38:15.204Z"
+        transcriptItem!.content = "testContent"
+        
+        let response = AWSConnectParticipantGetTranscriptResponse()!
+        response.transcript = [transcriptItem!]
+        response.nextToken = "testToken"
+        
+        chatService.internalTranscript.append(TranscriptItem(timeStamp: "2025-04-01T20:38:15.204Z", contentType: "text/plain", id: "1234", serializedContent: nil))
+        
+        mockAWSClient.getTranscriptResult = .success(response)
+        
+        let expectation = self.expectation(description: "Transcript should be retrieved successfully")
+        
+        // Create the chat session to ensure WebSocket is set up
+        chatService.createChatSession(chatDetails: chatDetails) { success, error in
+            XCTAssertTrue(success, "Chat session should be created successfully")
+            XCTAssertNil(error, "Error should be nil")
+            
+            // Get the transcript after the chat session is created
+            self.chatService.getTranscript(scanDirection: .backward, sortOrder: .ascending, maxResults: 15, nextToken: nil, startPosition: nil) { result in
+                switch result {
+                case .success(let transcriptResponse):
+                    XCTAssertEqual(transcriptResponse.transcript.count, 1, "Retrieved items should match expected items count")
+                    XCTAssertEqual(transcriptResponse.transcript.first?.serializedContent?["content"] as! String, "testContent", "Retrieved content should match expected content")
+                    XCTAssertEqual(self.chatService.previousTranscriptNextToken, response.nextToken)
+                case .failure(let error):
+                    XCTFail("Unexpected failure: \(error)")
+                }
+                expectation.fulfill()
+            }
+        }
+        
+        waitForExpectations(timeout: 1)
+    }
+
+    func testGetTranscript_previousNextTokenUpdate_wontUpdateOnForwardScan() {
+        let chatDetails = createChatDetails()
+        
+        mockAWSClient.createParticipantConnectionResult = .success(createConnectionDetails())
+        
+        let transcriptItem = AWSConnectParticipantItem()
+        transcriptItem?.absoluteTime = "2024-04-01T20:38:15.204Z"
+        transcriptItem!.content = "testContent"
+        
+        let response = AWSConnectParticipantGetTranscriptResponse()!
+        response.transcript = [transcriptItem!]
+        response.nextToken = "testToken"
+        
+        chatService.internalTranscript.append(TranscriptItem(timeStamp: "2025-04-01T20:38:15.204Z", contentType: "text/plain", id: "1234", serializedContent: nil))
+        
+        mockAWSClient.getTranscriptResult = .success(response)
+        
+        let expectation = self.expectation(description: "Transcript should be retrieved successfully")
+        
+        // Create the chat session to ensure WebSocket is set up
+        chatService.createChatSession(chatDetails: chatDetails) { success, error in
+            XCTAssertTrue(success, "Chat session should be created successfully")
+            XCTAssertNil(error, "Error should be nil")
+            
+            // Get the transcript after the chat session is created
+            self.chatService.getTranscript(scanDirection: .forward, sortOrder: .ascending, maxResults: 15, nextToken: nil, startPosition: nil) { result in
+                switch result {
+                case .success(let transcriptResponse):
+                    XCTAssertEqual(transcriptResponse.transcript.count, 1, "Retrieved items should match expected items count")
+                    XCTAssertEqual(transcriptResponse.transcript.first?.serializedContent?["content"] as! String, "testContent", "Retrieved content should match expected content")
+                    XCTAssertEqual(self.chatService.previousTranscriptNextToken, nil)
+                case .failure(let error):
+                    XCTFail("Unexpected failure: \(error)")
+                }
+                expectation.fulfill()
+            }
         }
         
         waitForExpectations(timeout: 1)

@@ -21,7 +21,7 @@ protocol ChatServiceProtocol {
     func getAttachmentDownloadUrl(attachmentId: String, completion: @escaping (Result<URL, Error>) -> Void)
     func subscribeToEvents(handleEvent: @escaping (ChatEvent) -> Void) -> AnyCancellable
     func subscribeToTranscriptItem(handleTranscriptItem: @escaping (TranscriptItem) -> Void) -> AnyCancellable
-    func subscribeToTranscriptList(handleTranscriptList: @escaping ([TranscriptItem]) -> Void) -> AnyCancellable
+    func subscribeToTranscriptList(handleTranscriptList: @escaping (TranscriptData) -> Void) -> AnyCancellable
     func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void)
     func configure(config: GlobalConfig)
     func getConnectionDetailsProvider() -> ConnectionDetailsProviderProtocol
@@ -31,12 +31,13 @@ protocol ChatServiceProtocol {
 class ChatService : ChatServiceProtocol {
     var eventPublisher = PassthroughSubject<ChatEvent, Never>()
     var transcriptItemPublisher = PassthroughSubject<TranscriptItem, Never>()
-    var transcriptListPublisher = CurrentValueSubject<[TranscriptItem], Never>([])
+    var transcriptListPublisher = CurrentValueSubject<(TranscriptData), Never>(TranscriptData(transcriptList:[], previousTranscriptNextToken: nil))
     var urlSession = URLSession(configuration: .default)
     var apiClient: APIClientProtocol = APIClient.shared
     var messageReceiptsManager: MessageReceiptsManagerProtocol?
     var websocketManager: WebsocketManagerProtocol?
     var internalTranscript: [TranscriptItem] = []
+    var previousTranscriptNextToken: String? = nil
     private var eventCancellables = Set<AnyCancellable>()
     private var transcriptItemCancellables = Set<AnyCancellable>()
     private var transcriptListCancellables = Set<AnyCancellable>()
@@ -51,7 +52,7 @@ class ChatService : ChatServiceProtocol {
     private var attachmentIdToTempMessageIdMap: [String: String] = [:]
     private var transcriptDict: [String: TranscriptItem] = [:]
     private var tempMessageIdToFileUrl: [String: URL] = [:]
-    
+    private var transcriptListUpdateDebounceTimer: Timer?
     
     init(awsClient: AWSClientProtocol = AWSClient.shared,
         connectionDetailsProvider: ConnectionDetailsProviderProtocol = ConnectionDetailsProvider.shared,
@@ -198,7 +199,7 @@ class ChatService : ChatServiceProtocol {
         }
         
         if transcriptDict.count != initialCount {
-            transcriptListPublisher.send(internalTranscript)
+            transcriptListPublisher.send(TranscriptData(transcriptList: internalTranscript, previousTranscriptNextToken: nil))
         }
     }
     
@@ -225,15 +226,20 @@ class ChatService : ChatServiceProtocol {
             }
         }
         
-        // Send out updated transcript
-        self.transcriptListPublisher.send(internalTranscript)
+        // Reduce frequency of published transcriptList updates
+        transcriptListUpdateDebounceTimer?.invalidate()
+        transcriptListUpdateDebounceTimer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { [weak self] _ in
+            guard let self = self else { return }
+            // Send out updated transcript
+            self.transcriptListPublisher.send(TranscriptData(transcriptList: internalTranscript, previousTranscriptNextToken: previousTranscriptNextToken))
+        }
     }
     
-    func subscribeToTranscriptList(handleTranscriptList: @escaping ([TranscriptItem]) -> Void) -> AnyCancellable {
+    func subscribeToTranscriptList(handleTranscriptList: @escaping (TranscriptData) -> Void) -> AnyCancellable {
         let subscription = transcriptListPublisher
             .receive(on: RunLoop.main)
-            .sink(receiveValue: { updatedTranscript in
-                handleTranscriptList(updatedTranscript)
+            .sink(receiveValue: { transcriptData in
+                handleTranscriptList(transcriptData)
             })
         transcriptListCancellables.insert(subscription)
         return subscription
@@ -331,7 +337,7 @@ class ChatService : ChatServiceProtocol {
                 transcriptDict.removeValue(forKey: oldId)
                 internalTranscript.removeAll { $0.id == oldId }
                 // Send out updated transcript
-                self.transcriptListPublisher.send(internalTranscript)
+                self.transcriptListPublisher.send(TranscriptData(transcriptList: internalTranscript, previousTranscriptNextToken: previousTranscriptNextToken))
             } else {
                 // Update the placeholder message's ID to the new ID
                 placeholderMessage.updateId(newId)
@@ -358,7 +364,7 @@ class ChatService : ChatServiceProtocol {
         internalTranscript.removeAll { $0.id == messageId }
         transcriptDict.removeValue(forKey: messageId)
         // Send out updated transcript with old message removed
-        self.transcriptListPublisher.send(internalTranscript)
+        self.transcriptListPublisher.send(TranscriptData(transcriptList: internalTranscript, previousTranscriptNextToken: previousTranscriptNextToken))
 
         // as the next step, attempt to resend the message based on its type
         // if old message is an attachment
@@ -756,6 +762,29 @@ class ChatService : ChatServiceProtocol {
                     return
                 }
                 
+                let isStartPositionDefined = getTranscriptArgs?.startPosition != nil &&
+                    (getTranscriptArgs?.startPosition?.identifier != nil ||
+                     getTranscriptArgs?.startPosition?.absoluteTime != nil ||
+                     getTranscriptArgs?.startPosition?.mostRecent != nil
+                    )
+                
+                // Ignore setting previousTranscriptNextToken if items aren't going from newest -> oldest.
+                // We also ignore if getTranscript is called with a start position but returns empty transcript
+                // since that is indicative of an invalid StartPosition.
+                if getTranscriptArgs?.scanDirection == .backward && !(isStartPositionDefined && transcriptItems.isEmpty) {
+                    if let internalTranscript = self?.internalTranscript, internalTranscript.isEmpty || transcriptItems.isEmpty {
+                        self?.previousTranscriptNextToken = response.nextToken
+                        self?.transcriptListPublisher.send(TranscriptData(transcriptList: internalTranscript, previousTranscriptNextToken: self?.previousTranscriptNextToken))
+                    } else {
+                        let oldestTranscriptItem = getTranscriptArgs?.sortOrder == .ascending ? transcriptItems.first : transcriptItems.last
+                        let oldestInternalTranscriptItem = self?.internalTranscript.first
+                        
+                        if let firstTranscriptItemTime = oldestTranscriptItem?.absoluteTime, let firstInternalTranscriptItemTime = oldestInternalTranscriptItem?.timeStamp, firstTranscriptItemTime <= firstInternalTranscriptItemTime {
+                            self?.previousTranscriptNextToken = response.nextToken
+                        }
+                    }
+                }
+                
                 if let websocketManager = self?.websocketManager {
                     let formattedItems = websocketManager.formatAndProcessTranscriptItems(transcriptItems)
                     let transcriptResponse = TranscriptResponse(
@@ -817,7 +846,7 @@ class ChatService : ChatServiceProtocol {
         
         eventPublisher = PassthroughSubject<ChatEvent, Never>()
         transcriptItemPublisher = PassthroughSubject<TranscriptItem, Never>()
-        transcriptListPublisher = CurrentValueSubject<[TranscriptItem], Never>([])
+        transcriptListPublisher = CurrentValueSubject<TranscriptData, Never>(TranscriptData(transcriptList:[], previousTranscriptNextToken: nil))
         transcriptItemSet = Set<String>()
         transcriptDict = [:]
         internalTranscript = []
