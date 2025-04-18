@@ -771,7 +771,7 @@ class ChatService : ChatServiceProtocol {
                 // Ignore setting previousTranscriptNextToken if items aren't going from newest -> oldest.
                 // We also ignore if getTranscript is called with a start position but returns empty transcript
                 // since that is indicative of an invalid StartPosition.
-                if getTranscriptArgs?.scanDirection == .backward || !(isStartPositionDefined && transcriptItems.isEmpty) {
+                if getTranscriptArgs?.scanDirection == .backward && !(isStartPositionDefined && transcriptItems.isEmpty) {
                     if let internalTranscript = self?.internalTranscript, internalTranscript.isEmpty || transcriptItems.isEmpty {
                         self?.previousTranscriptNextToken = response.nextToken
                         self?.transcriptListPublisher.send(TranscriptData(transcriptList: internalTranscript, previousTranscriptNextToken: self?.previousTranscriptNextToken))

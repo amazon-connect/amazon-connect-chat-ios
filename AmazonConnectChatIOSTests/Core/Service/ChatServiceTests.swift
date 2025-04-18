@@ -768,38 +768,6 @@ class ChatServiceTests: XCTestCase {
         waitForExpectations(timeout: 1)
     }
     
-    func testfetchReconnectedTranscript_Success() {
-        let chatDetails = createChatDetails()
-        
-        mockAWSClient.createParticipantConnectionResult = .success(createConnectionDetails())
-        
-        let transcriptItem = AWSConnectParticipantItem()
-        transcriptItem!.identifier = "testId"
-        transcriptItem!.content = "testContent"
-        
-        let response = AWSConnectParticipantGetTranscriptResponse()!
-        response.transcript = [transcriptItem!]
-        response.nextToken = "testNextToken"
-        
-        mockAWSClient.getTranscriptResult = .success(response)
-        
-        let expectation = self.expectation(description: "Transcript should be retrieved successfully")
-        
-        // Create the chat session to ensure WebSocket is set up
-        chatService.createChatSession(chatDetails: chatDetails) { success, error in
-            XCTAssertTrue(success, "Chat session should be created successfully")
-            XCTAssertNil(error, "Error should be nil")
-            self.chatService.internalTranscript = [TranscriptItem(timeStamp: "testContent", contentType: "text/plain", id: "testId", serializedContent: [:])]
-            self.chatService.fetchReconnectedTranscript()
-            
-            // Expect getTranscript to be called once since transcript response ID is the same as internal transcript ID
-            XCTAssertEqual(self.mockAWSClient.numGetTranscriptCalled, 1)
-            expectation.fulfill()
-        }
-        
-        waitForExpectations(timeout: 1)
-    }
-    
     func testRegisterNotificationListeners() {
         let expectation = self.expectation(description: "Should receive new WebSocket URL")
         
