@@ -95,7 +95,7 @@ public protocol ChatSessionProtocol {
     var onConnectionReEstablished: (() -> Void)? { get set }
     var onConnectionBroken: (() -> Void)? { get set }
     var onMessageReceived: ((TranscriptItem) -> Void)? { get set }
-    var onTranscriptUpdated: (([TranscriptItem]) -> Void)? { get set }
+    var onTranscriptUpdated: ((TranscriptData) -> Void)? { get set }
     var onChatEnded: (() -> Void)? { get set }
     var onDeepHeartbeatFailure: (() -> Void)? { get set }
 }
@@ -111,7 +111,7 @@ public class ChatSession: ChatSessionProtocol {
     public var onConnectionReEstablished: (() -> Void)?
     public var onConnectionBroken: (() -> Void)?
     public var onMessageReceived: ((TranscriptItem) -> Void)?
-    public var onTranscriptUpdated: (([TranscriptItem]) -> Void)?
+    public var onTranscriptUpdated: ((TranscriptData) -> Void)?
     public var onChatEnded: (() -> Void)?
     public var onDeepHeartbeatFailure: (() -> Void)?
     
@@ -148,10 +148,10 @@ public class ChatSession: ChatSessionProtocol {
             }
         }
         
-        transcriptSubscription = chatService.subscribeToTranscriptList { [weak self] transcriptList in
+        transcriptSubscription = chatService.subscribeToTranscriptList { [weak self] transcriptData in
             DispatchQueue.main.async {
-                if !transcriptList.isEmpty {
-                    self?.onTranscriptUpdated?(transcriptList)
+                if !transcriptData.transcriptList.isEmpty {
+                    self?.onTranscriptUpdated?(transcriptData)
                 }
             }
         }

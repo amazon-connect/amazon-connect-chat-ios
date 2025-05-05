@@ -42,3 +42,8 @@ public class TranscriptItem: TranscriptItemProtocol {
         self.timeStamp = newTimeStamp
     }
 }
+
+public struct TranscriptData {
+    public let transcriptList: [TranscriptItem]
+    public let previousTranscriptNextToken: String?
+}
