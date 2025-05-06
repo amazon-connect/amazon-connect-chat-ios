@@ -68,7 +68,7 @@ public protocol ChatSessionProtocol {
   var onConnectionReEstablished: (() -> Swift.Void)? { get set }
   var onConnectionBroken: (() -> Swift.Void)? { get set }
   var onMessageReceived: ((AmazonConnectChatIOS.TranscriptItem) -> Swift.Void)? { get set }
-  var onTranscriptUpdated: (([AmazonConnectChatIOS.TranscriptItem]) -> Swift.Void)? { get set }
+  var onTranscriptUpdated: ((AmazonConnectChatIOS.TranscriptData) -> Swift.Void)? { get set }
   var onChatEnded: (() -> Swift.Void)? { get set }
   var onDeepHeartbeatFailure: (() -> Swift.Void)? { get set }
 }
@@ -78,7 +78,7 @@ public protocol ChatSessionProtocol {
   public var onConnectionReEstablished: (() -> Swift.Void)?
   public var onConnectionBroken: (() -> Swift.Void)?
   public var onMessageReceived: ((AmazonConnectChatIOS.TranscriptItem) -> Swift.Void)?
-  public var onTranscriptUpdated: (([AmazonConnectChatIOS.TranscriptItem]) -> Swift.Void)?
+  public var onTranscriptUpdated: ((AmazonConnectChatIOS.TranscriptData) -> Swift.Void)?
   public var onChatEnded: (() -> Swift.Void)?
   public var onDeepHeartbeatFailure: (() -> Swift.Void)?
   public func isChatSessionActive() -> Swift.Bool
@@ -360,6 +360,10 @@ public class TranscriptItem : AmazonConnectChatIOS.TranscriptItemProtocol {
   public var hashValue: Swift.Int {
     get
   }
+}
+public struct TranscriptData {
+  public let transcriptList: [AmazonConnectChatIOS.TranscriptItem]
+  public let previousTranscriptNextToken: Swift.String?
 }
 public enum AttachmentTypes : Swift.String {
   case csv

@@ -2517,12 +2517,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
-                "printedName": "(([AmazonConnectChatIOS.TranscriptItem]) -> ())?",
+                "printedName": "((AmazonConnectChatIOS.TranscriptData) -> ())?",
                 "children": [
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "([AmazonConnectChatIOS.TranscriptItem]) -> ()",
+                    "printedName": "(AmazonConnectChatIOS.TranscriptData) -> ()",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -2531,17 +2531,9 @@
                       },
                       {
                         "kind": "TypeNominal",
-                        "name": "Array",
-                        "printedName": "[AmazonConnectChatIOS.TranscriptItem]",
-                        "children": [
-                          {
-                            "kind": "TypeNominal",
-                            "name": "TranscriptItem",
-                            "printedName": "AmazonConnectChatIOS.TranscriptItem",
-                            "usr": "s:20AmazonConnectChatIOS14TranscriptItemC"
-                          }
-                        ],
-                        "usr": "s:Sa"
+                        "name": "TranscriptData",
+                        "printedName": "AmazonConnectChatIOS.TranscriptData",
+                        "usr": "s:20AmazonConnectChatIOS14TranscriptDataV"
                       }
                     ]
                   }
@@ -2550,8 +2542,8 @@
               }
             ],
             "declKind": "Var",
-            "usr": "s:20AmazonConnectChatIOS0C15SessionProtocolP19onTranscriptUpdatedySayAA0H4ItemCGcSgvp",
-            "mangledName": "$s20AmazonConnectChatIOS0C15SessionProtocolP19onTranscriptUpdatedySayAA0H4ItemCGcSgvp",
+            "usr": "s:20AmazonConnectChatIOS0C15SessionProtocolP19onTranscriptUpdatedyAA0H4DataVcSgvp",
+            "mangledName": "$s20AmazonConnectChatIOS0C15SessionProtocolP19onTranscriptUpdatedyAA0H4DataVcSgvp",
             "moduleName": "AmazonConnectChatIOS",
             "protocolReq": true,
             "accessors": [
@@ -2563,12 +2555,12 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Optional",
-                    "printedName": "(([AmazonConnectChatIOS.TranscriptItem]) -> ())?",
+                    "printedName": "((AmazonConnectChatIOS.TranscriptData) -> ())?",
                     "children": [
                       {
                         "kind": "TypeFunc",
                         "name": "Function",
-                        "printedName": "([AmazonConnectChatIOS.TranscriptItem]) -> ()",
+                        "printedName": "(AmazonConnectChatIOS.TranscriptData) -> ()",
                         "children": [
                           {
                             "kind": "TypeNominal",
@@ -2577,17 +2569,9 @@
                           },
                           {
                             "kind": "TypeNominal",
-                            "name": "Array",
-                            "printedName": "[AmazonConnectChatIOS.TranscriptItem]",
-                            "children": [
-                              {
-                                "kind": "TypeNominal",
-                                "name": "TranscriptItem",
-                                "printedName": "AmazonConnectChatIOS.TranscriptItem",
-                                "usr": "s:20AmazonConnectChatIOS14TranscriptItemC"
-                              }
-                            ],
-                            "usr": "s:Sa"
+                            "name": "TranscriptData",
+                            "printedName": "AmazonConnectChatIOS.TranscriptData",
+                            "usr": "s:20AmazonConnectChatIOS14TranscriptDataV"
                           }
                         ]
                       }
@@ -2596,8 +2580,8 @@
                   }
                 ],
                 "declKind": "Accessor",
-                "usr": "s:20AmazonConnectChatIOS0C15SessionProtocolP19onTranscriptUpdatedySayAA0H4ItemCGcSgvg",
-                "mangledName": "$s20AmazonConnectChatIOS0C15SessionProtocolP19onTranscriptUpdatedySayAA0H4ItemCGcSgvg",
+                "usr": "s:20AmazonConnectChatIOS0C15SessionProtocolP19onTranscriptUpdatedyAA0H4DataVcSgvg",
+                "mangledName": "$s20AmazonConnectChatIOS0C15SessionProtocolP19onTranscriptUpdatedyAA0H4DataVcSgvg",
                 "moduleName": "AmazonConnectChatIOS",
                 "genericSig": "<τ_0_0 where τ_0_0 : AmazonConnectChatIOS.ChatSessionProtocol>",
                 "sugared_genericSig": "<Self where Self : AmazonConnectChatIOS.ChatSessionProtocol>",
@@ -2618,12 +2602,12 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Optional",
-                    "printedName": "(([AmazonConnectChatIOS.TranscriptItem]) -> ())?",
+                    "printedName": "((AmazonConnectChatIOS.TranscriptData) -> ())?",
                     "children": [
                       {
                         "kind": "TypeFunc",
                         "name": "Function",
-                        "printedName": "([AmazonConnectChatIOS.TranscriptItem]) -> ()",
+                        "printedName": "(AmazonConnectChatIOS.TranscriptData) -> ()",
                         "children": [
                           {
                             "kind": "TypeNominal",
@@ -2632,17 +2616,9 @@
                           },
                           {
                             "kind": "TypeNominal",
-                            "name": "Array",
-                            "printedName": "[AmazonConnectChatIOS.TranscriptItem]",
-                            "children": [
-                              {
-                                "kind": "TypeNominal",
-                                "name": "TranscriptItem",
-                                "printedName": "AmazonConnectChatIOS.TranscriptItem",
-                                "usr": "s:20AmazonConnectChatIOS14TranscriptItemC"
-                              }
-                            ],
-                            "usr": "s:Sa"
+                            "name": "TranscriptData",
+                            "printedName": "AmazonConnectChatIOS.TranscriptData",
+                            "usr": "s:20AmazonConnectChatIOS14TranscriptDataV"
                           }
                         ]
                       }
@@ -2651,8 +2627,8 @@
                   }
                 ],
                 "declKind": "Accessor",
-                "usr": "s:20AmazonConnectChatIOS0C15SessionProtocolP19onTranscriptUpdatedySayAA0H4ItemCGcSgvs",
-                "mangledName": "$s20AmazonConnectChatIOS0C15SessionProtocolP19onTranscriptUpdatedySayAA0H4ItemCGcSgvs",
+                "usr": "s:20AmazonConnectChatIOS0C15SessionProtocolP19onTranscriptUpdatedyAA0H4DataVcSgvs",
+                "mangledName": "$s20AmazonConnectChatIOS0C15SessionProtocolP19onTranscriptUpdatedyAA0H4DataVcSgvs",
                 "moduleName": "AmazonConnectChatIOS",
                 "genericSig": "<τ_0_0 where τ_0_0 : AmazonConnectChatIOS.ChatSessionProtocol>",
                 "sugared_genericSig": "<Self where Self : AmazonConnectChatIOS.ChatSessionProtocol>",
@@ -2672,8 +2648,8 @@
                   }
                 ],
                 "declKind": "Accessor",
-                "usr": "s:20AmazonConnectChatIOS0C15SessionProtocolP19onTranscriptUpdatedySayAA0H4ItemCGcSgvM",
-                "mangledName": "$s20AmazonConnectChatIOS0C15SessionProtocolP19onTranscriptUpdatedySayAA0H4ItemCGcSgvM",
+                "usr": "s:20AmazonConnectChatIOS0C15SessionProtocolP19onTranscriptUpdatedyAA0H4DataVcSgvM",
+                "mangledName": "$s20AmazonConnectChatIOS0C15SessionProtocolP19onTranscriptUpdatedyAA0H4DataVcSgvM",
                 "moduleName": "AmazonConnectChatIOS",
                 "genericSig": "<τ_0_0 where τ_0_0 : AmazonConnectChatIOS.ChatSessionProtocol>",
                 "sugared_genericSig": "<Self where Self : AmazonConnectChatIOS.ChatSessionProtocol>",
@@ -3645,12 +3621,12 @@
               {
                 "kind": "TypeNominal",
                 "name": "Optional",
-                "printedName": "(([AmazonConnectChatIOS.TranscriptItem]) -> ())?",
+                "printedName": "((AmazonConnectChatIOS.TranscriptData) -> ())?",
                 "children": [
                   {
                     "kind": "TypeFunc",
                     "name": "Function",
-                    "printedName": "([AmazonConnectChatIOS.TranscriptItem]) -> ()",
+                    "printedName": "(AmazonConnectChatIOS.TranscriptData) -> ()",
                     "children": [
                       {
                         "kind": "TypeNominal",
@@ -3659,17 +3635,9 @@
                       },
                       {
                         "kind": "TypeNominal",
-                        "name": "Array",
-                        "printedName": "[AmazonConnectChatIOS.TranscriptItem]",
-                        "children": [
-                          {
-                            "kind": "TypeNominal",
-                            "name": "TranscriptItem",
-                            "printedName": "AmazonConnectChatIOS.TranscriptItem",
-                            "usr": "s:20AmazonConnectChatIOS14TranscriptItemC"
-                          }
-                        ],
-                        "usr": "s:Sa"
+                        "name": "TranscriptData",
+                        "printedName": "AmazonConnectChatIOS.TranscriptData",
+                        "usr": "s:20AmazonConnectChatIOS14TranscriptDataV"
                       }
                     ]
                   }
@@ -3678,8 +3646,8 @@
               }
             ],
             "declKind": "Var",
-            "usr": "s:20AmazonConnectChatIOS0C7SessionC19onTranscriptUpdatedySayAA0G4ItemCGcSgvp",
-            "mangledName": "$s20AmazonConnectChatIOS0C7SessionC19onTranscriptUpdatedySayAA0G4ItemCGcSgvp",
+            "usr": "s:20AmazonConnectChatIOS0C7SessionC19onTranscriptUpdatedyAA0G4DataVcSgvp",
+            "mangledName": "$s20AmazonConnectChatIOS0C7SessionC19onTranscriptUpdatedyAA0G4DataVcSgvp",
             "moduleName": "AmazonConnectChatIOS",
             "declAttributes": [
               "HasInitialValue",
@@ -3696,12 +3664,12 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Optional",
-                    "printedName": "(([AmazonConnectChatIOS.TranscriptItem]) -> ())?",
+                    "printedName": "((AmazonConnectChatIOS.TranscriptData) -> ())?",
                     "children": [
                       {
                         "kind": "TypeFunc",
                         "name": "Function",
-                        "printedName": "([AmazonConnectChatIOS.TranscriptItem]) -> ()",
+                        "printedName": "(AmazonConnectChatIOS.TranscriptData) -> ()",
                         "children": [
                           {
                             "kind": "TypeNominal",
@@ -3710,17 +3678,9 @@
                           },
                           {
                             "kind": "TypeNominal",
-                            "name": "Array",
-                            "printedName": "[AmazonConnectChatIOS.TranscriptItem]",
-                            "children": [
-                              {
-                                "kind": "TypeNominal",
-                                "name": "TranscriptItem",
-                                "printedName": "AmazonConnectChatIOS.TranscriptItem",
-                                "usr": "s:20AmazonConnectChatIOS14TranscriptItemC"
-                              }
-                            ],
-                            "usr": "s:Sa"
+                            "name": "TranscriptData",
+                            "printedName": "AmazonConnectChatIOS.TranscriptData",
+                            "usr": "s:20AmazonConnectChatIOS14TranscriptDataV"
                           }
                         ]
                       }
@@ -3729,8 +3689,8 @@
                   }
                 ],
                 "declKind": "Accessor",
-                "usr": "s:20AmazonConnectChatIOS0C7SessionC19onTranscriptUpdatedySayAA0G4ItemCGcSgvg",
-                "mangledName": "$s20AmazonConnectChatIOS0C7SessionC19onTranscriptUpdatedySayAA0G4ItemCGcSgvg",
+                "usr": "s:20AmazonConnectChatIOS0C7SessionC19onTranscriptUpdatedyAA0G4DataVcSgvg",
+                "mangledName": "$s20AmazonConnectChatIOS0C7SessionC19onTranscriptUpdatedyAA0G4DataVcSgvg",
                 "moduleName": "AmazonConnectChatIOS",
                 "implicit": true,
                 "accessorKind": "get"
@@ -3748,12 +3708,12 @@
                   {
                     "kind": "TypeNominal",
                     "name": "Optional",
-                    "printedName": "(([AmazonConnectChatIOS.TranscriptItem]) -> ())?",
+                    "printedName": "((AmazonConnectChatIOS.TranscriptData) -> ())?",
                     "children": [
                       {
                         "kind": "TypeFunc",
                         "name": "Function",
-                        "printedName": "([AmazonConnectChatIOS.TranscriptItem]) -> ()",
+                        "printedName": "(AmazonConnectChatIOS.TranscriptData) -> ()",
                         "children": [
                           {
                             "kind": "TypeNominal",
@@ -3762,17 +3722,9 @@
                           },
                           {
                             "kind": "TypeNominal",
-                            "name": "Array",
-                            "printedName": "[AmazonConnectChatIOS.TranscriptItem]",
-                            "children": [
-                              {
-                                "kind": "TypeNominal",
-                                "name": "TranscriptItem",
-                                "printedName": "AmazonConnectChatIOS.TranscriptItem",
-                                "usr": "s:20AmazonConnectChatIOS14TranscriptItemC"
-                              }
-                            ],
-                            "usr": "s:Sa"
+                            "name": "TranscriptData",
+                            "printedName": "AmazonConnectChatIOS.TranscriptData",
+                            "usr": "s:20AmazonConnectChatIOS14TranscriptDataV"
                           }
                         ]
                       }
@@ -3781,8 +3733,8 @@
                   }
                 ],
                 "declKind": "Accessor",
-                "usr": "s:20AmazonConnectChatIOS0C7SessionC19onTranscriptUpdatedySayAA0G4ItemCGcSgvs",
-                "mangledName": "$s20AmazonConnectChatIOS0C7SessionC19onTranscriptUpdatedySayAA0G4ItemCGcSgvs",
+                "usr": "s:20AmazonConnectChatIOS0C7SessionC19onTranscriptUpdatedyAA0G4DataVcSgvs",
+                "mangledName": "$s20AmazonConnectChatIOS0C7SessionC19onTranscriptUpdatedyAA0G4DataVcSgvs",
                 "moduleName": "AmazonConnectChatIOS",
                 "implicit": true,
                 "accessorKind": "set"
@@ -3799,8 +3751,8 @@
                   }
                 ],
                 "declKind": "Accessor",
-                "usr": "s:20AmazonConnectChatIOS0C7SessionC19onTranscriptUpdatedySayAA0G4ItemCGcSgvM",
-                "mangledName": "$s20AmazonConnectChatIOS0C7SessionC19onTranscriptUpdatedySayAA0G4ItemCGcSgvM",
+                "usr": "s:20AmazonConnectChatIOS0C7SessionC19onTranscriptUpdatedyAA0G4DataVcSgvM",
+                "mangledName": "$s20AmazonConnectChatIOS0C7SessionC19onTranscriptUpdatedyAA0G4DataVcSgvM",
                 "moduleName": "AmazonConnectChatIOS",
                 "implicit": true,
                 "accessorKind": "_modify"
@@ -15073,6 +15025,156 @@
         ]
       },
       {
+        "kind": "TypeDecl",
+        "name": "TranscriptData",
+        "printedName": "TranscriptData",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "transcriptList",
+            "printedName": "transcriptList",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[AmazonConnectChatIOS.TranscriptItem]",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "TranscriptItem",
+                    "printedName": "AmazonConnectChatIOS.TranscriptItem",
+                    "usr": "s:20AmazonConnectChatIOS14TranscriptItemC"
+                  }
+                ],
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:20AmazonConnectChatIOS14TranscriptDataV14transcriptListSayAA0E4ItemCGvp",
+            "mangledName": "$s20AmazonConnectChatIOS14TranscriptDataV14transcriptListSayAA0E4ItemCGvp",
+            "moduleName": "AmazonConnectChatIOS",
+            "declAttributes": [
+              "HasStorage",
+              "AccessControl"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[AmazonConnectChatIOS.TranscriptItem]",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "TranscriptItem",
+                        "printedName": "AmazonConnectChatIOS.TranscriptItem",
+                        "usr": "s:20AmazonConnectChatIOS14TranscriptItemC"
+                      }
+                    ],
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:20AmazonConnectChatIOS14TranscriptDataV14transcriptListSayAA0E4ItemCGvg",
+                "mangledName": "$s20AmazonConnectChatIOS14TranscriptDataV14transcriptListSayAA0E4ItemCGvg",
+                "moduleName": "AmazonConnectChatIOS",
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "previousTranscriptNextToken",
+            "printedName": "previousTranscriptNextToken",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:20AmazonConnectChatIOS14TranscriptDataV08previousE9NextTokenSSSgvp",
+            "mangledName": "$s20AmazonConnectChatIOS14TranscriptDataV08previousE9NextTokenSSSgvp",
+            "moduleName": "AmazonConnectChatIOS",
+            "declAttributes": [
+              "HasStorage",
+              "AccessControl"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:20AmazonConnectChatIOS14TranscriptDataV08previousE9NextTokenSSSgvg",
+                "mangledName": "$s20AmazonConnectChatIOS14TranscriptDataV08previousE9NextTokenSSSgvg",
+                "moduleName": "AmazonConnectChatIOS",
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          }
+        ],
+        "declKind": "Struct",
+        "usr": "s:20AmazonConnectChatIOS14TranscriptDataV",
+        "mangledName": "$s20AmazonConnectChatIOS14TranscriptDataV",
+        "moduleName": "AmazonConnectChatIOS",
+        "declAttributes": [
+          "AccessControl"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          }
+        ]
+      },
+      {
         "kind": "Import",
         "name": "Foundation",
         "printedName": "Foundation",
@@ -22922,7 +23024,7 @@
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatSession.swift",
       "kind": "IntegerLiteral",
-      "offset": 9078,
+      "offset": 9089,
       "length": 2,
       "value": "30"
     },
@@ -22943,49 +23045,49 @@
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "Array",
-      "offset": 2396,
+      "offset": 2424,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "Array",
-      "offset": 2676,
+      "offset": 2739,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "BooleanLiteral",
-      "offset": 3112,
+      "offset": 3226,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "Dictionary",
-      "offset": 3394,
+      "offset": 3508,
       "length": 3,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "Dictionary",
-      "offset": 3457,
+      "offset": 3571,
       "length": 3,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "Dictionary",
-      "offset": 3517,
+      "offset": 3631,
       "length": 3,
       "value": "[]"
     },
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "FloatLiteral",
-      "offset": 9247,
+      "offset": 9414,
       "length": 3,
       "value": "0.0"
     },

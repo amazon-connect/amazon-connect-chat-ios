@@ -14,15 +14,15 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		OdmpSQ4cTupbrWJMuWDpBLDWB34=
+		oNYErSO7XGvn662muUl6891Y3b4=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
-		E4KreLKDih9ZmUTm+5sMNih73vY=
+		bLjgPKMM0D1WJkyS61zsozkuxwk=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
-		hchSCCxDwe55pjkKb23LUblM96o=
+		WXKeRjb6GJJMMzugBZBe9MU5hY0=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
 		<data>
@@ -30,15 +30,15 @@
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		hchSCCxDwe55pjkKb23LUblM96o=
+		WXKeRjb6GJJMMzugBZBe9MU5hY0=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
-		E4KreLKDih9ZmUTm+5sMNih73vY=
+		bLjgPKMM0D1WJkyS61zsozkuxwk=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
-		LIGTMeW3XFe3PJ7PvEB1/KELdqQ=
+		0SScf61ifKpO2Khy2bsb6CwGdt0=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<data>
@@ -46,7 +46,7 @@
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		LIGTMeW3XFe3PJ7PvEB1/KELdqQ=
+		0SScf61ifKpO2Khy2bsb6CwGdt0=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -77,14 +77,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Bokw4yjCXq73W9ir4s7WTOGh8jZNpmEtkLA6rEaOgjI=
+			uOSehvmhapVSKXYoM5YjTXfxW30hl02SM8NjNNnYIFg=
 			</data>
 		</dict>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			8gv/JUprN1bR0nYE0n6CocOMFXCtRZuR/Q2SbPHZGnY=
+			kljzMYH8gAZPvl0/nRohPCR85OwItrrr5Y1FV34rhd4=
 			</data>
 		</dict>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
@@ -98,21 +98,21 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			8gv/JUprN1bR0nYE0n6CocOMFXCtRZuR/Q2SbPHZGnY=
+			kljzMYH8gAZPvl0/nRohPCR85OwItrrr5Y1FV34rhd4=
 			</data>
 		</dict>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			Bokw4yjCXq73W9ir4s7WTOGh8jZNpmEtkLA6rEaOgjI=
+			uOSehvmhapVSKXYoM5YjTXfxW30hl02SM8NjNNnYIFg=
 			</data>
 		</dict>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			xpMWodmPz7CQ3iPFsJUI6gUruJNaY4N9/db79RMWmR4=
+			N4QXm1R8ZTYoS0EL+1H2rc1AVgmHZ20G3UGJRO2J6Y4=
 			</data>
 		</dict>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
@@ -126,7 +126,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			xpMWodmPz7CQ3iPFsJUI6gUruJNaY4N9/db79RMWmR4=
+			N4QXm1R8ZTYoS0EL+1H2rc1AVgmHZ20G3UGJRO2J6Y4=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
