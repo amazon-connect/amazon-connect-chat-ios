@@ -215,7 +215,9 @@ class ChatService : ChatServiceProtocol {
         self.transcriptItemPublisher.send(transcriptItem)
         
         if let index = internalTranscript.firstIndex(where: { $0.id == transcriptItem.id }) {
+            let existingItem = internalTranscript[index]
             // Update existing item
+            transcriptItem.updatePersistentId(existingItem.persistentId)
             internalTranscript[index] = transcriptItem
         } else {
             // Insert new item based on timestamp comparison
@@ -336,6 +338,7 @@ class ChatService : ChatServiceProtocol {
             if transcriptDict[newId] != nil {
                 transcriptDict.removeValue(forKey: oldId)
                 internalTranscript.removeAll { $0.id == oldId }
+                transcriptDict[newId]?.updatePersistentId(oldId)
                 // Send out updated transcript
                 self.transcriptListPublisher.send(TranscriptData(transcriptList: internalTranscript, previousTranscriptNextToken: previousTranscriptNextToken))
             } else {
@@ -343,6 +346,7 @@ class ChatService : ChatServiceProtocol {
                 placeholderMessage.updateId(newId)
                 placeholderMessage.metadata?.status = .Sent
                 transcriptDict.removeValue(forKey: oldId)
+                placeholderMessage.updatePersistentId(oldId)
                 transcriptDict[newId] = placeholderMessage
             }
             transcriptItemPublisher.send(placeholderMessage)
