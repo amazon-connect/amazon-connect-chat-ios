@@ -284,9 +284,9 @@ public class ChatSession: ChatSessionProtocol {
         sendReceipt(event: eventType, messageId: messageItem.id) { result in
             switch result {
             case .success:
-                print("Sent \(eventType.rawValue) receipt for \(messageItem.text)")
+                SDKLogger.logger.logDebug("Sent \(eventType.rawValue) receipt for \(messageItem.text)")
             case .failure(let error):
-                print("Error sending \(eventType.rawValue) receipt: \(error.localizedDescription)")
+                SDKLogger.logger.logError("Error sending \(eventType.rawValue) receipt: \(error.localizedDescription)")
             }
         }
     }

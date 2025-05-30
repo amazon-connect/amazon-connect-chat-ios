@@ -150,7 +150,7 @@ class DefaultHttpClient: HttpClient {
                 onFailure(error)
                 return
             }
-            print(data.base64EncodedString())
+            SDKLogger.logger.logDebug(data.base64EncodedString())
             onSuccess(data)
         }.resume()
     }
@@ -188,10 +188,10 @@ class DefaultHttpClient: HttpClient {
         // Print the entire request for debugging
         if let requestData = try? JSONSerialization.data(withJSONObject: request.allHTTPHeaderFields ?? [:], options: .prettyPrinted),
            let requestBody = String(data: requestData, encoding: .utf8) {
-            print("Raw Request:")
-            print("URL: \(request.url?.absoluteString ?? "N/A")")
-            print("HTTP Method: \(request.httpMethod ?? "N/A")")
-            print("Headers:\n\(requestBody)")
+            SDKLogger.logger.logDebug("Raw Request:")
+            SDKLogger.logger.logDebug("URL: \(request.url?.absoluteString ?? "N/A")")
+            SDKLogger.logger.logDebug("HTTP Method: \(request.httpMethod ?? "N/A")")
+            SDKLogger.logger.logDebug("Headers:\n\(requestBody)")
         }
         
         let encoder = JSONEncoder()
@@ -222,10 +222,10 @@ class DefaultHttpClient: HttpClient {
         // Print the entire request for debugging
         if let requestData = try? JSONSerialization.data(withJSONObject: request.allHTTPHeaderFields ?? [:], options: .prettyPrinted),
            let requestBody = String(data: requestData, encoding: .utf8) {
-            print("Raw Request:")
-            print("URL: \(request.url?.absoluteString ?? "N/A")")
-            print("HTTP Method: \(request.httpMethod ?? "N/A")")
-            print("Headers:\n\(requestBody)")
+            SDKLogger.logger.logDebug("Raw Request:")
+            SDKLogger.logger.logDebug("URL: \(request.url?.absoluteString ?? "N/A")")
+            SDKLogger.logger.logDebug("HTTP Method: \(request.httpMethod ?? "N/A")")
+            SDKLogger.logger.logDebug("Headers:\n\(requestBody)")
         }
                 
         request.httpBody = body

@@ -4,33 +4,40 @@
 import Foundation
 import OSLog
 
-
 public class SDKLogger: SDKLoggerProtocol {
     
     static var logger: SDKLoggerProtocol = SDKLogger()
     private let osLog: OSLog
     
+    /// Flag to enable/disable logging. Set to false by default.
+    public static var isLoggingEnabled: Bool = false
+
     private init() {
         osLog = OSLog(subsystem: Bundle.main.bundleIdentifier ?? "SDK.DefaultSubsystem", category: "SDKLogging")
     }
     
     public func logVerbose(_ message: @autoclosure () -> String) {
+        guard SDKLogger.isLoggingEnabled else { return }
         os_log("%{public}@", log: osLog, type: .default, message())
     }
     
     public func logInfo(_ message: @autoclosure () -> String) {
+        guard SDKLogger.isLoggingEnabled else { return }
         os_log("%{public}@", log: osLog, type: .info, message())
     }
     
     public func logDebug(_ message: @autoclosure () -> String) {
+        guard SDKLogger.isLoggingEnabled else { return }
         os_log("%{public}@", log: osLog, type: .debug, message())
     }
     
     public func logFault(_ message: @autoclosure () -> String) {
+        guard SDKLogger.isLoggingEnabled else { return }
         os_log("%{public}@", log: osLog, type: .fault, message())
     }
     
     public func logError(_ message: @autoclosure () -> String) {
+        guard SDKLogger.isLoggingEnabled else { return }
         os_log("%{public}@", log: osLog, type: .error, message())
     }
     
@@ -38,9 +45,3 @@ public class SDKLogger: SDKLoggerProtocol {
         SDKLogger.logger = logger
     }
 }
-
-
-// How to use
-//SDKLogger.shared.logInfo("Application started successfully.")
-//SDKLogger.shared.logDebug("User data fetched from the database.")
-//SDKLogger.shared.logError("Failed to process user request.")

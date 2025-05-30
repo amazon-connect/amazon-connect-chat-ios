@@ -69,7 +69,7 @@ public struct QuickReplyContent: InteractiveContent {
             let subtitle = quickReply.data.content.subtitle
             return QuickReplyContent(title: title, subtitle: subtitle, options: options)
         } catch {
-            print("Error decoding QuickReplyContent: \(error)")
+            SDKLogger.logger.logError("Error decoding QuickReplyContent: \(error)")
             return nil
         }
     }
@@ -119,7 +119,7 @@ public struct ListPickerContent: InteractiveContent {
             let imageUrl = listPicker.data.content.imageData
             return ListPickerContent(title: title, subtitle: subtitle, imageUrl: imageUrl, options: options)
         } catch {
-            print("Error decoding ListPickerContent: \(error)")
+            SDKLogger.logger.logError("Error decoding ListPickerContent: \(error)")
             return nil
         }
     }
@@ -175,7 +175,7 @@ public struct PanelContent: InteractiveContent {
             let options = panel.data.content.elements
             return PanelContent(title: title, subtitle: subtitle, imageUrl: imageUrl, imageDescription: imageDescription, options: options)
         } catch {
-            print("Error decoding PanelContent: \(error)")
+            SDKLogger.logger.logError("Error decoding PanelContent: \(error)")
             return nil
         }
     }
@@ -238,7 +238,7 @@ public struct TimePickerContent: InteractiveContent {
             let timeslots = timePicker.data.content.timeslots
             return TimePickerContent(title: title, subtitle: subtitle, timeZoneOffset: timeZoneOffset, location: location, timeslots: timeslots)
         } catch {
-            print("Error decoding TimePickerContent: \(error)")
+            SDKLogger.logger.logError("Error decoding TimePickerContent: \(error)")
             return nil
         }
     }
@@ -281,7 +281,7 @@ public struct CarouselContent: InteractiveContent {
             let elements = carousel.data.content.elements
             return CarouselContent(title: title, elements: elements)
         } catch {
-            print("Error decoding CarouselContent: \(error)")
+            SDKLogger.logger.logError("Error decoding CarouselContent: \(error)")
             return nil
         }
     }

@@ -75,7 +75,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
             websocketTask?.resume()
             receiveMessage()
         } else {
-            print("No WebSocketURL found")
+            SDKLogger.logger.logError("No WebSocketURL found")
             return
         }
     }
@@ -84,9 +84,9 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
         let messageToSend = URLSessionWebSocketTask.Message.string(message)
         websocketTask?.send(messageToSend) { error in
             if let error = error {
-                print("Failed to send message: \(error)")
+                SDKLogger.logger.logError("Failed to send message: \(error)")
             } else {
-                print("Message sent: \(message)")
+                SDKLogger.logger.logDebug("Message sent: \(message)")
             }
         }
     }
@@ -95,16 +95,16 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
         websocketTask?.receive { [weak self] result in
             switch result {
             case .failure(let error):
-                print("Failed to receive message, Websocket connection might be closed: \(error)")
+                SDKLogger.logger.logError("Failed to receive message, Websocket connection might be closed: \(error)")
             case .success(let message):
                 switch message {
                 case .string(let text):
-                    print("Received text in receiveMessage() \(text)")
+                    SDKLogger.logger.logDebug("Received text in receiveMessage() \(text)")
                     self?.handleWebsocketTextEvent(text: text)
                 case .data(_):
-                    print("Received data from websocket")
+                    SDKLogger.logger.logDebug("Received data from websocket")
                 @unknown default:
-                    print("Received an unknown message type, which is not handled.")
+                    SDKLogger.logger.logError("Received an unknown message type, which is not handled.")
                 }
                 self?.receiveMessage()
             }
@@ -136,9 +136,9 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
         }
         
         if let e = error {
-            print("websocket encountered an error: \(e.localizedDescription)")
+            SDKLogger.logger.logError("websocket encountered an error: \(e.localizedDescription)")
         } else {
-            print("websocket encountered an error")
+            SDKLogger.logger.logError("websocket encountered an error")
         }
         self.onError?(error)
     }
@@ -162,15 +162,15 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
     
     func reestablishConnectionIfChatActive() {
         if !ChatSession.shared.isChatSessionActive() {
-            print("WebSocket reconnection aborted due to inactive chat session")
+            SDKLogger.logger.logDebug("WebSocket reconnection aborted due to inactive chat session")
             return
         }
         if !NetworkConnectionManager.shared.checkConnectivity() {
-            print("WebSocket reconnection aborted due to missing network connectivity")
+            SDKLogger.logger.logDebug("WebSocket reconnection aborted due to missing network connectivity")
             return
         }
         if self.isSuspended {
-            print("WebSocket reconnection aborted due to suspended websocket connection")
+            SDKLogger.logger.logDebug("WebSocket reconnection aborted due to suspended websocket connection")
             return
         }
         NotificationCenter.default.post(name: .requestNewWsUrl, object: nil)
@@ -203,7 +203,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
                 processJsonContent(json)
             }
         } catch {
-            print("Error parsing JSON from WebSocket: \(error)")
+            SDKLogger.logger.logError("Error parsing JSON from WebSocket: \(error)")
         }
     }
     
@@ -214,7 +214,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
                 if (json["statusCode"] as? Int == 200 && json["statusContent"] as? String == "OK") {
                     self.deepHeartbeatManager?.heartbeatReceived()
                 } else {
-                    print("Deep heartbeat failed. Status: \(json["statusCode"] ?? "nil"), StatusContent: \(json["statusContent"] ?? "nil")")
+                    SDKLogger.logger.logError("Deep heartbeat failed. Status: \(json["statusCode"] ?? "nil"), StatusContent: \(json["statusContent"] ?? "nil")")
                 }
                 break
             case "aws/heartbeat":
@@ -240,7 +240,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
         if let stringContent = content,
            let innerJson = try? JSONSerialization.jsonObject(with: Data(stringContent.utf8), options: []) as? [String: Any] {
             guard let typeString = innerJson["Type"] as? String, let type = WebSocketMessageType(rawValue: typeString) else {
-                print("Unknown websocket message type: \(String(describing: innerJson["Type"]))")
+                SDKLogger.logger.logError("Unknown websocket message type: \(String(describing: innerJson["Type"]))")
                 return nil
             }
             switch type {
@@ -248,7 +248,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
                     return self.handleMessage(innerJson, json)
                 case .event:
                     guard let eventTypeString = innerJson["ContentType"] as? String, let eventType = ContentType(rawValue: eventTypeString) else {
-                        print("Unknown event type \(String(describing: innerJson["ContentType"]))")
+                        SDKLogger.logger.logError("Unknown event type \(String(describing: innerJson["ContentType"]))")
                         return nil
                     }
                     
@@ -266,17 +266,17 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
                         // Handle chat ended event
                         return handleChatEnded(innerJson, json)
                     default:
-                        print("Unknown event: \(String(describing: eventType))")
+                        SDKLogger.logger.logError("Unknown event: \(String(describing: eventType))")
                     }
                 case .attachment:
                     return handleAttachment(innerJson, json)
                 case .messageMetadata:
                     return handleMetadata(innerJson, json)
             }
-            print("Unknown message type: \(String(describing: type))")
+            SDKLogger.logger.logError("Unknown message type: \(String(describing: type))")
             return nil
         }
-        print("Unable to parse json: \(String(describing: content))")
+        SDKLogger.logger.logError("Unable to parse json: \(String(describing: content))")
         return nil
     }
     
@@ -316,9 +316,9 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
             return
         }
         if NetworkConnectionManager.shared.checkConnectivity() {
-            print("Heartbeat missed")
+            SDKLogger.logger.logError("Heartbeat missed")
         } else {
-            print("Device is not connected to the internet")
+            SDKLogger.logger.logError("Device is not connected to the internet")
         }
     }
     
@@ -328,9 +328,9 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
         }
         ChatSession.shared.onDeepHeartbeatFailure?()
         if NetworkConnectionManager.shared.checkConnectivity() {
-            print("Deep heartbeat missed")
+            SDKLogger.logger.logError("Deep heartbeat missed")
         } else {
-            print("Device is not connected to the internet")
+            SDKLogger.logger.logError("Device is not connected to the internet")
         }
         self.eventPublisher.send(.connectionBroken)
     }
@@ -342,7 +342,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
 extension WebsocketManager: URLSessionWebSocketDelegate {
     
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
-        print("Websocket connection successfully established")
+        SDKLogger.logger.logDebug("Websocket connection successfully established")
         self.onConnected?()
         self.eventPublisher.send(self.isReconnectFlow ? .connectionReEstablished : .connectionEstablished)
         self.sendWebSocketMessage(string: EventTypes.subscribe)
@@ -351,17 +351,17 @@ extension WebsocketManager: URLSessionWebSocketDelegate {
     
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
           let reasonString = reason.flatMap { String(data: $0, encoding: .utf8) } ?? "No reason provided"
-          print("WebSocket closed with code: \(closeCode) and reason: \(reasonString)")
+        SDKLogger.logger.logDebug("WebSocket closed with code: \(closeCode) and reason: \(reasonString)")
           self.onDisconnected?()
           self.isReconnectFlow = false
       }
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         if let error = error {
-            print("WebSocket connection completed with error: \(error.localizedDescription)")
+            SDKLogger.logger.logError("WebSocket connection completed with error: \(error.localizedDescription)")
             handleError(error)
         } else {
-            print("WebSocket task completed successfully without errors.")
+            SDKLogger.logger.logDebug("WebSocket task completed successfully without errors.")
         }
         self.onDisconnected?()
     }

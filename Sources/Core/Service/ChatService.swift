@@ -513,9 +513,9 @@ class ChatService : ChatServiceProtocol {
                 do {
                     // Delete the existing file
                     try FileManager.default.removeItem(at: tempFilePathUrl)
-                    print("Existing file deleted successfully.")
+                    SDKLogger.logger.logDebug("Existing file deleted successfully.")
                 } catch {
-                    print("Error deleting existing file: \(error)")
+                    SDKLogger.logger.logError("Error deleting existing file: \(error)")
                     completion(false, error)
                     return
                 }
@@ -631,10 +631,10 @@ class ChatService : ChatServiceProtocol {
             case .success(let url):
                 self.downloadFile(url: url, filename: filename) { (localUrl, error) in
                     if let localUrl = localUrl {
-                        print("File successfully downloaded to temporary directory")
+                        SDKLogger.logger.logDebug("File successfully downloaded to temporary directory")
                         completion(.success(localUrl))
                     } else if let error = error {
-                        print("Failed to download file: \(error.localizedDescription)")
+                        SDKLogger.logger.logError("Failed to download file: \(error.localizedDescription)")
                         completion(.failure(error))
                     }
                 }
@@ -667,9 +667,9 @@ class ChatService : ChatServiceProtocol {
                     do {
                         // Delete the existing file
                         try FileManager.default.removeItem(at: tempFilePathUrl)
-                        print("Existing file deleted successfully.")
+                        SDKLogger.logger.logDebug("Existing file deleted successfully.")
                     } catch {
-                        print("Error deleting existing file: \(error)")
+                        SDKLogger.logger.logError("Error deleting existing file: \(error)")
                         completion(nil, error)
                         return
                     }
