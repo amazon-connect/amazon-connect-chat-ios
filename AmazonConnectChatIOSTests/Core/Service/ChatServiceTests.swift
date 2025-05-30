@@ -52,10 +52,10 @@ class ChatServiceTests: XCTestCase {
         do {
             if FileManager.default.fileExists(atPath: deleteUrl.path) {
                 try FileManager.default.removeItem(at: deleteUrl)
-                print("Temp file successfully cleared")
+                SDKLogger.logger.logDebug("Temp file successfully cleared")
             }
         } catch {
-            print("Failed to remove test file: \(error.localizedDescription)")
+            SDKLogger.logger.logError("Failed to remove test file: \(error.localizedDescription)")
         }
     }
     
@@ -822,9 +822,9 @@ class ChatServiceTests: XCTestCase {
 
         do {
             try fileContents.write(to: fileUrl, atomically: true, encoding: .utf8)
-            print("File created successfully at: \(TestConstants.testFileUrl.path)")
+            SDKLogger.logger.logDebug("File created successfully at: \(TestConstants.testFileUrl.path)")
         } catch {
-            print("Failed to create file: \(error.localizedDescription)")
+            SDKLogger.logger.logError("Failed to create file: \(error.localizedDescription)")
             return
         }
         let mockAttachmentManager = MockChatService()
@@ -851,9 +851,9 @@ class ChatServiceTests: XCTestCase {
 
         do {
             try fileContents.write(to: fileUrl, atomically: true, encoding: .utf8)
-            print("File created successfully at: \(TestConstants.testFileUrl.path)")
+            SDKLogger.logger.logDebug("File created successfully at: \(TestConstants.testFileUrl.path)")
         } catch {
-            print("Failed to create file: \(error.localizedDescription)")
+            SDKLogger.logger.logError("Failed to create file: \(error.localizedDescription)")
             return
         }
         let mockAttachmentManager = MockChatService()

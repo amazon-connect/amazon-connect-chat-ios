@@ -8,9 +8,9 @@ struct TestUtils {
         let fileContents = "Sample text file contents"
         do {
             try fileContents.write(to: url, atomically: true, encoding: .utf8)
-            print("File created successfully at: \(url.path)")
+            SDKLogger.logger.logDebug("File created successfully at: \(url.path)")
         } catch {
-            print("Failed to create file: \(error.localizedDescription)")
+            SDKLogger.logger.logError("Failed to create file: \(error.localizedDescription)")
             return
         }
     }
