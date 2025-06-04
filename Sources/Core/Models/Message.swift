@@ -27,7 +27,7 @@ public class Message: TranscriptItem, MessageProtocol {
     @Published public var metadata: (any MetadataProtocol)?
 
     public init(participant: String, text: String, contentType: String, messageDirection: MessageDirection? = nil, timeStamp: String, attachmentId: String? = nil, messageId: String? = nil,
-                displayName: String? = nil, serializedContent: [String: Any], metadata: (any MetadataProtocol)? = nil) {
+                displayName: String? = nil, serializedContent: [String: Any], metadata: (any MetadataProtocol)? = nil, persistentId: String? = nil) {
         self.participant = participant
         self.text = text
         self.messageDirection = messageDirection

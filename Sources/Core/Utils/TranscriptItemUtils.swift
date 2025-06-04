@@ -19,6 +19,7 @@ struct TranscriptItemUtils {
     
     static func createDummyMessage(content: String, contentType: String, status: MessageStatus, attachmentId: String? = nil, displayName: String) -> Message {
         let isoTime = CommonUtils.getCurrentISOTime()
+        let randomId = UUID().uuidString
         
         return Message(
             participant: "CUSTOMER",
@@ -27,10 +28,11 @@ struct TranscriptItemUtils {
             messageDirection: .Outgoing,
             timeStamp: isoTime,
             attachmentId: attachmentId,
-            messageId: UUID().uuidString,
+            messageId: randomId,
             displayName: displayName,
             serializedContent: [:],
-            metadata: Metadata(status: status, timeStamp: isoTime, contentType: contentType, eventDirection: .Outgoing, serializedContent: [:])
+            metadata: Metadata(status: status, timeStamp: isoTime, contentType: contentType, eventDirection: .Outgoing, serializedContent: [:]),
+            persistentId: randomId
         )
     }
 }

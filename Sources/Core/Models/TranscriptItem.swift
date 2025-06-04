@@ -5,6 +5,7 @@ import Foundation
 
 public protocol TranscriptItemProtocol: Identifiable, Equatable, Hashable, ObservableObject {
     var id: String { get }
+    var persistentId: String { get }
     var timeStamp: String { get }
     var contentType: String { get set }
     var serializedContent: [String: Any]? { get set }
@@ -12,15 +13,18 @@ public protocol TranscriptItemProtocol: Identifiable, Equatable, Hashable, Obser
 
 public class TranscriptItem: TranscriptItemProtocol {
     public private(set) var id: String
+    public private(set) var persistentId: String
     public private(set) var timeStamp: String
     public var contentType: String
     public var serializedContent: [String: Any]?
 
     public init(timeStamp: String, contentType: String, id: String?, serializedContent: [String: Any]?) {
+        let randomId = UUID().uuidString
         self.timeStamp = timeStamp
         self.contentType = contentType
         self.serializedContent = serializedContent
-        self.id = id ?? UUID().uuidString
+        self.id = id ?? randomId
+        self.persistentId = id ?? randomId
     }
 
     public static func == (lhs: TranscriptItem, rhs: TranscriptItem) -> Bool {
@@ -40,6 +44,10 @@ public class TranscriptItem: TranscriptItemProtocol {
     
     internal func updateTimeStamp(_ newTimeStamp: String) {
         self.timeStamp = newTimeStamp
+    }
+    
+    internal func updatePersistentId(_ newPersistentId: String) {
+        self.persistentId = newPersistentId
     }
 }
 
