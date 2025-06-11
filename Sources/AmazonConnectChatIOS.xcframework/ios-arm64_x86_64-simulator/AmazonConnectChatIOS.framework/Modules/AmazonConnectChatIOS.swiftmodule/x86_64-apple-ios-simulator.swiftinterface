@@ -1,5 +1,5 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 6.0.2 effective-5.10 (swiftlang-6.0.2.1.2 clang-1600.0.26.4)
+// swift-compiler-version: Apple Swift version 6.0.3 effective-5.10 (swiftlang-6.0.3.1.10 clang-1600.0.30.1)
 // swift-module-flags: -target x86_64-apple-ios15.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-bare-slash-regex -module-name AmazonConnectChatIOS
 // swift-module-flags-ignorable: -no-verify-emitted-module-interface
 import AWSConnectParticipant
@@ -338,12 +338,16 @@ public class Event : AmazonConnectChatIOS.TranscriptItem, AmazonConnectChatIOS.E
 }
 public protocol TranscriptItemProtocol : Combine.ObservableObject, Swift.Hashable, Swift.Identifiable {
   var id: Swift.String { get }
+  var persistentId: Swift.String { get }
   var timeStamp: Swift.String { get }
   var contentType: Swift.String { get set }
   var serializedContent: [Swift.String : Any]? { get set }
 }
 public class TranscriptItem : AmazonConnectChatIOS.TranscriptItemProtocol {
   public var id: Swift.String {
+    get
+  }
+  public var persistentId: Swift.String {
     get
   }
   public var timeStamp: Swift.String {
@@ -476,7 +480,7 @@ public class Message : AmazonConnectChatIOS.TranscriptItem, AmazonConnectChatIOS
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     set
   }
-  public init(participant: Swift.String, text: Swift.String, contentType: Swift.String, messageDirection: AmazonConnectChatIOS.MessageDirection? = nil, timeStamp: Swift.String, attachmentId: Swift.String? = nil, messageId: Swift.String? = nil, displayName: Swift.String? = nil, serializedContent: [Swift.String : Any], metadata: (any AmazonConnectChatIOS.MetadataProtocol)? = nil)
+  public init(participant: Swift.String, text: Swift.String, contentType: Swift.String, messageDirection: AmazonConnectChatIOS.MessageDirection? = nil, timeStamp: Swift.String, attachmentId: Swift.String? = nil, messageId: Swift.String? = nil, displayName: Swift.String? = nil, serializedContent: [Swift.String : Any], metadata: (any AmazonConnectChatIOS.MetadataProtocol)? = nil, persistentId: Swift.String? = nil)
   public var content: (any AmazonConnectChatIOS.MessageContent)? {
     get
   }
@@ -507,6 +511,7 @@ public struct MessageReceipts {
   public init(shouldSendMessageReceipts: Swift.Bool, throttleTime: Swift.Double)
 }
 @_hasMissingDesignatedInitializers public class SDKLogger : AmazonConnectChatIOS.SDKLoggerProtocol {
+  public static var isLoggingEnabled: Swift.Bool
   public func logVerbose(_ message: @autoclosure () -> Swift.String)
   public func logInfo(_ message: @autoclosure () -> Swift.String)
   public func logDebug(_ message: @autoclosure () -> Swift.String)
