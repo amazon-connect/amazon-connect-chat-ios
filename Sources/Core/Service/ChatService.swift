@@ -545,7 +545,7 @@ class ChatService : ChatServiceProtocol {
                                     // Delete the existing file
                                     try FileManager.default.removeItem(at: tempFilePathUrl)
                                 } catch {
-                                    print("Error deleting existing file after successful upload: \(error)")
+                                    SDKLogger.logger.logError("Error deleting existing file after successful upload: \(error)")
                                 }
                                 completion(true, nil)
                             } else {
@@ -554,9 +554,9 @@ class ChatService : ChatServiceProtocol {
                             }
                         }
                     } else if error != nil {
-                        print("Attachment upload failed: \(String(describing: error))")
+                        SDKLogger.logger.logError("Attachment upload failed: \(String(describing: error))")
                     } else {
-                        print("Attachment upload failed")
+                        SDKLogger.logger.logError("Attachment upload failed")
                     }
                 }
             case .failure(let error):
@@ -599,7 +599,7 @@ class ChatService : ChatServiceProtocol {
             case .success(_):
                 completion(true, nil)
             case .failure(let error):
-                print("Complete attachmentUpload failed: \(String(describing: error))")
+                SDKLogger.logger.logError("Complete attachmentUpload failed: \(String(describing: error))")
                 completion(false, error)
             }
         }
@@ -647,13 +647,13 @@ class ChatService : ChatServiceProtocol {
     func downloadFile(url: URL, filename: String, completion: @escaping (URL?, Error?) -> Void) {
         let downloadTask = urlSession.downloadTask(with: url) { (tempLocalUrl, response, error) in
             if let error = error {
-                print("Download error: \(error.localizedDescription)")
+                SDKLogger.logger.logError("Download error: \(error.localizedDescription)")
                 completion(nil, error)
                 return
             }
             
             guard let tempLocalUrl = tempLocalUrl else {
-                print("No file found at URL")
+                SDKLogger.logger.logError("No file found at URL")
                 completion(nil, NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No file found at URL"]))
                 return
             }
@@ -723,7 +723,7 @@ class ChatService : ChatServiceProtocol {
                 }
             case .failure(let error):
                 // Handle error (e.g., log or show an error message)
-                print("Error fetching transcript: \(error.localizedDescription)")
+                SDKLogger.logger.logError("Error fetching transcript: \(error.localizedDescription)")
             }
         }
     }
@@ -828,7 +828,7 @@ class ChatService : ChatServiceProtocol {
                             self?.updateTranscriptDict(with: TranscriptItemUtils.createDummyEndedEvent())
                             self?.eventPublisher.send(.chatEnded)
                         }
-                        print("CreateParticipantConnection failed \(error)")
+                        SDKLogger.logger.logError("CreateParticipantConnection failed \(error)")
                     }
                 }
             }

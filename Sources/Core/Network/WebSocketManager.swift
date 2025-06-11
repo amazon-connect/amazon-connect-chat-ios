@@ -405,7 +405,7 @@ extension WebsocketManager {
             // Serialize the dictionary to JSON string
             guard let messageContentData = try? JSONSerialization.data(withJSONObject: messageContentDict, options: []),
                   let messageContentString = String(data: messageContentData, encoding: .utf8) else {
-                print("Failed to serialize message content to JSON string")
+                SDKLogger.logger.logError("Failed to serialize message content to JSON string")
                 return nil
             }
             
@@ -424,7 +424,7 @@ extension WebsocketManager {
                    return transcriptItem
                }
 
-            print("Failed to wrap and deserialize JSON.")
+            SDKLogger.logger.logError("Failed to wrap and deserialize JSON.")
             return nil
 
         }
@@ -470,7 +470,7 @@ extension WebsocketManager {
             contentType = firstAttachmentContentType
             attachmentId = firstAttachmentId
         } else {
-            print("Failed to access attachments")
+            SDKLogger.logger.logError("Failed to access attachments")
             return nil
         }
 
