@@ -145,7 +145,17 @@ chatSession.configure(config: globalConfig)
 ```
 
 ### SDKLogger
-The `SDKLogger` class is responsible for logging relevant runtime information to the console which is useful for debugging purposes. The `SDKLogger` will log key events such as establishing a connection or failures such as failing to send a message.
+The `SDKLogger` class is responsible for logging relevant runtime information to the console which is useful for debugging purposes. The `SDKLogger` will log key events such as establishing a connection or failures such as failing to send a message. By default, logging is disabled and can be enabled/disabled at runtime.
+
+#### Enabling/Disabling Logging
+You can toggle logging on/off using the `isLoggingEnabled` flag:
+```swift
+// Enable logging
+SDKLogger.isLoggingEnabled = true
+
+// Disable logging
+SDKLogger.isLoggingEnabled = false
+```
 
 #### `SDKLogger.configure`
 This API will allow you to override the SDK's built-in logger with your own [SDKLoggerProtocol](#sdkloggerprotocol) implementation. This is especially useful in cases where you would want to store logs for debugging purposes. Attaching these logs to issues filed in this project will greatly expedite the resolution process.
@@ -154,7 +164,6 @@ This API will allow you to override the SDK's built-in logger with your own [SDK
 public static func configureLogger(_ logger: SDKLoggerProtocol) {
     SDKLogger.logger = logger
 }
-```
 
 #### SDKLoggerProtocol
 The SDKLoggerProtocol is a protocol used for the `SDKLogger`.  Users can override the `SDKLogger` with any class that implements SDKLoggerProtocol.

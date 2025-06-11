@@ -69,30 +69,30 @@ class MessageReceiptsManager: MessageReceiptsManagerProtocol {
         switch event {
         case .messageDelivered:
             if deliveredReceiptSet.contains(messageId) {
-                print("Delivered receipt already sent for messageId: \(messageId)")
+                SDKLogger.logger.logDebug("Delivered receipt already sent for messageId: \(messageId)")
                 return
             }
             if self.readReceiptSet.contains(messageId) {
-                print("Read receipt already sent for messageId: \(messageId)")
+                SDKLogger.logger.logDebug("Read receipt already sent for messageId: \(messageId)")
                 return
             }
             deliveredReceiptSet.insert(messageId)
             Timer.scheduledTimer(withTimeInterval: deliveredThrottleTime, repeats: false) { _ in
                 if self.readReceiptSet.contains(messageId) {
-                    print("Read receipt already sent for messageId: \(messageId)")
+                    SDKLogger.logger.logDebug("Read receipt already sent for messageId: \(messageId)")
                     return
                 } else {
-                    print("Sending Delivered receipt: \(messageId)")
+                    SDKLogger.logger.logDebug("Sending Delivered receipt: \(messageId)")
                     self.pendingMessageReceipts.deliveredReceiptMessageId = messageId
                 }
             }
             break
         case .messageRead:
             if readReceiptSet.contains(messageId) {
-                print("Read receipt already sent for messageId: \(messageId)")
+                SDKLogger.logger.logDebug("Read receipt already sent for messageId: \(messageId)")
                 return
             }
-            print("Sending read receipt: \(messageId)")
+            SDKLogger.logger.logDebug("Sending read receipt: \(messageId)")
             readReceiptSet.insert(messageId)
             pendingMessageReceipts.readReceiptMessageId = messageId
             break
