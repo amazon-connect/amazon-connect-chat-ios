@@ -828,11 +828,13 @@ class ChatService : ChatServiceProtocol {
                             self?.websocketManager?.connect(wsUrl: wsUrl, isReconnect: true)
                         }
                     case .failure(let error):
-                        if error.localizedDescription == "Access denied" {
+                        let nsError = error as NSError
+                        if nsError.localizedFailureReason == "AccessDeniedException" {
                             self?.updateTranscriptDict(with: TranscriptItemUtils.createDummyEndedEvent())
                             self?.eventPublisher.send(.chatEnded)
                         }
-                        SDKLogger.logger.logError("CreateParticipantConnection failed \(error)")
+                        SDKLogger.logger.logError("CreateParticipantConnection failed \(nsError)")
+
                     }
                 }
             }
