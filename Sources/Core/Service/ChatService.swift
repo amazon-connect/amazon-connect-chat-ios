@@ -52,7 +52,6 @@ class ChatService : ChatServiceProtocol {
     private var attachmentIdToTempMessageIdMap: [String: String] = [:]
     private var transcriptDict: [String: TranscriptItem] = [:]
     private var tempMessageIdToFileUrl: [String: URL] = [:]
-    private var transcriptListUpdateDebounceTimer: Timer?
     
     init(awsClient: AWSClientProtocol = AWSClient.shared,
         connectionDetailsProvider: ConnectionDetailsProviderProtocol = ConnectionDetailsProvider.shared,
@@ -102,8 +101,8 @@ class ChatService : ChatServiceProtocol {
         
         self.websocketManager?.transcriptPublisher
             .receive(on: RunLoop.main)
-            .sink(receiveValue: { [weak self] transcriptItem in
-                self?.updateTranscriptDict(with: transcriptItem)
+            .sink(receiveValue: { [weak self] (transcriptItem, shouldTriggerTranscriptListUpdate) in
+                self?.updateTranscriptDict(with: transcriptItem, shouldTriggerTranscriptListUpdate: shouldTriggerTranscriptListUpdate)
             })
             .store(in: &transcriptListCancellables)
     }
@@ -129,7 +128,7 @@ class ChatService : ChatServiceProtocol {
     }
     
     // Update transcript dictionary and notify subscribers
-    private func updateTranscriptDict(with item: TranscriptItem) {
+    private func updateTranscriptDict(with item: TranscriptItem, shouldTriggerTranscriptListUpdate: Bool = true) {
         switch item {
         case let metadata as Metadata:
             // metadata.id here refers to messageId attatched to a metadata
@@ -157,7 +156,7 @@ class ChatService : ChatServiceProtocol {
         }
         
         if let updatedItem = transcriptDict[item.id] {
-            self.handleTranscriptItemUpdate(updatedItem)
+            self.handleTranscriptItemUpdate(updatedItem, shouldTriggerTranscriptListUpdate: shouldTriggerTranscriptListUpdate)
         }
     }
     
@@ -210,7 +209,7 @@ class ChatService : ChatServiceProtocol {
     }
 
     
-    private func handleTranscriptItemUpdate(_ transcriptItem: TranscriptItem) {
+    private func handleTranscriptItemUpdate(_ transcriptItem: TranscriptItem, shouldTriggerTranscriptListUpdate: Bool = true) {
         // Send out individual transcript item
         self.transcriptItemPublisher.send(transcriptItem)
         
@@ -228,11 +227,7 @@ class ChatService : ChatServiceProtocol {
             }
         }
         
-        // Reduce frequency of published transcriptList updates
-        transcriptListUpdateDebounceTimer?.invalidate()
-        transcriptListUpdateDebounceTimer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { [weak self] _ in
-            guard let self = self else { return }
-            // Send out updated transcript
+        if shouldTriggerTranscriptListUpdate {
             self.transcriptListPublisher.send(TranscriptData(transcriptList: internalTranscript, previousTranscriptNextToken: previousTranscriptNextToken))
         }
     }
