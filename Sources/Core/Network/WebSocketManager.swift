@@ -372,7 +372,7 @@ extension WebsocketManager: URLSessionWebSocketDelegate {
 
 extension WebsocketManager {
     func formatAndProcessTranscriptItems(_ transcriptItems: [AWSConnectParticipantItem]) -> [TranscriptItem] {
-        return transcriptItems.enumerated().compactMap { (index, item) in
+        return transcriptItems.compactMap { item in
             // Create a dictionary with the necessary fields
             let participantRole = CommonUtils().convertParticipantRoleToString(item.participantRole.rawValue)
             
@@ -419,8 +419,7 @@ extension WebsocketManager {
                    // Process the JSON content and return a TranscriptItem
                    let transcriptItem = self.processJsonContentAndGetItem(json)
                    if let validItem = transcriptItem {
-                       let isLastItem = index == transcriptItems.count - 1
-                       transcriptPublisher.send((validItem, isLastItem))
+                       transcriptPublisher.send((validItem, false))
                    }
                    return transcriptItem
                }

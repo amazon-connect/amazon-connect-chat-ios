@@ -22,6 +22,7 @@ protocol ChatServiceProtocol {
     func subscribeToEvents(handleEvent: @escaping (ChatEvent) -> Void) -> AnyCancellable
     func subscribeToTranscriptItem(handleTranscriptItem: @escaping (TranscriptItem) -> Void) -> AnyCancellable
     func subscribeToTranscriptList(handleTranscriptList: @escaping (TranscriptData) -> Void) -> AnyCancellable
+    func triggerTranscriptListUpdate()
     func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void)
     func configure(config: GlobalConfig)
     func getConnectionDetailsProvider() -> ConnectionDetailsProviderProtocol
@@ -230,6 +231,10 @@ class ChatService : ChatServiceProtocol {
         if shouldTriggerTranscriptListUpdate {
             self.transcriptListPublisher.send(TranscriptData(transcriptList: internalTranscript, previousTranscriptNextToken: previousTranscriptNextToken))
         }
+    }
+    
+    func triggerTranscriptListUpdate() {
+        self.transcriptListPublisher.send(TranscriptData(transcriptList: internalTranscript, previousTranscriptNextToken: previousTranscriptNextToken))
     }
     
     func subscribeToTranscriptList(handleTranscriptList: @escaping (TranscriptData) -> Void) -> AnyCancellable {
@@ -786,6 +791,7 @@ class ChatService : ChatServiceProtocol {
                 
                 if let websocketManager = self?.websocketManager {
                     let formattedItems = websocketManager.formatAndProcessTranscriptItems(transcriptItems)
+                    self?.triggerTranscriptListUpdate()
                     let transcriptResponse = TranscriptResponse(
                         initialContactId: response.initialContactId ?? "",
                         nextToken: response.nextToken ?? "", // Handle nextToken if it is available in the response
