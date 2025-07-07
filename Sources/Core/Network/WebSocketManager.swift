@@ -21,7 +21,7 @@ protocol WebSocketTask {
 
 protocol WebsocketManagerProtocol {
     var eventPublisher: PassthroughSubject<ChatEvent, Never> { get }
-    var transcriptPublisher: PassthroughSubject<TranscriptItem, Never> { get }
+    var transcriptPublisher: PassthroughSubject<(TranscriptItem, Bool), Never> { get }
     func connect(wsUrl: URL?, isReconnect: Bool?)
     func disconnect(reason: String?)
     func formatAndProcessTranscriptItems(_ transcriptItems: [AWSConnectParticipantItem]) -> [TranscriptItem]
@@ -33,7 +33,7 @@ extension URLSessionWebSocketTask: WebSocketTask {}
 
 class WebsocketManager: NSObject, WebsocketManagerProtocol {
     var eventPublisher = PassthroughSubject<ChatEvent, Never>()
-    var transcriptPublisher = PassthroughSubject<TranscriptItem, Never>()
+    var transcriptPublisher = PassthroughSubject<(TranscriptItem, Bool), Never>()
 
     private var session: URLSession?
     private var wsUrl: URL?
@@ -230,7 +230,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
     
     func websocketDidReceiveMessage(json: [String: Any]) {
         if let item = processJsonContentAndGetItem(json) {
-            transcriptPublisher.send(item)
+            transcriptPublisher.send((item, true))
         }
     }
     
@@ -419,7 +419,7 @@ extension WebsocketManager {
                    // Process the JSON content and return a TranscriptItem
                    let transcriptItem = self.processJsonContentAndGetItem(json)
                    if let validItem = transcriptItem {
-                       transcriptPublisher.send(validItem)
+                       transcriptPublisher.send((validItem, false))
                    }
                    return transcriptItem
                }
