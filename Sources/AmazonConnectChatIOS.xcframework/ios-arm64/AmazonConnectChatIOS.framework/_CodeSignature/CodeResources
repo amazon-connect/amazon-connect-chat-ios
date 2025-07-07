@@ -6,7 +6,7 @@
 	<dict>
 		<key>Headers/AmazonConnectChatIOS-Swift.h</key>
 		<data>
-		a0hayVKtWH2S042hCVF4AsE5EoU=
+		coiTx7BUlHgcIyL+Wx1l0OCE0Zo=
 		</data>
 		<key>Headers/AmazonConnectChatIOS.h</key>
 		<data>
@@ -14,23 +14,23 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		xVU1Wpj0M4fZFSfQH2FoJDVm8uY=
+		OFjXd+x8/CwJrQzEyTwYDJfXk7w=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios.abi.json</key>
 		<data>
-		zyA5PIdLjytaYKgxSF2eT5BTAUo=
+		VF6iFBjlqJavYI0B98jQ9IymmU8=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios.private.swiftinterface</key>
 		<data>
-		no/o5bD7EYVmyE0ZNOWBzQ8Z/kU=
+		B1TLUqoPVO/RqelmrwH06e5819Q=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios.swiftdoc</key>
 		<data>
-		dVVQAK5iT9n0VzafpQqaZMXNFXs=
+		XlvBYASP/TRv7RTWeHnVy/+r7x4=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios.swiftinterface</key>
 		<data>
-		no/o5bD7EYVmyE0ZNOWBzQ8Z/kU=
+		B1TLUqoPVO/RqelmrwH06e5819Q=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -47,7 +47,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			JqjQJkvvcFgdvcghADEQR2X5GCU10TYTMyTEIvj8X6c=
+			VmAWYTz87jD3zLtywfricRPNaatX1un3yWK91n3dmls=
 			</data>
 		</dict>
 		<key>Headers/AmazonConnectChatIOS.h</key>
@@ -61,28 +61,28 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			hRaFsZEHvuJrSjHe8SUuYzeYVejJA9QhlKM5xblHbVY=
+			aMKog1BN4OoHzzCDWo3f+hBekMDwruw6RXGTSFzYAdM=
 			</data>
 		</dict>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			es3O68RUGJwsXpll0ROfwxmRlGgdcsgxvJsq2ZRI5Vw=
+			q2Qtu9iuWJJGF8qV2ol28Ppji6vDaK1/tubwwMVWgXg=
 			</data>
 		</dict>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			a8lDgKLA91qx4FbbOR/Ym+eujw3pzBw+NQH9TOqpOLk=
+			yHil+AffFI9H5mD71zu1XJpK4NDmgZWgxqPdVqG/9p4=
 			</data>
 		</dict>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			es3O68RUGJwsXpll0ROfwxmRlGgdcsgxvJsq2ZRI5Vw=
+			q2Qtu9iuWJJGF8qV2ol28Ppji6vDaK1/tubwwMVWgXg=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
