@@ -229,7 +229,7 @@ class ChatService : ChatServiceProtocol {
         }
         
         if shouldTriggerTranscriptListUpdate {
-            self.transcriptListPublisher.send(TranscriptData(transcriptList: internalTranscript, previousTranscriptNextToken: previousTranscriptNextToken))
+            self.triggerTranscriptListUpdate()
         }
     }
     

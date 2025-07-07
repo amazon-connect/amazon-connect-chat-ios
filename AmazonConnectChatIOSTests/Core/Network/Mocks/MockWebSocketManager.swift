@@ -28,7 +28,7 @@ class MockWebsocketManager: WebsocketManagerProtocol {
     }
     
     var eventPublisher = PassthroughSubject<ChatEvent, Never>()
-    var transcriptPublisher = PassthroughSubject<TranscriptItem, Never>()
+    var transcriptPublisher = PassthroughSubject<(TranscriptItem, Bool), Never>()
     
     func connect(wsUrl: URL?,isReconnect: Bool? = false) {
         // Simulate connection logic if needed

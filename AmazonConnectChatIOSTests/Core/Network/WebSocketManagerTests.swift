@@ -64,7 +64,7 @@ class WebsocketManagerTests: XCTestCase {
         let type = "MESSAGE"
 
         mockWebSocketTask.mockReceiveResult = .success(.string(createSampleWebSocketResultString(textContent: text, type: .message, participant: participant)))
-        websocketManager.transcriptPublisher.sink { item in
+        websocketManager.transcriptPublisher.sink { (item, shouldTrigger) in
             XCTAssertNotNil(item)
             guard let messageItem = item as? Message else {
                 XCTFail("Expected message transcript item type")
@@ -84,7 +84,7 @@ class WebsocketManagerTests: XCTestCase {
         let text = "Test"
 
         mockWebSocketTask.mockReceiveResult = .success(.string(createSampleWebSocketResultString(textContent: text, contentType: .joined, type: .event, participant: participant)))
-        websocketManager.transcriptPublisher.sink { item in
+        websocketManager.transcriptPublisher.sink { (item, shouldTrigger) in
             XCTAssertNotNil(item)
             guard let eventItem = item as? Event else {
                 XCTFail("Expected event transcript item type")
@@ -103,7 +103,7 @@ class WebsocketManagerTests: XCTestCase {
         let text = "Test"
 
         mockWebSocketTask.mockReceiveResult = .success(.string(createSampleWebSocketResultString(textContent: text, contentType: .left, type: .event, participant: participant)))
-        websocketManager.transcriptPublisher.sink { item in
+        websocketManager.transcriptPublisher.sink { (item, shouldTrigger) in
             XCTAssertNotNil(item)
             guard let eventItem = item as? Event else {
                 XCTFail("Expected event transcript item type")
@@ -122,7 +122,7 @@ class WebsocketManagerTests: XCTestCase {
         let text = "Test"
 
         mockWebSocketTask.mockReceiveResult = .success(.string(createSampleWebSocketResultString(textContent: text, contentType: .typing, type: .event, participant: participant)))
-        websocketManager.transcriptPublisher.sink { item in
+        websocketManager.transcriptPublisher.sink { (item, shouldTrigger) in
             XCTAssertNotNil(item)
             guard let eventItem = item as? Event else {
                 XCTFail("Expected event transcript item type")
@@ -141,7 +141,7 @@ class WebsocketManagerTests: XCTestCase {
         let text = "Test"
 
         mockWebSocketTask.mockReceiveResult = .success(.string(createSampleWebSocketResultString(textContent: text, contentType: .ended, type: .event, participant: participant)))
-        websocketManager.transcriptPublisher.sink { item in
+        websocketManager.transcriptPublisher.sink { (item, shouldTrigger) in
             XCTAssertNotNil(item)
             guard let eventItem = item as? Event else {
                 XCTFail("Expected event transcript item type")
@@ -158,7 +158,7 @@ class WebsocketManagerTests: XCTestCase {
         let expectation = self.expectation(description: "WebSocket Attachment Received")
 
         mockWebSocketTask.mockReceiveResult = .success(.string(createSampleWebSocketAttachmentString()))
-        websocketManager.transcriptPublisher.sink { item in
+        websocketManager.transcriptPublisher.sink { (item, shouldTrigger) in
             XCTAssertNotNil(item)
             guard let attachmentItem = item as? Message else {
                 XCTFail("Expected message transcript item type")
@@ -175,7 +175,7 @@ class WebsocketManagerTests: XCTestCase {
         let expectation = self.expectation(description: "WebSocket Metadata Received")
 
         mockWebSocketTask.mockReceiveResult = .success(.string(createSampleMetadataString()))
-        websocketManager.transcriptPublisher.sink { item in
+        websocketManager.transcriptPublisher.sink { (item, shouldTrigger) in
             XCTAssertNotNil(item)
             guard let metadataItem = item as? Metadata else {
                 XCTFail("Expected metadata transcript item type")

@@ -97,7 +97,7 @@ class ChatServiceTests: XCTestCase {
             
             self.mockWebsocketManager.eventPublisher.send(.connectionEstablished)
             let transcriptItem = Event(text: "Joined event", timeStamp: "timestamp", contentType: "joined", messageId: "1234", serializedContent: [:])
-            self.mockWebsocketManager.transcriptPublisher.send(transcriptItem)
+            self.mockWebsocketManager.transcriptPublisher.send((transcriptItem, true))
         }
         
         // Wait for expectations
