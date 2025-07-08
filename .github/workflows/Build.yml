@@ -41,11 +41,34 @@ jobs:
     - name: Run Unit Tests
       run: |
         echo "::group::Run Unit Tests"
-        xcodebuild test -scheme AmazonConnectChatIOS \
-                        -sdk iphonesimulator \
-                        -destination 'platform=iOS Simulator,name=iPhone 12,OS=latest' \
-                        -configuration Debug \
-                        -enableCodeCoverage YES \
-                        -testPlan AmazonConnectChatIOS.xctestplan \
-                        2>&1 | xcpretty --color --simple
+        mkdir -p test_output
+        
+        # List available schemes to debug
+        echo "Available schemes:"
+        xcodebuild -list -project AmazonConnectChatIOS.xcodeproj
+        
+        # Use iPhone 15 with iOS 17.5
+        DESTINATION="platform=iOS Simulator,OS=17.5,name=iPhone 15"
+        
+        # Run tests with AmazonConnectChatIOSTests scheme
+        echo "Running tests with AmazonConnectChatIOSTests scheme..."
+        set -o pipefail && xcodebuild test -project AmazonConnectChatIOS.xcodeproj \
+                    -scheme AmazonConnectChatIOSTests \
+                    -sdk iphonesimulator \
+                    -destination "$DESTINATION" \
+                    -configuration Debug \
+                    -enableCodeCoverage YES \
+                    -resultBundlePath test_output/results.xcresult \
+                    | tee test_output/xcodebuild.log | xcpretty --color --test --report junit
+        
+        # Display failing tests more prominently
+        echo "::endgroup::"
+        
+        echo "::group::Failing Tests Summary"
+        if grep -q "Test Suite.*failed" test_output/xcodebuild*.log 2>/dev/null; then
+          echo "❌ FAILING TESTS DETECTED:"
+          grep -A 10 -B 2 "Test Case.*failed" test_output/xcodebuild*.log 2>/dev/null || true
+        else
+          echo "✅ All tests passed"
+        fi
         echo "::endgroup::"
