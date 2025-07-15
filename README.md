@@ -164,6 +164,7 @@ This API will allow you to override the SDK's built-in logger with your own [SDK
 public static func configureLogger(_ logger: SDKLoggerProtocol) {
     SDKLogger.logger = logger
 }
+```
 
 #### SDKLoggerProtocol
 The SDKLoggerProtocol is a protocol used for the `SDKLogger`.  Users can override the `SDKLogger` with any class that implements SDKLoggerProtocol.
