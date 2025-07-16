@@ -268,10 +268,11 @@ class ChatService : ChatServiceProtocol {
             case .success(_):
                 SDKLogger.logger.logDebug("Participant Disconnected")
                 self.eventPublisher.send(.chatEnded)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {}
-                self.websocketManager?.disconnect(reason: "Participant Disconnected")
-                self.clearSubscriptionsAndPublishers()
-                completion(true, nil)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.websocketManager?.disconnect(reason: "Participant Disconnected")
+                    self.clearSubscriptionsAndPublishers()
+                    completion(true, nil)
+                }
             case .failure(let error):
                 completion(false, error)
             }
