@@ -18,7 +18,9 @@ struct TranscriptItemUtils {
     }
     
     static func createDummyMessage(content: String, contentType: String, status: MessageStatus, attachmentId: String? = nil, displayName: String) -> Message {
-        let isoTime = CommonUtils.getCurrentISOTime()
+        // Use empty string for sending messages so no timestamp is displayed
+        // Sorting is handled by checking .Sending status in transcript logic
+        let isoTime = ""
         let randomId = UUID().uuidString
         
         return Message(
