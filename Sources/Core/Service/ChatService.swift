@@ -147,6 +147,12 @@ class ChatService : ChatServiceProtocol {
                     updateTemporaryMessage(tempMessage: tempMessage, with: message, in: &transcriptDict)
                 }
                 attachmentIdToTempMessageIdMap.removeValue(forKey: message.attachmentId ?? "")
+            } else if let existingMessage = transcriptDict[message.id] as? Message,
+                      let existingStatus = existingMessage.metadata?.status,
+                      existingStatus == .Sending || existingStatus == .Sent {
+                // This is a WebSocket message for an existing placeholder message
+                // Update the placeholder with server timestamp and mark as delivered
+                updatePlaceholderWithServerMessage(placeholder: existingMessage, serverMessage: message)
             } else {
                 transcriptDict[message.id] = message
             }
@@ -159,6 +165,20 @@ class ChatService : ChatServiceProtocol {
         if let updatedItem = transcriptDict[item.id] {
             self.handleTranscriptItemUpdate(updatedItem, shouldTriggerTranscriptListUpdate: shouldTriggerTranscriptListUpdate)
         }
+    }
+    
+    private func updatePlaceholderWithServerMessage(placeholder: Message, serverMessage: Message) {
+        // Update the placeholder message with server timestamp and mark as delivered
+        placeholder.updateTimeStamp(serverMessage.timeStamp)
+        placeholder.metadata?.status = .Delivered
+        
+        // Update metadata timestamp by casting to Metadata type which inherits from TranscriptItem
+        if let metadata = placeholder.metadata as? Metadata {
+            metadata.updateTimeStamp(serverMessage.timeStamp)
+        }
+        
+        // Update the transcript dict with the updated placeholder
+        transcriptDict[placeholder.id] = placeholder
     }
     
     private func updateTemporaryMessage(tempMessage: Message, with message: Message, in currentDict: inout [String: TranscriptItem]) {
@@ -221,7 +241,13 @@ class ChatService : ChatServiceProtocol {
             internalTranscript[index] = transcriptItem
         } else {
             // Insert new item based on timestamp comparison
-            if let firstItem = internalTranscript.first, transcriptItem.timeStamp < firstItem.timeStamp {
+            // Special handling: only sending messages should appear at the end (most recent)
+            let isSendingMessage = (transcriptItem as? Message)?.metadata?.status == .Sending
+            
+            if isSendingMessage {
+                // Sending messages go to the end (most recent)
+                internalTranscript.append(transcriptItem)
+            } else if let firstItem = internalTranscript.first, transcriptItem.timeStamp < firstItem.timeStamp {
                 internalTranscript.insert(transcriptItem, at: 0)
             } else {
                 internalTranscript.append(transcriptItem)
@@ -320,6 +346,12 @@ class ChatService : ChatServiceProtocol {
                 completion(true, nil)
             case .failure(let error):
                 recentlySentMessage.metadata?.status = .Failed
+                // Set current timestamp for failed messages so user sees when the failure occurred
+                let failureTime = CommonUtils.getCurrentISOTime()
+                recentlySentMessage.updateTimeStamp(failureTime)
+                if let metadata = recentlySentMessage.metadata as? Metadata {
+                    metadata.updateTimeStamp(failureTime)
+                }
                 self.sendSingleUpdateToClient(for: recentlySentMessage)
                 completion(false, error)
             }
@@ -347,6 +379,8 @@ class ChatService : ChatServiceProtocol {
                 // Update the placeholder message's ID to the new ID
                 placeholderMessage.updateId(newId)
                 placeholderMessage.metadata?.status = .Sent
+                // Note: .Sent messages keep empty timestamp (no display) until server WebSocket message arrives
+                // which will trigger updatePlaceholderWithServerMessage() to set proper server timestamp
                 transcriptDict.removeValue(forKey: oldId)
                 placeholderMessage.updatePersistentId(oldId)
                 transcriptDict[newId] = placeholderMessage
@@ -575,6 +609,12 @@ class ChatService : ChatServiceProtocol {
     
     private func handleAttachmentUploadFailure(message: Message, error: Error?) {
         message.metadata?.status = .Failed
+        // Set current timestamp for failed messages so user sees when the failure occurred
+        let failureTime = CommonUtils.getCurrentISOTime()
+        message.updateTimeStamp(failureTime)
+        if let metadata = message.metadata as? Metadata {
+            metadata.updateTimeStamp(failureTime)
+        }
         self.sendSingleUpdateToClient(for: message)
     }
     
