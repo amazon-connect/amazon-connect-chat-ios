@@ -147,12 +147,6 @@ class ChatService : ChatServiceProtocol {
                     updateTemporaryMessage(tempMessage: tempMessage, with: message, in: &transcriptDict)
                 }
                 attachmentIdToTempMessageIdMap.removeValue(forKey: message.attachmentId ?? "")
-            } else if let existingMessage = transcriptDict[message.id] as? Message,
-                      let existingStatus = existingMessage.metadata?.status,
-                      existingStatus == .Sending || existingStatus == .Sent {
-                // This is a WebSocket message for an existing placeholder message
-                // Update the placeholder with server timestamp and mark as delivered
-                updatePlaceholderWithServerMessage(placeholder: existingMessage, serverMessage: message)
             } else {
                 transcriptDict[message.id] = message
             }
@@ -165,20 +159,6 @@ class ChatService : ChatServiceProtocol {
         if let updatedItem = transcriptDict[item.id] {
             self.handleTranscriptItemUpdate(updatedItem, shouldTriggerTranscriptListUpdate: shouldTriggerTranscriptListUpdate)
         }
-    }
-    
-    private func updatePlaceholderWithServerMessage(placeholder: Message, serverMessage: Message) {
-        // Update the placeholder message with server timestamp and mark as delivered
-        placeholder.updateTimeStamp(serverMessage.timeStamp)
-        placeholder.metadata?.status = .Delivered
-        
-        // Update metadata timestamp by casting to Metadata type which inherits from TranscriptItem
-        if let metadata = placeholder.metadata as? Metadata {
-            metadata.updateTimeStamp(serverMessage.timeStamp)
-        }
-        
-        // Update the transcript dict with the updated placeholder
-        transcriptDict[placeholder.id] = placeholder
     }
     
     private func updateTemporaryMessage(tempMessage: Message, with message: Message, in currentDict: inout [String: TranscriptItem]) {
