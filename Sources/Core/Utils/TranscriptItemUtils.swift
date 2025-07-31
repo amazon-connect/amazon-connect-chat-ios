@@ -18,6 +18,7 @@ struct TranscriptItemUtils {
     }
     
     static func createDummyMessage(content: String, contentType: String, status: MessageStatus, attachmentId: String? = nil, displayName: String) -> Message {
+        let deviceTime = CommonUtils.getCurrentISOTime()
         let randomId = UUID().uuidString
         
         return Message(
@@ -25,12 +26,12 @@ struct TranscriptItemUtils {
             text: content,
             contentType: contentType,
             messageDirection: .Outgoing,
-            timeStamp: "", // Empty string for sending messages - no timestamp displayed, sorting handled by transcript logic
+            timeStamp: deviceTime,
             attachmentId: attachmentId,
             messageId: randomId,
             displayName: displayName,
             serializedContent: [:],
-            metadata: Metadata(status: status, timeStamp: "", contentType: contentType, eventDirection: .Outgoing, serializedContent: [:]), // Empty timestamp for metadata too
+            metadata: Metadata(status: status, timeStamp: deviceTime, contentType: contentType, eventDirection: .Outgoing, serializedContent: [:]),
             persistentId: randomId
         )
     }
