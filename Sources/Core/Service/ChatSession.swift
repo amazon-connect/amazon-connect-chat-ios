@@ -98,6 +98,9 @@ public protocol ChatSessionProtocol {
     var onTranscriptUpdated: ((TranscriptData) -> Void)? { get set }
     var onChatEnded: (() -> Void)? { get set }
     var onDeepHeartbeatFailure: (() -> Void)? { get set }
+    var onParticipantIdle: ((String) -> Void)? { get set }
+    var onParticipantReturned: ((String) -> Void)? { get set }
+    var onAutoDisconnection: ((String) -> Void)? { get set }
 }
 
 public class ChatSession: ChatSessionProtocol {
@@ -114,6 +117,9 @@ public class ChatSession: ChatSessionProtocol {
     public var onTranscriptUpdated: ((TranscriptData) -> Void)?
     public var onChatEnded: (() -> Void)?
     public var onDeepHeartbeatFailure: (() -> Void)?
+    public var onParticipantIdle: ((String) -> Void)?
+    public var onParticipantReturned: ((String) -> Void)?
+    public var onAutoDisconnection: ((String) -> Void)?
     
     /// Initializes a new chat session with a specified chat service.
     /// - Parameter chatService: The chat service to use for managing chat sessions.
@@ -136,6 +142,12 @@ public class ChatSession: ChatSessionProtocol {
                     self?.onConnectionReEstablished?()
                 case .chatEnded:
                     self?.onChatEnded?()
+                case .participantIdle(let displayName):
+                    self?.onParticipantIdle?(displayName)
+                case .participantReturned(let displayName):
+                    self?.onParticipantReturned?(displayName)
+                case .autoDisconnection(let displayName):
+                    self?.onAutoDisconnection?(displayName)
                 default:
                     break
                 }

@@ -265,6 +265,15 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
                     case .ended:
                         // Handle chat ended event
                         return handleChatEnded(innerJson, json)
+                    case .participantIdle:
+                        // Handle participant idle event
+                        return handleParticipantIdle(innerJson, json)
+                    case .participantReturned:
+                        // Handle participant returned event
+                        return handleParticipantReturned(innerJson, json)
+                    case .autoDisconnection:
+                        // Handle auto disconnection event
+                        return handleAutoDisconnection(innerJson, json)
                     default:
                         SDKLogger.logger.logError("Unknown event: \(String(describing: eventType))")
                     }
@@ -539,6 +548,46 @@ extension WebsocketManager {
             eventDirection: .Common,
             serializedContent: serializedContent)
     }
+    
+    func handleParticipantIdle(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {
+        let displayName = innerJson["DisplayName"] as? String ?? ""
+        return handleParticipantStateEvent(innerJson, serializedContent, eventType: .participantIdle(displayName: displayName))
+    }
+    
+    func handleParticipantReturned(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {
+        let displayName = innerJson["DisplayName"] as? String ?? ""
+        return handleParticipantStateEvent(innerJson, serializedContent, eventType: .participantReturned(displayName: displayName))
+    }
+    
+    func handleAutoDisconnection(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {
+        let displayName = innerJson["DisplayName"] as? String ?? ""
+        return handleParticipantStateEvent(innerJson, serializedContent, eventType: .autoDisconnection(displayName: displayName))
+    }
+    
+    // Common function to handle participant state events
+    private func handleParticipantStateEvent(_ innerJson: [String: Any], _ serializedContent: [String: Any], eventType: ChatEvent) -> TranscriptItem? {
+        let participantRole = innerJson["ParticipantRole"] as! String
+        let time = innerJson["AbsoluteTime"] as! String
+        let displayName = innerJson["DisplayName"] as! String
+        let messageId = innerJson["Id"] as! String
+        let isFromPastSession = innerJson["IsFromPastSession"] as? Bool ?? false
+
+        if !isFromPastSession {
+            // Current session event: Emit the specific event type
+            eventPublisher.send(eventType)
+        }
+
+        return Event(
+            timeStamp: time,
+            contentType: innerJson["ContentType"] as! String,
+            messageId: messageId,
+            displayName: displayName,
+            participant: participantRole,
+            eventDirection: .Common,
+            serializedContent: serializedContent
+        )
+    }
+    
     
     func handleMetadata(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {
         let messageMetadata = innerJson["MessageMetadata"] as! [String: Any]
