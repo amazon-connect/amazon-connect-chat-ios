@@ -98,9 +98,15 @@ public protocol ChatSessionProtocol {
     var onTranscriptUpdated: ((TranscriptData) -> Void)? { get set }
     var onChatEnded: (() -> Void)? { get set }
     var onDeepHeartbeatFailure: (() -> Void)? { get set }
-    var onParticipantIdle: ((String) -> Void)? { get set }
-    var onParticipantReturned: ((String) -> Void)? { get set }
-    var onAutoDisconnection: ((String) -> Void)? { get set }
+    var onParticipantIdle: ((EventData) -> Void)? { get set }
+    var onParticipantReturned: ((EventData) -> Void)? { get set }
+    var onAutoDisconnection: ((EventData) -> Void)? { get set }
+    var onTyping: ((EventData) -> Void)? { get set }
+    var onReadReceipt: ((EventData) -> Void)? { get set }
+    var onDeliveredReceipt: ((EventData) -> Void)? { get set }
+    var onParticipantInvited: ((EventData) -> Void)? { get set }
+    var onParticipantDisplayNameUpdated: ((EventData) -> Void)? { get set }
+    var onChatRehydrated: ((EventData) -> Void)? { get set }
 }
 
 public class ChatSession: ChatSessionProtocol {
@@ -117,9 +123,15 @@ public class ChatSession: ChatSessionProtocol {
     public var onTranscriptUpdated: ((TranscriptData) -> Void)?
     public var onChatEnded: (() -> Void)?
     public var onDeepHeartbeatFailure: (() -> Void)?
-    public var onParticipantIdle: ((String) -> Void)?
-    public var onParticipantReturned: ((String) -> Void)?
-    public var onAutoDisconnection: ((String) -> Void)?
+    public var onParticipantIdle: ((EventData) -> Void)?
+    public var onParticipantReturned: ((EventData) -> Void)?
+    public var onAutoDisconnection: ((EventData) -> Void)?
+    public var onTyping: ((EventData) -> Void)?
+    public var onReadReceipt: ((EventData) -> Void)?
+    public var onDeliveredReceipt: ((EventData) -> Void)?
+    public var onParticipantInvited: ((EventData) -> Void)?
+    public var onParticipantDisplayNameUpdated: ((EventData) -> Void)?
+    public var onChatRehydrated: ((EventData) -> Void)?
     
     /// Initializes a new chat session with a specified chat service.
     /// - Parameter chatService: The chat service to use for managing chat sessions.
@@ -142,12 +154,24 @@ public class ChatSession: ChatSessionProtocol {
                     self?.onConnectionReEstablished?()
                 case .chatEnded:
                     self?.onChatEnded?()
-                case .participantIdle(let displayName):
-                    self?.onParticipantIdle?(displayName)
-                case .participantReturned(let displayName):
-                    self?.onParticipantReturned?(displayName)
-                case .autoDisconnection(let displayName):
-                    self?.onAutoDisconnection?(displayName)
+                case .participantIdle(let data):
+                    self?.onParticipantIdle?(data)
+                case .participantReturned(let data):
+                    self?.onParticipantReturned?(data)
+                case .autoDisconnection(let data):
+                    self?.onAutoDisconnection?(data)
+                case .typing(let data):
+                    self?.onTyping?(data)
+                case .readReceipt(let data):
+                    self?.onReadReceipt?(data)
+                case .deliveredReceipt(let data):
+                    self?.onDeliveredReceipt?(data)
+                case .participantInvited(let data):
+                    self?.onParticipantInvited?(data)
+                case .participantDisplayNameUpdated(let data):
+                    self?.onParticipantDisplayNameUpdated?(data)
+                case .chatRehydrated(let data):
+                    self?.onChatRehydrated?(data)
                 default:
                     break
                 }
