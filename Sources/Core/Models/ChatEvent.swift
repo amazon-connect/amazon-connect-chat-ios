@@ -4,29 +4,6 @@
 
 import Foundation
 
-// Data structure to hold complete event information
-public struct EventData: Equatable {
-    public let absoluteTime: String?
-    public let contentType: String?
-    public let type: String?
-    public let participantId: String?
-    public let displayName: String?
-    public let participantRole: String?
-    public let initialContactId: String?
-    public let messageId: String?
-    
-    public init(absoluteTime: String?, contentType: String?, type: String?, participantId: String?, displayName: String?, participantRole: String?, initialContactId: String?, messageId: String?) {
-        self.absoluteTime = absoluteTime
-        self.contentType = contentType
-        self.type = type
-        self.participantId = participantId
-        self.displayName = displayName
-        self.participantRole = participantRole
-        self.initialContactId = initialContactId
-        self.messageId = messageId
-    }
-}
-
 public enum ContentType: String {
     case typing = "application/vnd.amazonaws.connect.event.typing"
     case connectionAcknowledged = "application/vnd.amazonaws.connect.event.connection.acknowledged"
