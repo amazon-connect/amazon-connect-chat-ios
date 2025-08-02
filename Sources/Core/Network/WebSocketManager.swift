@@ -514,20 +514,22 @@ extension WebsocketManager {
         let messageId = innerJson["Id"] as! String
         let isFromPastSession = innerJson["IsFromPastSession"] as? Bool ?? false
 
-        if !isFromPastSession {
-            // Current session event: Emit typing event with full data
-            let eventData = createEventData(from: innerJson)
-            eventPublisher.send(.typing(data: eventData))
-        }
-
-        return Event(
+        let event = Event(
             timeStamp: time,
             contentType: innerJson["ContentType"] as! String,
             messageId: messageId,
             displayName: displayName,
             participant: participantRole,
+            eventDirection: .Common,
             serializedContent: serializedContent
         )
+
+        if !isFromPastSession {
+            // Current session event: Emit typing event with Event object
+            eventPublisher.send(.typing(event))
+        }
+
+        return event
     }
     
     func handleChatEnded(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {
@@ -551,48 +553,45 @@ extension WebsocketManager {
     }
     
     func handleParticipantStateChange(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {
-        let eventData = createEventData(from: innerJson)
         let contentType = innerJson["ContentType"] as? String ?? ""
+        
+        // Create the Event object first
+        let participantRole = innerJson["ParticipantRole"] as! String
+        let time = innerJson["AbsoluteTime"] as! String
+        let displayName = innerJson["DisplayName"] as! String
+        let messageId = innerJson["Id"] as! String
+        
+        let event = Event(
+            timeStamp: time,
+            contentType: contentType,
+            messageId: messageId,
+            displayName: displayName,
+            participant: participantRole,
+            eventDirection: .Common,
+            serializedContent: serializedContent
+        )
         
         // Determine the event type based on ContentType
         let eventType: ChatEvent
         switch contentType {
         case ContentType.participantIdle.rawValue:
-            eventType = .participantIdle(data: eventData)
+            eventType = .participantIdle(event)
         case ContentType.participantReturned.rawValue:
-            eventType = .participantReturned(data: eventData)
+            eventType = .participantReturned(event)
         case ContentType.autoDisconnection.rawValue:
-            eventType = .autoDisconnection(data: eventData)
-        case ContentType.messageRead.rawValue:
-            eventType = .readReceipt(data: eventData)
-        case ContentType.messageDelivered.rawValue:
-            eventType = .deliveredReceipt(data: eventData)
+            eventType = .autoDisconnection(event)
         case ContentType.participantInvited.rawValue:
-            eventType = .participantInvited(data: eventData)
+            eventType = .participantInvited(event)
         case ContentType.participantDisplayNameUpdated.rawValue:
-            eventType = .participantDisplayNameUpdated(data: eventData)
+            eventType = .participantDisplayNameUpdated(event)
         case ContentType.chatRehydrated.rawValue:
-            eventType = .chatRehydrated(data: eventData)
+            eventType = .chatRehydrated(event)
         default:
             SDKLogger.logger.logError("Unknown participant state event type: \(contentType)")
             return nil
         }
         
         return handleParticipantStateEvent(innerJson, serializedContent, eventType: eventType)
-    }
-    
-    // Helper method to create EventData from WebSocket JSON
-    private func createEventData(from innerJson: [String: Any]) -> EventData {
-        return EventData(
-            absoluteTime: innerJson["AbsoluteTime"] as? String,
-            contentType: innerJson["ContentType"] as? String,
-            type: innerJson["Type"] as? String,
-            participantId: innerJson["ParticipantId"] as? String,
-            displayName: innerJson["DisplayName"] as? String,
-            participantRole: innerJson["ParticipantRole"] as? String,
-            initialContactId: innerJson["InitialContactId"] as? String,
-            messageId: innerJson["Id"] as? String
-        )
     }
     
     // Common function to handle participant state events
@@ -603,12 +602,7 @@ extension WebsocketManager {
         let messageId = innerJson["Id"] as! String
         let isFromPastSession = innerJson["IsFromPastSession"] as? Bool ?? false
 
-        if !isFromPastSession {
-            // Current session event: Emit the specific event type
-            eventPublisher.send(eventType)
-        }
-
-        return Event(
+        let event = Event(
             timeStamp: time,
             contentType: innerJson["ContentType"] as! String,
             messageId: messageId,
@@ -617,6 +611,13 @@ extension WebsocketManager {
             eventDirection: .Common,
             serializedContent: serializedContent
         )
+
+        if !isFromPastSession {
+            // Current session event: Emit the specific event type with the Event object
+            eventPublisher.send(eventType)
+        }
+
+        return event
     }
     
     
@@ -626,14 +627,26 @@ extension WebsocketManager {
         let receipts = messageMetadata["Receipts"] as? [[String: Any]]
         var status: MessageStatus = .Delivered // Default status
         let time = innerJson["AbsoluteTime"] as! String
+        let isFromPastSession = innerJson["IsFromPastSession"] as? Bool ?? false
 
         if let receipts = receipts {
             for receipt in receipts {
                 if receipt["ReadTimestamp"] is String {
                     status = .Read
+                    if !isFromPastSession {
+                        triggerReceiptCallback(receipt: receipt, messageId: messageId, contentType: .messageRead, innerJson: innerJson, time: time)
+                    }
+                } else if receipt["DeliveredTimestamp"] is String {
+                    if status != .Read { // Don't downgrade from Read to Delivered
+                        status = .Delivered
+                    }
+                    if !isFromPastSession {
+                        triggerReceiptCallback(receipt: receipt, messageId: messageId, contentType: .messageDelivered, innerJson: innerJson, time: time)
+                    }
                 }
             }
         }
+        
         return Metadata(
             status: status,
             messageId: messageId,
@@ -642,6 +655,53 @@ extension WebsocketManager {
             eventDirection: .Outgoing,
             serializedContent: serializedContent
         )
+    }
+    
+    private func triggerReceiptCallback(receipt: [String: Any], messageId: String, contentType: ContentType, innerJson: [String: Any], time: String) {
+        let timestampKey = contentType == .messageRead ? "ReadTimestamp" : "DeliveredTimestamp"
+        let receiptTime = receipt[timestampKey] as? String ?? time
+        let participantId = receipt["ParticipantId"] as? String ?? "Unknown"
+        
+        // Try to determine participant role from the participant ID or context
+        // Note: Receipt metadata doesn't include display names or roles directly
+        let participantRole = determineParticipantRole(participantId: participantId, context: innerJson)
+        
+        let receiptEvent = Event(
+            text: contentType == .messageRead ? "Message read" : "Message delivered",
+            timeStamp: receiptTime,
+            contentType: contentType.rawValue,
+            messageId: messageId,
+            displayName: participantRole, // Use role as display name since we don't have actual names
+            participant: participantId, // Store the actual participant ID
+            eventDirection: .Incoming,
+            serializedContent: [
+                "receipt": receipt,
+                "originalMessage": innerJson,
+                "participantRole": participantRole
+            ]
+        )
+        
+        if contentType == .messageRead {
+            eventPublisher.send(.readReceipt(receiptEvent))
+        } else {
+            eventPublisher.send(.deliveredReceipt(receiptEvent))
+        }
+    }
+    
+    private func determineParticipantRole(participantId: String, context: [String: Any]) -> String {
+        // Try to determine role from participant ID patterns or context
+        // This is a best-effort approach since receipt metadata is limited
+        
+        if participantId.contains("agent") || participantId.contains("AGENT") {
+            return "AGENT"
+        } else if participantId.contains("customer") || participantId.contains("CUSTOMER") {
+            return "CUSTOMER"
+        } else if participantId.contains("supervisor") || participantId.contains("SUPERVISOR") {
+            return "SUPERVISOR"
+        }
+        
+        // If we can't determine from ID, return a generic description
+        return "Participant (\(participantId.prefix(8))...)"
     }
     
 }

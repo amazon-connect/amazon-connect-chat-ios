@@ -8,29 +8,29 @@ final class AmazonConnectChatIOSTests: XCTestCase {
     
     // MARK: - Helper Methods
     
-    private func createEventData(
-        absoluteTime: String? = "2024-08-01T21:00:00.000Z",
-        contentType: String? = "application/vnd.amazonaws.connect.event.participant.idle",
-        type: String? = "EVENT",
-        participantId: String? = "participant-123",
+    private func createEvent(
+        text: String? = nil,
+        timeStamp: String = "2024-08-01T21:00:00.000Z",
+        contentType: String = "application/vnd.amazonaws.connect.event.participant.idle",
+        messageId: String = "message-789",
         displayName: String? = "Test User",
-        participantRole: String? = "CUSTOMER",
-        initialContactId: String? = "contact-456",
-        messageId: String? = "message-789"
-    ) -> EventData {
-        return EventData(
-            absoluteTime: absoluteTime,
+        participant: String? = "CUSTOMER",
+        eventDirection: MessageDirection = .Common,
+        serializedContent: [String: Any] = [:]
+    ) -> Event {
+        return Event(
+            text: text,
+            timeStamp: timeStamp,
             contentType: contentType,
-            type: type,
-            participantId: participantId,
+            messageId: messageId,
             displayName: displayName,
-            participantRole: participantRole,
-            initialContactId: initialContactId,
-            messageId: messageId
+            participant: participant,
+            eventDirection: eventDirection,
+            serializedContent: serializedContent
         )
     }
     
-    // MARK: - EventData Tests
+    // MARK: - Event Tests
     
     func testEventDataEquatable() {
         // Given
@@ -154,33 +154,87 @@ final class AmazonConnectChatIOSTests: XCTestCase {
     }
     
     func testChatEventEquatable_ReadReceiptEvents() {
-        // Given
-        let eventData1 = createEventData(displayName: "Agent", participantRole: "AGENT", contentType: "application/vnd.amazonaws.connect.event.message.read")
-        let eventData2 = createEventData(displayName: "Agent", participantRole: "AGENT", contentType: "application/vnd.amazonaws.connect.event.message.read")
-        let eventData3 = createEventData(displayName: "Customer", participantRole: "CUSTOMER", contentType: "application/vnd.amazonaws.connect.event.message.read")
+        // Given - ReadReceipt events are triggered via metadata processing
+        let event1 = Event(
+            text: "Message read",
+            timeStamp: "2024-08-01T21:02:00.000Z",
+            contentType: "application/vnd.amazonaws.connect.event.message.read",
+            messageId: "msg-123",
+            displayName: nil,
+            participant: "participant-123",
+            eventDirection: .Incoming,
+            serializedContent: [:]
+        )
+        let event2 = Event(
+            text: "Message read",
+            timeStamp: "2024-08-01T21:02:00.000Z",
+            contentType: "application/vnd.amazonaws.connect.event.message.read",
+            messageId: "msg-123",
+            displayName: nil,
+            participant: "participant-123",
+            eventDirection: .Incoming,
+            serializedContent: [:]
+        )
+        let event3 = Event(
+            text: "Message read",
+            timeStamp: "2024-08-01T21:02:00.000Z",
+            contentType: "application/vnd.amazonaws.connect.event.message.read",
+            messageId: "msg-456",
+            displayName: nil,
+            participant: "participant-123",
+            eventDirection: .Incoming,
+            serializedContent: [:]
+        )
         
-        let event1 = ChatEvent.readReceipt(data: eventData1)
-        let event2 = ChatEvent.readReceipt(data: eventData2)
-        let event3 = ChatEvent.readReceipt(data: eventData3)
+        let chatEvent1 = ChatEvent.readReceipt(event1)
+        let chatEvent2 = ChatEvent.readReceipt(event2)
+        let chatEvent3 = ChatEvent.readReceipt(event3)
         
         // Then
-        XCTAssertEqual(event1, event2, "Same read receipt events should be equal")
-        XCTAssertNotEqual(event1, event3, "Different event data should not be equal")
+        XCTAssertEqual(chatEvent1, chatEvent2, "Same read receipt events should be equal")
+        XCTAssertNotEqual(chatEvent1, chatEvent3, "Different message IDs should not be equal")
     }
     
     func testChatEventEquatable_DeliveredReceiptEvents() {
-        // Given
-        let eventData1 = createEventData(displayName: "Customer", participantRole: "CUSTOMER", contentType: "application/vnd.amazonaws.connect.event.message.delivered")
-        let eventData2 = createEventData(displayName: "Customer", participantRole: "CUSTOMER", contentType: "application/vnd.amazonaws.connect.event.message.delivered")
-        let eventData3 = createEventData(displayName: "Agent", participantRole: "AGENT", contentType: "application/vnd.amazonaws.connect.event.message.delivered")
+        // Given - DeliveredReceipt events are triggered via metadata processing
+        let event1 = Event(
+            text: "Message delivered",
+            timeStamp: "2024-08-01T21:01:30.000Z",
+            contentType: "application/vnd.amazonaws.connect.event.message.delivered",
+            messageId: "msg-123",
+            displayName: nil,
+            participant: "participant-123",
+            eventDirection: .Incoming,
+            serializedContent: [:]
+        )
+        let event2 = Event(
+            text: "Message delivered",
+            timeStamp: "2024-08-01T21:01:30.000Z",
+            contentType: "application/vnd.amazonaws.connect.event.message.delivered",
+            messageId: "msg-123",
+            displayName: nil,
+            participant: "participant-123",
+            eventDirection: .Incoming,
+            serializedContent: [:]
+        )
+        let event3 = Event(
+            text: "Message delivered",
+            timeStamp: "2024-08-01T21:01:30.000Z",
+            contentType: "application/vnd.amazonaws.connect.event.message.delivered",
+            messageId: "msg-456",
+            displayName: nil,
+            participant: "participant-123",
+            eventDirection: .Incoming,
+            serializedContent: [:]
+        )
         
-        let event1 = ChatEvent.deliveredReceipt(data: eventData1)
-        let event2 = ChatEvent.deliveredReceipt(data: eventData2)
-        let event3 = ChatEvent.deliveredReceipt(data: eventData3)
+        let chatEvent1 = ChatEvent.deliveredReceipt(event1)
+        let chatEvent2 = ChatEvent.deliveredReceipt(event2)
+        let chatEvent3 = ChatEvent.deliveredReceipt(event3)
         
         // Then
-        XCTAssertEqual(event1, event2, "Same delivered receipt events should be equal")
-        XCTAssertNotEqual(event1, event3, "Different event data should not be equal")
+        XCTAssertEqual(chatEvent1, chatEvent2, "Same delivered receipt events should be equal")
+        XCTAssertNotEqual(chatEvent1, chatEvent3, "Different message IDs should not be equal")
     }
     
     func testChatEventEquatable_ParticipantInvitedEvents() {
@@ -324,6 +378,92 @@ final class AmazonConnectChatIOSTests: XCTestCase {
         XCTAssertEqual(eventData.participantRole, "AGENT")
         XCTAssertNil(eventData.initialContactId)
         XCTAssertEqual(eventData.messageId, "message-789")
+    }
+    
+    // MARK: - Receipt Processing Architecture Tests
+    
+    func testReceiptEventArchitecture() {
+        // Test that receipt events are properly structured for metadata processing
+        
+        // Given - Receipt events contain message-specific information
+        let readReceiptEvent = Event(
+            text: "Message read",
+            timeStamp: "2024-08-01T21:02:00.000Z",
+            contentType: "application/vnd.amazonaws.connect.event.message.read",
+            messageId: "message-789",
+            displayName: nil, // Receipts don't include display names
+            participant: "participant-123", // Who sent the receipt
+            eventDirection: .Incoming,
+            serializedContent: [
+                "receipt": ["ParticipantId": "participant-123", "ReadTimestamp": "2024-08-01T21:02:00.000Z"],
+                "originalMessage": ["InitialContactId": "contact-456"]
+            ]
+        )
+        
+        let deliveredReceiptEvent = Event(
+            text: "Message delivered",
+            timeStamp: "2024-08-01T21:01:30.000Z",
+            contentType: "application/vnd.amazonaws.connect.event.message.delivered",
+            messageId: "message-789",
+            displayName: nil,
+            participant: "participant-123",
+            eventDirection: .Incoming,
+            serializedContent: [
+                "receipt": ["ParticipantId": "participant-123", "DeliveredTimestamp": "2024-08-01T21:01:30.000Z"],
+                "originalMessage": ["InitialContactId": "contact-456"]
+            ]
+        )
+        
+        // Then - Verify receipt events have the correct structure
+        XCTAssertEqual(readReceiptEvent.contentType, "application/vnd.amazonaws.connect.event.message.read")
+        XCTAssertEqual(readReceiptEvent.id, "message-789")
+        XCTAssertEqual(readReceiptEvent.participant, "participant-123")
+        XCTAssertNil(readReceiptEvent.displayName) // Receipts don't include display names
+        XCTAssertEqual(readReceiptEvent.eventDirection, .Incoming)
+        
+        XCTAssertEqual(deliveredReceiptEvent.contentType, "application/vnd.amazonaws.connect.event.message.delivered")
+        XCTAssertEqual(deliveredReceiptEvent.id, "message-789")
+        XCTAssertEqual(deliveredReceiptEvent.participant, "participant-123")
+    }
+    
+    func testReceiptEventEquality_MessageIdFocus() {
+        // Given - Receipt events should be compared by their Event properties
+        let receiptEvent1 = Event(
+            text: "Message read",
+            timeStamp: "2024-08-01T21:02:00.000Z",
+            contentType: "application/vnd.amazonaws.connect.event.message.read",
+            messageId: "message-789",
+            displayName: nil,
+            participant: "participant-123",
+            eventDirection: .Incoming,
+            serializedContent: [:]
+        )
+        
+        let receiptEvent2 = Event(
+            text: "Message read",
+            timeStamp: "2024-08-01T21:02:05.000Z", // Different timestamp
+            contentType: "application/vnd.amazonaws.connect.event.message.read",
+            messageId: "message-789", // Same message ID
+            displayName: nil,
+            participant: "participant-123",
+            eventDirection: .Incoming,
+            serializedContent: [:]
+        )
+        
+        let receiptEvent3 = Event(
+            text: "Message read",
+            timeStamp: "2024-08-01T21:02:00.000Z",
+            contentType: "application/vnd.amazonaws.connect.event.message.read",
+            messageId: "message-999", // Different message ID
+            displayName: nil,
+            participant: "participant-123",
+            eventDirection: .Incoming,
+            serializedContent: [:]
+        )
+        
+        // Then - Different timestamps should make events unequal, different message IDs should make events unequal
+        XCTAssertNotEqual(receiptEvent1, receiptEvent2, "Different timestamps should make events unequal")
+        XCTAssertNotEqual(receiptEvent1, receiptEvent3, "Different message IDs should make events unequal")
     }
     
     // MARK: - Integration Tests

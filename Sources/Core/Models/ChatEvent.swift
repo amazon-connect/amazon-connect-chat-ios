@@ -85,13 +85,13 @@ enum ChatEvent: Equatable {
     case connectionReEstablished
     case chatEnded
     case connectionBroken
-    case participantIdle(data: EventData)
-    case participantReturned(data: EventData)
-    case autoDisconnection(data: EventData)
-    case typing(data: EventData)
-    case readReceipt(data: EventData)
-    case deliveredReceipt(data: EventData)
-    case participantInvited(data: EventData)
-    case participantDisplayNameUpdated(data: EventData)
-    case chatRehydrated(data: EventData)
+    case participantIdle(Event)
+    case participantReturned(Event)
+    case autoDisconnection(Event)
+    case typing(Event)
+    case readReceipt(Event)
+    case deliveredReceipt(Event)
+    case participantInvited(Event)
+    case participantDisplayNameUpdated(Event)
+    case chatRehydrated(Event)
 }

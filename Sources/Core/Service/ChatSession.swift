@@ -98,15 +98,15 @@ public protocol ChatSessionProtocol {
     var onTranscriptUpdated: ((TranscriptData) -> Void)? { get set }
     var onChatEnded: (() -> Void)? { get set }
     var onDeepHeartbeatFailure: (() -> Void)? { get set }
-    var onParticipantIdle: ((EventData) -> Void)? { get set }
-    var onParticipantReturned: ((EventData) -> Void)? { get set }
-    var onAutoDisconnection: ((EventData) -> Void)? { get set }
-    var onTyping: ((EventData) -> Void)? { get set }
-    var onReadReceipt: ((EventData) -> Void)? { get set }
-    var onDeliveredReceipt: ((EventData) -> Void)? { get set }
-    var onParticipantInvited: ((EventData) -> Void)? { get set }
-    var onParticipantDisplayNameUpdated: ((EventData) -> Void)? { get set }
-    var onChatRehydrated: ((EventData) -> Void)? { get set }
+    var onParticipantIdle: ((Event) -> Void)? { get set }
+    var onParticipantReturned: ((Event) -> Void)? { get set }
+    var onAutoDisconnection: ((Event) -> Void)? { get set }
+    var onTyping: ((Event) -> Void)? { get set }
+    var onReadReceipt: ((Event) -> Void)? { get set }
+    var onDeliveredReceipt: ((Event) -> Void)? { get set }
+    var onParticipantInvited: ((Event) -> Void)? { get set }
+    var onParticipantDisplayNameUpdated: ((Event) -> Void)? { get set }
+    var onChatRehydrated: ((Event) -> Void)? { get set }
 }
 
 public class ChatSession: ChatSessionProtocol {
@@ -123,15 +123,15 @@ public class ChatSession: ChatSessionProtocol {
     public var onTranscriptUpdated: ((TranscriptData) -> Void)?
     public var onChatEnded: (() -> Void)?
     public var onDeepHeartbeatFailure: (() -> Void)?
-    public var onParticipantIdle: ((EventData) -> Void)?
-    public var onParticipantReturned: ((EventData) -> Void)?
-    public var onAutoDisconnection: ((EventData) -> Void)?
-    public var onTyping: ((EventData) -> Void)?
-    public var onReadReceipt: ((EventData) -> Void)?
-    public var onDeliveredReceipt: ((EventData) -> Void)?
-    public var onParticipantInvited: ((EventData) -> Void)?
-    public var onParticipantDisplayNameUpdated: ((EventData) -> Void)?
-    public var onChatRehydrated: ((EventData) -> Void)?
+    public var onParticipantIdle: ((Event) -> Void)?
+    public var onParticipantReturned: ((Event) -> Void)?
+    public var onAutoDisconnection: ((Event) -> Void)?
+    public var onTyping: ((Event) -> Void)?
+    public var onReadReceipt: ((Event) -> Void)?
+    public var onDeliveredReceipt: ((Event) -> Void)?
+    public var onParticipantInvited: ((Event) -> Void)?
+    public var onParticipantDisplayNameUpdated: ((Event) -> Void)?
+    public var onChatRehydrated: ((Event) -> Void)?
     
     /// Initializes a new chat session with a specified chat service.
     /// - Parameter chatService: The chat service to use for managing chat sessions.
@@ -154,24 +154,24 @@ public class ChatSession: ChatSessionProtocol {
                     self?.onConnectionReEstablished?()
                 case .chatEnded:
                     self?.onChatEnded?()
-                case .participantIdle(let data):
-                    self?.onParticipantIdle?(data)
-                case .participantReturned(let data):
-                    self?.onParticipantReturned?(data)
-                case .autoDisconnection(let data):
-                    self?.onAutoDisconnection?(data)
-                case .typing(let data):
-                    self?.onTyping?(data)
-                case .readReceipt(let data):
-                    self?.onReadReceipt?(data)
-                case .deliveredReceipt(let data):
-                    self?.onDeliveredReceipt?(data)
-                case .participantInvited(let data):
-                    self?.onParticipantInvited?(data)
-                case .participantDisplayNameUpdated(let data):
-                    self?.onParticipantDisplayNameUpdated?(data)
-                case .chatRehydrated(let data):
-                    self?.onChatRehydrated?(data)
+                case .participantIdle(let event):
+                    self?.onParticipantIdle?(event)
+                case .participantReturned(let event):
+                    self?.onParticipantReturned?(event)
+                case .autoDisconnection(let event):
+                    self?.onAutoDisconnection?(event)
+                case .typing(let event):
+                    self?.onTyping?(event)
+                case .readReceipt(let event):
+                    self?.onReadReceipt?(event)
+                case .deliveredReceipt(let event):
+                    self?.onDeliveredReceipt?(event)
+                case .participantInvited(let event):
+                    self?.onParticipantInvited?(event)
+                case .participantDisplayNameUpdated(let event):
+                    self?.onParticipantDisplayNameUpdated?(event)
+                case .chatRehydrated(let event):
+                    self?.onChatRehydrated?(event)
                 default:
                     break
                 }
