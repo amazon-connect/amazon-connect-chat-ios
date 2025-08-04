@@ -121,6 +121,30 @@ class ChatServiceTests: XCTestCase {
         XCTAssertEqual(receivedEvent, .connectionEstablished, "Should receive the correct event")
     }
     
+    func testSubscribeToEvents_TransferSucceeded() {
+        let testEvent = Event(text: "Transfer succeeded", timeStamp: "2024-01-15T10:30:00Z", contentType: ContentType.transferSucceeded.rawValue, messageId: "transfer-123", serializedContent: [:])
+        let receivedEvent = subscribeAndSendEvent(.transferSucceeded(testEvent))
+        
+        if case .transferSucceeded(let event) = receivedEvent {
+            XCTAssertEqual(event.contentType, ContentType.transferSucceeded.rawValue, "Should receive transfer succeeded event with correct content type")
+            XCTAssertEqual(event.id, "transfer-123", "Should receive event with correct ID")
+        } else {
+            XCTFail("Should receive transferSucceeded event")
+        }
+    }
+    
+    func testSubscribeToEvents_TransferFailed() {
+        let testEvent = Event(text: "Transfer failed", timeStamp: "2024-01-15T10:30:00Z", contentType: ContentType.transferFailed.rawValue, messageId: "transfer-456", serializedContent: [:])
+        let receivedEvent = subscribeAndSendEvent(.transferFailed(testEvent))
+        
+        if case .transferFailed(let event) = receivedEvent {
+            XCTAssertEqual(event.contentType, ContentType.transferFailed.rawValue, "Should receive transfer failed event with correct content type")
+            XCTAssertEqual(event.id, "transfer-456", "Should receive event with correct ID")
+        } else {
+            XCTFail("Should receive transferFailed event")
+        }
+    }
+    
     func testSubscribeToTranscriptItem() {
         let receivedItem = subscribeAndSendTranscriptItem(TranscriptItem(timeStamp: "timestamp", contentType: "text/plain", id: "12345", serializedContent: ["content": "testContent"]))
         XCTAssertEqual(receivedItem?.contentType, "text/plain", "Should receive the correct transcript item")
