@@ -69,6 +69,5 @@ enum ChatEvent: Equatable {
     case readReceipt(Event)
     case deliveredReceipt(Event)
     case participantInvited(Event)
-    case participantDisplayNameUpdated(Event)
     case chatRehydrated(Event)
 }
