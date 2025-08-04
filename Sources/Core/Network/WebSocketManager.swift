@@ -266,8 +266,8 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
                         // Handle chat ended event
                         return handleChatEnded(innerJson, json)
                     case .participantIdle, .participantReturned, .autoDisconnection, .messageRead, .messageDelivered, .participantInvited, .chatRehydrated:
-                        // Handle all participant state change events with common function
-                        return handleParticipantStateChange(innerJson, json)
+                        // Handle all common chat events with unified function
+                        return handleCommonChatEvent(innerJson, json)
                     default:
                         SDKLogger.logger.logError("Unknown event: \(String(describing: eventType))")
                     }
@@ -552,7 +552,7 @@ extension WebsocketManager {
             serializedContent: serializedContent)
     }
     
-    func handleParticipantStateChange(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {
+    func handleCommonChatEvent(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {
         let contentType = innerJson["ContentType"] as? String ?? ""
         let participantRole = innerJson["ParticipantRole"] as! String
         let time = innerJson["AbsoluteTime"] as! String
@@ -585,7 +585,7 @@ extension WebsocketManager {
             case ContentType.chatRehydrated.rawValue:
                 eventType = .chatRehydrated(event)
             default:
-                SDKLogger.logger.logError("Unknown participant state event type: \(contentType)")
+                SDKLogger.logger.logError("Unknown chat event type: \(contentType)")
                 return event // Return the event even if we don't recognize the type
             }
             
