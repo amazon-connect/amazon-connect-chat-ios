@@ -70,4 +70,6 @@ enum ChatEvent: Equatable {
     case deliveredReceipt(Event)
     case participantInvited(Event)
     case chatRehydrated(Event)
+    case transferSucceeded(Event)
+    case transferFailed(Event)
 }

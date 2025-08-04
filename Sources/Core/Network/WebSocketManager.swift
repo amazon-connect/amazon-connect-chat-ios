@@ -265,7 +265,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
                     case .ended:
                         // Handle chat ended event
                         return handleChatEnded(innerJson, json)
-                    case .participantIdle, .participantReturned, .autoDisconnection, .messageRead, .messageDelivered, .participantInvited, .chatRehydrated:
+                    case .participantIdle, .participantReturned, .autoDisconnection, .messageRead, .messageDelivered, .participantInvited, .chatRehydrated, .transferSucceeded, .transferFailed:
                         // Handle all common chat events with unified function
                         return handleCommonChatEvent(innerJson, json)
                     default:
@@ -584,6 +584,10 @@ extension WebsocketManager {
                 eventType = .participantInvited(event)
             case ContentType.chatRehydrated.rawValue:
                 eventType = .chatRehydrated(event)
+            case ContentType.transferSucceeded.rawValue:
+                eventType = .transferSucceeded(event)
+            case ContentType.transferFailed.rawValue:
+                eventType = .transferFailed(event)
             default:
                 SDKLogger.logger.logError("Unknown chat event type: \(contentType)")
                 return event // Return the event even if we don't recognize the type
