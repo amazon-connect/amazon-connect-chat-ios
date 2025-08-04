@@ -98,16 +98,16 @@ public protocol ChatSessionProtocol {
     var onTranscriptUpdated: ((TranscriptData) -> Void)? { get set }
     var onChatEnded: (() -> Void)? { get set }
     var onDeepHeartbeatFailure: (() -> Void)? { get set }
-    var onParticipantIdle: ((Event) -> Void)? { get set }
-    var onParticipantReturned: ((Event) -> Void)? { get set }
-    var onAutoDisconnection: ((Event) -> Void)? { get set }
-    var onTyping: ((Event) -> Void)? { get set }
-    var onReadReceipt: ((Event) -> Void)? { get set }
-    var onDeliveredReceipt: ((Event) -> Void)? { get set }
-    var onParticipantInvited: ((Event) -> Void)? { get set }
-    var onChatRehydrated: ((Event) -> Void)? { get set }
-    var onTransferSucceeded: ((Event) -> Void)? { get set }
-    var onTransferFailed: ((Event) -> Void)? { get set }
+    var onParticipantIdle: ((Event?) -> Void)? { get set }
+    var onParticipantReturned: ((Event?) -> Void)? { get set }
+    var onAutoDisconnection: ((Event?) -> Void)? { get set }
+    var onTyping: ((Event?) -> Void)? { get set }
+    var onReadReceipt: ((Event?) -> Void)? { get set }
+    var onDeliveredReceipt: ((Event?) -> Void)? { get set }
+    var onParticipantInvited: ((Event?) -> Void)? { get set }
+    var onChatRehydrated: ((Event?) -> Void)? { get set }
+    var onTransferSucceeded: ((Event?) -> Void)? { get set }
+    var onTransferFailed: ((Event?) -> Void)? { get set }
 }
 
 public class ChatSession: ChatSessionProtocol {
@@ -124,16 +124,16 @@ public class ChatSession: ChatSessionProtocol {
     public var onTranscriptUpdated: ((TranscriptData) -> Void)?
     public var onChatEnded: (() -> Void)?
     public var onDeepHeartbeatFailure: (() -> Void)?
-    public var onParticipantIdle: ((Event) -> Void)?
-    public var onParticipantReturned: ((Event) -> Void)?
-    public var onAutoDisconnection: ((Event) -> Void)?
-    public var onTyping: ((Event) -> Void)?
-    public var onReadReceipt: ((Event) -> Void)?
-    public var onDeliveredReceipt: ((Event) -> Void)?
-    public var onParticipantInvited: ((Event) -> Void)?
-    public var onChatRehydrated: ((Event) -> Void)?
-    public var onTransferSucceeded: ((Event) -> Void)?
-    public var onTransferFailed: ((Event) -> Void)?
+    public var onParticipantIdle: ((Event?) -> Void)?
+    public var onParticipantReturned: ((Event?) -> Void)?
+    public var onAutoDisconnection: ((Event?) -> Void)?
+    public var onTyping: ((Event?) -> Void)?
+    public var onReadReceipt: ((Event?) -> Void)?
+    public var onDeliveredReceipt: ((Event?) -> Void)?
+    public var onParticipantInvited: ((Event?) -> Void)?
+    public var onChatRehydrated: ((Event?) -> Void)?
+    public var onTransferSucceeded: ((Event?) -> Void)?
+    public var onTransferFailed: ((Event?) -> Void)?
     
     /// Initializes a new chat session with a specified chat service.
     /// - Parameter chatService: The chat service to use for managing chat sessions.
