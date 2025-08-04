@@ -105,7 +105,6 @@ public protocol ChatSessionProtocol {
     var onReadReceipt: ((Event) -> Void)? { get set }
     var onDeliveredReceipt: ((Event) -> Void)? { get set }
     var onParticipantInvited: ((Event) -> Void)? { get set }
-    var onParticipantDisplayNameUpdated: ((Event) -> Void)? { get set }
     var onChatRehydrated: ((Event) -> Void)? { get set }
 }
 
@@ -130,7 +129,6 @@ public class ChatSession: ChatSessionProtocol {
     public var onReadReceipt: ((Event) -> Void)?
     public var onDeliveredReceipt: ((Event) -> Void)?
     public var onParticipantInvited: ((Event) -> Void)?
-    public var onParticipantDisplayNameUpdated: ((Event) -> Void)?
     public var onChatRehydrated: ((Event) -> Void)?
     
     /// Initializes a new chat session with a specified chat service.
@@ -168,8 +166,6 @@ public class ChatSession: ChatSessionProtocol {
                     self?.onDeliveredReceipt?(event)
                 case .participantInvited(let event):
                     self?.onParticipantInvited?(event)
-                case .participantDisplayNameUpdated(let event):
-                    self?.onParticipantDisplayNameUpdated?(event)
                 case .chatRehydrated(let event):
                     self?.onChatRehydrated?(event)
                 default:
