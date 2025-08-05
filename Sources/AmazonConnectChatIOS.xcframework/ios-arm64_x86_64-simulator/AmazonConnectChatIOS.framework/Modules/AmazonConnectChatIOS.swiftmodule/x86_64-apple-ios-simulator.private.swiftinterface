@@ -1,5 +1,5 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 6.0 effective-5.10 (swiftlang-6.0.0.9.10 clang-1600.0.26.2)
+// swift-compiler-version: Apple Swift version 6.0.2 effective-5.10 (swiftlang-6.0.2.1.2 clang-1600.0.26.4)
 // swift-module-flags: -target x86_64-apple-ios15.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-bare-slash-regex -module-name AmazonConnectChatIOS
 // swift-module-flags-ignorable: -no-verify-emitted-module-interface
 import AWSConnectParticipant
@@ -28,6 +28,7 @@ public enum WebSocketErrorCodes : Swift.Int {
   }
 }
 public struct ConnectionDetails {
+  public init(websocketUrl: Swift.String?, connectionToken: Swift.String?, expiry: Foundation.Date?)
   public func getWebsocketUrl() -> Swift.String?
   public func getConnectionToken() -> Swift.String?
   public func getExpiry() -> Foundation.Date?
@@ -71,6 +72,16 @@ public protocol ChatSessionProtocol {
   var onTranscriptUpdated: ((AmazonConnectChatIOS.TranscriptData) -> Swift.Void)? { get set }
   var onChatEnded: (() -> Swift.Void)? { get set }
   var onDeepHeartbeatFailure: (() -> Swift.Void)? { get set }
+  var onParticipantIdle: ((AmazonConnectChatIOS.Event?) -> Swift.Void)? { get set }
+  var onParticipantReturned: ((AmazonConnectChatIOS.Event?) -> Swift.Void)? { get set }
+  var onAutoDisconnection: ((AmazonConnectChatIOS.Event?) -> Swift.Void)? { get set }
+  var onTyping: ((AmazonConnectChatIOS.Event?) -> Swift.Void)? { get set }
+  var onReadReceipt: ((AmazonConnectChatIOS.Event?) -> Swift.Void)? { get set }
+  var onDeliveredReceipt: ((AmazonConnectChatIOS.Event?) -> Swift.Void)? { get set }
+  var onParticipantInvited: ((AmazonConnectChatIOS.Event?) -> Swift.Void)? { get set }
+  var onChatRehydrated: ((AmazonConnectChatIOS.Event?) -> Swift.Void)? { get set }
+  var onTransferSucceeded: ((AmazonConnectChatIOS.Event?) -> Swift.Void)? { get set }
+  var onTransferFailed: ((AmazonConnectChatIOS.Event?) -> Swift.Void)? { get set }
 }
 @_hasMissingDesignatedInitializers public class ChatSession : AmazonConnectChatIOS.ChatSessionProtocol {
   public static let shared: any AmazonConnectChatIOS.ChatSessionProtocol
@@ -81,6 +92,16 @@ public protocol ChatSessionProtocol {
   public var onTranscriptUpdated: ((AmazonConnectChatIOS.TranscriptData) -> Swift.Void)?
   public var onChatEnded: (() -> Swift.Void)?
   public var onDeepHeartbeatFailure: (() -> Swift.Void)?
+  public var onParticipantIdle: ((AmazonConnectChatIOS.Event?) -> Swift.Void)?
+  public var onParticipantReturned: ((AmazonConnectChatIOS.Event?) -> Swift.Void)?
+  public var onAutoDisconnection: ((AmazonConnectChatIOS.Event?) -> Swift.Void)?
+  public var onTyping: ((AmazonConnectChatIOS.Event?) -> Swift.Void)?
+  public var onReadReceipt: ((AmazonConnectChatIOS.Event?) -> Swift.Void)?
+  public var onDeliveredReceipt: ((AmazonConnectChatIOS.Event?) -> Swift.Void)?
+  public var onParticipantInvited: ((AmazonConnectChatIOS.Event?) -> Swift.Void)?
+  public var onChatRehydrated: ((AmazonConnectChatIOS.Event?) -> Swift.Void)?
+  public var onTransferSucceeded: ((AmazonConnectChatIOS.Event?) -> Swift.Void)?
+  public var onTransferFailed: ((AmazonConnectChatIOS.Event?) -> Swift.Void)?
   public func isChatSessionActive() -> Swift.Bool
   public func configure(config: AmazonConnectChatIOS.GlobalConfig)
   public func getConnectionDetailsProvider() -> any AmazonConnectChatIOS.ConnectionDetailsProviderProtocol
@@ -358,9 +379,7 @@ public class TranscriptItem : AmazonConnectChatIOS.TranscriptItemProtocol {
   public init(timeStamp: Swift.String, contentType: Swift.String, id: Swift.String?, serializedContent: [Swift.String : Any]?)
   public static func == (lhs: AmazonConnectChatIOS.TranscriptItem, rhs: AmazonConnectChatIOS.TranscriptItem) -> Swift.Bool
   public func hash(into hasher: inout Swift.Hasher)
-  @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
   public typealias ID = Swift.String
-  @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
   public typealias ObjectWillChangePublisher = Combine.ObservableObjectPublisher
   @objc deinit
   public var hashValue: Swift.Int {
@@ -370,6 +389,7 @@ public class TranscriptItem : AmazonConnectChatIOS.TranscriptItemProtocol {
 public struct TranscriptData {
   public let transcriptList: [AmazonConnectChatIOS.TranscriptItem]
   public let previousTranscriptNextToken: Swift.String?
+  public init(transcriptList: [AmazonConnectChatIOS.TranscriptItem], previousTranscriptNextToken: Swift.String?)
 }
 public enum AttachmentTypes : Swift.String {
   case csv
