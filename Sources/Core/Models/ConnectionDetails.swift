@@ -8,6 +8,12 @@ public struct ConnectionDetails {
     let connectionToken: String?
     let expiry: Date?
     
+    public init(websocketUrl: String?, connectionToken: String?, expiry: Date?) {
+        self.websocketUrl = websocketUrl
+        self.connectionToken = connectionToken
+        self.expiry = expiry
+    }
+    
     public func getWebsocketUrl() -> String? {
         return websocketUrl
     }

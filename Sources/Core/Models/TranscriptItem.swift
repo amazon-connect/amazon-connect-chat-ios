@@ -54,4 +54,9 @@ public class TranscriptItem: TranscriptItemProtocol {
 public struct TranscriptData {
     public let transcriptList: [TranscriptItem]
     public let previousTranscriptNextToken: String?
+    
+    public init(transcriptList: [TranscriptItem], previousTranscriptNextToken: String?) {
+        self.transcriptList = transcriptList
+        self.previousTranscriptNextToken = previousTranscriptNextToken
+    }
 }
