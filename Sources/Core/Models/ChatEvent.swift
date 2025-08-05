@@ -57,9 +57,19 @@ public enum WebSocketMessageType: String {
 }
 
 
-enum ChatEvent {
+enum ChatEvent: Equatable {
     case connectionEstablished
     case connectionReEstablished
     case chatEnded
     case connectionBroken
+    case participantIdle(Event)
+    case participantReturned(Event)
+    case autoDisconnection(Event)
+    case typing(Event)
+    case readReceipt(Event)
+    case deliveredReceipt(Event)
+    case participantInvited(Event)
+    case chatRehydrated(Event)
+    case transferSucceeded(Event)
+    case transferFailed(Event)
 }

@@ -103,6 +103,149 @@ The Amazon Connect Chat SDK for iOS provides two methods to receive messages.
 2. Use [ChatSession.onMessageReceived](#chatsessiononmessagereceived)
   * This event will pass back each message that is received by the WebSocket.  The event handler will be passed a single [TranscriptItem](#transcriptitem).
 
+### How to handle events
+
+The SDK provides event callbacks for chat experiences:
+
+```swift
+// Typing indicators
+chatSession.onTyping = { event in
+    print("Participant \(event.participant!) is typing...")
+    // Show typing indicator in UI
+}
+
+// Message receipts
+chatSession.onReadReceipt = { event in
+    print("Message \(event.id) was read by participant \(event.participant!)")
+    // Update message status to "Read"
+}
+
+chatSession.onDeliveredReceipt = { event in
+    print("Message \(event.id) was delivered to participant \(event.participant!)")
+    // Update message status to "Delivered"
+}
+
+// Participant state changes
+chatSession.onParticipantIdle = { event in
+    print("Participant \(event.displayName!) went idle")
+    // Show idle indicator
+}
+
+chatSession.onParticipantReturned = { event in
+    print("Participant \(event.displayName!) returned")
+    // Hide idle indicator
+}
+
+// Chat lifecycle events
+chatSession.onChatRehydrated = { event in
+    print("Chat session restored from previous session")
+    // Handle chat restoration
+}
+```
+
+### Event Property Reference
+
+All events provide an `Event` object with these properties. Here's what's available in each event type:
+
+#### Typing Events
+```swift
+chatSession.onTyping = { event in
+    // Available properties:
+    // - event.id: Event ID (String)
+    // - event.timeStamp: When typing started (String, ISO 8601)
+    // - event.participant: Participant role, e.g. "AGENT", "CUSTOMER" (String?)
+    // - event.displayName: Participant's display name (String?)
+    // - event.contentType: "application/vnd.amazonaws.connect.event.typing"
+    // - event.eventDirection: .Common
+}
+```
+
+#### Message Receipt Events
+```swift
+chatSession.onReadReceipt = { event in
+    // Available properties:
+    // - event.id: Receipt event ID (String)
+    // - event.timeStamp: When message was read (String, ISO 8601)
+    // - event.participant: Participant ID (UUID) who read the message (String?)
+    // - event.displayName: nil (receipts don't have display names)
+    // - event.contentType: "application/vnd.amazonaws.connect.event.message.read"
+    // - event.eventDirection: .Incoming
+    // - event.serializedContent["receipt"]: Original receipt data
+    // - event.serializedContent["originalMessage"]: Original message metadata
+}
+
+chatSession.onDeliveredReceipt = { event in
+    // Available properties:
+    // - event.id: Receipt event ID (String)
+    // - event.timeStamp: When message was delivered (String, ISO 8601)
+    // - event.participant: Participant ID (UUID) who received the message (String?)
+    // - event.displayName: nil (receipts don't have display names)
+    // - event.contentType: "application/vnd.amazonaws.connect.event.message.delivered"
+    // - event.eventDirection: .Incoming
+    // - event.serializedContent["receipt"]: Original receipt data
+    // - event.serializedContent["originalMessage"]: Original message metadata
+}
+```
+
+#### Participant State Events
+```swift
+chatSession.onParticipantIdle = { event in
+    // Available properties:
+    // - event.id: Event ID (String)
+    // - event.timeStamp: When participant went idle (String, ISO 8601)
+    // - event.participant: Participant role, e.g. "AGENT", "CUSTOMER" (String?)
+    // - event.displayName: Participant's display name (String?)
+    // - event.contentType: "application/vnd.amazonaws.connect.event.participant.idle"
+    // - event.eventDirection: .Common
+}
+
+chatSession.onParticipantReturned = { event in
+    // Available properties:
+    // - event.id: Event ID (String)
+    // - event.timeStamp: When participant returned (String, ISO 8601)
+    // - event.participant: Participant role, e.g. "AGENT", "CUSTOMER" (String?)
+    // - event.displayName: Participant's display name (String?)
+    // - event.contentType: "application/vnd.amazonaws.connect.event.participant.returned"
+    // - event.eventDirection: .Common
+}
+
+chatSession.onAutoDisconnection = { event in
+    // Available properties:
+    // - event.id: Event ID (String)
+    // - event.timeStamp: When auto-disconnection occurred (String, ISO 8601)
+    // - event.participant: Participant role, e.g. "AGENT", "CUSTOMER" (String?)
+    // - event.displayName: Participant's display name (String?)
+    // - event.contentType: "application/vnd.amazonaws.connect.event.participant.autodisconnection"
+    // - event.eventDirection: .Common
+}
+
+chatSession.onParticipantInvited = { event in
+    // Available properties:
+    // - event.id: Event ID (String)
+    // - event.timeStamp: When participant was invited (String, ISO 8601)
+    // - event.participant: Participant role, e.g. "AGENT", "CUSTOMER" (String?)
+    // - event.displayName: Participant's display name (String?)
+    // - event.contentType: "application/vnd.amazonaws.connect.event.participant.invited"
+    // - event.eventDirection: .Common
+}
+```
+
+#### Chat Lifecycle Events
+```swift
+chatSession.onChatRehydrated = { event in
+    // Available properties:
+    // - event.id: Event ID (String)
+    // - event.timeStamp: When chat was rehydrated (String, ISO 8601)
+    // - event.participant: Participant role, e.g. "AGENT", "CUSTOMER" (String?)
+    // - event.displayName: Participant's display name (String?)
+    // - event.contentType: "application/vnd.amazonaws.connect.event.chat.rehydrated"
+    // - event.eventDirection: .Common
+    // - event.serializedContent: Additional rehydration data
+}
+```
+
+**Important Note**: Receipt events (`onReadReceipt`, `onDeliveredReceipt`) use `event.participant` for the participant ID (UUID format like `"2171b970-42b8-471b-b999-3dee14efcd24"`), while other events use it for the participant role (`"AGENT"`, `"CUSTOMER"`, etc.).
+
 ## API List
 
 ### GlobalConfig
@@ -502,6 +645,78 @@ var onConnectionReEstablished: (() -> Void)? { get set }
 ```
 --------------------
 
+#### `ChatSession.onParticipantIdle`
+Callback for when a participant becomes idle.
+
+```
+var onParticipantIdle: ((Event) -> Void)? { get set }
+```
+
+--------------------
+
+#### `ChatSession.onParticipantReturned`
+Callback for when a participant returns from idle state.
+
+```
+var onParticipantReturned: ((Event) -> Void)? { get set }
+```
+
+--------------------
+
+#### `ChatSession.onAutoDisconnection`
+Callback for when a participant is automatically disconnected due to inactivity.
+
+```
+var onAutoDisconnection: ((Event) -> Void)? { get set }
+```
+
+--------------------
+
+#### `ChatSession.onTyping`
+Callback for when a participant is typing.
+
+```
+var onTyping: ((Event) -> Void)? { get set }
+```
+
+--------------------
+
+#### `ChatSession.onReadReceipt`
+Callback for when a message read receipt is received.
+
+```
+var onReadReceipt: ((Event) -> Void)? { get set }
+```
+
+--------------------
+
+#### `ChatSession.onDeliveredReceipt`
+Callback for when a message delivered receipt is received.
+
+```
+var onDeliveredReceipt: ((Event) -> Void)? { get set }
+```
+
+--------------------
+
+#### `ChatSession.onParticipantInvited`
+Callback for when a participant is invited to the chat.
+
+```
+var onParticipantInvited: ((Event) -> Void)? { get set }
+```
+
+--------------------
+
+#### `ChatSession.onChatRehydrated`
+Callback for when a chat session is rehydrated (restored from a previous session).
+
+```
+var onChatRehydrated: ((Event) -> Void)? { get set }
+```
+
+--------------------
+
 ## Classes and Structs
 
 ### Features
@@ -645,6 +860,12 @@ public enum ContentType: String {
     case joined = "application/vnd.amazonaws.connect.event.participant.joined"
     case left = "application/vnd.amazonaws.connect.event.participant.left"
     case ended = "application/vnd.amazonaws.connect.event.chat.ended"
+    case participantIdle = "application/vnd.amazonaws.connect.event.participant.idle"
+    case participantReturned = "application/vnd.amazonaws.connect.event.participant.returned"
+    case participantInvited = "application/vnd.amazonaws.connect.event.participant.invited"
+    case autoDisconnection = "application/vnd.amazonaws.connect.event.participant.autodisconnection"
+    case participantDisplayNameUpdated = "application/vnd.amazonaws.connect.event.participant.displayname.updated"
+    case chatRehydrated = "application/vnd.amazonaws.connect.event.chat.rehydrated"
     case plainText = "text/plain"
     case richText = "text/markdown"
     case interactiveText = "application/vnd.amazonaws.connect.message.interactive"

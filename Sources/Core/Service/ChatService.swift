@@ -168,6 +168,11 @@ class ChatService : ChatServiceProtocol {
         tempMessage.contentType = message.contentType
         tempMessage.attachmentId = message.attachmentId
         
+        // Update status from Sending to Sent when we receive the server confirmation
+        if tempMessage.metadata?.status == .Sending {
+            tempMessage.metadata?.status = .Sent
+        }
+        
         currentDict.removeValue(forKey: tempMessage.id)
         currentDict[message.id] = tempMessage
         self.handleTranscriptItemUpdate(tempMessage)

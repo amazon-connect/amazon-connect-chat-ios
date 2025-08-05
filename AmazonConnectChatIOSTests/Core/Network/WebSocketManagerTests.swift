@@ -189,6 +189,46 @@ class WebsocketManagerTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
     }
     
+    func testReceiveEvent_TransferSucceeded() {
+        let expectation = self.expectation(description: "WebSocket Transfer Succeeded Event Received")
+        let participant = "AGENT"
+        let text = "Transfer completed successfully"
+
+        mockWebSocketTask.mockReceiveResult = .success(.string(createSampleWebSocketResultString(textContent: text, contentType: .transferSucceeded, type: .event, participant: participant)))
+        websocketManager.transcriptPublisher.sink { (item, shouldTrigger) in
+            XCTAssertNotNil(item)
+            guard let eventItem = item as? Event else {
+                XCTFail("Expected event transcript item type")
+                return
+            }
+            XCTAssertEqual(eventItem.contentType, ContentType.transferSucceeded.rawValue)
+            XCTAssertEqual(eventItem.participant, participant)
+            expectation.fulfill()
+        }.store(in: &cancellables)
+        websocketManager.receiveMessage()
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+    
+    func testReceiveEvent_TransferFailed() {
+        let expectation = self.expectation(description: "WebSocket Transfer Failed Event Received")
+        let participant = "AGENT"
+        let text = "Transfer failed"
+
+        mockWebSocketTask.mockReceiveResult = .success(.string(createSampleWebSocketResultString(textContent: text, contentType: .transferFailed, type: .event, participant: participant)))
+        websocketManager.transcriptPublisher.sink { (item, shouldTrigger) in
+            XCTAssertNotNil(item)
+            guard let eventItem = item as? Event else {
+                XCTFail("Expected event transcript item type")
+                return
+            }
+            XCTAssertEqual(eventItem.contentType, ContentType.transferFailed.rawValue)
+            XCTAssertEqual(eventItem.participant, participant)
+            expectation.fulfill()
+        }.store(in: &cancellables)
+        websocketManager.receiveMessage()
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+    
     private func createSampleWebSocketResultString(textContent:String = "Test", contentType:ContentType = .plainText, type:WebSocketMessageType = .message, participant:String = Constants.CUSTOMER) -> String {
         return "{\"content\":\"{\\\"AbsoluteTime\\\":\\\"2024-07-14T22:18:39.241Z\\\",\\\"Content\\\":\\\"\(textContent)\\\",\\\"ContentType\\\":\\\"\(contentType.rawValue)\\\",\\\"Id\\\":\\\"abcdefgh-abcd-abcd-abcd-abcdefghijkl\\\",\\\"Type\\\":\\\"\(type.rawValue)\\\",\\\"ParticipantId\\\":\\\"abcdefgh-abcd-abcd-abcd-abcdefghijkl\\\",\\\"DisplayName\\\":\\\"Customer\\\",\\\"ParticipantRole\\\":\\\"\(participant)\\\",\\\"InitialContactId\\\":\\\"abcdefgh-abcd-abcd-abcd-abcdefghijkl\\\",\\\"ContactId\\\":\\\"abcdefgh-abcd-abcd-abcd-abcdefghijkl\\\"}\",\"contentType\":\"application/json\",\"topic\":\"aws/chat\"}"
     }
