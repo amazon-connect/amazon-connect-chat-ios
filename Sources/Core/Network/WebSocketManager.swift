@@ -554,10 +554,10 @@ extension WebsocketManager {
     
     func handleCommonChatEvent(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {
         let contentType = innerJson["ContentType"] as? String ?? ""
-        let participantRole = innerJson["ParticipantRole"] as! String
-        let time = innerJson["AbsoluteTime"] as! String
-        let displayName = innerJson["DisplayName"] as! String
-        let messageId = innerJson["Id"] as! String
+        let participantRole = innerJson["ParticipantRole"] as? String ?? ""
+        let time = innerJson["AbsoluteTime"] as? String ?? ""
+        let displayName = innerJson["DisplayName"] as? String ?? ""
+        let messageId = innerJson["Id"] as? String ?? ""
         let isFromPastSession = innerJson["IsFromPastSession"] as? Bool ?? false
 
         let event = Event(
