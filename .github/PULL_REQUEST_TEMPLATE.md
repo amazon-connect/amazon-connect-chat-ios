@@ -35,4 +35,5 @@ Here are a list of manual test cases to run through:
     * Receiving an attachment from the agent
     * Preview the attachment on click
 * Close the application (Without ending chat) → open app again → Start chat → Should Retrieve transcript from a previous chat session
+* Quick Connect transfer failed should show the transfer failed event in the transcript
 
