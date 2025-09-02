@@ -8,6 +8,11 @@ public struct Constants {
     static let AWSConnectParticipantKey = "AWSConnectParticipant"
     static let ACPSRequestTypes = ["WEBSOCKET", "CONNECTION_CREDENTIALS"]
     static let AGENT = "AGENT"
+    
+    // TODO: Remove this print statement - added to test linting failure
+    static func testPrint() {
+        print("This should fail the linting check")
+    }
     static let CUSTOMER = "CUSTOMER"
     static let SYSTEM = "SYSTEM"
     static let UNKNOWN = "UNKNOWN"
