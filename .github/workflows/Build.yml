@@ -9,23 +9,6 @@ on:
       - main
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-      
-    - name: Check for print() statements
-      run: |
-        echo "Checking for print() statements in Swift files..."
-        if grep -r "print(" --include="*.swift" . --exclude-dir=".git"; then
-          echo "❌ ERROR: Found print() statements in Swift files"
-          echo "Please use SDKLogger instead of print() for logging"
-          exit 1
-        else
-          echo "✅ No print() statements found"
-        fi
-
   build-and-test:
     runs-on: macos-latest
 
@@ -49,13 +32,6 @@ jobs:
     - name: Clean and Build SDK
       run: |
         echo "::group::Clean and Build SDK"
-        # Clean derived data
-        rm -rf ~/Library/Developer/Xcode/DerivedData
-        
-        # Resolve package dependencies first
-        xcodebuild -resolvePackageDependencies -project AmazonConnectChatIOS.xcodeproj
-        
-        # Clean and build
         xcodebuild clean -project AmazonConnectChatIOS.xcodeproj \
                          -scheme AmazonConnectChatIOS \
                          -sdk iphonesimulator \
@@ -96,3 +72,12 @@ jobs:
           echo "✅ All tests passed"
         fi
         echo "::endgroup::"
+
+    - name: Check for print() statements
+      run: |
+        if grep -r "print(" --include="*.swift" . --exclude-dir=".git"; then
+          echo "❌ ERROR: Found print() statements in Swift files"
+          exit 1
+        else
+          echo "✅ No print() statements found"
+        fi
