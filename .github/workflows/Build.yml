@@ -19,7 +19,7 @@ jobs:
     - name: Set up Xcode
       uses: maxim-lobanov/setup-xcode@v1
       with:
-        xcode-version: 'latest'
+        xcode-version: '16.4.0'
 
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
@@ -47,8 +47,8 @@ jobs:
         echo "Available schemes:"
         xcodebuild -list -project AmazonConnectChatIOS.xcodeproj
         
-        # Use iPhone 15 with iOS 17.5
-        DESTINATION="platform=iOS Simulator,OS=17.5,name=iPhone 15"
+        # Use iPhone 16 with iOS 18.4 (available in Xcode 16.4)
+        DESTINATION="platform=iOS Simulator,OS=18.4,name=iPhone 16"
         
         # Run tests with AmazonConnectChatIOSTests scheme
         echo "Running tests with AmazonConnectChatIOSTests scheme..."
@@ -72,3 +72,12 @@ jobs:
           echo "✅ All tests passed"
         fi
         echo "::endgroup::"
+
+    - name: Check for print() statements
+      run: |
+        if grep -r "print(" --include="*.swift" . --exclude-dir=".git"; then
+          echo "❌ ERROR: Found print() statements in Swift files"
+          exit 1
+        else
+          echo "✅ No print() statements found"
+        fi
