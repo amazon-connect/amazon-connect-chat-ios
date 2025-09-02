@@ -1,0 +1,32 @@
+name: Xcode Compatibility Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test-latest-xcode:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Latest Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: 'latest'
+
+    - name: Test Build with Latest Xcode
+      run: |
+        echo "::group::Test Build with Latest Xcode"
+        xcodebuild clean -project AmazonConnectChatIOS.xcodeproj \
+                         -scheme AmazonConnectChatIOS \
+                         -sdk iphonesimulator \
+                         -configuration Debug \
+                         build
+        echo "::endgroup::"
