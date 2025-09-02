@@ -9,6 +9,23 @@ on:
       - main
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Check for print() statements
+      run: |
+        echo "Checking for print() statements in Swift files..."
+        if grep -r "print(" --include="*.swift" . --exclude-dir=".git"; then
+          echo "❌ ERROR: Found print() statements in Swift files"
+          echo "Please use SDKLogger instead of print() for logging"
+          exit 1
+        else
+          echo "✅ No print() statements found"
+        fi
+
   build-and-test:
     runs-on: macos-latest
 
@@ -28,17 +45,6 @@ jobs:
 
     - name: Install xcpretty
       run: gem install xcpretty
-
-    - name: Lint - Check for print() statements
-      run: |
-        echo "Checking for print() statements in Swift files..."
-        if grep -r "print(" --include="*.swift" . --exclude-dir=".git"; then
-          echo "❌ ERROR: Found print() statements in Swift files"
-          echo "Please use SDKLogger instead of print() for logging"
-          exit 1
-        else
-          echo "✅ No print() statements found"
-        fi
 
     - name: Clean and Build SDK
       run: |
