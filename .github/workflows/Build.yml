@@ -75,7 +75,7 @@ jobs:
 
   test-latest-xcode:
     runs-on: macos-latest
-    continue-on-error: true
+    if: github.ref == 'refs/heads/main'
 
     steps:
     - name: Checkout code
