@@ -32,9 +32,6 @@ jobs:
     - name: Clean and Build SDK
       run: |
         echo "::group::Clean and Build SDK"
-        # Resolve package dependencies first
-        xcodebuild -resolvePackageDependencies -project AmazonConnectChatIOS.xcodeproj
-        
         xcodebuild clean -project AmazonConnectChatIOS.xcodeproj \
                          -scheme AmazonConnectChatIOS \
                          -sdk iphonesimulator \
