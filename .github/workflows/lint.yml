@@ -1,0 +1,31 @@
+name: Lint Code
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Check for print() statements
+      run: |
+        echo "Checking for print() statements in Swift files..."
+        
+        # Find all Swift files and check for print() statements
+        if grep -r "print(" --include="*.swift" . --exclude-dir=".git"; then
+          echo "❌ ERROR: Found print() statements in Swift files"
+          echo "Please use SDKLogger instead of print() for logging"
+          echo "Example: SDKLogger.logger.logInfo(\"Your message\")"
+          exit 1
+        else
+          echo "✅ No print() statements found"
+        fi

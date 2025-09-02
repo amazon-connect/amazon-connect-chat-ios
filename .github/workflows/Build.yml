@@ -16,6 +16,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Lint - Check for print() statements
+      run: |
+        echo "Checking for print() statements in Swift files..."
+        if grep -r "print(" --include="*.swift" . --exclude-dir=".git"; then
+          echo "❌ ERROR: Found print() statements in Swift files"
+          echo "Please use SDKLogger instead of print() for logging"
+          exit 1
+        else
+          echo "✅ No print() statements found"
+        fi
+
     - name: Set up Xcode
       uses: maxim-lobanov/setup-xcode@v1
       with:
