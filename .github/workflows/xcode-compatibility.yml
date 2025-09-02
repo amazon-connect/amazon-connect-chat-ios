@@ -1,4 +1,4 @@
-name: Xcode Compatibility Test (Optional)
+name: Xcode Compatibility (Can Fail - PR Can Still Merge)
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  test-latest-xcode-optional:
+  test-latest-xcode-can-fail:
     runs-on: macos-latest
 
     steps:
@@ -21,9 +21,9 @@ jobs:
       with:
         xcode-version: 'latest'
 
-    - name: Test Build with Latest Xcode (Optional)
+    - name: Test Build with Latest Xcode (Failure OK - PR Can Still Merge)
       run: |
-        echo "::group::Test Build with Latest Xcode (Optional)"
+        echo "::group::Test Build with Latest Xcode (Failure OK - PR Can Still Merge)"
         xcodebuild clean -project AmazonConnectChatIOS.xcodeproj \
                          -scheme AmazonConnectChatIOS \
                          -sdk iphonesimulator \
