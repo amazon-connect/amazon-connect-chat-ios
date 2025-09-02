@@ -1,4 +1,4 @@
-name: Xcode Compatibility Test
+name: Xcode Compatibility Test (Optional)
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  test-latest-xcode:
+  test-latest-xcode-optional:
     runs-on: macos-latest
 
     steps:
@@ -21,9 +21,9 @@ jobs:
       with:
         xcode-version: 'latest'
 
-    - name: Test Build with Latest Xcode
+    - name: Test Build with Latest Xcode (Optional)
       run: |
-        echo "::group::Test Build with Latest Xcode"
+        echo "::group::Test Build with Latest Xcode (Optional)"
         xcodebuild clean -project AmazonConnectChatIOS.xcodeproj \
                          -scheme AmazonConnectChatIOS \
                          -sdk iphonesimulator \
