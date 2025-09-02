@@ -12,6 +12,7 @@ public struct Constants {
     // TODO: Remove this print statement - added to test linting failure
     static func testPrint() {
         print("This should fail the linting check")
+        print("Another print to ensure linting catches it")
     }
     static let CUSTOMER = "CUSTOMER"
     static let SYSTEM = "SYSTEM"
