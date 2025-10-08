@@ -21,6 +21,9 @@ extension HttpHeader {
         case contentDisposition = "Content-Disposition"
         case amzMetaAccountId = "x-amz-meta-account_id"
         case amzExpctedBucketOwner = "x-amz-expected-bucket-owner"
+        case amzServerSideEncryption = "x-amz-server-side-encryption"
+        case amzServerSideEncryptionAwsKmsKeyId = "x-amz-server-side-encryption-aws-kms-key-id"
+        case amzServerSideEncryptionContext = "x-amz-server-side-encryption-context"
     }
 }
 
