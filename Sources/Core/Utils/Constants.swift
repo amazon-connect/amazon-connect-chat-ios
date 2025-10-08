@@ -10,6 +10,8 @@ public struct Constants {
     static let AGENT = "AGENT"
     static let CUSTOMER = "CUSTOMER"
     static let SYSTEM = "SYSTEM"
+    static let SUPERVISOR = "SUPERVISOR"
+    static let CUSTOM_BOT = "CUSTOM_BOT"
     static let UNKNOWN = "UNKNOWN"
     static let MESSAGE = "MESSAGE"
     static let ATTACHMENT = "ATTACHMENT"

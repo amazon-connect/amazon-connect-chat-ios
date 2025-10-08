@@ -14,6 +14,10 @@ struct CommonUtils {
             return Constants.CUSTOMER
         case AWSConnectParticipantParticipantRole.system.rawValue:
             return Constants.SYSTEM
+        case AWSConnectParticipantParticipantRole.supervisor.rawValue:
+            return Constants.SUPERVISOR
+        case AWSConnectParticipantParticipantRole.customBot.rawValue:
+            return Constants.CUSTOM_BOT
         default:
             return Constants.UNKNOWN
         }
