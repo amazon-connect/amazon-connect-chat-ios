@@ -26697,70 +26697,84 @@
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
       "kind": "StringLiteral",
-      "offset": 436,
+      "offset": 439,
+      "length": 12,
+      "value": "\"SUPERVISOR\""
+    },
+    {
+      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
+      "kind": "StringLiteral",
+      "offset": 480,
+      "length": 12,
+      "value": "\"CUSTOM_BOT\""
+    },
+    {
+      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
+      "kind": "StringLiteral",
+      "offset": 518,
       "length": 9,
       "value": "\"UNKNOWN\""
     },
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
       "kind": "StringLiteral",
-      "offset": 471,
+      "offset": 553,
       "length": 9,
       "value": "\"MESSAGE\""
     },
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
       "kind": "StringLiteral",
-      "offset": 509,
+      "offset": 591,
       "length": 12,
       "value": "\"ATTACHMENT\""
     },
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
       "kind": "StringLiteral",
-      "offset": 545,
+      "offset": 627,
       "length": 7,
       "value": "\"EVENT\""
     },
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
       "kind": "FloatLiteral",
-      "offset": 600,
+      "offset": 682,
       "length": 3,
       "value": "5.0"
     },
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
       "kind": "StringLiteral",
-      "offset": 698,
+      "offset": 780,
       "length": 12,
       "value": "\"QuickReply\""
     },
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
       "kind": "StringLiteral",
-      "offset": 747,
+      "offset": 829,
       "length": 12,
       "value": "\"ListPicker\""
     },
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
       "kind": "StringLiteral",
-      "offset": 790,
+      "offset": 872,
       "length": 7,
       "value": "\"Panel\""
     },
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
       "kind": "StringLiteral",
-      "offset": 834,
+      "offset": 916,
       "length": 12,
       "value": "\"TimePicker\""
     },
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
       "kind": "StringLiteral",
-      "offset": 880,
+      "offset": 962,
       "length": 10,
       "value": "\"Carousel\""
     },
@@ -27124,14 +27138,35 @@
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
       "kind": "StringLiteral",
-      "offset": 917,
+      "offset": 867,
+      "length": 30,
+      "value": "\"x-amz-server-side-encryption\""
+    },
+    {
+      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
+      "kind": "StringLiteral",
+      "offset": 948,
+      "length": 45,
+      "value": "\"x-amz-server-side-encryption-aws-kms-key-id\""
+    },
+    {
+      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
+      "kind": "StringLiteral",
+      "offset": 1040,
+      "length": 38,
+      "value": "\"x-amz-server-side-encryption-context\""
+    },
+    {
+      "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
+      "kind": "StringLiteral",
+      "offset": 1168,
       "length": 9,
       "value": "\"amz-1.0\""
     },
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/HttpClient\/HttpHeader.swift",
       "kind": "StringLiteral",
-      "offset": 958,
+      "offset": 1209,
       "length": 18,
       "value": "\"Application\/json\""
     },

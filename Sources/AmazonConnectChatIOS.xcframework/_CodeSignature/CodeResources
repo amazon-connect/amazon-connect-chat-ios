@@ -6,7 +6,7 @@
 	<dict>
 		<key>ios-arm64/AmazonConnectChatIOS.framework/AmazonConnectChatIOS</key>
 		<data>
-		1RgF8fAH44/GWYCmWWKb1cinXV4=
+		4bXugNEKQqWPVzPExTbrsaPi+uc=
 		</data>
 		<key>ios-arm64/AmazonConnectChatIOS.framework/Headers/AmazonConnectChatIOS-Swift.h</key>
 		<data>
@@ -18,11 +18,11 @@
 		</data>
 		<key>ios-arm64/AmazonConnectChatIOS.framework/Info.plist</key>
 		<data>
-		aCDmHVLGkJQhHbekWdsEoXUR6P4=
+		Lx/53ecwbu5HqyZJbn4U67nlRUI=
 		</data>
 		<key>ios-arm64/AmazonConnectChatIOS.framework/Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios.abi.json</key>
 		<data>
-		3pIi4GZubHpRvp2hyM0Q2SmZa+Q=
+		yZAIwlncPRhOAPxioRG1AExwuCo=
 		</data>
 		<key>ios-arm64/AmazonConnectChatIOS.framework/Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios.private.swiftinterface</key>
 		<data>
@@ -46,11 +46,11 @@
 		</data>
 		<key>ios-arm64/AmazonConnectChatIOS.framework/_CodeSignature/CodeResources</key>
 		<data>
-		Z4wizKjAqiyrOO3iyZc9SvWorS0=
+		dybbG/6po46d3gRFW5vWOcmcrF4=
 		</data>
 		<key>ios-arm64_x86_64-simulator/AmazonConnectChatIOS.framework/AmazonConnectChatIOS</key>
 		<data>
-		Mty+TiDdpIguzO/6UoSYIisPMps=
+		a4nqx7j66tz7E+Bk39VLY1+1luI=
 		</data>
 		<key>ios-arm64_x86_64-simulator/AmazonConnectChatIOS.framework/Headers/AmazonConnectChatIOS-Swift.h</key>
 		<data>
@@ -62,11 +62,11 @@
 		</data>
 		<key>ios-arm64_x86_64-simulator/AmazonConnectChatIOS.framework/Info.plist</key>
 		<data>
-		PvWcfl6V3Z1tKVtYmDJeBjOqiqk=
+		uHQDInqXEM5qZ7JyS59UzcBlyV8=
 		</data>
 		<key>ios-arm64_x86_64-simulator/AmazonConnectChatIOS.framework/Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
-		3pIi4GZubHpRvp2hyM0Q2SmZa+Q=
+		yZAIwlncPRhOAPxioRG1AExwuCo=
 		</data>
 		<key>ios-arm64_x86_64-simulator/AmazonConnectChatIOS.framework/Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
@@ -82,7 +82,7 @@
 		</data>
 		<key>ios-arm64_x86_64-simulator/AmazonConnectChatIOS.framework/Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
-		3pIi4GZubHpRvp2hyM0Q2SmZa+Q=
+		yZAIwlncPRhOAPxioRG1AExwuCo=
 		</data>
 		<key>ios-arm64_x86_64-simulator/AmazonConnectChatIOS.framework/Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
@@ -106,7 +106,7 @@
 		</data>
 		<key>ios-arm64_x86_64-simulator/AmazonConnectChatIOS.framework/_CodeSignature/CodeResources</key>
 		<data>
-		1bWXcsrrEyz3FLs1zwOaz0msklQ=
+		0vHyeVnD7hVuI/owiF8d9UCxmtI=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -115,11 +115,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			1RgF8fAH44/GWYCmWWKb1cinXV4=
+			4bXugNEKQqWPVzPExTbrsaPi+uc=
 			</data>
 			<key>hash2</key>
 			<data>
-			fT2bGeF3//JpRLa/Hhfuuz1kaZAp7zQ4T2ewYyI6QB0=
+			eIOXnxTuHHfxXAIDIM+oxUaDfZYAn1xLagYHG7DsmZg=
 			</data>
 		</dict>
 		<key>ios-arm64/AmazonConnectChatIOS.framework/Headers/AmazonConnectChatIOS-Swift.h</key>
@@ -148,22 +148,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			aCDmHVLGkJQhHbekWdsEoXUR6P4=
+			Lx/53ecwbu5HqyZJbn4U67nlRUI=
 			</data>
 			<key>hash2</key>
 			<data>
-			UJz/Sr2281Ra9o65DaffcBKoinpm0+wghBrDd6njoA0=
+			53WLiNKo434c2dnWS+HnVlCFGYyD0ku7Yv2inZFoSkA=
 			</data>
 		</dict>
 		<key>ios-arm64/AmazonConnectChatIOS.framework/Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios.abi.json</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			3pIi4GZubHpRvp2hyM0Q2SmZa+Q=
+			yZAIwlncPRhOAPxioRG1AExwuCo=
 			</data>
 			<key>hash2</key>
 			<data>
-			8NbMzfnQofhLmoyr4gQrrZt72COjOXnU+nWC8H8b7O0=
+			5jaYDc6/ABorzd5EE6yxshm04msViQIqzR4Fi2X20CM=
 			</data>
 		</dict>
 		<key>ios-arm64/AmazonConnectChatIOS.framework/Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios.private.swiftinterface</key>
@@ -225,22 +225,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			Z4wizKjAqiyrOO3iyZc9SvWorS0=
+			dybbG/6po46d3gRFW5vWOcmcrF4=
 			</data>
 			<key>hash2</key>
 			<data>
-			7NaYttPq+q7HTlTWs1Kdeu2nm/gmPdYY9g48gBv69yw=
+			tFbwaezJaqcDkOoZhaz0Eqt0ROFm/25OY0bZiG1rgAI=
 			</data>
 		</dict>
 		<key>ios-arm64_x86_64-simulator/AmazonConnectChatIOS.framework/AmazonConnectChatIOS</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			Mty+TiDdpIguzO/6UoSYIisPMps=
+			a4nqx7j66tz7E+Bk39VLY1+1luI=
 			</data>
 			<key>hash2</key>
 			<data>
-			84eswM1asr4zclSj3vZxuHQUtMc5B8ZhianJtQnPhGA=
+			NBM2DTSeJ2nZ4gf5cIe3mylOjGLMbTtOvCM12uiHZTQ=
 			</data>
 		</dict>
 		<key>ios-arm64_x86_64-simulator/AmazonConnectChatIOS.framework/Headers/AmazonConnectChatIOS-Swift.h</key>
@@ -269,22 +269,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			PvWcfl6V3Z1tKVtYmDJeBjOqiqk=
+			uHQDInqXEM5qZ7JyS59UzcBlyV8=
 			</data>
 			<key>hash2</key>
 			<data>
-			otoTp85oKQ0ofjbj9CmmXOwutEbYVgb+9LrmPtHJQBQ=
+			loPaxjnU7631cS/1HZR3pc///0De+F+bJGj5fm07lq4=
 			</data>
 		</dict>
 		<key>ios-arm64_x86_64-simulator/AmazonConnectChatIOS.framework/Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			3pIi4GZubHpRvp2hyM0Q2SmZa+Q=
+			yZAIwlncPRhOAPxioRG1AExwuCo=
 			</data>
 			<key>hash2</key>
 			<data>
-			8NbMzfnQofhLmoyr4gQrrZt72COjOXnU+nWC8H8b7O0=
+			5jaYDc6/ABorzd5EE6yxshm04msViQIqzR4Fi2X20CM=
 			</data>
 		</dict>
 		<key>ios-arm64_x86_64-simulator/AmazonConnectChatIOS.framework/Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
@@ -324,11 +324,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			3pIi4GZubHpRvp2hyM0Q2SmZa+Q=
+			yZAIwlncPRhOAPxioRG1AExwuCo=
 			</data>
 			<key>hash2</key>
 			<data>
-			8NbMzfnQofhLmoyr4gQrrZt72COjOXnU+nWC8H8b7O0=
+			5jaYDc6/ABorzd5EE6yxshm04msViQIqzR4Fi2X20CM=
 			</data>
 		</dict>
 		<key>ios-arm64_x86_64-simulator/AmazonConnectChatIOS.framework/Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
@@ -390,11 +390,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			1bWXcsrrEyz3FLs1zwOaz0msklQ=
+			0vHyeVnD7hVuI/owiF8d9UCxmtI=
 			</data>
 			<key>hash2</key>
 			<data>
-			Q8dJH6VWHxIeVRHv2Ye0TKn17eTyKlCYkmjclNqnZS4=
+			W0LTo1EhQpI6A+XeYSg+P3KvePBd0u8Khf4/HdhA8ZU=
 			</data>
 		</dict>
 	</dict>
