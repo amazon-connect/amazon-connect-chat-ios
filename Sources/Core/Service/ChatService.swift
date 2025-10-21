@@ -866,6 +866,7 @@ class ChatService : ChatServiceProtocol {
                         if nsError.localizedFailureReason == "AccessDeniedException" {
                             self?.updateTranscriptDict(with: TranscriptItemUtils.createDummyEndedEvent())
                             self?.eventPublisher.send(.chatEnded)
+                            ConnectionDetailsProvider.shared.setChatSessionState(isActive: false)
                         }
                         SDKLogger.logger.logError("CreateParticipantConnection failed \(nsError)")
 
