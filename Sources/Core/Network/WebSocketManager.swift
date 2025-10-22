@@ -47,7 +47,11 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
     var onConnected: (() -> Void)?
     var onDisconnected: (() -> Void)?
     var onError: ((Error?) -> Void)?
-    
+
+    private var networkObserver: NSObjectProtocol?
+    private var backgroundObserver: NSObjectProtocol?
+    private var foregroundObserver: NSObjectProtocol?
+
     init(wsUrl: URL) {
         self.wsUrl = wsUrl
         super.init()
@@ -178,21 +182,33 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
 
     
     func addNetworkNotificationObserver() {
-        NotificationCenter.default.addObserver(forName: .networkConnected, object: nil, queue: .main) { _ in
+        networkObserver = NotificationCenter.default.addObserver(forName: .networkConnected, object: nil, queue: .main) { _ in
             self.reestablishConnectionIfChatActive()
         }
     }
     
     func addLifecycleObservers() {
-        NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main) {
+        backgroundObserver = NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main) {
             [weak self] notification in
             if (ChatSession.shared.isChatSessionActive()) {
                 self?.disconnect(reason: "App backgrounded")
             }
         }
-        NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) {
+        foregroundObserver = NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) {
             [weak self] notification in
             self?.reestablishConnectionIfChatActive()
+        }
+    }
+    
+    deinit {
+        if let observer = networkObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+        if let observer = backgroundObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+        if let observer = foregroundObserver {
+            NotificationCenter.default.removeObserver(observer)
         }
     }
     
@@ -664,6 +680,5 @@ extension WebsocketManager {
             eventPublisher.send(.deliveredReceipt(receiptEvent))
         }
     }
-    
 }
 

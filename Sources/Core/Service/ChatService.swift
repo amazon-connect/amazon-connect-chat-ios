@@ -53,7 +53,8 @@ class ChatService : ChatServiceProtocol {
     private var attachmentIdToTempMessageIdMap: [String: String] = [:]
     private var transcriptDict: [String: TranscriptItem] = [:]
     private var tempMessageIdToFileUrl: [String: URL] = [:]
-    
+    private var reqeustWsUrlObserver: NSObjectProtocol?
+
     init(awsClient: AWSClientProtocol = AWSClient.shared,
         connectionDetailsProvider: ConnectionDetailsProviderProtocol = ConnectionDetailsProvider.shared,
         websocketManagerFactory: @escaping (URL) -> WebsocketManagerProtocol = { WebsocketManager(wsUrl: $0) }) {
@@ -747,7 +748,7 @@ class ChatService : ChatServiceProtocol {
                 if let self = self {
                     if let lastItem = transcriptResponse.transcript.last, !(transcriptResponse.nextToken.isEmpty || isItemInInternalTranscript(Id: lastItem.id)) {
                         // Continue fetching if there are more messages to fetch.
-                        var newStartPosition = AWSConnectParticipantStartPosition()                      
+                        var newStartPosition = AWSConnectParticipantStartPosition()
                         newStartPosition?.identifier = lastItem.id
                         self.fetchTranscriptWith(startPosition: newStartPosition)
                     }
@@ -852,7 +853,7 @@ class ChatService : ChatServiceProtocol {
     }
     
     func registerNotificationListeners() {
-        NotificationCenter.default.addObserver(forName: .requestNewWsUrl, object: nil, queue: .main) { [weak self] _ in
+        reqeustWsUrlObserver = NotificationCenter.default.addObserver(forName: .requestNewWsUrl, object: nil, queue: .main) { [weak self] _ in
             if let pToken = self?.connectionDetailsProvider.getChatDetails()?.participantToken {
                 self?.awsClient.createParticipantConnection(participantToken: pToken) { result in
                     switch result {
@@ -892,5 +893,10 @@ class ChatService : ChatServiceProtocol {
         transcriptDict = [:]
         internalTranscript = []
     }
-    
+
+    deinit {
+        if let observer = reqeustWsUrlObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
 }
