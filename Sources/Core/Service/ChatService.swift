@@ -53,7 +53,7 @@ class ChatService : ChatServiceProtocol {
     private var attachmentIdToTempMessageIdMap: [String: String] = [:]
     private var transcriptDict: [String: TranscriptItem] = [:]
     private var tempMessageIdToFileUrl: [String: URL] = [:]
-    private var reqeustWsUrlObserver: NSObjectProtocol?
+    private var requestWsUrlObserver: NSObjectProtocol?
 
     init(awsClient: AWSClientProtocol = AWSClient.shared,
         connectionDetailsProvider: ConnectionDetailsProviderProtocol = ConnectionDetailsProvider.shared,
@@ -853,7 +853,7 @@ class ChatService : ChatServiceProtocol {
     }
     
     func registerNotificationListeners() {
-        reqeustWsUrlObserver = NotificationCenter.default.addObserver(forName: .requestNewWsUrl, object: nil, queue: .main) { [weak self] _ in
+        requestWsUrlObserver = NotificationCenter.default.addObserver(forName: .requestNewWsUrl, object: nil, queue: .main) { [weak self] _ in
             if let pToken = self?.connectionDetailsProvider.getChatDetails()?.participantToken {
                 self?.awsClient.createParticipantConnection(participantToken: pToken) { result in
                     switch result {
@@ -895,7 +895,7 @@ class ChatService : ChatServiceProtocol {
     }
 
     deinit {
-        if let observer = reqeustWsUrlObserver {
+        if let observer = requestWsUrlObserver {
             NotificationCenter.default.removeObserver(observer)
         }
     }
