@@ -819,13 +819,6 @@ class ChatService : ChatServiceProtocol {
                 
                 if let websocketManager = self?.websocketManager {
                     let formattedItems = websocketManager.formatAndProcessTranscriptItems(transcriptItems)
-                    
-                    // Dispatch the transcript list update to the next run loop cycle
-                    // to ensure formatAndProcessTranscriptItems completes all its internal processing
-                    DispatchQueue.main.async {
-                        self?.triggerTranscriptListUpdate()
-                    }
-                    
                     let transcriptResponse = TranscriptResponse(
                         initialContactId: response.initialContactId ?? "",
                         nextToken: response.nextToken ?? "", // Handle nextToken if it is available in the response
