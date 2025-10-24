@@ -133,9 +133,9 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
                 }
                 break
             default:
-                SDKLogger.logger.logDebug("DEBUG - DOMAIN: \(nsError.domain)")
-                SDKLogger.logger.logDebug("DEBUG - CODE: \(nsError.code)")
-                SDKLogger.logger.logDebug("DEBUG - DESCRIPTION: \(nsError.localizedDescription)")
+                SDKLogger.logger.logDebug("Domain: \(nsError.domain)")
+                SDKLogger.logger.logDebug("Code: \(nsError.code)")
+                SDKLogger.logger.logDebug("Description: \(nsError.localizedDescription)")
             }
         }
         
@@ -391,10 +391,11 @@ extension WebsocketManager: URLSessionWebSocketDelegate {
 
 extension WebsocketManager {
     func formatAndProcessTranscriptItems(_ transcriptItems: [AWSConnectParticipantItem]) -> [TranscriptItem] {
-        return transcriptItems.compactMap { item in
+        let totalTranscriptItems = transcriptItems.count
+        return transcriptItems.enumerated().compactMap { (index, item) in
             // Create a dictionary with the necessary fields
             let participantRole = CommonUtils().convertParticipantRoleToString(item.participantRole.rawValue)
-            
+
             // Process attachments
             var attachmentsArray: [[String: Any]] = []
             if let attachments = item.attachments {
@@ -407,7 +408,7 @@ extension WebsocketManager {
                     ]
                 }
             }
-            
+
             let messageContentDict: [String: Any] = [
                 "Id": item.identifier ?? "",
                 "ParticipantRole": "\(participantRole)",
@@ -420,14 +421,14 @@ extension WebsocketManager {
                 "IsFromPastSession": true, // Mark all these items as coming from a past session
                 "MessageMetadata": CommonUtils().convertMessageMetadataToDict(item.messageMetadata)
             ]
-            
+
             // Serialize the dictionary to JSON string
             guard let messageContentData = try? JSONSerialization.data(withJSONObject: messageContentDict, options: []),
                   let messageContentString = String(data: messageContentData, encoding: .utf8) else {
                 SDKLogger.logger.logError("Failed to serialize message content to JSON string")
                 return nil
             }
-            
+
             // Wrap the JSON string properly as a nested object
             let wrappedMessage: [String: Any] = [
                 "content": messageContentString
@@ -438,7 +439,8 @@ extension WebsocketManager {
                    // Process the JSON content and return a TranscriptItem
                    let transcriptItem = self.processJsonContentAndGetItem(json)
                    if let validItem = transcriptItem {
-                       transcriptPublisher.send((validItem, false))
+                       let isLastItem = index == totalTranscriptItems - 1
+                       transcriptPublisher.send((validItem, isLastItem))
                    }
                    return transcriptItem
                }
