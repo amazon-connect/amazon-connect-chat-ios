@@ -583,6 +583,23 @@ Returns a boolean indicating whether the chat session is still active.
 func isChatSessionActive() -> Bool
 ```
 
+#### `ChatSession.isParticipantDisconnected`
+Returns a boolean indicating whether the participant has been disconnected from the chat. This is useful for checking if the chat session has ended before attempting other operations like `disconnect()`.
+
+```
+func isParticipantDisconnected() -> Bool
+```
+
+**Usage Example:**
+```swift
+if !ChatSession.shared.isParticipantDisconnected() {
+    // Safe to call disconnect or other operations
+    ChatSession.shared.disconnect { result in
+        // Handle result
+    }
+}
+```
+
 --------------------
 
 ### ChatSession Events

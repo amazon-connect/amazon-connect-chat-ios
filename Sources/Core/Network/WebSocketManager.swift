@@ -557,6 +557,7 @@ extension WebsocketManager {
         if !isFromPastSession {
             // Current session event: Reset state and update session
             resetHeartbeatManagers()
+            ConnectionDetailsProvider.shared.setParticipantDisconnected(true)
             eventPublisher.send(.chatEnded)
             ConnectionDetailsProvider.shared.setChatSessionState(isActive: false)
         }

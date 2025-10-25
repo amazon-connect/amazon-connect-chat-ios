@@ -279,6 +279,7 @@ class ChatService : ChatServiceProtocol {
             switch result {
             case .success(_):
                 SDKLogger.logger.logDebug("Participant Disconnected")
+                ConnectionDetailsProvider.shared.setParticipantDisconnected(true)
                 self.eventPublisher.send(.chatEnded)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     self.websocketManager?.disconnect(reason: "Participant Disconnected")
@@ -859,6 +860,7 @@ class ChatService : ChatServiceProtocol {
                         let nsError = error as NSError
                         if nsError.localizedFailureReason == "AccessDeniedException" {
                             self?.updateTranscriptDict(with: TranscriptItemUtils.createDummyEndedEvent())
+                            ConnectionDetailsProvider.shared.setParticipantDisconnected(true)
                             self?.eventPublisher.send(.chatEnded)
                             ConnectionDetailsProvider.shared.setChatSessionState(isActive: false)
                         }

@@ -394,4 +394,20 @@ class ChatSessionTests: XCTestCase {
         }
         waitForExpectations(timeout: 1.0, handler: nil)
     }
+    
+    func testIsParticipantDisconnected_InitiallyFalse() {
+        // Test that isParticipantDisconnected returns false initially
+        XCTAssertFalse(chatSession.isParticipantDisconnected())
+    }
+    
+    func testIsParticipantDisconnected_TrueAfterChatEnded() {
+        // Set up the connection details provider to simulate participant disconnection
+        ConnectionDetailsProvider.shared.setParticipantDisconnected(true)
+        
+        // Test that isParticipantDisconnected returns true after chat ended
+        XCTAssertTrue(chatSession.isParticipantDisconnected())
+        
+        // Clean up
+        ConnectionDetailsProvider.shared.setParticipantDisconnected(false)
+    }
 }

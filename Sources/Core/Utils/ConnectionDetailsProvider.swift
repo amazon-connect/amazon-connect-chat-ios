@@ -10,6 +10,8 @@ public protocol ConnectionDetailsProviderProtocol {
     func getChatDetails() -> ChatDetails?
     func isChatSessionActive() -> Bool
     func setChatSessionState(isActive: Bool) -> Void
+    func isParticipantDisconnected() -> Bool
+    func setParticipantDisconnected(_ disconnected: Bool) -> Void
     func reset() -> Void
 }
 
@@ -18,6 +20,7 @@ class ConnectionDetailsProvider: ConnectionDetailsProviderProtocol {
     private var connectionDetails: ConnectionDetails?
     private var chatDetails: ChatDetails?
     private var isChatActive: Bool = false
+    private var participantDisconnected: Bool = false
 
     func updateConnectionDetails(newDetails: ConnectionDetails) {
         // Logic to update connection details
@@ -45,10 +48,19 @@ class ConnectionDetailsProvider: ConnectionDetailsProviderProtocol {
         self.isChatActive = isActive
     }
     
+    func isParticipantDisconnected() -> Bool {
+        return self.participantDisconnected
+    }
+    
+    func setParticipantDisconnected(_ disconnected: Bool) -> Void {
+        self.participantDisconnected = disconnected
+    }
+    
     func reset() {
         self.connectionDetails = nil
         self.chatDetails = nil
         self.isChatActive = false
+        self.participantDisconnected = false
     }
 
     // Additional logic to handle connection details lifecycle

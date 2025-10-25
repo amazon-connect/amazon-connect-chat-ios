@@ -91,6 +91,9 @@ public protocol ChatSessionProtocol {
     /// Returns a boolean indicating whether the chat session is still active.
     func isChatSessionActive() -> Bool
     
+    /// Returns a boolean indicating whether the participant has been disconnected from the chat.
+    func isParticipantDisconnected() -> Bool
+    
     var onConnectionEstablished: (() -> Void)? { get set }
     var onConnectionReEstablished: (() -> Void)? { get set }
     var onConnectionBroken: (() -> Void)? { get set }
@@ -204,6 +207,10 @@ public class ChatSession: ChatSessionProtocol {
     
     public func isChatSessionActive() -> Bool {
         return ConnectionDetailsProvider.shared.isChatSessionActive()
+    }
+    
+    public func isParticipantDisconnected() -> Bool {
+        return ConnectionDetailsProvider.shared.isParticipantDisconnected()
     }
     
     /// Configures the chat service with global configuration.
