@@ -26865,21 +26865,21 @@
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "BooleanLiteral",
-      "offset": 7276,
+      "offset": 7328,
       "length": 4,
       "value": "true"
     },
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "FloatLiteral",
-      "offset": 9828,
+      "offset": 9880,
       "length": 3,
       "value": "0.0"
     },
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "BooleanLiteral",
-      "offset": 10950,
+      "offset": 11002,
       "length": 4,
       "value": "true"
     },
@@ -27222,7 +27222,7 @@
     {
       "filePath": "\/Users\/mikeliao\/Work\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Network\/WebSocketManager.swift",
       "kind": "BooleanLiteral",
-      "offset": 2186,
+      "offset": 2342,
       "length": 5,
       "value": "false"
     },

@@ -6,7 +6,7 @@
 	<dict>
 		<key>ios-arm64/AmazonConnectChatIOS.framework/AmazonConnectChatIOS</key>
 		<data>
-		4bXugNEKQqWPVzPExTbrsaPi+uc=
+		/FBE6lu61SJeHqWkB6+oVUmLhco=
 		</data>
 		<key>ios-arm64/AmazonConnectChatIOS.framework/Headers/AmazonConnectChatIOS-Swift.h</key>
 		<data>
@@ -22,7 +22,7 @@
 		</data>
 		<key>ios-arm64/AmazonConnectChatIOS.framework/Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios.abi.json</key>
 		<data>
-		yZAIwlncPRhOAPxioRG1AExwuCo=
+		UJ0VOowVqtgcT2B9HcROv/3HQTE=
 		</data>
 		<key>ios-arm64/AmazonConnectChatIOS.framework/Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios.private.swiftinterface</key>
 		<data>
@@ -46,11 +46,11 @@
 		</data>
 		<key>ios-arm64/AmazonConnectChatIOS.framework/_CodeSignature/CodeResources</key>
 		<data>
-		dybbG/6po46d3gRFW5vWOcmcrF4=
+		WboKdnYCzdDcQ0f6frASX3OxRDw=
 		</data>
 		<key>ios-arm64_x86_64-simulator/AmazonConnectChatIOS.framework/AmazonConnectChatIOS</key>
 		<data>
-		a4nqx7j66tz7E+Bk39VLY1+1luI=
+		20SXZpfRFgk2F69GpQhlMhRucQY=
 		</data>
 		<key>ios-arm64_x86_64-simulator/AmazonConnectChatIOS.framework/Headers/AmazonConnectChatIOS-Swift.h</key>
 		<data>
@@ -66,7 +66,7 @@
 		</data>
 		<key>ios-arm64_x86_64-simulator/AmazonConnectChatIOS.framework/Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
-		yZAIwlncPRhOAPxioRG1AExwuCo=
+		UJ0VOowVqtgcT2B9HcROv/3HQTE=
 		</data>
 		<key>ios-arm64_x86_64-simulator/AmazonConnectChatIOS.framework/Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
@@ -82,7 +82,7 @@
 		</data>
 		<key>ios-arm64_x86_64-simulator/AmazonConnectChatIOS.framework/Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
-		yZAIwlncPRhOAPxioRG1AExwuCo=
+		UJ0VOowVqtgcT2B9HcROv/3HQTE=
 		</data>
 		<key>ios-arm64_x86_64-simulator/AmazonConnectChatIOS.framework/Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
@@ -106,7 +106,7 @@
 		</data>
 		<key>ios-arm64_x86_64-simulator/AmazonConnectChatIOS.framework/_CodeSignature/CodeResources</key>
 		<data>
-		0vHyeVnD7hVuI/owiF8d9UCxmtI=
+		vAXDL/ROCvKFqajAEALWzpowgIM=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -115,11 +115,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			4bXugNEKQqWPVzPExTbrsaPi+uc=
+			/FBE6lu61SJeHqWkB6+oVUmLhco=
 			</data>
 			<key>hash2</key>
 			<data>
-			eIOXnxTuHHfxXAIDIM+oxUaDfZYAn1xLagYHG7DsmZg=
+			EuVC/91VOE+crtnI2QdpkIDV4vnIOp48ek7UfCmEDIg=
 			</data>
 		</dict>
 		<key>ios-arm64/AmazonConnectChatIOS.framework/Headers/AmazonConnectChatIOS-Swift.h</key>
@@ -159,11 +159,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			yZAIwlncPRhOAPxioRG1AExwuCo=
+			UJ0VOowVqtgcT2B9HcROv/3HQTE=
 			</data>
 			<key>hash2</key>
 			<data>
-			5jaYDc6/ABorzd5EE6yxshm04msViQIqzR4Fi2X20CM=
+			b9m1MwbMmf8MiP80zRPRgBDdNhA0hUvOqq1k/3Yvo7k=
 			</data>
 		</dict>
 		<key>ios-arm64/AmazonConnectChatIOS.framework/Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios.private.swiftinterface</key>
@@ -225,22 +225,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			dybbG/6po46d3gRFW5vWOcmcrF4=
+			WboKdnYCzdDcQ0f6frASX3OxRDw=
 			</data>
 			<key>hash2</key>
 			<data>
-			tFbwaezJaqcDkOoZhaz0Eqt0ROFm/25OY0bZiG1rgAI=
+			cCgPH7AeowD0WWkGh/3n9oKL7OiYrDhwXoWZRqimR40=
 			</data>
 		</dict>
 		<key>ios-arm64_x86_64-simulator/AmazonConnectChatIOS.framework/AmazonConnectChatIOS</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			a4nqx7j66tz7E+Bk39VLY1+1luI=
+			20SXZpfRFgk2F69GpQhlMhRucQY=
 			</data>
 			<key>hash2</key>
 			<data>
-			NBM2DTSeJ2nZ4gf5cIe3mylOjGLMbTtOvCM12uiHZTQ=
+			iMB3cD7ArIES8xjcynzAhr1j8ft4jPkHissmX/v/kTc=
 			</data>
 		</dict>
 		<key>ios-arm64_x86_64-simulator/AmazonConnectChatIOS.framework/Headers/AmazonConnectChatIOS-Swift.h</key>
@@ -280,11 +280,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			yZAIwlncPRhOAPxioRG1AExwuCo=
+			UJ0VOowVqtgcT2B9HcROv/3HQTE=
 			</data>
 			<key>hash2</key>
 			<data>
-			5jaYDc6/ABorzd5EE6yxshm04msViQIqzR4Fi2X20CM=
+			b9m1MwbMmf8MiP80zRPRgBDdNhA0hUvOqq1k/3Yvo7k=
 			</data>
 		</dict>
 		<key>ios-arm64_x86_64-simulator/AmazonConnectChatIOS.framework/Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
@@ -324,11 +324,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			yZAIwlncPRhOAPxioRG1AExwuCo=
+			UJ0VOowVqtgcT2B9HcROv/3HQTE=
 			</data>
 			<key>hash2</key>
 			<data>
-			5jaYDc6/ABorzd5EE6yxshm04msViQIqzR4Fi2X20CM=
+			b9m1MwbMmf8MiP80zRPRgBDdNhA0hUvOqq1k/3Yvo7k=
 			</data>
 		</dict>
 		<key>ios-arm64_x86_64-simulator/AmazonConnectChatIOS.framework/Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
@@ -390,11 +390,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			0vHyeVnD7hVuI/owiF8d9UCxmtI=
+			vAXDL/ROCvKFqajAEALWzpowgIM=
 			</data>
 			<key>hash2</key>
 			<data>
-			W0LTo1EhQpI6A+XeYSg+P3KvePBd0u8Khf4/HdhA8ZU=
+			fYcNyHiz7LKTr/OSuIGmON8QLMuUqi+A3IDEu9HCd5c=
 			</data>
 		</dict>
 	</dict>
