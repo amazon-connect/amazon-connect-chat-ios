@@ -5,6 +5,8 @@
 * [Installation Steps](#installation-steps)
 * [Getting Started](#getting-started)
   * [How to receive messages](#how-to-receive-messages)
+* [Advanced Configuration](#advanced-configuration)
+  * [Custom Client Implementation](#custom-client-implementation)
 * [API List](#api-list)
   * [GlobalConfig](#globalconfig)
     * [GlobalConfig.init](#globalconfiginit)
@@ -245,6 +247,185 @@ chatSession.onChatRehydrated = { event in
 ```
 
 **Important Note**: Receipt events (`onReadReceipt`, `onDeliveredReceipt`) use `event.participant` for the participant ID (UUID format like `"2171b970-42b8-471b-b999-3dee14efcd24"`), while other events use it for the participant role (`"AGENT"`, `"CUSTOMER"`, etc.).
+
+## Advanced Configuration
+
+### Custom Client Implementation
+
+The Amazon Connect Chat SDK for iOS supports custom client implementations to enable advanced networking scenarios such as:
+
+- **Custom endpoint routing** through proxy servers or API gateways
+- **Custom header injection** for authentication tokens, WAF bypass, or security headers  
+- **Certificate pinning** for enhanced security in enterprise environments
+- **Request/response transformation** for compliance or monitoring requirements
+
+#### Overview
+
+By default, the SDK uses the standard AWS SDK HTTP client to communicate directly with Amazon Connect Participant Service APIs. For organizations requiring custom networking behavior, the SDK provides a protocol-based dependency injection system that allows you to replace the default client with your own implementation.
+
+**Important**: When you implement a custom client, it replaces **ALL** AWS API calls. Your custom client will handle **every single API request** made by the SDK - there is no partial override. You must implement all 8 required methods in the `AWSClientProtocol`.
+
+#### Implementation Steps
+
+**1. Implement the AWSClientProtocol**
+
+Create a custom client class that implements the `AWSClientProtocol`:
+
+```swift
+import AmazonConnectChatIOS
+import AWSConnectParticipant
+
+class MyCustomClient: AWSClientProtocol {
+    
+    func createParticipantConnection(participantToken: String, completion: @escaping (Result<ConnectionDetails, Error>) -> Void) {
+        // Route through your custom endpoint
+        let customRequest = buildCustomRequest(
+            endpoint: "https://your-proxy.example.com/participant-connection",
+            token: participantToken,
+            headers: ["X-Custom-Auth": "your-token"]
+        )
+        
+        executeRequest(customRequest) { result in
+            // Transform response and call completion
+            completion(result)
+        }
+    }
+    
+    func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<AWSConnectParticipantSendMessageResponse, Error>) -> Void) {
+        // Custom message routing logic
+        // Implementation here...
+    }
+    
+    func sendEvent(connectionToken: String, contentType: ContentType, content: String, completion: @escaping (Result<AWSConnectParticipantSendEventResponse, Error>) -> Void) {
+        // Custom event routing logic
+        // Implementation here...
+    }
+    
+    func getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Result<AWSConnectParticipantGetTranscriptResponse, Error>) -> Void) {
+        // Custom transcript retrieval logic
+        // Implementation here...
+    }
+    
+    func disconnectParticipantConnection(connectionToken: String, completion: @escaping (Result<AWSConnectParticipantDisconnectParticipantResponse, Error>) -> Void) {
+        // Custom disconnect logic
+        // Implementation here...
+    }
+    
+    func startAttachmentUpload(connectionToken: String, contentType: String, attachmentName: String, attachmentSizeInBytes: Int, completion: @escaping (Result<AWSConnectParticipantStartAttachmentUploadResponse, Error>) -> Void) {
+        // Custom attachment upload start logic
+        // Implementation here...
+    }
+    
+    func completeAttachmentUpload(connectionToken: String, attachmentIds: [String], completion: @escaping (Result<AWSConnectParticipantCompleteAttachmentUploadResponse, Error>) -> Void) {
+        // Custom attachment upload completion logic
+        // Implementation here...
+    }
+    
+    func getAttachment(connectionToken: String, attachmentId: String, completion: @escaping (Result<AWSConnectParticipantGetAttachmentResponse, Error>) -> Void) {
+        // Custom attachment download logic
+        // Implementation here...
+    }
+}
+```
+
+**2. Configure ChatSession with Custom Client**
+
+Inject your custom client into the ChatSession via GlobalConfig:
+
+```swift
+import AmazonConnectChatIOS
+
+class ChatManager: ObservableObject {
+    private var chatSession = ChatSession.shared
+    private let customClient = MyCustomClient()
+    
+    init() {
+        // Configure with custom client
+        let globalConfig = GlobalConfig(
+            region: .USEast1,
+            customAWSClient: customClient
+        )
+        chatSession.configure(config: globalConfig)
+    }
+}
+```
+
+**3. Required Protocol Methods**
+
+Your custom client **must implement ALL methods** in `AWSClientProtocol`. The SDK will route **every single API call** through your custom client:
+
+| Method | Purpose | Required Parameters |
+|--------|---------|-------------------|
+| `createParticipantConnection` | Establish chat session | `participantToken` |
+| `sendMessage` | Send chat messages | `connectionToken`, `contentType`, `message` |
+| `sendEvent` | Send typing indicators and events | `connectionToken`, `contentType`, `content` |
+| `getTranscript` | Retrieve chat history | `getTranscriptArgs` |
+| `disconnectParticipantConnection` | End chat session | `connectionToken` |
+| `startAttachmentUpload` | Initiate file uploads | `connectionToken`, `contentType`, `attachmentName`, `attachmentSizeInBytes` |
+| `completeAttachmentUpload` | Complete file uploads | `connectionToken`, `attachmentIds` |
+| `getAttachment` | Download attachments | `connectionToken`, `attachmentId` |
+
+**Critical**: There is no partial override - implementing a custom client means **ALL 8 API methods** will be routed through your implementation. You cannot selectively override only some methods.
+
+#### Use Cases
+
+**Enterprise Proxy Routing**
+```swift
+// Route all API calls through corporate proxy
+func createParticipantConnection(participantToken: String, completion: @escaping (Result<ConnectionDetails, Error>) -> Void) {
+    let proxyURL = "https://corporate-proxy.company.com/connect-participant"
+    let request = URLRequest(url: URL(string: proxyURL)!)
+    // Add corporate authentication headers
+    request.setValue("Bearer \(corporateToken)", forHTTPHeaderField: "Authorization")
+    // Execute request through proxy
+}
+```
+
+**WAF Token Injection**
+```swift
+// Add WAF bypass tokens to all requests
+func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<AWSConnectParticipantSendMessageResponse, Error>) -> Void) {
+    var request = buildStandardRequest(connectionToken, contentType, message)
+    // Inject WAF token
+    request.setValue(wafToken, forHTTPHeaderField: "X-WAF-Token")
+    executeRequest(request, completion: completion)
+}
+```
+
+**Certificate Pinning**
+```swift
+class SecureCustomClient: NSObject, CustomAWSClientProtocol, URLSessionDelegate {
+    
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        // Implement certificate pinning validation
+        if validateCertificatePinning(challenge.protectionSpace.serverTrust) {
+            completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
+        } else {
+            completionHandler(.cancelAuthenticationChallenge, nil)
+        }
+    }
+}
+```
+
+#### Important Considerations
+
+- **Complete Override**: Custom client implementation replaces **ALL** AWS ACPS API calls. You cannot selectively override individual methods - it's all or nothing.
+
+- **Backward Compatibility**: Custom client implementation is completely optional. Existing applications continue to work unchanged when not using a custom client.
+
+- **Full Responsibility**: Your custom client becomes responsible for **every API interaction** including error handling, retries, authentication, and response parsing.
+
+- **Token Security**: The SDK treats participant tokens as opaque strings. Your custom client receives these tokens and is responsible for secure handling.
+
+- **Error Handling**: Implement proper error handling and retry logic in your custom client to ensure reliable chat functionality.
+
+- **Performance**: Custom clients should maintain low latency (<100ms additional overhead recommended) to preserve real-time chat experience.
+
+- **Testing**: Thoroughly test your custom client implementation across all 8 API methods and error scenarios.
+
+#### Example Implementation
+
+For a complete example of custom client implementation, see the [iOS Chat Example](https://github.com/amazon-connect/amazon-connect-chat-ui-examples/tree/master/mobileChatExamples/iOSChatExample) in the Amazon Connect Chat UI Examples repository.
 
 ## API List
 

@@ -48,6 +48,7 @@ class ChatService : ChatServiceProtocol {
     private var throttleTypingEvent: Bool = false
     private var throttleTypingEventTimer: Timer?
     private var transcriptItemSet = Set<String>()
+    private var globalConfig: GlobalConfig?
     private var typingIndicatorTimer: Timer?
     // Dictionary to map attachment IDs to temporary message IDs
     private var attachmentIdToTempMessageIdMap: [String: String] = [:]
@@ -64,15 +65,29 @@ class ChatService : ChatServiceProtocol {
         self.messageReceiptsManager = MessageReceiptsManager()
         self.registerNotificationListeners()
     }
+    
+    private func getClient() -> AWSClientProtocol {
+        return globalConfig?.customAWSClient ?? awsClient
+    }
 
     func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void) {
         self.connectionDetailsProvider.updateChatDetails(newDetails: chatDetails)
-        awsClient.createParticipantConnection(participantToken: chatDetails.participantToken) { result in
+        getClient().createParticipantConnection(participantToken: chatDetails.participantToken) { result in
             switch result {
             case .success(let connectionDetails):
                 self.connectionDetailsProvider.updateConnectionDetails(newDetails: connectionDetails)
-                if let wsUrl = URL(string: connectionDetails.websocketUrl ?? "") {
-                    self.setupWebSocket(url: wsUrl)
+                if let originalWsUrlString = connectionDetails.websocketUrl {
+                    // Apply custom URL transformation if provided
+                    let finalWsUrlString: String
+                    if let urlProvider = self.globalConfig?.customWebSocketURLProvider {
+                        finalWsUrlString = urlProvider(originalWsUrlString)
+                    } else {
+                        finalWsUrlString = originalWsUrlString
+                    }
+                    
+                    if let wsUrl = URL(string: finalWsUrlString) {
+                        self.setupWebSocket(url: wsUrl)
+                    }
                 }
                 MetricsClient.shared.triggerCountMetric(metricName: .CreateParticipantConnection)
                 completion(true, nil)
@@ -275,7 +290,7 @@ class ChatService : ChatServiceProtocol {
         
         messageReceiptsManager?.invalidateTimer()
         
-        awsClient.disconnectParticipantConnection(connectionToken: connectionDetails.connectionToken!) { result in
+        getClient().disconnectParticipantConnection(connectionToken: connectionDetails.connectionToken!) { result in
             switch result {
             case .success(_):
                 SDKLogger.logger.logDebug("Participant Disconnected")
@@ -322,7 +337,7 @@ class ChatService : ChatServiceProtocol {
         
         self.sendSingleUpdateToClient(for: recentlySentMessage)
         
-        self.awsClient.sendMessage(connectionToken: connectionDetails.connectionToken!, contentType: contentType, message: message) { result in
+        self.getClient().sendMessage(connectionToken: connectionDetails.connectionToken!, contentType: contentType, message: message) { result in
             switch result {
             case .success(let response):
                 MetricsClient.shared.triggerCountMetric(metricName: .SendMessage)
@@ -427,7 +442,7 @@ class ChatService : ChatServiceProtocol {
             }
         }
         
-        awsClient.sendEvent(connectionToken: connectionDetails.connectionToken!,contentType: event, content: content!) { result in
+        getClient().sendEvent(connectionToken: connectionDetails.connectionToken!,contentType: event, content: content!) { result in
             switch result {
             case .success(_):
                 completion(true, nil)
@@ -610,7 +625,7 @@ class ChatService : ChatServiceProtocol {
             return
         }
         
-        awsClient.startAttachmentUpload(connectionToken: connectionDetails.connectionToken!, contentType: contentType, attachmentName: attachmentName, attachmentSizeInBytes: attachmentSizeInBytes) { result in
+        getClient().startAttachmentUpload(connectionToken: connectionDetails.connectionToken!, contentType: contentType, attachmentName: attachmentName, attachmentSizeInBytes: attachmentSizeInBytes) { result in
             switch result {
             case .success(let response):
                 completion(.success(response))
@@ -626,7 +641,7 @@ class ChatService : ChatServiceProtocol {
             return
         }
         
-        awsClient.completeAttachmentUpload(connectionToken: connectionDetails.connectionToken!, attachmentIds: attachmentIds) { result in
+        getClient().completeAttachmentUpload(connectionToken: connectionDetails.connectionToken!, attachmentIds: attachmentIds) { result in
             switch result {
             case .success(_):
                 completion(true, nil)
@@ -643,7 +658,7 @@ class ChatService : ChatServiceProtocol {
             return
         }
         
-        awsClient.getAttachment(connectionToken: connectionDetails.connectionToken!, attachmentId: attachmentId) { result in
+        getClient().getAttachment(connectionToken: connectionDetails.connectionToken!, attachmentId: attachmentId) { result in
             switch result {
             case .success(let response):
                 if let url = URL(string: response.url!) {
@@ -785,7 +800,7 @@ class ChatService : ChatServiceProtocol {
             getTranscriptArgs?.nextToken = nextToken
         }
         
-        awsClient.getTranscript(getTranscriptArgs: getTranscriptArgs!) { [weak self] result in
+        getClient().getTranscript(getTranscriptArgs: getTranscriptArgs!) { [weak self] result in
             switch result {
             case .success(let response):
                 
@@ -835,6 +850,7 @@ class ChatService : ChatServiceProtocol {
     }
     
     func configure(config: GlobalConfig) {
+        self.globalConfig = config
         let messageReceiptConfig = config.features.messageReceipts
         messageReceiptsManager?.throttleTime = messageReceiptConfig.throttleTime
         messageReceiptsManager?.shouldSendMessageReceipts = messageReceiptConfig.shouldSendMessageReceipts
@@ -848,7 +864,7 @@ class ChatService : ChatServiceProtocol {
     func registerNotificationListeners() {
         requestWsUrlObserver = NotificationCenter.default.addObserver(forName: .requestNewWsUrl, object: nil, queue: .main) { [weak self] _ in
             if let pToken = self?.connectionDetailsProvider.getChatDetails()?.participantToken {
-                self?.awsClient.createParticipantConnection(participantToken: pToken) { result in
+                self?.getClient().createParticipantConnection(participantToken: pToken) { result in
                     switch result {
                     case .success(let connectionDetails):
                         self?.connectionDetailsProvider.updateConnectionDetails(newDetails: connectionDetails)

@@ -7,7 +7,7 @@ import AWSConnectParticipant
 import AWSCore
 
 /// Protocol defining the AWS client operations.
-protocol AWSClientProtocol {
+public protocol AWSClientProtocol {
     /// Creates a new participant connection.
     /// - Parameters:
     ///   - participantToken: The token for the participant to identify.
@@ -66,9 +66,9 @@ protocol AWSClientProtocol {
 }
 
 /// AWSClient manages the interactions with AWS Connect Participant service.
-class AWSClient: AWSClientProtocol {
+public class AWSClient: AWSClientProtocol {
     /// Shared instance of AWSClient.
-    static let shared = AWSClient()
+    public static let shared = AWSClient()
     
     /// AWS Connect Participant Client
     var connectParticipantClient: AWSConnectParticipantProtocol?
@@ -126,7 +126,7 @@ class AWSClient: AWSClientProtocol {
     }
     
     /// Creates a connection for a participant identified by a token.
-    func createParticipantConnection(participantToken: String, completion: @escaping (Result<ConnectionDetails, Error>) -> Void) {
+    public func createParticipantConnection(participantToken: String, completion: @escaping (Result<ConnectionDetails, Error>) -> Void) {
         guard let request = createParticipantConnectionRequest() else {
             completion(.failure(AWSClientError.requestCreationFailed))
             return
@@ -150,7 +150,7 @@ class AWSClient: AWSClientProtocol {
     }
     
     /// Disconnects a participant connection using a connection token.
-    func disconnectParticipantConnection(connectionToken: String, completion: @escaping (Result<AWSConnectParticipantDisconnectParticipantResponse, Error>) -> Void) {
+    public func disconnectParticipantConnection(connectionToken: String, completion: @escaping (Result<AWSConnectParticipantDisconnectParticipantResponse, Error>) -> Void) {
         guard let request = disconnectParticipantRequest() else {
             completion(.failure(AWSClientError.requestCreationFailed))
             return
@@ -171,7 +171,7 @@ class AWSClient: AWSClientProtocol {
     }
     
     /// Sends a message using a connection token.
-    func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<AWSConnectParticipantSendMessageResponse, Error>) -> Void) {
+    public func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<AWSConnectParticipantSendMessageResponse, Error>) -> Void) {
         guard let request = sendMessageRequest() else {
             completion(.failure(AWSClientError.requestCreationFailed))
             return
@@ -194,7 +194,7 @@ class AWSClient: AWSClientProtocol {
     }
     
     /// Sends an event using a connection token.
-    func sendEvent(connectionToken: String, contentType: ContentType, content: String = "", completion: @escaping (Result<AWSConnectParticipantSendEventResponse, Error>) -> Void) {
+    public func sendEvent(connectionToken: String, contentType: ContentType, content: String = "", completion: @escaping (Result<AWSConnectParticipantSendEventResponse, Error>) -> Void) {
         guard let request = sendEventRequest() else {
             completion(.failure(AWSClientError.requestCreationFailed))
             return
@@ -217,7 +217,7 @@ class AWSClient: AWSClientProtocol {
         })
     }
     
-    func startAttachmentUpload(connectionToken: String, contentType: String, attachmentName: String, attachmentSizeInBytes: Int, completion: @escaping (Result<AWSConnectParticipantStartAttachmentUploadResponse, Error>) -> Void) {
+    public func startAttachmentUpload(connectionToken: String, contentType: String, attachmentName: String, attachmentSizeInBytes: Int, completion: @escaping (Result<AWSConnectParticipantStartAttachmentUploadResponse, Error>) -> Void) {
         guard let request = AWSConnectParticipantStartAttachmentUploadRequest() else {
             completion(.failure(AWSClientError.requestCreationFailed))
             return
@@ -240,7 +240,7 @@ class AWSClient: AWSClientProtocol {
         })
     }
     
-    func completeAttachmentUpload(connectionToken: String, attachmentIds: [String], completion: @escaping (Result<AWSConnectParticipantCompleteAttachmentUploadResponse, Error>) -> Void) {
+    public func completeAttachmentUpload(connectionToken: String, attachmentIds: [String], completion: @escaping (Result<AWSConnectParticipantCompleteAttachmentUploadResponse, Error>) -> Void) {
         guard let request = AWSConnectParticipantCompleteAttachmentUploadRequest() else {
             completion(.failure(AWSClientError.requestCreationFailed))
             return
@@ -261,7 +261,7 @@ class AWSClient: AWSClientProtocol {
         })
     }
     
-    func getAttachment(connectionToken: String, attachmentId: String, completion: @escaping (Result<AWSConnectParticipantGetAttachmentResponse, Error>) -> Void) {
+    public func getAttachment(connectionToken: String, attachmentId: String, completion: @escaping (Result<AWSConnectParticipantGetAttachmentResponse, Error>) -> Void) {
         guard let request = AWSConnectParticipantGetAttachmentRequest() else {
             completion(.failure(AWSClientError.requestCreationFailed))
             return
@@ -282,7 +282,7 @@ class AWSClient: AWSClientProtocol {
         })
     }
     
-    func getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Result<AWSConnectParticipantGetTranscriptResponse, Error>) -> Void) {
+    public func getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Result<AWSConnectParticipantGetTranscriptResponse, Error>) -> Void) {
         connectParticipantClient?.getTranscript(getTranscriptArgs).continueWith { (task) -> AnyObject? in
             if let error = task.error {
                 SDKLogger.logger.logError("Error in getting transcript: \(error.localizedDescription)")
