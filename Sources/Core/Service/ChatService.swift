@@ -59,20 +59,17 @@ class ChatService : ChatServiceProtocol {
     init(awsClient: AWSClientProtocol = AWSClient.shared,
         connectionDetailsProvider: ConnectionDetailsProviderProtocol = ConnectionDetailsProvider.shared,
         websocketManagerFactory: @escaping (URL) -> WebsocketManagerProtocol = { WebsocketManager(wsUrl: $0) }) {
-        self.awsClient = awsClient
+        self.awsClient = globalConfig?.customAWSClient ?? awsClient
         self.connectionDetailsProvider = connectionDetailsProvider
         self.websocketManagerFactory = websocketManagerFactory
         self.messageReceiptsManager = MessageReceiptsManager()
         self.registerNotificationListeners()
     }
-    
-    private func getClient() -> AWSClientProtocol {
-        return globalConfig?.customAWSClient ?? awsClient
-    }
+
 
     func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void) {
         self.connectionDetailsProvider.updateChatDetails(newDetails: chatDetails)
-        getClient().createParticipantConnection(participantToken: chatDetails.participantToken) { result in
+        awsClient.createParticipantConnection(participantToken: chatDetails.participantToken) { result in
             switch result {
             case .success(let connectionDetails):
                 self.connectionDetailsProvider.updateConnectionDetails(newDetails: connectionDetails)
@@ -290,7 +287,7 @@ class ChatService : ChatServiceProtocol {
         
         messageReceiptsManager?.invalidateTimer()
         
-        getClient().disconnectParticipantConnection(connectionToken: connectionDetails.connectionToken!) { result in
+        awsClient.disconnectParticipantConnection(connectionToken: connectionDetails.connectionToken!) { result in
             switch result {
             case .success(_):
                 SDKLogger.logger.logDebug("Participant Disconnected")
@@ -337,7 +334,7 @@ class ChatService : ChatServiceProtocol {
         
         self.sendSingleUpdateToClient(for: recentlySentMessage)
         
-        self.getClient().sendMessage(connectionToken: connectionDetails.connectionToken!, contentType: contentType, message: message) { result in
+        self.awsClient.sendMessage(connectionToken: connectionDetails.connectionToken!, contentType: contentType, message: message) { result in
             switch result {
             case .success(let response):
                 MetricsClient.shared.triggerCountMetric(metricName: .SendMessage)
@@ -442,7 +439,7 @@ class ChatService : ChatServiceProtocol {
             }
         }
         
-        getClient().sendEvent(connectionToken: connectionDetails.connectionToken!,contentType: event, content: content!) { result in
+        awsClient.sendEvent(connectionToken: connectionDetails.connectionToken!,contentType: event, content: content!) { result in
             switch result {
             case .success(_):
                 completion(true, nil)
@@ -625,7 +622,7 @@ class ChatService : ChatServiceProtocol {
             return
         }
         
-        getClient().startAttachmentUpload(connectionToken: connectionDetails.connectionToken!, contentType: contentType, attachmentName: attachmentName, attachmentSizeInBytes: attachmentSizeInBytes) { result in
+        awsClient.startAttachmentUpload(connectionToken: connectionDetails.connectionToken!, contentType: contentType, attachmentName: attachmentName, attachmentSizeInBytes: attachmentSizeInBytes) { result in
             switch result {
             case .success(let response):
                 completion(.success(response))
@@ -641,7 +638,7 @@ class ChatService : ChatServiceProtocol {
             return
         }
         
-        getClient().completeAttachmentUpload(connectionToken: connectionDetails.connectionToken!, attachmentIds: attachmentIds) { result in
+        awsClient.completeAttachmentUpload(connectionToken: connectionDetails.connectionToken!, attachmentIds: attachmentIds) { result in
             switch result {
             case .success(_):
                 completion(true, nil)
@@ -658,7 +655,7 @@ class ChatService : ChatServiceProtocol {
             return
         }
         
-        getClient().getAttachment(connectionToken: connectionDetails.connectionToken!, attachmentId: attachmentId) { result in
+        awsClient.getAttachment(connectionToken: connectionDetails.connectionToken!, attachmentId: attachmentId) { result in
             switch result {
             case .success(let response):
                 if let url = URL(string: response.url!) {
@@ -800,7 +797,7 @@ class ChatService : ChatServiceProtocol {
             getTranscriptArgs?.nextToken = nextToken
         }
         
-        getClient().getTranscript(getTranscriptArgs: getTranscriptArgs!) { [weak self] result in
+        awsClient.getTranscript(getTranscriptArgs: getTranscriptArgs!) { [weak self] result in
             switch result {
             case .success(let response):
                 
@@ -851,6 +848,10 @@ class ChatService : ChatServiceProtocol {
     
     func configure(config: GlobalConfig) {
         self.globalConfig = config
+        // Update awsClient if custom client is provided
+        if let customClient = config.customAWSClient {
+            self.awsClient = customClient
+        }
         let messageReceiptConfig = config.features.messageReceipts
         messageReceiptsManager?.throttleTime = messageReceiptConfig.throttleTime
         messageReceiptsManager?.shouldSendMessageReceipts = messageReceiptConfig.shouldSendMessageReceipts
@@ -864,7 +865,7 @@ class ChatService : ChatServiceProtocol {
     func registerNotificationListeners() {
         requestWsUrlObserver = NotificationCenter.default.addObserver(forName: .requestNewWsUrl, object: nil, queue: .main) { [weak self] _ in
             if let pToken = self?.connectionDetailsProvider.getChatDetails()?.participantToken {
-                self?.getClient().createParticipantConnection(participantToken: pToken) { result in
+                self?.awsClient.createParticipantConnection(participantToken: pToken) { result in
                     switch result {
                     case .success(let connectionDetails):
                         self?.connectionDetailsProvider.updateConnectionDetails(newDetails: connectionDetails)

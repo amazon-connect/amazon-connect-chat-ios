@@ -423,10 +423,6 @@ class SecureCustomClient: NSObject, CustomAWSClientProtocol, URLSessionDelegate 
 
 - **Testing**: Thoroughly test your custom client implementation across all 8 API methods and error scenarios.
 
-#### Example Implementation
-
-For a complete example of custom client implementation, see the [iOS Chat Example](https://github.com/amazon-connect/amazon-connect-chat-ui-examples/tree/master/mobileChatExamples/iOSChatExample) in the Amazon Connect Chat UI Examples repository.
-
 ## API List
 
 ### GlobalConfig
