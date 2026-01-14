@@ -47,8 +47,8 @@ jobs:
         echo "Available schemes:"
         xcodebuild -list -project AmazonConnectChatIOS.xcodeproj
         
-        # Use iPhone 16 with iOS 18.4 (available in Xcode 16.4)
-        DESTINATION="platform=iOS Simulator,OS=18.4,name=iPhone 16"
+        # Use iPhone 16 with iOS 18.5 (available in Xcode 16.4)
+        DESTINATION="platform=iOS Simulator,OS=18.5,name=iPhone 16"
         
         # Run tests with AmazonConnectChatIOSTests scheme
         echo "Running tests with AmazonConnectChatIOSTests scheme..."
