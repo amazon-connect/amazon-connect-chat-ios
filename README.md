@@ -261,69 +261,87 @@ The Amazon Connect Chat SDK for iOS supports custom client implementations to en
 
 #### Overview
 
-By default, the SDK uses the standard AWS SDK HTTP client to communicate directly with Amazon Connect Participant Service APIs. For organizations requiring custom networking behavior, the SDK provides a protocol-based dependency injection system that allows you to replace the default client with your own implementation.
+By default, the SDK uses the standard AWS SDK HTTP client to communicate directly with Amazon Connect Participant Service APIs. For organizations requiring custom networking behavior, the SDK provides an inheritance-based system that allows you to subclass `AWSClient` and selectively override only the methods you need.
 
-**Important**: When you implement a custom client, it replaces **ALL** AWS API calls. Your custom client will handle **every single API request** made by the SDK - there is no partial override. You must implement all 8 required methods in the `AWSClientProtocol`.
+**Flexible Override Options**: You can choose to override all 8 API methods for complete control, or override only specific methods while automatically inheriting default behavior for the rest.
 
 #### Implementation Steps
 
-**1. Implement the AWSClientProtocol**
+**1. Subclass AWSClient**
 
-Create a custom client class that implements the `AWSClientProtocol`:
+Create a custom client class that inherits from `AWSClient` and override the methods you need:
 
+**Option A: Partial Override**
 ```swift
 import AmazonConnectChatIOS
 import AWSConnectParticipant
 
-class MyCustomClient: AWSClientProtocol {
+class MyCustomClient: AWSClient {
     
-    func createParticipantConnection(participantToken: String, completion: @escaping (Result<ConnectionDetails, Error>) -> Void) {
-        // Route through your custom endpoint
+    // Only override the methods you need to customize
+    override func createParticipantConnection(participantToken: String, completion: @escaping (Result<ConnectionDetails, Error>) -> Void) {
+        // Add custom logging/monitoring
+        print("Custom client: Routing createParticipantConnection through proxy")
+        
+        // Call parent implementation to use default AWS behavior
+        super.createParticipantConnection(participantToken: participantToken, completion: completion)
+    }
+    
+    override func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<AWSConnectParticipantSendMessageResponse, Error>) -> Void) {
+        // Add custom message filtering or transformation
+        let filteredMessage = applyCustomFilters(message)
+        
+        // Call parent implementation with modified message
+        super.sendMessage(connectionToken: connectionToken, contentType: contentType, message: filteredMessage, completion: completion)
+    }
+    
+    // Other 6 methods automatically use parent AWSClient implementation
+    // No need to implement them unless you need custom behavior
+}
+```
+
+**Option B: Complete Override (For full control)**
+```swift
+class MyFullCustomClient: AWSClient {
+    
+    // Override ALL 8 methods with completely custom implementations
+    override func createParticipantConnection(participantToken: String, completion: @escaping (Result<ConnectionDetails, Error>) -> Void) {
+        // Completely custom implementation - route through your proxy
         let customRequest = buildCustomRequest(
             endpoint: "https://your-proxy.example.com/participant-connection",
-            token: participantToken,
-            headers: ["X-Custom-Auth": "your-token"]
+            token: participantToken
         )
-        
         executeRequest(customRequest) { result in
-            // Transform response and call completion
             completion(result)
         }
     }
     
-    func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<AWSConnectParticipantSendMessageResponse, Error>) -> Void) {
-        // Custom message routing logic
-        // Implementation here...
+    override func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<AWSConnectParticipantSendMessageResponse, Error>) -> Void) {
+        // Completely custom message routing
     }
     
-    func sendEvent(connectionToken: String, contentType: ContentType, content: String, completion: @escaping (Result<AWSConnectParticipantSendEventResponse, Error>) -> Void) {
-        // Custom event routing logic
-        // Implementation here...
+    override func sendEvent(connectionToken: String, contentType: ContentType, content: String, completion: @escaping (Result<AWSConnectParticipantSendEventResponse, Error>) -> Void) {
+        // Completely custom event routing
     }
     
-    func getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Result<AWSConnectParticipantGetTranscriptResponse, Error>) -> Void) {
-        // Custom transcript retrieval logic
-        // Implementation here...
+    override func getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Result<AWSConnectParticipantGetTranscriptResponse, Error>) -> Void) {
+        // Completely custom transcript retrieval
     }
     
-    func disconnectParticipantConnection(connectionToken: String, completion: @escaping (Result<AWSConnectParticipantDisconnectParticipantResponse, Error>) -> Void) {
-        // Custom disconnect logic
-        // Implementation here...
+    override func disconnectParticipantConnection(connectionToken: String, completion: @escaping (Result<AWSConnectParticipantDisconnectParticipantResponse, Error>) -> Void) {
+        // Completely custom disconnect
     }
     
-    func startAttachmentUpload(connectionToken: String, contentType: String, attachmentName: String, attachmentSizeInBytes: Int, completion: @escaping (Result<AWSConnectParticipantStartAttachmentUploadResponse, Error>) -> Void) {
-        // Custom attachment upload start logic
-        // Implementation here...
+    override func startAttachmentUpload(connectionToken: String, contentType: String, attachmentName: String, attachmentSizeInBytes: Int, completion: @escaping (Result<AWSConnectParticipantStartAttachmentUploadResponse, Error>) -> Void) {
+        // Completely custom attachment upload start
     }
     
-    func completeAttachmentUpload(connectionToken: String, attachmentIds: [String], completion: @escaping (Result<AWSConnectParticipantCompleteAttachmentUploadResponse, Error>) -> Void) {
-        // Custom attachment upload completion logic
-        // Implementation here...
+    override func completeAttachmentUpload(connectionToken: String, attachmentIds: [String], completion: @escaping (Result<AWSConnectParticipantCompleteAttachmentUploadResponse, Error>) -> Void) {
+        // Completely custom attachment upload completion
     }
     
-    func getAttachment(connectionToken: String, attachmentId: String, completion: @escaping (Result<AWSConnectParticipantGetAttachmentResponse, Error>) -> Void) {
-        // Custom attachment download logic
-        // Implementation here...
+    override func getAttachment(connectionToken: String, attachmentId: String, completion: @escaping (Result<AWSConnectParticipantGetAttachmentResponse, Error>) -> Void) {
+        // Completely custom attachment download
     }
 }
 ```
@@ -350,9 +368,9 @@ class ChatManager: ObservableObject {
 }
 ```
 
-**3. Required Protocol Methods**
+**3. Available Override Methods**
 
-Your custom client **must implement ALL methods** in `AWSClientProtocol`. The SDK will route **every single API call** through your custom client:
+Your custom client can override any or all of these methods from the `AWSClient` base class:
 
 | Method | Purpose | Required Parameters |
 |--------|---------|-------------------|
@@ -394,7 +412,7 @@ func sendMessage(connectionToken: String, contentType: ContentType, message: Str
 
 **Certificate Pinning**
 ```swift
-class SecureCustomClient: NSObject, CustomAWSClientProtocol, URLSessionDelegate {
+class SecureCustomClient: AWSClient, URLSessionDelegate {
     
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         // Implement certificate pinning validation
@@ -409,11 +427,13 @@ class SecureCustomClient: NSObject, CustomAWSClientProtocol, URLSessionDelegate 
 
 #### Important Considerations
 
-- **Complete Override**: Custom client implementation replaces **ALL** AWS ACPS API calls. You cannot selectively override individual methods - it's all or nothing.
+- **Flexible Override**: You can override all 8 methods for complete control, or selectively override only the methods you need. Non-overridden methods automatically use the parent `AWSClient` implementation.
 
 - **Backward Compatibility**: Custom client implementation is completely optional. Existing applications continue to work unchanged when not using a custom client.
 
-- **Full Responsibility**: Your custom client becomes responsible for **every API interaction** including error handling, retries, authentication, and response parsing.
+- **Calling Parent Methods**: You can call `super.methodName()` from your overridden methods to use the default AWS implementation while adding custom behavior (logging, monitoring, etc.).
+
+- **Full Responsibility for Overridden Methods**: When you override a method without calling `super`, your implementation becomes fully responsible for that API interaction including error handling, retries, authentication, and response parsing.
 
 - **Token Security**: The SDK treats participant tokens as opaque strings. Your custom client receives these tokens and is responsible for secure handling.
 

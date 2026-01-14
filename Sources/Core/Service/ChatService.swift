@@ -43,7 +43,7 @@ class ChatService : ChatServiceProtocol {
     private var transcriptItemCancellables = Set<AnyCancellable>()
     private var transcriptListCancellables = Set<AnyCancellable>()
     private let connectionDetailsProvider: ConnectionDetailsProviderProtocol
-    private var awsClient: AWSClientProtocol
+    private var awsClient: AWSClient
     private var websocketManagerFactory: (URL) -> WebsocketManagerProtocol
     private var throttleTypingEvent: Bool = false
     private var throttleTypingEventTimer: Timer?
@@ -56,7 +56,7 @@ class ChatService : ChatServiceProtocol {
     private var tempMessageIdToFileUrl: [String: URL] = [:]
     private var requestWsUrlObserver: NSObjectProtocol?
 
-    init(awsClient: AWSClientProtocol = AWSClient.shared,
+    init(awsClient: AWSClient = AWSClient.shared,
         connectionDetailsProvider: ConnectionDetailsProviderProtocol = ConnectionDetailsProvider.shared,
         websocketManagerFactory: @escaping (URL) -> WebsocketManagerProtocol = { WebsocketManager(wsUrl: $0) }) {
         self.awsClient = globalConfig?.customAWSClient ?? awsClient
