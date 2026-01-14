@@ -44,6 +44,8 @@ public class Message: TranscriptItem, MessageProtocol {
         case ContentType.richText.rawValue:
             // Placeholder for a future rich text content class
             return PlainTextContent.decode(from: text)
+        case ContentType.json.rawValue:
+            return PlainTextContent.decode(from: text)
         case ContentType.interactiveText.rawValue:
             return decodeInteractiveContent(from: text)
         default:
