@@ -6,69 +6,11 @@ import Foundation
 import AWSConnectParticipant
 import AWSCore
 
-/// Protocol defining the AWS client operations.
-protocol AWSClientProtocol {
-    /// Creates a new participant connection.
-    /// - Parameters:
-    ///   - participantToken: The token for the participant to identify.
-    ///   - completion: Completion handler to handle the connection details or error.
-    func createParticipantConnection(participantToken: String, completion: @escaping (Result<ConnectionDetails, Error>) -> Void)
-    
-    /// Disconnects an existing participant connection.
-    /// - Parameters:
-    ///   - connectionToken: The token for the connection to be disconnected.
-    ///   - completion: Completion handler to handle the success status or error.
-    func disconnectParticipantConnection(connectionToken: String, completion: @escaping (Result<AWSConnectParticipantDisconnectParticipantResponse, Error>) -> Void)
-    
-    /// Sends a message.
-    /// - Parameters:
-    ///   - connectionToken: The token for the connection through which the message is sent.
-    ///   - message: The message text to be sent.
-    ///   - completion: Completion handler to handle the success status or error.
-    func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<AWSConnectParticipantSendMessageResponse, Error>) -> Void)
-    
-    /// Sends an event..
-    /// - Parameters:
-    ///   - connectionToken: The token for the connection through which the event is sent.
-    ///   - contentType: The type of content being sent.
-    ///   - content: The content string to be sent.
-    ///   - completion: Completion handler to handle the success status or error.
-    func sendEvent(connectionToken: String, contentType: ContentType, content: String, completion: @escaping (Result<AWSConnectParticipantSendEventResponse, Error>) -> Void)
-    
-    /// Requests a pre-signed S3 URL with authentication headers used to upload a given file to S3.
-    /// - Parameters:
-    ///   - connectionToken: The token for the connection through which the event is sent.
-    ///   - contentType: Describes the MIME file type of the attachment.
-    ///   - attachmentName: A case-sensitive name of the attachment being uploaded.
-    ///   - attachmentSizeInBytes: The size of the attachment in bytes.
-    ///   - completion: Completion handler to handle the success status or error.
-    func startAttachmentUpload(connectionToken: String, contentType: String, attachmentName: String, attachmentSizeInBytes: Int, completion: @escaping (Result<AWSConnectParticipantStartAttachmentUploadResponse, Error>) -> Void)
-
-    /// Communicates with the Connect Participant backend to signal that the file has been uploaded successfully.
-    /// - Parameters:
-    ///   - connectionToken: The token for the connection through which the event is sent.
-    ///   - attachmentIds: A list of unique identifiers for the attachments.
-    ///   - completion: Completion handler to handle the success status or error.
-    func completeAttachmentUpload(connectionToken: String, attachmentIds: [String], completion: @escaping (Result<AWSConnectParticipantCompleteAttachmentUploadResponse, Error>) -> Void)
-    
-    /// Retrieves a download URL for the attachment defined by the attachmentId.
-    /// - Parameters:
-    ///   - connectionToken: The token for the connection through which the event is sent.
-    ///   - attachmentId: A unique identifier for the attachment.
-    ///   - completion: Completion handler to handle the success status or error.
-    func getAttachment(connectionToken: String, attachmentId: String, completion: @escaping (Result<AWSConnectParticipantGetAttachmentResponse, Error>) -> Void)
-  
-    /// Requests the chat transcript.
-    /// - Parameters:
-    ///   - getTranscriptArgs: arguments for the get transcript request.
-    ///   - completion: Completion handler to handle the success status or error.
-    func getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Result<AWSConnectParticipantGetTranscriptResponse, Error>) -> Void)
-}
-
 /// AWSClient manages the interactions with AWS Connect Participant service.
-class AWSClient: AWSClientProtocol {
+/// Subclass this to selectively override specific API methods while inheriting default behavior for others.
+open class AWSClient {
     /// Shared instance of AWSClient.
-    static let shared = AWSClient()
+    public static let shared = AWSClient()
     
     /// AWS Connect Participant Client
     var connectParticipantClient: AWSConnectParticipantProtocol?
@@ -102,12 +44,17 @@ class AWSClient: AWSClientProtocol {
         AWSConnectParticipantGetAttachmentRequest()
     }
     
-    private init() {}
+    public init() {}
     
     
     /// Configures the client with global configuration settings.
     /// - Parameter config: Global configuration settings.
-    func configure(with config: GlobalConfig, participantClient: AWSConnectParticipantProtocol? = nil) {
+    public func configure(with config: GlobalConfig) {
+        self.configure(with: config, participantClient: nil)
+    }
+    
+    /// Internal configuration method with participant client injection for testing
+    func configure(with config: GlobalConfig, participantClient: AWSConnectParticipantProtocol?) {
         // AWS service initialization with empty credentials as placeholders
         let credentials = AWSStaticCredentialsProvider(accessKey: "", secretKey: "")
         
@@ -126,7 +73,10 @@ class AWSClient: AWSClientProtocol {
     }
     
     /// Creates a connection for a participant identified by a token.
-    func createParticipantConnection(participantToken: String, completion: @escaping (Result<ConnectionDetails, Error>) -> Void) {
+    /// - Parameters:
+    ///   - participantToken: The token for the participant to identify.
+    ///   - completion: Completion handler to handle the connection details or error.
+    open func createParticipantConnection(participantToken: String, completion: @escaping (Result<ConnectionDetails, Error>) -> Void) {
         guard let request = createParticipantConnectionRequest() else {
             completion(.failure(AWSClientError.requestCreationFailed))
             return
@@ -150,7 +100,10 @@ class AWSClient: AWSClientProtocol {
     }
     
     /// Disconnects a participant connection using a connection token.
-    func disconnectParticipantConnection(connectionToken: String, completion: @escaping (Result<AWSConnectParticipantDisconnectParticipantResponse, Error>) -> Void) {
+    /// - Parameters:
+    ///   - connectionToken: The token for the connection to be disconnected.
+    ///   - completion: Completion handler to handle the success status or error.
+    open func disconnectParticipantConnection(connectionToken: String, completion: @escaping (Result<AWSConnectParticipantDisconnectParticipantResponse, Error>) -> Void) {
         guard let request = disconnectParticipantRequest() else {
             completion(.failure(AWSClientError.requestCreationFailed))
             return
@@ -171,7 +124,12 @@ class AWSClient: AWSClientProtocol {
     }
     
     /// Sends a message using a connection token.
-    func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<AWSConnectParticipantSendMessageResponse, Error>) -> Void) {
+    /// - Parameters:
+    ///   - connectionToken: The token for the connection through which the message is sent.
+    ///   - contentType: The type of content being sent.
+    ///   - message: The message text to be sent.
+    ///   - completion: Completion handler to handle the success status or error.
+    open func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<AWSConnectParticipantSendMessageResponse, Error>) -> Void) {
         guard let request = sendMessageRequest() else {
             completion(.failure(AWSClientError.requestCreationFailed))
             return
@@ -194,7 +152,12 @@ class AWSClient: AWSClientProtocol {
     }
     
     /// Sends an event using a connection token.
-    func sendEvent(connectionToken: String, contentType: ContentType, content: String = "", completion: @escaping (Result<AWSConnectParticipantSendEventResponse, Error>) -> Void) {
+    /// - Parameters:
+    ///   - connectionToken: The token for the connection through which the event is sent.
+    ///   - contentType: The type of content being sent.
+    ///   - content: The content string to be sent.
+    ///   - completion: Completion handler to handle the success status or error.
+    open func sendEvent(connectionToken: String, contentType: ContentType, content: String = "", completion: @escaping (Result<AWSConnectParticipantSendEventResponse, Error>) -> Void) {
         guard let request = sendEventRequest() else {
             completion(.failure(AWSClientError.requestCreationFailed))
             return
@@ -217,7 +180,14 @@ class AWSClient: AWSClientProtocol {
         })
     }
     
-    func startAttachmentUpload(connectionToken: String, contentType: String, attachmentName: String, attachmentSizeInBytes: Int, completion: @escaping (Result<AWSConnectParticipantStartAttachmentUploadResponse, Error>) -> Void) {
+    /// Requests a pre-signed S3 URL with authentication headers used to upload a given file to S3.
+    /// - Parameters:
+    ///   - connectionToken: The token for the connection through which the event is sent.
+    ///   - contentType: Describes the MIME file type of the attachment.
+    ///   - attachmentName: A case-sensitive name of the attachment being uploaded.
+    ///   - attachmentSizeInBytes: The size of the attachment in bytes.
+    ///   - completion: Completion handler to handle the success status or error.
+    open func startAttachmentUpload(connectionToken: String, contentType: String, attachmentName: String, attachmentSizeInBytes: Int, completion: @escaping (Result<AWSConnectParticipantStartAttachmentUploadResponse, Error>) -> Void) {
         guard let request = AWSConnectParticipantStartAttachmentUploadRequest() else {
             completion(.failure(AWSClientError.requestCreationFailed))
             return
@@ -240,7 +210,12 @@ class AWSClient: AWSClientProtocol {
         })
     }
     
-    func completeAttachmentUpload(connectionToken: String, attachmentIds: [String], completion: @escaping (Result<AWSConnectParticipantCompleteAttachmentUploadResponse, Error>) -> Void) {
+    /// Communicates with the Connect Participant backend to signal that the file has been uploaded successfully.
+    /// - Parameters:
+    ///   - connectionToken: The token for the connection through which the event is sent.
+    ///   - attachmentIds: A list of unique identifiers for the attachments.
+    ///   - completion: Completion handler to handle the success status or error.
+    open func completeAttachmentUpload(connectionToken: String, attachmentIds: [String], completion: @escaping (Result<AWSConnectParticipantCompleteAttachmentUploadResponse, Error>) -> Void) {
         guard let request = AWSConnectParticipantCompleteAttachmentUploadRequest() else {
             completion(.failure(AWSClientError.requestCreationFailed))
             return
@@ -261,7 +236,12 @@ class AWSClient: AWSClientProtocol {
         })
     }
     
-    func getAttachment(connectionToken: String, attachmentId: String, completion: @escaping (Result<AWSConnectParticipantGetAttachmentResponse, Error>) -> Void) {
+    /// Retrieves a download URL for the attachment defined by the attachmentId.
+    /// - Parameters:
+    ///   - connectionToken: The token for the connection through which the event is sent.
+    ///   - attachmentId: A unique identifier for the attachment.
+    ///   - completion: Completion handler to handle the success status or error.
+    open func getAttachment(connectionToken: String, attachmentId: String, completion: @escaping (Result<AWSConnectParticipantGetAttachmentResponse, Error>) -> Void) {
         guard let request = AWSConnectParticipantGetAttachmentRequest() else {
             completion(.failure(AWSClientError.requestCreationFailed))
             return
@@ -282,7 +262,11 @@ class AWSClient: AWSClientProtocol {
         })
     }
     
-    func getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Result<AWSConnectParticipantGetTranscriptResponse, Error>) -> Void) {
+    /// Requests the chat transcript.
+    /// - Parameters:
+    ///   - getTranscriptArgs: arguments for the get transcript request.
+    ///   - completion: Completion handler to handle the success status or error.
+    open func getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Result<AWSConnectParticipantGetTranscriptResponse, Error>) -> Void) {
         connectParticipantClient?.getTranscript(getTranscriptArgs).continueWith { (task) -> AnyObject? in
             if let error = task.error {
                 SDKLogger.logger.logError("Error in getting transcript: \(error.localizedDescription)")

@@ -116,6 +116,7 @@ public class ChatSession: ChatSessionProtocol {
     private var eventSubscription: AnyCancellable?
     private var messageSubscription: AnyCancellable?
     private var transcriptSubscription: AnyCancellable?
+    public var globalConfig: GlobalConfig?
     
     public var onConnectionEstablished: (() -> Void)?
     public var onConnectionReEstablished: (() -> Void)?
@@ -208,6 +209,7 @@ public class ChatSession: ChatSessionProtocol {
     
     /// Configures the chat service with global configuration.
     public func configure(config: GlobalConfig) {
+        self.globalConfig = config
         AWSClient.shared.configure(with: config)
         chatService.configure(config: config)
     }
