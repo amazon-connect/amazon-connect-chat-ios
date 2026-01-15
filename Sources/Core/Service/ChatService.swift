@@ -43,11 +43,12 @@ class ChatService : ChatServiceProtocol {
     private var transcriptItemCancellables = Set<AnyCancellable>()
     private var transcriptListCancellables = Set<AnyCancellable>()
     private let connectionDetailsProvider: ConnectionDetailsProviderProtocol
-    private var awsClient: AWSClientProtocol
+    private var awsClient: AWSClient
     private var websocketManagerFactory: (URL) -> WebsocketManagerProtocol
     private var throttleTypingEvent: Bool = false
     private var throttleTypingEventTimer: Timer?
     private var transcriptItemSet = Set<String>()
+    private var globalConfig: GlobalConfig?
     private var typingIndicatorTimer: Timer?
     // Dictionary to map attachment IDs to temporary message IDs
     private var attachmentIdToTempMessageIdMap: [String: String] = [:]
@@ -55,15 +56,16 @@ class ChatService : ChatServiceProtocol {
     private var tempMessageIdToFileUrl: [String: URL] = [:]
     private var requestWsUrlObserver: NSObjectProtocol?
 
-    init(awsClient: AWSClientProtocol = AWSClient.shared,
+    init(awsClient: AWSClient = AWSClient.shared,
         connectionDetailsProvider: ConnectionDetailsProviderProtocol = ConnectionDetailsProvider.shared,
         websocketManagerFactory: @escaping (URL) -> WebsocketManagerProtocol = { WebsocketManager(wsUrl: $0) }) {
-        self.awsClient = awsClient
+        self.awsClient = globalConfig?.customAWSClient ?? awsClient
         self.connectionDetailsProvider = connectionDetailsProvider
         self.websocketManagerFactory = websocketManagerFactory
         self.messageReceiptsManager = MessageReceiptsManager()
         self.registerNotificationListeners()
     }
+
 
     func createChatSession(chatDetails: ChatDetails, completion: @escaping (Bool, Error?) -> Void) {
         self.connectionDetailsProvider.updateChatDetails(newDetails: chatDetails)
@@ -71,8 +73,18 @@ class ChatService : ChatServiceProtocol {
             switch result {
             case .success(let connectionDetails):
                 self.connectionDetailsProvider.updateConnectionDetails(newDetails: connectionDetails)
-                if let wsUrl = URL(string: connectionDetails.websocketUrl ?? "") {
-                    self.setupWebSocket(url: wsUrl)
+                if let originalWsUrlString = connectionDetails.websocketUrl {
+                    // Apply custom URL transformation if provided
+                    let finalWsUrlString: String
+                    if let urlProvider = self.globalConfig?.customWebSocketURLProvider {
+                        finalWsUrlString = urlProvider(originalWsUrlString)
+                    } else {
+                        finalWsUrlString = originalWsUrlString
+                    }
+                    
+                    if let wsUrl = URL(string: finalWsUrlString) {
+                        self.setupWebSocket(url: wsUrl)
+                    }
                 }
                 MetricsClient.shared.triggerCountMetric(metricName: .CreateParticipantConnection)
                 completion(true, nil)
@@ -835,6 +847,11 @@ class ChatService : ChatServiceProtocol {
     }
     
     func configure(config: GlobalConfig) {
+        self.globalConfig = config
+        // Update awsClient if custom client is provided
+        if let customClient = config.customAWSClient {
+            self.awsClient = customClient
+        }
         let messageReceiptConfig = config.features.messageReceipts
         messageReceiptsManager?.throttleTime = messageReceiptConfig.throttleTime
         messageReceiptsManager?.shouldSendMessageReceipts = messageReceiptConfig.shouldSendMessageReceipts
