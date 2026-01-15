@@ -263,7 +263,7 @@ The Amazon Connect Chat SDK for iOS supports custom client implementations to en
 
 By default, the SDK uses the standard AWS SDK HTTP client to communicate directly with Amazon Connect Participant Service APIs. For organizations requiring custom networking behavior, the SDK provides an inheritance-based system that allows you to subclass `AWSClient` and selectively override only the methods you need.
 
-**Flexible Override Options**: You can choose to override all 8 API methods for complete control, or override only specific methods while automatically inheriting default behavior for the rest.
+**Flexible Override Options**: You can choose to override all ACPS API methods for complete control, or override only specific methods while automatically inheriting default behavior for the rest.
 
 #### Implementation Steps
 
@@ -295,7 +295,7 @@ class MyCustomClient: AWSClient {
         super.sendMessage(connectionToken: connectionToken, contentType: contentType, message: filteredMessage, completion: completion)
     }
     
-    // Other 6 methods automatically use parent AWSClient implementation
+    // Other methods automatically use parent AWSClient implementation
     // No need to implement them unless you need custom behavior
 }
 ```
@@ -304,7 +304,7 @@ class MyCustomClient: AWSClient {
 ```swift
 class MyFullCustomClient: AWSClient {
     
-    // Override ALL 8 methods with completely custom implementations
+    // Override ALL ACPS methods with completely custom implementations
     override func createParticipantConnection(participantToken: String, completion: @escaping (Result<ConnectionDetails, Error>) -> Void) {
         // Completely custom implementation - route through your proxy
         let customRequest = buildCustomRequest(
@@ -370,7 +370,7 @@ class ChatManager: ObservableObject {
 
 **3. Available Override Methods**
 
-Your custom client can override any or all of these methods from the `AWSClient` base class:
+Your custom client can override any or all of these ACPS methods from the `AWSClient` base class:
 
 | Method | Purpose | Required Parameters |
 |--------|---------|-------------------|
@@ -382,8 +382,6 @@ Your custom client can override any or all of these methods from the `AWSClient`
 | `startAttachmentUpload` | Initiate file uploads | `connectionToken`, `contentType`, `attachmentName`, `attachmentSizeInBytes` |
 | `completeAttachmentUpload` | Complete file uploads | `connectionToken`, `attachmentIds` |
 | `getAttachment` | Download attachments | `connectionToken`, `attachmentId` |
-
-**Critical**: There is no partial override - implementing a custom client means **ALL 8 API methods** will be routed through your implementation. You cannot selectively override only some methods.
 
 #### Use Cases
 
@@ -427,7 +425,7 @@ class SecureCustomClient: AWSClient, URLSessionDelegate {
 
 #### Important Considerations
 
-- **Flexible Override**: You can override all 8 methods for complete control, or selectively override only the methods you need. Non-overridden methods automatically use the parent `AWSClient` implementation.
+- **Flexible Override**: You can override all ACPS methods for complete control, or selectively override only the methods you need. Non-overridden methods automatically use the parent `AWSClient` implementation.
 
 - **Backward Compatibility**: Custom client implementation is completely optional. Existing applications continue to work unchanged when not using a custom client.
 
@@ -441,7 +439,7 @@ class SecureCustomClient: AWSClient, URLSessionDelegate {
 
 - **Performance**: Custom clients should maintain low latency (<100ms additional overhead recommended) to preserve real-time chat experience.
 
-- **Testing**: Thoroughly test your custom client implementation across all 8 API methods and error scenarios.
+- **Testing**: Thoroughly test your custom client implementation across all ACPS API methods and error scenarios.
 
 ## API List
 
