@@ -44,15 +44,13 @@ public class Message: TranscriptItem, MessageProtocol {
         case ContentType.richText.rawValue:
             // Placeholder for a future rich text content class
             return PlainTextContent.decode(from: text)
+        case ContentType.json.rawValue:
+            return PlainTextContent.decode(from: text)
         case ContentType.interactiveText.rawValue:
             return decodeInteractiveContent(from: text)
         default:
-            // Handle or log unsupported content types
-            if attachmentId != nil{
-                return PlainTextContent.decode(from: text)
-            }
             SDKLogger.logger.logDebug("Unsupported content type: \(contentType)")
-            return nil
+            return PlainTextContent.decode(from: text)
         }
     }
     

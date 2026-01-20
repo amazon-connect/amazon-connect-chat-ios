@@ -15,6 +15,7 @@ public enum ContentType: String {
     case ended = "application/vnd.amazonaws.connect.event.chat.ended"
     case plainText = "text/plain"
     case richText = "text/markdown"
+    case json = "application/json"
     case interactiveText = "application/vnd.amazonaws.connect.message.interactive"
     case interactiveResponse = "application/vnd.amazonaws.connect.message.interactive.response"
     case authenticationInitiated = "application/vnd.amazonaws.connect.event.authentication.initiated"
