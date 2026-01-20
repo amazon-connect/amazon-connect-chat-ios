@@ -49,12 +49,8 @@ public class Message: TranscriptItem, MessageProtocol {
         case ContentType.interactiveText.rawValue:
             return decodeInteractiveContent(from: text)
         default:
-            // Handle or log unsupported content types
-            if attachmentId != nil{
-                return PlainTextContent.decode(from: text)
-            }
             SDKLogger.logger.logDebug("Unsupported content type: \(contentType)")
-            return nil
+            return PlainTextContent.decode(from: text)
         }
     }
     
