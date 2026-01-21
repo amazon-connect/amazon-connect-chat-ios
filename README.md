@@ -780,7 +780,7 @@ func resendFailedMessage(messageId: String, completion: @escaping (Result<Void, 
 Retrieves a view resource object containing metadata and content necessary to render the view.
 
 ```
-func describeView(viewToken: String, completion: @escaping (Result<AWSConnectParticipantDescribeViewResponse, Error>) -> Void)
+func describeView(viewToken: String, completion: @escaping (Result<ViewResource, Error>) -> Void)
 ```
 
 * `viewToken`
@@ -788,7 +788,7 @@ func describeView(viewToken: String, completion: @escaping (Result<AWSConnectPar
   * Type: `String`
 * `completion`
   * The completion handler to call when the view retrieval is complete.
-  * Type: `(Result<AWSConnectParticipantDescribeViewResponse, Error>) -> Void`
+  * Type: `(Result<ViewResource, Error>) -> Void`
 
 --------------------
 

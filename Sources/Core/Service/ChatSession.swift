@@ -252,7 +252,7 @@ public class ChatSession: ChatSessionProtocol {
     /// - Parameters:
     ///   - viewToken: An encrypted token originating from the interactive message of a ShowView block operation.
     ///   - completion: Completion handler with the view response or error.
-    public func describeView(viewToken: String, completion: @escaping (Result<AWSConnectParticipantDescribeViewResponse, Error>) -> Void) {
+    public func describeView(viewToken: String, completion: @escaping (Result<ViewResource, Error>) -> Void) {
         chatService.describeView(viewToken: viewToken) { result in
             DispatchQueue.main.async {
                 completion(result)

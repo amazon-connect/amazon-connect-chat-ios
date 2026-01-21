@@ -24,7 +24,7 @@ protocol ChatServiceProtocol {
     func subscribeToTranscriptList(handleTranscriptList: @escaping (TranscriptData) -> Void) -> AnyCancellable
     func triggerTranscriptListUpdate()
     func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void)
-    func describeView(viewToken: String, completion: @escaping (Result<AWSConnectParticipantDescribeViewResponse, Error>) -> Void)
+    func describeView(viewToken: String, completion: @escaping (Result<ViewResource, Error>) -> Void)
     func configure(config: GlobalConfig)
     func getConnectionDetailsProvider() -> ConnectionDetailsProviderProtocol
     func reset() -> Void
@@ -847,7 +847,7 @@ class ChatService : ChatServiceProtocol {
         }
     }
     
-    func describeView(viewToken: String, completion: @escaping (Result<AWSConnectParticipantDescribeViewResponse, Error>) -> Void) {
+    func describeView(viewToken: String, completion: @escaping (Result<ViewResource, Error>) -> Void) {
         guard let connectionDetails = connectionDetailsProvider.getConnectionDetails(),
               let connectionToken = connectionDetails.connectionToken else {
             let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
@@ -856,7 +856,19 @@ class ChatService : ChatServiceProtocol {
         }
         
         awsClient.describeView(connectionToken: connectionToken, viewToken: viewToken) { result in
-            completion(result)
+            switch result {
+            case .success(let response):
+                let viewResource = ViewResource(
+                    id: response.view?.identifier,
+                    name: response.view?.name,
+                    arn: response.view?.arn,
+                    version: response.view?.version?.intValue,
+                    content: response.view?.content as? [String: Any]
+                )
+                completion(.success(viewResource))
+            case .failure(let error):
+                completion(.failure(error))
+            }
         }
     }
     
