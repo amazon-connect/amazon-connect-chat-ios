@@ -24,6 +24,7 @@ protocol ChatServiceProtocol {
     func subscribeToTranscriptList(handleTranscriptList: @escaping (TranscriptData) -> Void) -> AnyCancellable
     func triggerTranscriptListUpdate()
     func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void)
+    func describeView(viewToken: String, completion: @escaping (Result<AWSConnectParticipantDescribeViewResponse, Error>) -> Void)
     func configure(config: GlobalConfig)
     func getConnectionDetailsProvider() -> ConnectionDetailsProviderProtocol
     func reset() -> Void
@@ -843,6 +844,19 @@ class ChatService : ChatServiceProtocol {
             case .failure(let error):
                 completion(.failure(error))
             }
+        }
+    }
+    
+    func describeView(viewToken: String, completion: @escaping (Result<AWSConnectParticipantDescribeViewResponse, Error>) -> Void) {
+        guard let connectionDetails = connectionDetailsProvider.getConnectionDetails(),
+              let connectionToken = connectionDetails.connectionToken else {
+            let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
+            completion(.failure(error))
+            return
+        }
+        
+        awsClient.describeView(connectionToken: connectionToken, viewToken: viewToken) { result in
+            completion(result)
         }
     }
     

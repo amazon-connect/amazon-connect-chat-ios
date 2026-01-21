@@ -343,6 +343,10 @@ class MyFullCustomClient: AWSClient {
     override func getAttachment(connectionToken: String, attachmentId: String, completion: @escaping (Result<AWSConnectParticipantGetAttachmentResponse, Error>) -> Void) {
         // Completely custom attachment download
     }
+    
+    override func describeView(connectionToken: String, viewToken: String, completion: @escaping (Result<AWSConnectParticipantDescribeViewResponse, Error>) -> Void) {
+        // Completely custom view resource retrieval
+    }
 }
 ```
 
@@ -382,6 +386,7 @@ Your custom client can override any or all of these ACPS methods from the `AWSCl
 | `startAttachmentUpload` | Initiate file uploads | `connectionToken`, `contentType`, `attachmentName`, `attachmentSizeInBytes` |
 | `completeAttachmentUpload` | Complete file uploads | `connectionToken`, `attachmentIds` |
 | `getAttachment` | Download attachments | `connectionToken`, `attachmentId` |
+| `describeView` | Retrieve view resource metadata | `connectionToken`, `viewToken` |
 
 #### Use Cases
 
@@ -769,6 +774,22 @@ func resendFailedMessage(messageId: String, completion: @escaping (Result<Void, 
   * messageId The Id of the message that failed to be sent.
   * Type: `String`
   
+--------------------
+
+#### `ChatSession.describeView`
+Retrieves a view resource object containing metadata and content necessary to render the view.
+
+```
+func describeView(viewToken: String, completion: @escaping (Result<AWSConnectParticipantDescribeViewResponse, Error>) -> Void)
+```
+
+* `viewToken`
+  * An encrypted token originating from the interactive message of a ShowView block operation.
+  * Type: `String`
+* `completion`
+  * The completion handler to call when the view retrieval is complete.
+  * Type: `(Result<AWSConnectParticipantDescribeViewResponse, Error>) -> Void`
+
 --------------------
 
 #### `ChatSession.isChatSessionActive`
