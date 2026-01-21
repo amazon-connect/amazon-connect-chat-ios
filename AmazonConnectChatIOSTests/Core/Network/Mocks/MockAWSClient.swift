@@ -14,6 +14,7 @@ class MockAWSClient: AWSClient {
     var startAttachmentUploadResult: Result<AWSConnectParticipantStartAttachmentUploadResponse, Error>?
     var completeAttachmentUploadResult: Result<AWSConnectParticipantCompleteAttachmentUploadResponse, Error>?
     var getAttachmentResult: Result<AWSConnectParticipantGetAttachmentResponse, Error>?
+    var describeViewResult: Result<AWSConnectParticipantDescribeViewResponse, Error>?
     var numTypingEventCalled: Int = 0
     var numGetTranscriptCalled: Int = 0
 
@@ -65,6 +66,12 @@ class MockAWSClient: AWSClient {
     
     override func getAttachment(connectionToken: String, attachmentId: String, completion: @escaping (Result<AWSConnectParticipantGetAttachmentResponse, Error>) -> Void) {
         if let result = getAttachmentResult {
+            completion(result)
+        }
+    }
+    
+    override func describeView(connectionToken: String, viewToken: String, completion: @escaping (Result<AWSConnectParticipantDescribeViewResponse, Error>) -> Void) {
+        if let result = describeViewResult {
             completion(result)
         }
     }
