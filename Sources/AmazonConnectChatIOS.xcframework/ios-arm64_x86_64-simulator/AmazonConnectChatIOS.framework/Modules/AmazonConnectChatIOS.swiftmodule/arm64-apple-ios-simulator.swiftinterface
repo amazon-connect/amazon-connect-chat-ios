@@ -1,7 +1,7 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 6.0.2 effective-5.10 (swiftlang-6.0.2.1.2 clang-1600.0.26.4)
-// swift-module-flags: -target arm64-apple-ios15.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-bare-slash-regex -module-name AmazonConnectChatIOS
-// swift-module-flags-ignorable: -no-verify-emitted-module-interface
+// swift-compiler-version: Apple Swift version 6.2.1 effective-5.10 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)
+// swift-module-flags: -target arm64-apple-ios15.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name AmazonConnectChatIOS
+// swift-module-flags-ignorable: -no-verify-emitted-module-interface -formal-cxx-interoperability-mode=off -interface-compiler-version 6.2.1
 import AWSConnectParticipant
 import AWSCore
 @_exported import AmazonConnectChatIOS
@@ -21,17 +21,27 @@ public enum WebSocketErrorCodes : Swift.Int {
   case BAD_SERVER_RESPONSE
   case SOFTWARE_ABORT
   case OPERATION_TIMED_OUT
+  #if compiler(>=5.3) && $NonescapableTypes
   public init?(rawValue: Swift.Int)
+  #endif
   public typealias RawValue = Swift.Int
   public var rawValue: Swift.Int {
     get
   }
 }
 public struct ConnectionDetails {
+  #if compiler(>=5.3) && $NonescapableTypes
   public init(websocketUrl: Swift.String?, connectionToken: Swift.String?, expiry: Foundation.Date?)
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   public func getWebsocketUrl() -> Swift.String?
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   public func getConnectionToken() -> Swift.String?
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   public func getExpiry() -> Foundation.Date?
+  #endif
 }
 public struct Constants {
   public static let QUICK_REPLY: Swift.String
@@ -51,40 +61,93 @@ public class TranscriptResponse : Swift.Equatable {
 public protocol ChatSessionProtocol {
   func configure(config: AmazonConnectChatIOS.GlobalConfig)
   func getConnectionDetailsProvider() -> any AmazonConnectChatIOS.ConnectionDetailsProviderProtocol
+  #if compiler(>=5.3) && $NonescapableTypes
   func connect(chatDetails: AmazonConnectChatIOS.ChatDetails, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   func disconnect(completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  #endif
   func suspendWebSocketConnection()
   func resumeWebSocketConnection()
   func reset()
+  #if compiler(>=5.3) && $NonescapableTypes
   func sendMessage(contentType: AmazonConnectChatIOS.ContentType, message: Swift.String, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   func resendFailedMessage(messageId: Swift.String, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   func sendEvent(event: AmazonConnectChatIOS.ContentType, content: Swift.String, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  #endif
   func sendMessageReceipt(for transcriptItem: AmazonConnectChatIOS.TranscriptItem, eventType: AmazonConnectChatIOS.MessageReceiptType)
+  #if compiler(>=5.3) && $NonescapableTypes
   func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: Foundation.NSNumber?, nextToken: Swift.String?, startPosition: Swift.String?, completion: @escaping (Swift.Result<AmazonConnectChatIOS.TranscriptResponse, any Swift.Error>) -> Swift.Void)
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   func sendAttachment(file: Foundation.URL, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   func downloadAttachment(attachmentId: Swift.String, filename: Swift.String, completion: @escaping (Swift.Result<Foundation.URL, any Swift.Error>) -> Swift.Void)
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   func getAttachmentDownloadUrl(attachmentId: Swift.String, completion: @escaping (Swift.Result<Foundation.URL, any Swift.Error>) -> Swift.Void)
+  #endif
   func isChatSessionActive() -> Swift.Bool
+  #if compiler(>=5.3) && $NonescapableTypes
   var onConnectionEstablished: (() -> Swift.Void)? { get set }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   var onConnectionReEstablished: (() -> Swift.Void)? { get set }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   var onConnectionBroken: (() -> Swift.Void)? { get set }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   var onMessageReceived: ((AmazonConnectChatIOS.TranscriptItem) -> Swift.Void)? { get set }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   var onTranscriptUpdated: ((AmazonConnectChatIOS.TranscriptData) -> Swift.Void)? { get set }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   var onChatEnded: (() -> Swift.Void)? { get set }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   var onDeepHeartbeatFailure: (() -> Swift.Void)? { get set }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   var onParticipantIdle: ((AmazonConnectChatIOS.Event?) -> Swift.Void)? { get set }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   var onParticipantReturned: ((AmazonConnectChatIOS.Event?) -> Swift.Void)? { get set }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   var onAutoDisconnection: ((AmazonConnectChatIOS.Event?) -> Swift.Void)? { get set }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   var onTyping: ((AmazonConnectChatIOS.Event?) -> Swift.Void)? { get set }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   var onReadReceipt: ((AmazonConnectChatIOS.Event?) -> Swift.Void)? { get set }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   var onDeliveredReceipt: ((AmazonConnectChatIOS.Event?) -> Swift.Void)? { get set }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   var onParticipantInvited: ((AmazonConnectChatIOS.Event?) -> Swift.Void)? { get set }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   var onChatRehydrated: ((AmazonConnectChatIOS.Event?) -> Swift.Void)? { get set }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   var onTransferSucceeded: ((AmazonConnectChatIOS.Event?) -> Swift.Void)? { get set }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   var onTransferFailed: ((AmazonConnectChatIOS.Event?) -> Swift.Void)? { get set }
+  #endif
 }
 @_hasMissingDesignatedInitializers public class ChatSession : AmazonConnectChatIOS.ChatSessionProtocol {
   public static let shared: any AmazonConnectChatIOS.ChatSessionProtocol
+  public var globalConfig: AmazonConnectChatIOS.GlobalConfig?
   public var onConnectionEstablished: (() -> Swift.Void)?
   public var onConnectionReEstablished: (() -> Swift.Void)?
   public var onConnectionBroken: (() -> Swift.Void)?
@@ -105,28 +168,80 @@ public protocol ChatSessionProtocol {
   public func isChatSessionActive() -> Swift.Bool
   public func configure(config: AmazonConnectChatIOS.GlobalConfig)
   public func getConnectionDetailsProvider() -> any AmazonConnectChatIOS.ConnectionDetailsProviderProtocol
+  #if compiler(>=5.3) && $NonescapableTypes
   public func connect(chatDetails: AmazonConnectChatIOS.ChatDetails, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   public func getTranscript(scanDirection: AWSConnectParticipantScanDirection? = .backward, sortOrder: AWSConnectParticipantSortKey? = .ascending, maxResults: Foundation.NSNumber? = 30, nextToken: Swift.String? = nil, startPosition: Swift.String? = nil, completion: @escaping (Swift.Result<AmazonConnectChatIOS.TranscriptResponse, any Swift.Error>) -> Swift.Void)
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   public func disconnect(completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  #endif
   public func suspendWebSocketConnection()
   public func resumeWebSocketConnection()
+  #if compiler(>=5.3) && $NonescapableTypes
   public func sendMessage(contentType: AmazonConnectChatIOS.ContentType, message: Swift.String, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   public func resendFailedMessage(messageId: Swift.String, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   public func sendEvent(event: AmazonConnectChatIOS.ContentType, content: Swift.String, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  #endif
   public func sendMessageReceipt(for transcriptItem: AmazonConnectChatIOS.TranscriptItem, eventType: AmazonConnectChatIOS.MessageReceiptType)
+  #if compiler(>=5.3) && $NonescapableTypes
   public func sendAttachment(file: Foundation.URL, completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   public func downloadAttachment(attachmentId: Swift.String, filename: Swift.String, completion: @escaping (Swift.Result<Foundation.URL, any Swift.Error>) -> Swift.Void)
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   public func getAttachmentDownloadUrl(attachmentId: Swift.String, completion: @escaping (Swift.Result<Foundation.URL, any Swift.Error>) -> Swift.Void)
+  #endif
   public func reset()
   @objc deinit
 }
+open class AWSClient {
+  public static let shared: AmazonConnectChatIOS.AWSClient
+  public init()
+  public func configure(with config: AmazonConnectChatIOS.GlobalConfig)
+  #if compiler(>=5.3) && $NonescapableTypes
+  open func createParticipantConnection(participantToken: Swift.String, completion: @escaping (Swift.Result<AmazonConnectChatIOS.ConnectionDetails, any Swift.Error>) -> Swift.Void)
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
+  open func disconnectParticipantConnection(connectionToken: Swift.String, completion: @escaping (Swift.Result<AWSConnectParticipant.AWSConnectParticipantDisconnectParticipantResponse, any Swift.Error>) -> Swift.Void)
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
+  open func sendMessage(connectionToken: Swift.String, contentType: AmazonConnectChatIOS.ContentType, message: Swift.String, completion: @escaping (Swift.Result<AWSConnectParticipant.AWSConnectParticipantSendMessageResponse, any Swift.Error>) -> Swift.Void)
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
+  open func sendEvent(connectionToken: Swift.String, contentType: AmazonConnectChatIOS.ContentType, content: Swift.String = "", completion: @escaping (Swift.Result<AWSConnectParticipant.AWSConnectParticipantSendEventResponse, any Swift.Error>) -> Swift.Void)
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
+  open func startAttachmentUpload(connectionToken: Swift.String, contentType: Swift.String, attachmentName: Swift.String, attachmentSizeInBytes: Swift.Int, completion: @escaping (Swift.Result<AWSConnectParticipant.AWSConnectParticipantStartAttachmentUploadResponse, any Swift.Error>) -> Swift.Void)
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
+  open func completeAttachmentUpload(connectionToken: Swift.String, attachmentIds: [Swift.String], completion: @escaping (Swift.Result<AWSConnectParticipant.AWSConnectParticipantCompleteAttachmentUploadResponse, any Swift.Error>) -> Swift.Void)
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
+  open func getAttachment(connectionToken: Swift.String, attachmentId: Swift.String, completion: @escaping (Swift.Result<AWSConnectParticipant.AWSConnectParticipantGetAttachmentResponse, any Swift.Error>) -> Swift.Void)
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
+  open func getTranscript(getTranscriptArgs: AWSConnectParticipant.AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Swift.Result<AWSConnectParticipant.AWSConnectParticipantGetTranscriptResponse, any Swift.Error>) -> Swift.Void)
+  #endif
+  @objc deinit
+}
 public protocol MessageContent {
+  #if compiler(>=5.3) && $NonescapableTypes
   static func decode(from text: Swift.String) -> (any AmazonConnectChatIOS.MessageContent)?
+  #endif
 }
 public struct PlainTextContent : AmazonConnectChatIOS.MessageContent {
   public let text: Swift.String
   public init(text: Swift.String)
+  #if compiler(>=5.3) && $NonescapableTypes
   public static func decode(from text: Swift.String) -> (any AmazonConnectChatIOS.MessageContent)?
+  #endif
 }
 public struct GenericInteractiveTemplate : Swift.Decodable {
   public let templateType: Swift.String
@@ -164,16 +279,18 @@ public struct QuickReplyContent : AmazonConnectChatIOS.InteractiveContent {
   public let title: Swift.String
   public let subtitle: Swift.String?
   public let options: [Swift.String]
+  #if compiler(>=5.3) && $NonescapableTypes
   public static func decode(from text: Swift.String) -> (any AmazonConnectChatIOS.MessageContent)?
+  #endif
 }
 public struct ListPickerElement : Swift.Codable, Swift.Hashable, Swift.Equatable {
   public let title: Swift.String
   public let subtitle: Swift.String?
   public let imageType: Swift.String?
   public let imageData: Swift.String?
-  public func hash(into hasher: inout Swift.Hasher)
   public static func == (a: AmazonConnectChatIOS.ListPickerElement, b: AmazonConnectChatIOS.ListPickerElement) -> Swift.Bool
   public func encode(to encoder: any Swift.Encoder) throws
+  public func hash(into hasher: inout Swift.Hasher)
   public var hashValue: Swift.Int {
     get
   }
@@ -206,7 +323,9 @@ public struct ListPickerContent : AmazonConnectChatIOS.InteractiveContent {
   public let subtitle: Swift.String?
   public let imageUrl: Swift.String?
   public let options: [AmazonConnectChatIOS.ListPickerElement]
+  #if compiler(>=5.3) && $NonescapableTypes
   public static func decode(from text: Swift.String) -> (any AmazonConnectChatIOS.MessageContent)?
+  #endif
 }
 public struct PanelElement : Swift.Codable {
   public let title: Swift.String
@@ -249,7 +368,9 @@ public struct PanelContent : AmazonConnectChatIOS.InteractiveContent {
   public let imageUrl: Swift.String?
   public let imageDescription: Swift.String?
   public let options: [AmazonConnectChatIOS.PanelElement]
+  #if compiler(>=5.3) && $NonescapableTypes
   public static func decode(from text: Swift.String) -> (any AmazonConnectChatIOS.MessageContent)?
+  #endif
 }
 public struct TimeSlot : Swift.Codable {
   public let date: Swift.String
@@ -300,7 +421,9 @@ public struct TimePickerContent : AmazonConnectChatIOS.InteractiveContent {
   public let timeZoneOffset: Swift.Int?
   public let location: AmazonConnectChatIOS.Location?
   public let timeslots: [AmazonConnectChatIOS.TimeSlot]
+  #if compiler(>=5.3) && $NonescapableTypes
   public static func decode(from text: Swift.String) -> (any AmazonConnectChatIOS.MessageContent)?
+  #endif
 }
 public struct CarouselElement : Swift.Codable {
   public let templateIdentifier: Swift.String
@@ -332,29 +455,45 @@ public struct CarouselContent : AmazonConnectChatIOS.InteractiveContent {
   public static let templateType: Swift.String
   public let title: Swift.String
   public let elements: [AmazonConnectChatIOS.CarouselElement]
+  #if compiler(>=5.3) && $NonescapableTypes
   public static func decode(from text: Swift.String) -> (any AmazonConnectChatIOS.MessageContent)?
+  #endif
 }
 public protocol ConnectionDetailsProviderProtocol {
   func updateChatDetails(newDetails: AmazonConnectChatIOS.ChatDetails)
+  #if compiler(>=5.3) && $NonescapableTypes
   func getConnectionDetails() -> AmazonConnectChatIOS.ConnectionDetails?
+  #endif
   func updateConnectionDetails(newDetails: AmazonConnectChatIOS.ConnectionDetails)
+  #if compiler(>=5.3) && $NonescapableTypes
   func getChatDetails() -> AmazonConnectChatIOS.ChatDetails?
+  #endif
   func isChatSessionActive() -> Swift.Bool
   func setChatSessionState(isActive: Swift.Bool)
   func reset()
 }
 public protocol EventProtocol : AmazonConnectChatIOS.TranscriptItemProtocol {
+  #if compiler(>=5.3) && $NonescapableTypes
   var participant: Swift.String? { get set }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   var text: Swift.String? { get set }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   var displayName: Swift.String? { get set }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   var eventDirection: AmazonConnectChatIOS.MessageDirection? { get set }
+  #endif
 }
 public class Event : AmazonConnectChatIOS.TranscriptItem, AmazonConnectChatIOS.EventProtocol {
   public var participant: Swift.String?
   public var text: Swift.String?
   public var displayName: Swift.String?
   public var eventDirection: AmazonConnectChatIOS.MessageDirection?
+  #if compiler(>=5.3) && $NonescapableTypes
   public init(text: Swift.String? = nil, timeStamp: Swift.String, contentType: Swift.String, messageId: Swift.String, displayName: Swift.String? = nil, participant: Swift.String? = nil, eventDirection: AmazonConnectChatIOS.MessageDirection? = .Common, serializedContent: [Swift.String : Any])
+  #endif
   @objc deinit
 }
 public protocol TranscriptItemProtocol : Combine.ObservableObject, Swift.Hashable, Swift.Identifiable {
@@ -362,7 +501,9 @@ public protocol TranscriptItemProtocol : Combine.ObservableObject, Swift.Hashabl
   var persistentId: Swift.String { get }
   var timeStamp: Swift.String { get }
   var contentType: Swift.String { get set }
+  #if compiler(>=5.3) && $NonescapableTypes
   var serializedContent: [Swift.String : Any]? { get set }
+  #endif
 }
 public class TranscriptItem : AmazonConnectChatIOS.TranscriptItemProtocol {
   public var id: Swift.String {
@@ -376,7 +517,9 @@ public class TranscriptItem : AmazonConnectChatIOS.TranscriptItemProtocol {
   }
   public var contentType: Swift.String
   public var serializedContent: [Swift.String : Any]?
+  #if compiler(>=5.3) && $NonescapableTypes
   public init(timeStamp: Swift.String, contentType: Swift.String, id: Swift.String?, serializedContent: [Swift.String : Any]?)
+  #endif
   public static func == (lhs: AmazonConnectChatIOS.TranscriptItem, rhs: AmazonConnectChatIOS.TranscriptItem) -> Swift.Bool
   public func hash(into hasher: inout Swift.Hasher)
   public typealias ID = Swift.String
@@ -389,7 +532,9 @@ public class TranscriptItem : AmazonConnectChatIOS.TranscriptItemProtocol {
 public struct TranscriptData {
   public let transcriptList: [AmazonConnectChatIOS.TranscriptItem]
   public let previousTranscriptNextToken: Swift.String?
+  #if compiler(>=5.3) && $NonescapableTypes
   public init(transcriptList: [AmazonConnectChatIOS.TranscriptItem], previousTranscriptNextToken: Swift.String?)
+  #endif
 }
 public enum AttachmentTypes : Swift.String {
   case csv
@@ -408,7 +553,9 @@ public enum AttachmentTypes : Swift.String {
   case wav
   case xls
   case xlsx
+  #if compiler(>=5.3) && $NonescapableTypes
   public init?(rawValue: Swift.String)
+  #endif
   public typealias RawValue = Swift.String
   public var rawValue: Swift.String {
     get
@@ -428,10 +575,15 @@ public enum MessageStatus {
   }
 }
 public protocol MetadataProtocol : AmazonConnectChatIOS.TranscriptItemProtocol {
+  #if compiler(>=5.3) && $NonescapableTypes
   var status: AmazonConnectChatIOS.MessageStatus? { get set }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   var eventDirection: AmazonConnectChatIOS.MessageDirection? { get set }
+  #endif
 }
 public class Metadata : AmazonConnectChatIOS.TranscriptItem, AmazonConnectChatIOS.MetadataProtocol {
+  #if compiler(>=5.3) && $NonescapableTypes
   @Combine.Published @_projectedValueProperty($status) public var status: AmazonConnectChatIOS.MessageStatus? {
     get
     @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
@@ -439,11 +591,15 @@ public class Metadata : AmazonConnectChatIOS.TranscriptItem, AmazonConnectChatIO
     @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
     _modify
   }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   public var $status: Combine.Published<AmazonConnectChatIOS.MessageStatus?>.Publisher {
     get
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     set
   }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   @Combine.Published @_projectedValueProperty($eventDirection) public var eventDirection: AmazonConnectChatIOS.MessageDirection? {
     get
     @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
@@ -451,12 +607,17 @@ public class Metadata : AmazonConnectChatIOS.TranscriptItem, AmazonConnectChatIO
     @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
     _modify
   }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   public var $eventDirection: Combine.Published<AmazonConnectChatIOS.MessageDirection?>.Publisher {
     get
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     set
   }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   public init(status: AmazonConnectChatIOS.MessageStatus? = nil, messageId: Swift.String? = nil, timeStamp: Swift.String, contentType: Swift.String, eventDirection: AmazonConnectChatIOS.MessageDirection? = .Common, serializedContent: [Swift.String : Any])
+  #endif
   @objc deinit
 }
 public protocol SDKLoggerProtocol {
@@ -480,9 +641,15 @@ public protocol MessageProtocol : AmazonConnectChatIOS.TranscriptItemProtocol {
   var participant: Swift.String { get set }
   var text: Swift.String { get set }
   var contentType: Swift.String { get set }
+  #if compiler(>=5.3) && $NonescapableTypes
   var displayName: Swift.String? { get set }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   var messageDirection: AmazonConnectChatIOS.MessageDirection? { get set }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   var metadata: (any AmazonConnectChatIOS.MetadataProtocol)? { get set }
+  #endif
 }
 public class Message : AmazonConnectChatIOS.TranscriptItem, AmazonConnectChatIOS.MessageProtocol {
   public var participant: Swift.String
@@ -490,6 +657,7 @@ public class Message : AmazonConnectChatIOS.TranscriptItem, AmazonConnectChatIOS
   public var messageDirection: AmazonConnectChatIOS.MessageDirection?
   public var attachmentId: Swift.String?
   public var displayName: Swift.String?
+  #if compiler(>=5.3) && $NonescapableTypes
   @Combine.Published @_projectedValueProperty($metadata) public var metadata: (any AmazonConnectChatIOS.MetadataProtocol)? {
     get
     @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
@@ -497,25 +665,36 @@ public class Message : AmazonConnectChatIOS.TranscriptItem, AmazonConnectChatIOS
     @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
     _modify
   }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   public var $metadata: Combine.Published<(any AmazonConnectChatIOS.MetadataProtocol)?>.Publisher {
     get
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     set
   }
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   public init(participant: Swift.String, text: Swift.String, contentType: Swift.String, messageDirection: AmazonConnectChatIOS.MessageDirection? = nil, timeStamp: Swift.String, attachmentId: Swift.String? = nil, messageId: Swift.String? = nil, displayName: Swift.String? = nil, serializedContent: [Swift.String : Any], metadata: (any AmazonConnectChatIOS.MetadataProtocol)? = nil, persistentId: Swift.String? = nil)
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   public var content: (any AmazonConnectChatIOS.MessageContent)? {
     get
   }
+  #endif
   @objc deinit
 }
 public struct GlobalConfig {
   public var region: AWSCore.AWSRegionType
   public var features: AmazonConnectChatIOS.Features
   public var disableCsm: Swift.Bool
+  public var customAWSClient: AmazonConnectChatIOS.AWSClient?
+  public var customWebSocketURLProvider: ((Swift.String) -> Swift.String)?
   public static var defaultRegion: AWSCore.AWSRegionType {
     get
   }
-  public init(region: AWSCore.AWSRegionType = defaultRegion, features: AmazonConnectChatIOS.Features = .defaultFeatures, disableCsm: Swift.Bool = false)
+  #if compiler(>=5.3) && $NonescapableTypes
+  public init(region: AWSCore.AWSRegionType = defaultRegion, features: AmazonConnectChatIOS.Features = .defaultFeatures, disableCsm: Swift.Bool = false, customAWSClient: AmazonConnectChatIOS.AWSClient? = nil, customWebSocketURLProvider: ((Swift.String) -> Swift.String)? = nil)
+  #endif
 }
 public struct Features {
   public var messageReceipts: AmazonConnectChatIOS.MessageReceipts
@@ -543,7 +722,9 @@ public struct MessageReceipts {
   @objc deinit
 }
 public struct ChatDetails {
+  #if compiler(>=5.3) && $NonescapableTypes
   public init(contactId: Swift.String? = nil, participantId: Swift.String? = nil, participantToken: Swift.String)
+  #endif
 }
 public struct ChatSessionOptions {
 }
@@ -558,6 +739,7 @@ public enum ContentType : Swift.String {
   case ended
   case plainText
   case richText
+  case json
   case interactiveText
   case interactiveResponse
   case authenticationInitiated
@@ -576,7 +758,9 @@ public enum ContentType : Swift.String {
   case participantInvited
   case autoDisconnection
   case chatRehydrated
+  #if compiler(>=5.3) && $NonescapableTypes
   public init?(rawValue: Swift.String)
+  #endif
   public typealias RawValue = Swift.String
   public var rawValue: Swift.String {
     get
@@ -585,7 +769,9 @@ public enum ContentType : Swift.String {
 public enum MessageReceiptType : Swift.String {
   case messageDelivered
   case messageRead
+  #if compiler(>=5.3) && $NonescapableTypes
   public init?(rawValue: Swift.String)
+  #endif
   public typealias RawValue = Swift.String
   public var rawValue: Swift.String {
     get
@@ -596,7 +782,9 @@ public enum WebSocketMessageType : Swift.String {
   case event
   case attachment
   case messageMetadata
+  #if compiler(>=5.3) && $NonescapableTypes
   public init?(rawValue: Swift.String)
+  #endif
   public typealias RawValue = Swift.String
   public var rawValue: Swift.String {
     get

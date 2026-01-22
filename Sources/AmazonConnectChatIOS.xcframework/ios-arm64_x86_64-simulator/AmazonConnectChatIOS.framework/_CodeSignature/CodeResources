@@ -6,7 +6,7 @@
 	<dict>
 		<key>Headers/AmazonConnectChatIOS-Swift.h</key>
 		<data>
-		6zKaCm+jdxkmN/PQZnhaLAnDInk=
+		M/t+Z0M/zZRdJHvN3AvBhFSSvIA=
 		</data>
 		<key>Headers/AmazonConnectChatIOS.h</key>
 		<data>
@@ -14,39 +14,39 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		uHQDInqXEM5qZ7JyS59UzcBlyV8=
+		fHEfynnqie62xUsiZGg/4ky4LtU=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
-		UJ0VOowVqtgcT2B9HcROv/3HQTE=
+		b0lgGz0CTWE0ytZ6U5v/SaVi4G4=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
-		+bGvPgqcblkP8mFTDTnHZa08ckk=
+		sTRk5alTqLpW2b9AVickW8NkSms=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
 		<data>
-		1kr4+UmKstkq0fcubgJpw60jsD4=
+		8GA4J/h9CEEsLxcWmLHmS2AzFLU=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		+bGvPgqcblkP8mFTDTnHZa08ckk=
+		sTRk5alTqLpW2b9AVickW8NkSms=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
-		UJ0VOowVqtgcT2B9HcROv/3HQTE=
+		b0lgGz0CTWE0ytZ6U5v/SaVi4G4=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<data>
-		eXOHCWG0p4QF36ECC1RQxxfF2BM=
+		FrSZlKrT90ABxGflMrMc5OrvuE8=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<data>
-		36WHIbPEcKLYkpG88xcxTsCjB88=
+		hsQ+ZyIWCcNb3BtVyu/DgkOvO3M=
 		</data>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		eXOHCWG0p4QF36ECC1RQxxfF2BM=
+		FrSZlKrT90ABxGflMrMc5OrvuE8=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -63,7 +63,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			/qxOxvjD+2X1n4zfe8g4UNHohw3j1mqRy212DX+1adI=
+			vm8TQX8oBmYhqZwG0VdS+WvxrX4FvFuogssjgOesPOI=
 			</data>
 		</dict>
 		<key>Headers/AmazonConnectChatIOS.h</key>
@@ -77,56 +77,56 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			b9m1MwbMmf8MiP80zRPRgBDdNhA0hUvOqq1k/3Yvo7k=
+			qJtAqzpz4k/rkiS5Rk5ezZTduRIAXeLXKzTlvZ82JQs=
 			</data>
 		</dict>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			JSoe0FuEaHxelMN0UCs39CqnxT16h5ji5h6CKONVWFA=
+			gywjHWAby3Qx2J6U8oKoV5VSh+mgSni5yVXeJzsLWDU=
 			</data>
 		</dict>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			PzebCjKmscymRpgZKASpH5knMIVtqVumDOOYVvahDIk=
+			MswMZ5yuuf8gETENcxOHODyDm3R31SAKN02cFVtQWrc=
 			</data>
 		</dict>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/arm64-apple-ios-simulator.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			JSoe0FuEaHxelMN0UCs39CqnxT16h5ji5h6CKONVWFA=
+			gywjHWAby3Qx2J6U8oKoV5VSh+mgSni5yVXeJzsLWDU=
 			</data>
 		</dict>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			b9m1MwbMmf8MiP80zRPRgBDdNhA0hUvOqq1k/3Yvo7k=
+			qJtAqzpz4k/rkiS5Rk5ezZTduRIAXeLXKzTlvZ82JQs=
 			</data>
 		</dict>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			FXENLwyuU7nssLJBaNrpMdsjDh87RoKViczXIFYRh18=
+			xDC/ctEtrVxJIbJ49JwkXQDPw11Z4IohJ+7l6xUIDk4=
 			</data>
 		</dict>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			4FkzXbGTDXvQ4XXArpCzV93WXIwmpiJSBN4P0JNli7A=
+			4Som1nqQFV3BhoX0cKITGJd8xVhYhmqarhDPmkvx3dU=
 			</data>
 		</dict>
 		<key>Modules/AmazonConnectChatIOS.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			FXENLwyuU7nssLJBaNrpMdsjDh87RoKViczXIFYRh18=
+			xDC/ctEtrVxJIbJ49JwkXQDPw11Z4IohJ+7l6xUIDk4=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
