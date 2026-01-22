@@ -954,8 +954,8 @@ class ChatService : ChatServiceProtocol {
                        let updatedString = String(data: updatedData, encoding: .utf8) {
                         processedItems[index].content = updatedString
                     }
-                case .failure(let error):
-                    print("Failed to describe view: \(error.localizedDescription)")
+                case .failure:
+                    break
                 }
             }
         }
