@@ -1127,6 +1127,7 @@ public class TranscriptItem: TranscriptItemProtocol {
     public var timeStamp: String
     public var contentType: String
     public var serializedContent: [String: Any]?
+    public var viewResource: ViewResource?
     public var persistentId: String
 }
 ```
@@ -1142,6 +1143,9 @@ public class TranscriptItem: TranscriptItemProtocol {
 * `serializedContent`
   * The raw JSON format of the received WebSocket message
   * Type: Array of `String: Any`
+* `viewResource`
+  * Structured ViewResource data for interactive messages with templateType "ViewResource". Contains schema information including Actions, InputSchema, and Template. This property is `nil` for non-ViewResource messages.
+  * Type: `ViewResource?` (See [ViewResource](#viewresource))
 * `persistentId`
   * Id for the message, Unique to each message throughout chat session. This can be used only for tracking purposes by the client.
   * Type: `String`
@@ -1236,6 +1240,42 @@ public class Metadata: TranscriptItem, MetadataProtocol {
 * `eventDirection`
   * This is the direction of the metadata event.
   * Type: `eventDirection` (`Outgoing | Incoming | Common`)
+
+--------
+### ViewResource
+Contains structured schema data for ViewResource interactive messages. This data is automatically extracted and populated in the `viewResource` property of [TranscriptItem](#transcriptitem) for messages with templateType "ViewResource".
+
+```
+public struct ViewResource {
+    public let id: String?
+    public let name: String?
+    public let arn: String?
+    public let version: Int?
+    public let content: [String: Any]?
+}
+```
+* `id`
+  * The ViewResource identifier (typically an ARN)
+  * Type: `String?`
+* `content`
+  * Dictionary containing ViewResource schema fields:
+    * `Actions`: Array of available actions
+    * `InputSchema`: JSON schema for input validation
+    * `Template`: UI template structure with form fields and components
+  * Type: `[String: Any]?`
+
+**Example Usage:**
+```swift
+chatSession.onMessageReceived = { transcriptItem in
+    if let viewResource = transcriptItem.viewResource,
+       let content = viewResource.content {
+        let actions = content["Actions"]
+        let inputSchema = content["InputSchema"]
+        let template = content["Template"]
+        // Use schema data to render interactive UI
+    }
+}
+```
 
 ## Security
 

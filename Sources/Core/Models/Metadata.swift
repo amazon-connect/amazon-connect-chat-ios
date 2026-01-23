@@ -21,9 +21,9 @@ public class Metadata: TranscriptItem, MetadataProtocol {
     @Published public var status: MessageStatus?
     @Published public var eventDirection: MessageDirection?
     
-    public init(status: MessageStatus? = nil, messageId: String? = nil, timeStamp: String, contentType: String, eventDirection: MessageDirection? = .Common, serializedContent: [String: Any]) {
+    public init(status: MessageStatus? = nil, messageId: String? = nil, timeStamp: String, contentType: String, eventDirection: MessageDirection? = .Common, serializedContent: [String: Any], viewResource: ViewResource? = nil) {
         self.status = status
         self.eventDirection = eventDirection
-        super.init(timeStamp: timeStamp, contentType: contentType, id: messageId, serializedContent: serializedContent)
+        super.init(timeStamp: timeStamp, contentType: contentType, id: messageId, serializedContent: serializedContent, viewResource: viewResource)
     }
 }

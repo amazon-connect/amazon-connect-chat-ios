@@ -250,6 +250,25 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
         }
     }
     
+    func extractViewResource(from content: String) -> ViewResource? {
+        guard let data = content.data(using: .utf8),
+              let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let templateType = json["templateType"] as? String,
+              templateType == "ViewResource",
+              let dataContent = json["data"] as? [String: Any],
+              let viewContent = dataContent["content"] as? [String: Any] else {
+            return nil
+        }
+        
+        return ViewResource(
+            id: viewContent["viewId"] as? String,
+            name: nil,
+            arn: nil,
+            version: nil,
+            content: viewContent
+        )
+    }
+    
     func processJsonContentAndGetItem(_ json: [String: Any]) -> TranscriptItem? {
         let content = json["content"] as? String
         
@@ -459,17 +478,21 @@ extension WebsocketManager {
         let messageText = innerJson["Content"] as! String
         let displayName = innerJson["DisplayName"] as! String
         let time = innerJson["AbsoluteTime"] as! String
+        let contentType = innerJson["ContentType"] as! String
 
+        // Only extract ViewResource for interactive messages
+        let viewResource = contentType.contains("interactive") ? extractViewResource(from: messageText) : nil
         
         return Message(
             participant: participantRole,
             text: messageText,
-            contentType: innerJson["ContentType"] as! String,
+            contentType: contentType,
             timeStamp: time,
             messageId: messageId,
             displayName: displayName,
             serializedContent: serializedContent,
-            metadata: (innerJson["MessageMetadata"] != nil) ? handleMetadata(innerJson, serializedContent) as? (any MetadataProtocol) : nil
+            metadata: (innerJson["MessageMetadata"] != nil) ? handleMetadata(innerJson, serializedContent) as? (any MetadataProtocol) : nil,
+            viewResource: viewResource
         )
     }
     
