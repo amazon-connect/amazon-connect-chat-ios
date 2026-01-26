@@ -16,6 +16,7 @@ public protocol MessageProtocol: TranscriptItemProtocol {
     var displayName: String? { get set }
     var messageDirection: MessageDirection? { get set }
     var metadata: (any MetadataProtocol)? { get set }
+    var viewResource: ViewResource? { get set }
 }
 
 public class Message: TranscriptItem, MessageProtocol {
@@ -24,6 +25,7 @@ public class Message: TranscriptItem, MessageProtocol {
     public var messageDirection: MessageDirection?
     public var attachmentId: String?
     public var displayName: String?
+    public var viewResource: ViewResource?
     @Published public var metadata: (any MetadataProtocol)?
 
     public init(participant: String, text: String, contentType: String, messageDirection: MessageDirection? = nil, timeStamp: String, attachmentId: String? = nil, messageId: String? = nil,
@@ -34,7 +36,8 @@ public class Message: TranscriptItem, MessageProtocol {
         self.metadata = metadata
         self.displayName = displayName
         self.attachmentId = attachmentId
-        super.init(timeStamp: timeStamp, contentType: contentType, id: messageId, serializedContent: serializedContent, viewResource: viewResource)
+        self.viewResource = viewResource
+        super.init(timeStamp: timeStamp, contentType: contentType, id: messageId, serializedContent: serializedContent)
     }
     
     public var content: MessageContent? {

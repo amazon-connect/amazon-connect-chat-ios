@@ -9,7 +9,6 @@ public protocol TranscriptItemProtocol: Identifiable, Equatable, Hashable, Obser
     var timeStamp: String { get }
     var contentType: String { get set }
     var serializedContent: [String: Any]? { get set }
-    var viewResource: ViewResource? { get set }
 }
 
 public class TranscriptItem: TranscriptItemProtocol {
@@ -18,14 +17,12 @@ public class TranscriptItem: TranscriptItemProtocol {
     public private(set) var timeStamp: String
     public var contentType: String
     public var serializedContent: [String: Any]?
-    public var viewResource: ViewResource?
 
-    public init(timeStamp: String, contentType: String, id: String?, serializedContent: [String: Any]?, viewResource: ViewResource? = nil) {
+    public init(timeStamp: String, contentType: String, id: String?, serializedContent: [String: Any]?) {
         let randomId = UUID().uuidString
         self.timeStamp = timeStamp
         self.contentType = contentType
         self.serializedContent = serializedContent
-        self.viewResource = viewResource
         self.id = id ?? randomId
         self.persistentId = id ?? randomId
     }

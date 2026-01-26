@@ -830,19 +830,17 @@ class ChatService : ChatServiceProtocol {
                     }
                 }
                 
-                // Process ViewResource messages and fetch view content
-                self?.processViewResourceMessages(transcriptItems) { processedItems in
-                    if let websocketManager = self?.websocketManager {
-                        let formattedItems = websocketManager.formatAndProcessTranscriptItems(processedItems)
-                        let transcriptResponse = TranscriptResponse(
-                            initialContactId: response.initialContactId ?? "",
-                            nextToken: response.nextToken ?? "",
-                            transcript: formattedItems
-                        )
-                        completion(.success(transcriptResponse))
-                    } else {
-                        completion(.failure(NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "WebsocketManager is not available"])))
-                    }
+                // Format and process transcript items
+                if let websocketManager = self?.websocketManager {
+                    let formattedItems = websocketManager.formatAndProcessTranscriptItems(transcriptItems)
+                    let transcriptResponse = TranscriptResponse(
+                        initialContactId: response.initialContactId ?? "",
+                        nextToken: response.nextToken ?? "",
+                        transcript: formattedItems
+                    )
+                    completion(.success(transcriptResponse))
+                } else {
+                    completion(.failure(NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "WebsocketManager is not available"])))
                 }
             case .failure(let error):
                 completion(.failure(error))
@@ -892,78 +890,6 @@ class ChatService : ChatServiceProtocol {
     }
     
     // Process ViewResource messages in transcript and fetch view content
-    private func processViewResourceMessages(_ items: [AWSConnectParticipantItem], completion: @escaping ([AWSConnectParticipantItem]) -> Void) {
-        guard let connectionDetails = connectionDetailsProvider.getConnectionDetails(),
-              let connectionToken = connectionDetails.connectionToken else {
-            completion(items)
-            return
-        }
-        
-        var processedItems = items
-        let group = DispatchGroup()
-        
-        for (index, item) in items.enumerated() {
-            // Check if this is a ViewResource interactive message
-            guard item.contentType == "application/vnd.amazonaws.connect.message.interactive",
-                  let content = item.content,
-                  let data = content.data(using: .utf8),
-                  let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-                  let templateType = json["templateType"] as? String,
-                  templateType == "ViewResource",
-                  let dataContent = json["data"] as? [String: Any],
-                  let viewContent = dataContent["content"] as? [String: Any],
-                  let viewToken = viewContent["viewToken"] as? String else {
-                continue
-            }
-            
-            // Skip if already processed (content dictionary exists with Actions/InputSchema/Template)
-            if let contentDict = viewContent["content"] as? [String: Any],
-               (contentDict["Actions"] != nil || contentDict["InputSchema"] != nil || contentDict["Template"] != nil) {
-                continue
-            }
-            
-            group.enter()
-            awsClient.describeView(connectionToken: connectionToken, viewToken: viewToken) { result in
-                defer { group.leave() }
-                
-                switch result {
-                case .success(let response):
-                    guard let view = response.view, let viewContentObj = view.content else { return }
-                    
-                    // Build view content dictionary
-                    var contentDict: [String: Any] = [:]
-                    if let actions = viewContentObj.actions {
-                        contentDict["Actions"] = actions
-                    }
-                    if let inputSchema = viewContentObj.inputSchema {
-                        contentDict["InputSchema"] = inputSchema
-                    }
-                    if let template = viewContentObj.template {
-                        contentDict["Template"] = template
-                    }
-                    
-                    // Update the transcript item's content
-                    var updatedJson = json
-                    var updatedDataContent = dataContent
-                    var updatedViewContent = viewContent
-                    updatedViewContent["content"] = contentDict
-                    updatedDataContent["content"] = updatedViewContent
-                    updatedJson["data"] = updatedDataContent
-                    
-                    if let updatedData = try? JSONSerialization.data(withJSONObject: updatedJson),
-                       let updatedString = String(data: updatedData, encoding: .utf8) {
-                        processedItems[index].content = updatedString
-                    }
-                case .failure:
-                    break
-                }
-            }
-        }
-        
-        group.notify(queue: .main) {
-            completion(processedItems)
-        }
-    }
     
     func configure(config: GlobalConfig) {
         self.globalConfig = config
