@@ -16,7 +16,6 @@ public protocol MessageProtocol: TranscriptItemProtocol {
     var displayName: String? { get set }
     var messageDirection: MessageDirection? { get set }
     var metadata: (any MetadataProtocol)? { get set }
-    var viewResource: ViewResource? { get set }
 }
 
 public class Message: TranscriptItem, MessageProtocol {
@@ -25,18 +24,16 @@ public class Message: TranscriptItem, MessageProtocol {
     public var messageDirection: MessageDirection?
     public var attachmentId: String?
     public var displayName: String?
-    public var viewResource: ViewResource?
     @Published public var metadata: (any MetadataProtocol)?
 
     public init(participant: String, text: String, contentType: String, messageDirection: MessageDirection? = nil, timeStamp: String, attachmentId: String? = nil, messageId: String? = nil,
-                displayName: String? = nil, serializedContent: [String: Any], metadata: (any MetadataProtocol)? = nil, persistentId: String? = nil, viewResource: ViewResource? = nil) {
+                displayName: String? = nil, serializedContent: [String: Any], metadata: (any MetadataProtocol)? = nil, persistentId: String? = nil) {
         self.participant = participant
         self.text = text
         self.messageDirection = messageDirection
         self.metadata = metadata
         self.displayName = displayName
         self.attachmentId = attachmentId
-        self.viewResource = viewResource
         super.init(timeStamp: timeStamp, contentType: contentType, id: messageId, serializedContent: serializedContent)
     }
     
@@ -73,6 +70,8 @@ public class Message: TranscriptItem, MessageProtocol {
             return PanelContent.decode(from: text)
         case CarouselContent.templateType:
             return CarouselContent.decode(from: text)
+        case ViewResourceContent.templateType:
+            return ViewResourceContent.decode(from: text)
         default:
             SDKLogger.logger.logDebug("Unsupported interactive content type: \(genericTemplate.templateType)")
             return nil

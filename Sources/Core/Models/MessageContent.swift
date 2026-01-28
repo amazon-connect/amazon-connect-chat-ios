@@ -287,4 +287,24 @@ public struct CarouselContent: InteractiveContent {
     }
 }
 
+// MARK: - View Resource Content
+public struct ViewResourceContent: InteractiveContent {
+    public static let templateType = Constants.VIEW_RESOURCE
+    
+    public let viewId: String?
+    public let content: [String: Any]?
+    
+    public static func decode(from text: String) -> MessageContent? {
+        guard let jsonData = text.data(using: .utf8),
+              let json = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any],
+              let dataContent = json["data"] as? [String: Any],
+              let viewContent = dataContent["content"] as? [String: Any] else {
+            return nil
+        }
+        return ViewResourceContent(
+            viewId: viewContent["viewId"] as? String,
+            content: viewContent
+        )
+    }
+}
 
