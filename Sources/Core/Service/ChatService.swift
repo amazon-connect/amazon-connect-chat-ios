@@ -24,6 +24,7 @@ protocol ChatServiceProtocol {
     func subscribeToTranscriptList(handleTranscriptList: @escaping (TranscriptData) -> Void) -> AnyCancellable
     func triggerTranscriptListUpdate()
     func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void)
+    func describeView(viewToken: String, completion: @escaping (Result<ViewResource, Error>) -> Void)
     func configure(config: GlobalConfig)
     func getConnectionDetailsProvider() -> ConnectionDetailsProviderProtocol
     func reset() -> Void
@@ -829,11 +830,12 @@ class ChatService : ChatServiceProtocol {
                     }
                 }
                 
+                // Format and process transcript items
                 if let websocketManager = self?.websocketManager {
                     let formattedItems = websocketManager.formatAndProcessTranscriptItems(transcriptItems)
                     let transcriptResponse = TranscriptResponse(
                         initialContactId: response.initialContactId ?? "",
-                        nextToken: response.nextToken ?? "", // Handle nextToken if it is available in the response
+                        nextToken: response.nextToken ?? "",
                         transcript: formattedItems
                     )
                     completion(.success(transcriptResponse))
@@ -845,6 +847,49 @@ class ChatService : ChatServiceProtocol {
             }
         }
     }
+    
+    func describeView(viewToken: String, completion: @escaping (Result<ViewResource, Error>) -> Void) {
+        guard let connectionDetails = connectionDetailsProvider.getConnectionDetails(),
+              let connectionToken = connectionDetails.connectionToken else {
+            let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
+            completion(.failure(error))
+            return
+        }
+        
+        awsClient.describeView(connectionToken: connectionToken, viewToken: viewToken) { result in
+            switch result {
+            case .success(let response):
+                // Convert AWSConnectParticipantViewContent to dictionary
+                var contentDict: [String: Any]?
+                if let content = response.view?.content {
+                    var dict: [String: Any] = [:]
+                    if let actions = content.actions {
+                        dict["Actions"] = actions
+                    }
+                    if let inputSchema = content.inputSchema {
+                        dict["InputSchema"] = inputSchema
+                    }
+                    if let template = content.template {
+                        dict["Template"] = template
+                    }
+                    contentDict = dict.isEmpty ? nil : dict
+                }
+                
+                let viewResource = ViewResource(
+                    id: response.view?.identifier,
+                    name: response.view?.name,
+                    arn: response.view?.arn,
+                    version: response.view?.version?.intValue,
+                    content: contentDict
+                )
+                completion(.success(viewResource))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    // Process ViewResource messages in transcript and fetch view content
     
     func configure(config: GlobalConfig) {
         self.globalConfig = config

@@ -47,6 +47,7 @@
 		7ED5DEC42BEAFD42001693FC /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED5DEC32BEAFD42001693FC /* Event.swift */; };
 		7ED5DEC62BEB38B8001693FC /* Metadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ED5DEC52BEB38B8001693FC /* Metadata.swift */; };
 		7EF4384A2BFF056400E7F8E9 /* AWSConnectParticipantAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EF438492BFF056400E7F8E9 /* AWSConnectParticipantAdapter.swift */; };
+		85555FC92F21899200747D8C /* ViewResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85555FC82F21899200747D8C /* ViewResource.swift */; };
 		F747263E2BF4143D002B278E /* MetricsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F747263D2BF4143D002B278E /* MetricsUtils.swift */; };
 		F74726442BF418F0002B278E /* MetricsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74726432BF418F0002B278E /* MetricsClient.swift */; };
 		F74726472BF41948002B278E /* MetricsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F74726462BF41948002B278E /* MetricsManager.swift */; };
@@ -116,6 +117,7 @@
 		7ED5DEC32BEAFD42001693FC /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		7ED5DEC52BEB38B8001693FC /* Metadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metadata.swift; sourceTree = "<group>"; };
 		7EF438492BFF056400E7F8E9 /* AWSConnectParticipantAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWSConnectParticipantAdapter.swift; sourceTree = "<group>"; };
+		85555FC82F21899200747D8C /* ViewResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewResource.swift; sourceTree = "<group>"; };
 		F747263D2BF4143D002B278E /* MetricsUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsUtils.swift; sourceTree = "<group>"; };
 		F74726432BF418F0002B278E /* MetricsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsClient.swift; sourceTree = "<group>"; };
 		F74726462BF41948002B278E /* MetricsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsManager.swift; sourceTree = "<group>"; };
@@ -255,6 +257,7 @@
 		7E58A5F02BB604A200965327 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				85555FC82F21899200747D8C /* ViewResource.swift */,
 				7E58A5F82BB605F300965327 /* Message.swift */,
 				7E58A5FE2BB6062300965327 /* ChatEvent.swift */,
 				7E58A5F72BB605F300965327 /* MessageContent.swift */,
@@ -475,6 +478,7 @@
 				7E58A6092BBB460A00965327 /* DefaultHttpClient.swift in Sources */,
 				7E91597B2BC0A92E00821C05 /* Constants.swift in Sources */,
 				7E58A5F92BB605F300965327 /* TranscriptResponse.swift in Sources */,
+				85555FC92F21899200747D8C /* ViewResource.swift in Sources */,
 				7E58A6232BBDDBF900965327 /* ChatSession.swift in Sources */,
 				7E58A6272BBDDE4A00965327 /* AWSClient.swift in Sources */,
 				7E58A5FC2BB605F300965327 /* MessageContent.swift in Sources */,

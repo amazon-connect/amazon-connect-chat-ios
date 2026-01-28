@@ -14,6 +14,7 @@ class MockAWSConnectParticipant: AWSConnectParticipantProtocol {
     var startAttachmentUploadResult: Result<AWSConnectParticipantStartAttachmentUploadResponse, Error>?
     var completeAttachmnetUploadResult: Result<AWSConnectParticipantCompleteAttachmentUploadResponse, Error>?
     var getAttachmentResult: Result<AWSConnectParticipantGetAttachmentResponse, Error>?
+    var describeViewResult: Result<AWSConnectParticipantDescribeViewResponse, Error>?
     
     func createParticipantConnection(_ request: AWSConnectParticipantCreateParticipantConnectionRequest?) -> AWSTask<AWSConnectParticipantCreateParticipantConnectionResponse> {
         let taskCompletionSource = AWSTaskCompletionSource<AWSConnectParticipantCreateParticipantConnectionResponse>()
@@ -137,6 +138,23 @@ class MockAWSConnectParticipant: AWSConnectParticipantProtocol {
     func getAttachment(_ request: AWSConnectParticipantGetAttachmentRequest?) -> AWSTask<AWSConnectParticipantGetAttachmentResponse> {
         let taskCompletionSource = AWSTaskCompletionSource<AWSConnectParticipantGetAttachmentResponse>()
         if let result = getAttachmentResult {
+            switch result {
+            case .success(let response):
+                taskCompletionSource.set(result: response)
+            case .failure(let error):
+                taskCompletionSource.set(error: error)
+            }
+        } else if request == nil {
+            taskCompletionSource.set(error: AWSClient.AWSClientError.requestCreationFailed)
+        } else {
+            taskCompletionSource.set(error: MockError.unexpected)
+        }
+        return taskCompletionSource.task
+    }
+    
+    func describeView(_ request: AWSConnectParticipantDescribeViewRequest?) -> AWSTask<AWSConnectParticipantDescribeViewResponse> {
+        let taskCompletionSource = AWSTaskCompletionSource<AWSConnectParticipantDescribeViewResponse>()
+        if let result = describeViewResult {
             switch result {
             case .success(let response):
                 taskCompletionSource.set(result: response)

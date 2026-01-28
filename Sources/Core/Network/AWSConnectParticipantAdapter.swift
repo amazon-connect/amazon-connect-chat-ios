@@ -13,6 +13,7 @@ protocol AWSConnectParticipantProtocol {
     func startAttachmentUpload(_ request: AWSConnectParticipantStartAttachmentUploadRequest?) -> AWSTask<AWSConnectParticipantStartAttachmentUploadResponse>
     func completeAttachmentUpload(_ request: AWSConnectParticipantCompleteAttachmentUploadRequest?) -> AWSTask<AWSConnectParticipantCompleteAttachmentUploadResponse>
     func getAttachment(_ request: AWSConnectParticipantGetAttachmentRequest?) -> AWSTask<AWSConnectParticipantGetAttachmentResponse>
+    func describeView(_ request: AWSConnectParticipantDescribeViewRequest?) -> AWSTask<AWSConnectParticipantDescribeViewResponse>
 }
 
 class AWSConnectParticipantAdapter: AWSConnectParticipantProtocol {
@@ -91,5 +92,12 @@ class AWSConnectParticipantAdapter: AWSConnectParticipantProtocol {
             return AWSTask(error: NSError(domain: "AWSConnectParticipantAdapter", code: 1001, userInfo: [NSLocalizedDescriptionKey: "Invalid request"]))
         }
         return participant.getAttachment(request)
+    }
+    
+    func describeView(_ request: AWSConnectParticipantDescribeViewRequest?) -> AWSTask<AWSConnectParticipantDescribeViewResponse> {
+        guard let request = request else {
+            return AWSTask(error: NSError(domain: "AWSConnectParticipantAdapter", code: 1001, userInfo: [NSLocalizedDescriptionKey: "Invalid request"]))
+        }
+        return participant.describeView(request)
     }
 }

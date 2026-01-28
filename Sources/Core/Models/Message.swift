@@ -70,6 +70,8 @@ public class Message: TranscriptItem, MessageProtocol {
             return PanelContent.decode(from: text)
         case CarouselContent.templateType:
             return CarouselContent.decode(from: text)
+        case ViewResourceContent.templateType:
+            return ViewResourceContent.decode(from: text)
         default:
             SDKLogger.logger.logDebug("Unsupported interactive content type: \(genericTemplate.templateType)")
             return nil

@@ -287,6 +287,32 @@ open class AWSClient {
         }
     }
     
+    /// Retrieves a view resource object containing metadata and content necessary to render the view.
+    /// - Parameters:
+    ///   - connectionToken: The token for the connection.
+    ///   - viewToken: An encrypted token originating from the interactive message of a ShowView block operation.
+    ///   - completion: Completion handler to handle the success status or error.
+    open func describeView(connectionToken: String, viewToken: String, completion: @escaping (Result<AWSConnectParticipantDescribeViewResponse, Error>) -> Void) {
+        guard let request = AWSConnectParticipantDescribeViewRequest() else {
+            completion(.failure(AWSClientError.requestCreationFailed))
+            return
+        }
+        
+        request.connectionToken = connectionToken
+        request.viewToken = viewToken
+        
+        connectParticipantClient?.describeView(request).continueWith(executor: AWSExecutor.mainThread(), block: { (task: AWSTask<AWSConnectParticipantDescribeViewResponse>) -> AnyObject? in
+            if let error = task.error {
+                completion(.failure(error))
+            } else if let result = task.result {
+                completion(.success(result))
+            } else {
+                completion(.failure(AWSClientError.unknownError))
+            }
+            return nil
+        })
+    }
+    
     /// Enum for client-specific errors.
     enum AWSClientError: Error {
         case requestCreationFailed

@@ -23,6 +23,7 @@ public struct Constants {
     public static let PANEL = "Panel"
     public static let TIME_PICKER = "TimePicker"
     public static let CAROUSEL = "Carousel"
+    public static let VIEW_RESOURCE = "ViewResource"
     
     // For future reference
     struct Error {

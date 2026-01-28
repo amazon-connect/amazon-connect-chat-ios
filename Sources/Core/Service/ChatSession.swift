@@ -248,6 +248,18 @@ public class ChatSession: ChatSessionProtocol {
         }
     }
     
+    /// Retrieves a view resource object containing metadata and content necessary to render the view.
+    /// - Parameters:
+    ///   - viewToken: An encrypted token originating from the interactive message of a ShowView block operation.
+    ///   - completion: Completion handler with the view response or error.
+    public func describeView(viewToken: String, completion: @escaping (Result<ViewResource, Error>) -> Void) {
+        chatService.describeView(viewToken: viewToken) { result in
+            DispatchQueue.main.async {
+                completion(result)
+            }
+        }
+    }
+    
     /// Disconnects the current chat session.
     public func disconnect(completion: @escaping (Result<Void, Error>) -> Void) {
         chatService.disconnectChatSession { success, error in

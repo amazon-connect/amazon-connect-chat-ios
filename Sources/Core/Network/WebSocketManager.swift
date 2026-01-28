@@ -250,6 +250,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
         }
     }
     
+
     func processJsonContentAndGetItem(_ json: [String: Any]) -> TranscriptItem? {
         let content = json["content"] as? String
         
@@ -459,12 +460,12 @@ extension WebsocketManager {
         let messageText = innerJson["Content"] as! String
         let displayName = innerJson["DisplayName"] as! String
         let time = innerJson["AbsoluteTime"] as! String
-
+        let contentType = innerJson["ContentType"] as! String
         
         return Message(
             participant: participantRole,
             text: messageText,
-            contentType: innerJson["ContentType"] as! String,
+            contentType: contentType,
             timeStamp: time,
             messageId: messageId,
             displayName: displayName,
