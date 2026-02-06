@@ -49,6 +49,7 @@ public struct Constants {
   public static let PANEL: Swift.String
   public static let TIME_PICKER: Swift.String
   public static let CAROUSEL: Swift.String
+  public static let VIEW_RESOURCE: Swift.String
 }
 public class TranscriptResponse : Swift.Equatable {
   public static func == (lhs: AmazonConnectChatIOS.TranscriptResponse, rhs: AmazonConnectChatIOS.TranscriptResponse) -> Swift.Bool
@@ -57,6 +58,16 @@ public class TranscriptResponse : Swift.Equatable {
   public var transcript: [AmazonConnectChatIOS.TranscriptItem]
   public init(initialContactId: Swift.String, nextToken: Swift.String, transcript: [AmazonConnectChatIOS.TranscriptItem])
   @objc deinit
+}
+public struct ViewResource {
+  public let id: Swift.String?
+  public let name: Swift.String?
+  public let arn: Swift.String?
+  public let version: Swift.Int?
+  public let content: [Swift.String : Any]?
+  #if compiler(>=5.3) && $NonescapableTypes
+  public init(id: Swift.String?, name: Swift.String?, arn: Swift.String?, version: Swift.Int?, content: [Swift.String : Any]?)
+  #endif
 }
 public protocol ChatSessionProtocol {
   func configure(config: AmazonConnectChatIOS.GlobalConfig)
@@ -175,6 +186,9 @@ public protocol ChatSessionProtocol {
   public func getTranscript(scanDirection: AWSConnectParticipantScanDirection? = .backward, sortOrder: AWSConnectParticipantSortKey? = .ascending, maxResults: Foundation.NSNumber? = 30, nextToken: Swift.String? = nil, startPosition: Swift.String? = nil, completion: @escaping (Swift.Result<AmazonConnectChatIOS.TranscriptResponse, any Swift.Error>) -> Swift.Void)
   #endif
   #if compiler(>=5.3) && $NonescapableTypes
+  public func describeView(viewToken: Swift.String, completion: @escaping (Swift.Result<AmazonConnectChatIOS.ViewResource, any Swift.Error>) -> Swift.Void)
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
   public func disconnect(completion: @escaping (Swift.Result<Swift.Void, any Swift.Error>) -> Swift.Void)
   #endif
   public func suspendWebSocketConnection()
@@ -228,6 +242,9 @@ open class AWSClient {
   #endif
   #if compiler(>=5.3) && $NonescapableTypes
   open func getTranscript(getTranscriptArgs: AWSConnectParticipant.AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Swift.Result<AWSConnectParticipant.AWSConnectParticipantGetTranscriptResponse, any Swift.Error>) -> Swift.Void)
+  #endif
+  #if compiler(>=5.3) && $NonescapableTypes
+  open func describeView(connectionToken: Swift.String, viewToken: Swift.String, completion: @escaping (Swift.Result<AWSConnectParticipant.AWSConnectParticipantDescribeViewResponse, any Swift.Error>) -> Swift.Void)
   #endif
   @objc deinit
 }
@@ -455,6 +472,14 @@ public struct CarouselContent : AmazonConnectChatIOS.InteractiveContent {
   public static let templateType: Swift.String
   public let title: Swift.String
   public let elements: [AmazonConnectChatIOS.CarouselElement]
+  #if compiler(>=5.3) && $NonescapableTypes
+  public static func decode(from text: Swift.String) -> (any AmazonConnectChatIOS.MessageContent)?
+  #endif
+}
+public struct ViewResourceContent : AmazonConnectChatIOS.InteractiveContent {
+  public static let templateType: Swift.String
+  public let viewId: Swift.String?
+  public let content: [Swift.String : Any]?
   #if compiler(>=5.3) && $NonescapableTypes
   public static func decode(from text: Swift.String) -> (any AmazonConnectChatIOS.MessageContent)?
   #endif

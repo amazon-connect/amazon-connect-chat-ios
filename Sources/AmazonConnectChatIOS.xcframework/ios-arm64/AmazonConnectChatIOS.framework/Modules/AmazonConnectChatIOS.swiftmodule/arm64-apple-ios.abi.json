@@ -772,6 +772,53 @@
                 "accessorKind": "get"
               }
             ]
+          },
+          {
+            "kind": "Var",
+            "name": "VIEW_RESOURCE",
+            "printedName": "VIEW_RESOURCE",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:20AmazonConnectChatIOS9ConstantsV13VIEW_RESOURCESSvpZ",
+            "mangledName": "$s20AmazonConnectChatIOS9ConstantsV13VIEW_RESOURCESSvpZ",
+            "moduleName": "AmazonConnectChatIOS",
+            "static": true,
+            "declAttributes": [
+              "HasInitialValue",
+              "HasStorage",
+              "AccessControl"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:20AmazonConnectChatIOS9ConstantsV13VIEW_RESOURCESSvgZ",
+                "mangledName": "$s20AmazonConnectChatIOS9ConstantsV13VIEW_RESOURCESSvgZ",
+                "moduleName": "AmazonConnectChatIOS",
+                "static": true,
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
           }
         ],
         "declKind": "Struct",
@@ -1129,6 +1176,482 @@
             "printedName": "Equatable",
             "usr": "s:SQ",
             "mangledName": "$sSQ"
+          }
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Foundation",
+        "printedName": "Foundation",
+        "declKind": "Import",
+        "moduleName": "AmazonConnectChatIOS",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "ViewResource",
+        "printedName": "ViewResource",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "id",
+            "printedName": "id",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:20AmazonConnectChatIOS12ViewResourceV2idSSSgvp",
+            "mangledName": "$s20AmazonConnectChatIOS12ViewResourceV2idSSSgvp",
+            "moduleName": "AmazonConnectChatIOS",
+            "declAttributes": [
+              "HasStorage",
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:20AmazonConnectChatIOS12ViewResourceV2idSSSgvg",
+                "mangledName": "$s20AmazonConnectChatIOS12ViewResourceV2idSSSgvg",
+                "moduleName": "AmazonConnectChatIOS",
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "name",
+            "printedName": "name",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:20AmazonConnectChatIOS12ViewResourceV4nameSSSgvp",
+            "mangledName": "$s20AmazonConnectChatIOS12ViewResourceV4nameSSSgvp",
+            "moduleName": "AmazonConnectChatIOS",
+            "declAttributes": [
+              "HasStorage",
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:20AmazonConnectChatIOS12ViewResourceV4nameSSSgvg",
+                "mangledName": "$s20AmazonConnectChatIOS12ViewResourceV4nameSSSgvg",
+                "moduleName": "AmazonConnectChatIOS",
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "arn",
+            "printedName": "arn",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:20AmazonConnectChatIOS12ViewResourceV3arnSSSgvp",
+            "mangledName": "$s20AmazonConnectChatIOS12ViewResourceV3arnSSSgvp",
+            "moduleName": "AmazonConnectChatIOS",
+            "declAttributes": [
+              "HasStorage",
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:20AmazonConnectChatIOS12ViewResourceV3arnSSSgvg",
+                "mangledName": "$s20AmazonConnectChatIOS12ViewResourceV3arnSSSgvg",
+                "moduleName": "AmazonConnectChatIOS",
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "version",
+            "printedName": "version",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.Int?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:20AmazonConnectChatIOS12ViewResourceV7versionSiSgvp",
+            "mangledName": "$s20AmazonConnectChatIOS12ViewResourceV7versionSiSgvp",
+            "moduleName": "AmazonConnectChatIOS",
+            "declAttributes": [
+              "HasStorage",
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.Int?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:20AmazonConnectChatIOS12ViewResourceV7versionSiSgvg",
+                "mangledName": "$s20AmazonConnectChatIOS12ViewResourceV7versionSiSgvg",
+                "moduleName": "AmazonConnectChatIOS",
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "content",
+            "printedName": "content",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "[Swift.String : Any]?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Dictionary",
+                    "printedName": "[Swift.String : Any]",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ProtocolComposition",
+                        "printedName": "Any"
+                      }
+                    ],
+                    "usr": "s:SD"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:20AmazonConnectChatIOS12ViewResourceV7contentSDySSypGSgvp",
+            "mangledName": "$s20AmazonConnectChatIOS12ViewResourceV7contentSDySSypGSgvp",
+            "moduleName": "AmazonConnectChatIOS",
+            "declAttributes": [
+              "HasStorage",
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "[Swift.String : Any]?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Dictionary",
+                        "printedName": "[Swift.String : Any]",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ProtocolComposition",
+                            "printedName": "Any"
+                          }
+                        ],
+                        "usr": "s:SD"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:20AmazonConnectChatIOS12ViewResourceV7contentSDySSypGSgvg",
+                "mangledName": "$s20AmazonConnectChatIOS12ViewResourceV7contentSDySSypGSgvg",
+                "moduleName": "AmazonConnectChatIOS",
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Constructor",
+            "name": "init",
+            "printedName": "init(id:name:arn:version:content:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ViewResource",
+                "printedName": "AmazonConnectChatIOS.ViewResource",
+                "usr": "s:20AmazonConnectChatIOS12ViewResourceV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.Int?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "[Swift.String : Any]?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Dictionary",
+                    "printedName": "[Swift.String : Any]",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ProtocolComposition",
+                        "printedName": "Any"
+                      }
+                    ],
+                    "usr": "s:SD"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Constructor",
+            "usr": "s:20AmazonConnectChatIOS12ViewResourceV2id4name3arn7version7contentACSSSg_A2ISiSgSDySSypGSgtcfc",
+            "mangledName": "$s20AmazonConnectChatIOS12ViewResourceV2id4name3arn7version7contentACSSSg_A2ISiSgSDySSypGSgtcfc",
+            "moduleName": "AmazonConnectChatIOS",
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "init_kind": "Designated"
+          }
+        ],
+        "declKind": "Struct",
+        "usr": "s:20AmazonConnectChatIOS12ViewResourceV",
+        "mangledName": "$s20AmazonConnectChatIOS12ViewResourceV",
+        "moduleName": "AmazonConnectChatIOS",
+        "declAttributes": [
+          "AccessControl",
+          "RawDocComment"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
           }
         ]
       },
@@ -7925,6 +8448,65 @@
           },
           {
             "kind": "Function",
+            "name": "describeView",
+            "printedName": "describeView(viewToken:completion:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Swift.Result<AmazonConnectChatIOS.ViewResource, any Swift.Error>) -> ()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Result",
+                    "printedName": "Swift.Result<AmazonConnectChatIOS.ViewResource, any Swift.Error>",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ViewResource",
+                        "printedName": "AmazonConnectChatIOS.ViewResource",
+                        "usr": "s:20AmazonConnectChatIOS12ViewResourceV"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Error",
+                        "printedName": "any Swift.Error",
+                        "usr": "s:s5ErrorP"
+                      }
+                    ],
+                    "usr": "s:s6ResultO"
+                  }
+                ]
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:20AmazonConnectChatIOS0C7SessionC12describeView9viewToken10completionySS_ys6ResultOyAA0G8ResourceVs5Error_pGctF",
+            "mangledName": "$s20AmazonConnectChatIOS0C7SessionC12describeView9viewToken10completionySS_ys6ResultOyAA0G8ResourceVs5Error_pGctF",
+            "moduleName": "AmazonConnectChatIOS",
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
             "name": "disconnect",
             "printedName": "disconnect(completion:)",
             "children": [
@@ -9133,6 +9715,72 @@
             "declKind": "Func",
             "usr": "s:20AmazonConnectChatIOS9AWSClientC13getTranscript0fG4Args10completionySo024AWSConnectParticipantGetG7RequestC_ys6ResultOySo0jklG8ResponseCs5Error_pGctF",
             "mangledName": "$s20AmazonConnectChatIOS9AWSClientC13getTranscript0fG4Args10completionySo024AWSConnectParticipantGetG7RequestC_ys6ResultOySo0jklG8ResponseCs5Error_pGctF",
+            "moduleName": "AmazonConnectChatIOS",
+            "isOpen": true,
+            "declAttributes": [
+              "AccessControl",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "describeView",
+            "printedName": "describeView(connectionToken:viewToken:completion:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Swift.Result<AWSConnectParticipant.AWSConnectParticipantDescribeViewResponse, any Swift.Error>) -> ()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Result",
+                    "printedName": "Swift.Result<AWSConnectParticipant.AWSConnectParticipantDescribeViewResponse, any Swift.Error>",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AWSConnectParticipantDescribeViewResponse",
+                        "printedName": "AWSConnectParticipant.AWSConnectParticipantDescribeViewResponse",
+                        "usr": "c:objc(cs)AWSConnectParticipantDescribeViewResponse"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Error",
+                        "printedName": "any Swift.Error",
+                        "usr": "s:s5ErrorP"
+                      }
+                    ],
+                    "usr": "s:s6ResultO"
+                  }
+                ]
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:20AmazonConnectChatIOS9AWSClientC12describeView15connectionToken04viewI010completionySS_SSys6ResultOySo029AWSConnectParticipantDescribeG8ResponseCs5Error_pGctF",
+            "mangledName": "$s20AmazonConnectChatIOS9AWSClientC12describeView15connectionToken04viewI010completionySS_SSys6ResultOySo029AWSConnectParticipantDescribeG8ResponseCs5Error_pGctF",
             "moduleName": "AmazonConnectChatIOS",
             "isOpen": true,
             "declAttributes": [
@@ -16720,6 +17368,280 @@
         "moduleName": "AmazonConnectChatIOS",
         "declAttributes": [
           "AccessControl"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "InteractiveContent",
+            "printedName": "InteractiveContent",
+            "usr": "s:20AmazonConnectChatIOS18InteractiveContentP",
+            "mangledName": "$s20AmazonConnectChatIOS18InteractiveContentP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "MessageContent",
+            "printedName": "MessageContent",
+            "usr": "s:20AmazonConnectChatIOS14MessageContentP",
+            "mangledName": "$s20AmazonConnectChatIOS14MessageContentP"
+          }
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "ViewResourceContent",
+        "printedName": "ViewResourceContent",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "templateType",
+            "printedName": "templateType",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:20AmazonConnectChatIOS19ViewResourceContentV12templateTypeSSvpZ",
+            "mangledName": "$s20AmazonConnectChatIOS19ViewResourceContentV12templateTypeSSvpZ",
+            "moduleName": "AmazonConnectChatIOS",
+            "static": true,
+            "declAttributes": [
+              "HasInitialValue",
+              "HasStorage",
+              "AccessControl"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:20AmazonConnectChatIOS19ViewResourceContentV12templateTypeSSvgZ",
+                "mangledName": "$s20AmazonConnectChatIOS19ViewResourceContentV12templateTypeSSvgZ",
+                "moduleName": "AmazonConnectChatIOS",
+                "static": true,
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "viewId",
+            "printedName": "viewId",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:20AmazonConnectChatIOS19ViewResourceContentV6viewIdSSSgvp",
+            "mangledName": "$s20AmazonConnectChatIOS19ViewResourceContentV6viewIdSSSgvp",
+            "moduleName": "AmazonConnectChatIOS",
+            "declAttributes": [
+              "HasStorage",
+              "AccessControl"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:20AmazonConnectChatIOS19ViewResourceContentV6viewIdSSSgvg",
+                "mangledName": "$s20AmazonConnectChatIOS19ViewResourceContentV6viewIdSSSgvg",
+                "moduleName": "AmazonConnectChatIOS",
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "content",
+            "printedName": "content",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "[Swift.String : Any]?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Dictionary",
+                    "printedName": "[Swift.String : Any]",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ProtocolComposition",
+                        "printedName": "Any"
+                      }
+                    ],
+                    "usr": "s:SD"
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:20AmazonConnectChatIOS19ViewResourceContentV7contentSDySSypGSgvp",
+            "mangledName": "$s20AmazonConnectChatIOS19ViewResourceContentV7contentSDySSypGSgvp",
+            "moduleName": "AmazonConnectChatIOS",
+            "declAttributes": [
+              "HasStorage",
+              "AccessControl"
+            ],
+            "isLet": true,
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "[Swift.String : Any]?",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Dictionary",
+                        "printedName": "[Swift.String : Any]",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ProtocolComposition",
+                            "printedName": "Any"
+                          }
+                        ],
+                        "usr": "s:SD"
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:20AmazonConnectChatIOS19ViewResourceContentV7contentSDySSypGSgvg",
+                "mangledName": "$s20AmazonConnectChatIOS19ViewResourceContentV7contentSDySSypGSgvg",
+                "moduleName": "AmazonConnectChatIOS",
+                "implicit": true,
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Function",
+            "name": "decode",
+            "printedName": "decode(from:)",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "(any AmazonConnectChatIOS.MessageContent)?",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MessageContent",
+                    "printedName": "any AmazonConnectChatIOS.MessageContent",
+                    "usr": "s:20AmazonConnectChatIOS14MessageContentP"
+                  }
+                ],
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "s:20AmazonConnectChatIOS19ViewResourceContentV6decode4fromAA07MessageG0_pSgSS_tFZ",
+            "mangledName": "$s20AmazonConnectChatIOS19ViewResourceContentV6decode4fromAA07MessageG0_pSgSS_tFZ",
+            "moduleName": "AmazonConnectChatIOS",
+            "static": true,
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "funcSelfKind": "NonMutating"
+          }
+        ],
+        "declKind": "Struct",
+        "usr": "s:20AmazonConnectChatIOS19ViewResourceContentV",
+        "mangledName": "$s20AmazonConnectChatIOS19ViewResourceContentV",
+        "moduleName": "AmazonConnectChatIOS",
+        "declAttributes": [
+          "AccessControl",
+          "RawDocComment"
         ],
         "conformances": [
           {
@@ -27910,6 +28832,13 @@
       "value": "\"Carousel\""
     },
     {
+      "filePath": "\/Volumes\/workplace\/BrazilPackages\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Utils\/Constants.swift",
+      "kind": "StringLiteral",
+      "offset": 1011,
+      "length": 14,
+      "value": "\"ViewResource\""
+    },
+    {
       "filePath": "\/Volumes\/workplace\/BrazilPackages\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Models\/TranscriptResponse.swift",
       "kind": "StringLiteral",
       "offset": 814,
@@ -27954,63 +28883,63 @@
     {
       "filePath": "\/Volumes\/workplace\/BrazilPackages\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "Array",
-      "offset": 2463,
+      "offset": 2565,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Volumes\/workplace\/BrazilPackages\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "Array",
-      "offset": 2778,
+      "offset": 2880,
       "length": 2,
       "value": "[]"
     },
     {
       "filePath": "\/Volumes\/workplace\/BrazilPackages\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "BooleanLiteral",
-      "offset": 3257,
+      "offset": 3359,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Volumes\/workplace\/BrazilPackages\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "Dictionary",
-      "offset": 3583,
+      "offset": 3685,
       "length": 3,
       "value": "[]"
     },
     {
       "filePath": "\/Volumes\/workplace\/BrazilPackages\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "Dictionary",
-      "offset": 3646,
+      "offset": 3748,
       "length": 3,
       "value": "[]"
     },
     {
       "filePath": "\/Volumes\/workplace\/BrazilPackages\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "Dictionary",
-      "offset": 3706,
+      "offset": 3808,
       "length": 3,
       "value": "[]"
     },
     {
       "filePath": "\/Volumes\/workplace\/BrazilPackages\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "BooleanLiteral",
-      "offset": 7894,
+      "offset": 7996,
       "length": 4,
       "value": "true"
     },
     {
       "filePath": "\/Volumes\/workplace\/BrazilPackages\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "FloatLiteral",
-      "offset": 10446,
+      "offset": 10548,
       "length": 3,
       "value": "0.0"
     },
     {
       "filePath": "\/Volumes\/workplace\/BrazilPackages\/AmazonConnectChatIOS\/src\/AmazonConnectChatIOS\/amazon-connect-chat-ios\/Sources\/Core\/Service\/ChatService.swift",
       "kind": "BooleanLiteral",
-      "offset": 11568,
+      "offset": 11670,
       "length": 4,
       "value": "true"
     },
