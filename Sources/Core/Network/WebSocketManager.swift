@@ -455,12 +455,12 @@ extension WebsocketManager {
     
     // MARK: - Handle Events
     func handleMessage(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {
-        let participantRole = innerJson["ParticipantRole"] as! String
-        let messageId = innerJson["Id"] as! String
-        let messageText = innerJson["Content"] as! String
-        let displayName = innerJson["DisplayName"] as! String
-        let time = innerJson["AbsoluteTime"] as! String
-        let contentType = innerJson["ContentType"] as! String
+        let participantRole = innerJson["ParticipantRole"] as? String ?? ""
+        let messageId = innerJson["Id"] as? String ?? ""
+        let messageText = innerJson["Content"] as? String ?? ""
+        let displayName = innerJson["DisplayName"] as? String ?? ""
+        let time = innerJson["AbsoluteTime"] as? String ?? ""
+        let contentType = innerJson["ContentType"] as? String ?? ""
         
         return Message(
             participant: participantRole,
@@ -475,10 +475,10 @@ extension WebsocketManager {
     }
     
     func handleAttachment(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem?  {
-        let participantRole = innerJson["ParticipantRole"] as! String
-        let messageId = innerJson["Id"] as! String
-        let time = innerJson["AbsoluteTime"] as! String
-        let displayName = innerJson["DisplayName"] as! String
+        let participantRole = innerJson["ParticipantRole"] as? String ?? ""
+        let messageId = innerJson["Id"] as? String ?? ""
+        let time = innerJson["AbsoluteTime"] as? String ?? ""
+        let displayName = innerJson["DisplayName"] as? String ?? ""
 
         var attachmentName: String? = nil
         var contentType: String? = nil
@@ -510,14 +510,14 @@ extension WebsocketManager {
     }
     
     func handleParticipantEvent(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {
-        let participantRole = innerJson["ParticipantRole"] as! String
-        let time = innerJson["AbsoluteTime"] as! String
-        let displayName = innerJson["DisplayName"] as! String
-        let messageId = innerJson["Id"] as! String
+        let participantRole = innerJson["ParticipantRole"] as? String ?? ""
+        let time = innerJson["AbsoluteTime"] as? String ?? ""
+        let displayName = innerJson["DisplayName"] as? String ?? ""
+        let messageId = innerJson["Id"] as? String ?? ""
 
         return Event(
             timeStamp: time,
-            contentType: innerJson["ContentType"] as! String,
+            contentType: innerJson["ContentType"] as? String ?? "",
             messageId: messageId,
             displayName: displayName,
             participant: participantRole,
@@ -527,15 +527,15 @@ extension WebsocketManager {
     }
     
     func handleTyping(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem {
-        let participantRole = innerJson["ParticipantRole"] as! String
-        let time = innerJson["AbsoluteTime"] as! String
-        let displayName = innerJson["DisplayName"] as! String
-        let messageId = innerJson["Id"] as! String
+        let participantRole = innerJson["ParticipantRole"] as? String ?? ""
+        let time = innerJson["AbsoluteTime"] as? String ?? ""
+        let displayName = innerJson["DisplayName"] as? String ?? ""
+        let messageId = innerJson["Id"] as? String ?? ""
         let isFromPastSession = innerJson["IsFromPastSession"] as? Bool ?? false
 
         let event = Event(
             timeStamp: time,
-            contentType: innerJson["ContentType"] as! String,
+            contentType: innerJson["ContentType"] as? String ?? "",
             messageId: messageId,
             displayName: displayName,
             participant: participantRole,
@@ -552,7 +552,7 @@ extension WebsocketManager {
     }
     
     func handleChatEnded(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {
-        let time = innerJson["AbsoluteTime"] as! String
+        let time = innerJson["AbsoluteTime"] as? String ?? ""
         let isFromPastSession = innerJson["IsFromPastSession"] as? Bool ?? false
 
         if !isFromPastSession {
@@ -562,10 +562,10 @@ extension WebsocketManager {
             ConnectionDetailsProvider.shared.setChatSessionState(isActive: false)
         }
         
-        let messageId = innerJson["Id"] as! String
+        let messageId = innerJson["Id"] as? String ?? ""
         return Event(
             timeStamp: time,
-            contentType: innerJson["ContentType"] as! String,
+            contentType: innerJson["ContentType"] as? String ?? "",
             messageId: messageId,
             eventDirection: .Common,
             serializedContent: serializedContent)
@@ -621,11 +621,11 @@ extension WebsocketManager {
     
     
     func handleMetadata(_ innerJson: [String: Any], _ serializedContent: [String: Any]) -> TranscriptItem? {
-        let messageMetadata = innerJson["MessageMetadata"] as! [String: Any]
-        let messageId = messageMetadata["MessageId"] as! String
+        guard let messageMetadata = innerJson["MessageMetadata"] as? [String: Any] else { return nil }
+        let messageId = messageMetadata["MessageId"] as? String ?? (innerJson["Id"] as? String ?? "")
         let receipts = messageMetadata["Receipts"] as? [[String: Any]]
         var status: MessageStatus = .Delivered // Default status
-        let time = innerJson["AbsoluteTime"] as! String
+        let time = innerJson["AbsoluteTime"] as? String ?? ""
         let isFromPastSession = innerJson["IsFromPastSession"] as? Bool ?? false
 
         if let receipts = receipts {
@@ -650,7 +650,7 @@ extension WebsocketManager {
             status: status,
             messageId: messageId,
             timeStamp: time,
-            contentType: innerJson["ContentType"] as! String,
+            contentType: innerJson["ContentType"] as? String ?? "",
             eventDirection: .Outgoing,
             serializedContent: serializedContent
         )

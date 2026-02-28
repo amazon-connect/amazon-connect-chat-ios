@@ -240,6 +240,182 @@ class WebsocketManagerTests: XCTestCase {
     private func createSampleMetadataString() -> String {
         "{\"content\":\"{\\\"AbsoluteTime\\\":\\\"2024-07-14T23:41:28.821Z\\\",\\\"ContentType\\\":\\\"application/vnd.amazonaws.connect.event.message.metadata\\\",\\\"Id\\\":\\\"abcdefgh-abcd-abcd-abcd-abcdefghijkl\\\",\\\"Type\\\":\\\"MESSAGEMETADATA\\\",\\\"MessageMetadata\\\":{\\\"MessageId\\\":\\\"message-id\\\",\\\"Receipts\\\":[{\\\"DeliveredTimestamp\\\":\\\"2024-07-14T23:41:28.735Z\\\",\\\"ReadTimestamp\\\":\\\"2024-07-14T23:41:28.735Z\\\",\\\"RecipientParticipantId\\\":\\\"abcdefgh-abcd-abcd-abcd-abcdefghijkl\\\"}]}}\",\"contentType\":\"application/json\",\"topic\":\"aws/chat\"}"
     }
+
+    // MARK: - Loosened message property tests (GitHub #109 / P382365182)
+
+    func testHandleMessage_missingFields_defaultsToEmpty() {
+        let innerJson: [String: Any] = ["Type": "MESSAGE"]
+        let result = websocketManager.handleMessage(innerJson, [:])
+        guard let msg = result as? Message else {
+            XCTFail("Expected Message"); return
+        }
+        XCTAssertEqual(msg.id, "")
+        XCTAssertEqual(msg.text, "")
+        XCTAssertEqual(msg.participant, "")
+        XCTAssertEqual(msg.displayName, "")
+        XCTAssertEqual(msg.timeStamp, "")
+        XCTAssertEqual(msg.contentType, "")
+    }
+
+    func testHandleMessage_completeFields_parsesCorrectly() {
+        let innerJson: [String: Any] = [
+            "ParticipantRole": "CUSTOMER",
+            "Id": "msg-123",
+            "Content": "Hello",
+            "DisplayName": "Customer",
+            "AbsoluteTime": "2026-02-28T00:00:00Z",
+            "ContentType": "text/plain"
+        ]
+        let result = websocketManager.handleMessage(innerJson, [:])
+        guard let msg = result as? Message else {
+            XCTFail("Expected Message"); return
+        }
+        XCTAssertEqual(msg.id, "msg-123")
+        XCTAssertEqual(msg.text, "Hello")
+        XCTAssertEqual(msg.participant, "CUSTOMER")
+    }
+
+    func testHandleMessage_interactiveWithMetadataNoMessageId() {
+        let innerJson: [String: Any] = [
+            "ParticipantRole": "SYSTEM",
+            "Id": "msg-456",
+            "Content": "{\"templateType\":\"ListPicker\"}",
+            "DisplayName": "BOT",
+            "AbsoluteTime": "2026-02-28T00:00:00Z",
+            "ContentType": "application/vnd.amazonaws.connect.message.interactive",
+            "MessageMetadata": ["Receipts": []]
+        ]
+        let result = websocketManager.handleMessage(innerJson, [:])
+        XCTAssertNotNil(result, "Should not crash on missing MessageId in MessageMetadata")
+    }
+
+    func testHandleMetadata_missingMessageId_fallsBackToOuterId() {
+        let innerJson: [String: Any] = [
+            "AbsoluteTime": "2026-02-28T00:00:00Z",
+            "ContentType": "application/vnd.amazonaws.connect.event.message.metadata",
+            "Id": "fallback-id",
+            "Type": "MESSAGEMETADATA",
+            "MessageMetadata": ["Receipts": []]
+        ]
+        let result = websocketManager.handleMetadata(innerJson, [:])
+        guard let metadata = result as? Metadata else {
+            XCTFail("Expected Metadata"); return
+        }
+        XCTAssertEqual(metadata.id, "fallback-id")
+    }
+
+    func testHandleMetadata_missingMessageIdAndOuterId_defaultsToEmpty() {
+        let innerJson: [String: Any] = [
+            "AbsoluteTime": "2026-02-28T00:00:00Z",
+            "ContentType": "application/vnd.amazonaws.connect.event.message.metadata",
+            "Type": "MESSAGEMETADATA",
+            "MessageMetadata": ["Receipts": []]
+        ]
+        let result = websocketManager.handleMetadata(innerJson, [:])
+        guard let metadata = result as? Metadata else {
+            XCTFail("Expected Metadata"); return
+        }
+        XCTAssertEqual(metadata.id, "")
+    }
+
+    func testHandleMetadata_missingMessageMetadata_returnsNil() {
+        let innerJson: [String: Any] = [
+            "AbsoluteTime": "2026-02-28T00:00:00Z",
+            "ContentType": "application/vnd.amazonaws.connect.event.message.metadata",
+            "Type": "MESSAGEMETADATA"
+        ]
+        let result = websocketManager.handleMetadata(innerJson, [:])
+        XCTAssertNil(result)
+    }
+
+    func testHandleMetadata_completeFields_parsesCorrectly() {
+        let innerJson: [String: Any] = [
+            "AbsoluteTime": "2026-02-28T00:00:00Z",
+            "ContentType": "application/vnd.amazonaws.connect.event.message.metadata",
+            "Type": "MESSAGEMETADATA",
+            "MessageMetadata": [
+                "MessageId": "meta-123",
+                "Receipts": [["ReadTimestamp": "2026-02-28T00:00:00Z", "RecipientParticipantId": "p-1"]]
+            ]
+        ]
+        let result = websocketManager.handleMetadata(innerJson, [:])
+        guard let metadata = result as? Metadata else {
+            XCTFail("Expected Metadata"); return
+        }
+        XCTAssertEqual(metadata.id, "meta-123")
+        XCTAssertEqual(metadata.status, .Read)
+    }
+
+    func testHandleParticipantEvent_missingFields_defaultsToEmpty() {
+        let innerJson: [String: Any] = [
+            "ContentType": "application/vnd.amazonaws.connect.event.participant.joined",
+            "Type": "EVENT"
+        ]
+        let result = websocketManager.handleParticipantEvent(innerJson, [:])
+        guard let event = result as? Event else {
+            XCTFail("Expected Event"); return
+        }
+        XCTAssertEqual(event.id, "")
+        XCTAssertEqual(event.participant, "")
+        XCTAssertEqual(event.displayName, "")
+    }
+
+    func testHandleTyping_missingFields_defaultsToEmpty() {
+        let innerJson: [String: Any] = [
+            "ContentType": "application/vnd.amazonaws.connect.event.typing",
+            "Type": "EVENT"
+        ]
+        let result = websocketManager.handleTyping(innerJson, [:])
+        guard let event = result as? Event else {
+            XCTFail("Expected Event"); return
+        }
+        XCTAssertEqual(event.id, "")
+        XCTAssertEqual(event.displayName, "")
+    }
+
+    func testHandleChatEnded_missingFields_defaultsToEmpty() {
+        let innerJson: [String: Any] = [
+            "ContentType": "application/vnd.amazonaws.connect.event.chat.ended",
+            "Type": "EVENT"
+        ]
+        let result = websocketManager.handleChatEnded(innerJson, [:])
+        guard let event = result as? Event else {
+            XCTFail("Expected Event"); return
+        }
+        XCTAssertEqual(event.id, "")
+        XCTAssertEqual(event.timeStamp, "")
+    }
+
+    func testHandleAttachment_missingFields_defaultsToEmpty() {
+        let innerJson: [String: Any] = [
+            "Type": "ATTACHMENT",
+            "Attachments": [["AttachmentName": "file.pdf", "ContentType": "application/pdf", "AttachmentId": "a-1"]]
+        ]
+        let result = websocketManager.handleAttachment(innerJson, [:])
+        guard let msg = result as? Message else {
+            XCTFail("Expected Message"); return
+        }
+        XCTAssertEqual(msg.id, "")
+        XCTAssertEqual(msg.participant, "")
+        XCTAssertEqual(msg.displayName, "")
+    }
+
+    func testReceiveMetadata_missingMessageId_doesNotCrash() {
+        let expectation = self.expectation(description: "WebSocket Metadata without MessageId")
+        let metadataString = "{\"content\":\"{\\\"AbsoluteTime\\\":\\\"2024-07-14T23:41:28.821Z\\\",\\\"ContentType\\\":\\\"application/vnd.amazonaws.connect.event.message.metadata\\\",\\\"Id\\\":\\\"outer-id\\\",\\\"Type\\\":\\\"MESSAGEMETADATA\\\",\\\"MessageMetadata\\\":{\\\"Receipts\\\":[]}}\",\"contentType\":\"application/json\",\"topic\":\"aws/chat\"}"
+
+        mockWebSocketTask.mockReceiveResult = .success(.string(metadataString))
+        websocketManager.transcriptPublisher.sink { (item, shouldTrigger) in
+            XCTAssertNotNil(item)
+            guard let metadataItem = item as? Metadata else {
+                XCTFail("Expected metadata transcript item type"); return
+            }
+            XCTAssertEqual(metadataItem.id, "outer-id")
+            expectation.fulfill()
+        }.store(in: &cancellables)
+        websocketManager.receiveMessage()
+        waitForExpectations(timeout: 1, handler: nil)
+    }
 }
 
 // Mock WebSocket Task
