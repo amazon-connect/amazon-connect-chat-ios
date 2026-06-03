@@ -20,6 +20,19 @@
             <key>linked</key>
             <false/>
         </dict>
+        <dict>
+            <key>type</key>
+            <string>product_interaction</string>
+            <key>purpose</key>
+            <array>
+                <string>analytics</string>
+                <string>app_functionality</string>
+            </array>
+            <key>optional</key>
+            <true/>
+            <key>linked</key>
+            <false/>
+        </dict>
     </array>
     <key>NSPrivacyAccessedAPITypes</key>
     <array/>
