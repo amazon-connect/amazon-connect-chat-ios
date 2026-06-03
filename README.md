@@ -51,6 +51,8 @@ Then run `pod install` in your project's root directory
 
 >⚠️ Important: Please remember to add 'AWSCore' and 'AWSConnectParticipant' from [AWS IOS SDK](https://github.com/aws-amplify/aws-sdk-ios) while using binaries.
 
+>⚠️ **Xcode version compatibility**: Each release binary is compiled with a specific version of Xcode and Swift. Using the binary with a significantly newer Xcode version may cause linker errors such as `Undefined symbol: ... unsafeMutableAddressor` due to Swift ABI changes between toolchain versions. The Xcode version used to build each release is listed in the release notes. If you are on a newer Xcode version than the one listed, use **Swift Package Manager** (above) instead — SPM compiles the SDK from source with your local toolchain and avoids this issue entirely.
+
 
 #### How to Import the XCFramework
 
