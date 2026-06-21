@@ -420,7 +420,9 @@ extension WebsocketManager {
                 "DisplayName": item.displayName ?? "",
                 "Attachments": attachmentsArray,
                 "IsFromPastSession": true, // Mark all these items as coming from a past session
-                "MessageMetadata": CommonUtils().convertMessageMetadataToDict(item.messageMetadata)
+                "MessageMetadata": CommonUtils().convertMessageMetadataToDict(item.messageMetadata),
+                "ContactId": item.contactId ?? "",
+                "RelatedContactId": item.relatedContactId ?? ""
             ]
 
             // Serialize the dictionary to JSON string

@@ -229,6 +229,69 @@ class WebsocketManagerTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
     }
     
+    // MARK: - Format Transcript Items Tests
+
+    func testFormatTranscriptItems_preservesContactId() {
+        let expectation = self.expectation(description: "Transcript item should contain ContactId and RelatedContactId")
+
+        let item = AWSConnectParticipantItem()!
+        item.identifier = "test-message-id"
+        item.content = "Hello"
+        item.contentType = "text/plain"
+        item.displayName = "Customer"
+        item.absoluteTime = "2024-07-14T22:18:39.241Z"
+        item.participantRole = .customer
+        item.types = .message
+        item.contactId = "test-contact-123"
+        item.relatedContactId = "test-related-456"
+
+        websocketManager.transcriptPublisher.sink { (transcriptItem, _) in
+            guard let serializedContent = transcriptItem.serializedContent,
+                  let contentString = serializedContent["content"] as? String,
+                  let contentData = contentString.data(using: .utf8),
+                  let contentJson = try? JSONSerialization.jsonObject(with: contentData) as? [String: Any] else {
+                XCTFail("Failed to parse serialized content")
+                return
+            }
+            XCTAssertEqual(contentJson["ContactId"] as? String, "test-contact-123")
+            XCTAssertEqual(contentJson["RelatedContactId"] as? String, "test-related-456")
+            expectation.fulfill()
+        }.store(in: &cancellables)
+
+        _ = websocketManager.formatAndProcessTranscriptItems([item])
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+
+    func testFormatTranscriptItems_nilContactIdDefaultsToEmpty() {
+        let expectation = self.expectation(description: "Nil contactId should default to empty string")
+
+        let item = AWSConnectParticipantItem()!
+        item.identifier = "test-message-id"
+        item.content = "Hello"
+        item.contentType = "text/plain"
+        item.displayName = "Customer"
+        item.absoluteTime = "2024-07-14T22:18:39.241Z"
+        item.participantRole = .customer
+        item.types = .message
+        // contactId and relatedContactId left as nil (default)
+
+        websocketManager.transcriptPublisher.sink { (transcriptItem, _) in
+            guard let serializedContent = transcriptItem.serializedContent,
+                  let contentString = serializedContent["content"] as? String,
+                  let contentData = contentString.data(using: .utf8),
+                  let contentJson = try? JSONSerialization.jsonObject(with: contentData) as? [String: Any] else {
+                XCTFail("Failed to parse serialized content")
+                return
+            }
+            XCTAssertEqual(contentJson["ContactId"] as? String, "")
+            XCTAssertEqual(contentJson["RelatedContactId"] as? String, "")
+            expectation.fulfill()
+        }.store(in: &cancellables)
+
+        _ = websocketManager.formatAndProcessTranscriptItems([item])
+        waitForExpectations(timeout: 1, handler: nil)
+    }
+
     private func createSampleWebSocketResultString(textContent:String = "Test", contentType:ContentType = .plainText, type:WebSocketMessageType = .message, participant:String = Constants.CUSTOMER) -> String {
         return "{\"content\":\"{\\\"AbsoluteTime\\\":\\\"2024-07-14T22:18:39.241Z\\\",\\\"Content\\\":\\\"\(textContent)\\\",\\\"ContentType\\\":\\\"\(contentType.rawValue)\\\",\\\"Id\\\":\\\"abcdefgh-abcd-abcd-abcd-abcdefghijkl\\\",\\\"Type\\\":\\\"\(type.rawValue)\\\",\\\"ParticipantId\\\":\\\"abcdefgh-abcd-abcd-abcd-abcdefghijkl\\\",\\\"DisplayName\\\":\\\"Customer\\\",\\\"ParticipantRole\\\":\\\"\(participant)\\\",\\\"InitialContactId\\\":\\\"abcdefgh-abcd-abcd-abcd-abcdefghijkl\\\",\\\"ContactId\\\":\\\"abcdefgh-abcd-abcd-abcd-abcdefghijkl\\\"}\",\"contentType\":\"application/json\",\"topic\":\"aws/chat\"}"
     }
