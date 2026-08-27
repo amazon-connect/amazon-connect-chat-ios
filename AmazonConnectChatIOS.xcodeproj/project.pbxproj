@@ -697,6 +697,7 @@
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -module-interface-preserve-types-as-written";
 				PRODUCT_BUNDLE_IDENTIFIER = com.amazon.connect.chat.AmazonConnectChatIOS;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -730,6 +731,7 @@
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				OTHER_SWIFT_FLAGS = "$(inherited) -Xfrontend -module-interface-preserve-types-as-written";
 				PRODUCT_BUNDLE_IDENTIFIER = com.amazon.connect.chat.AmazonConnectChatIOS;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
