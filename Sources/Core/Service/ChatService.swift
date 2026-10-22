@@ -23,18 +23,40 @@ protocol ChatServiceProtocol {
     func subscribeToTranscriptItem(handleTranscriptItem: @escaping (TranscriptItem) -> Void) -> AnyCancellable
     func subscribeToTranscriptList(handleTranscriptList: @escaping (TranscriptData) -> Void) -> AnyCancellable
     func triggerTranscriptListUpdate()
-    func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void)
+    func getTranscript(scanDirection: ScanDirection?, sortOrder: SortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: ConnectParticipantClientTypes.StartPosition?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void)
     func describeView(viewToken: String, completion: @escaping (Result<ViewResource, Error>) -> Void)
     func configure(config: GlobalConfig)
     func getConnectionDetailsProvider() -> ConnectionDetailsProviderProtocol
     func reset() -> Void
 }
 
+protocol DownloadTaskProtocol {
+    func resume()
+}
+
+extension URLSessionDownloadTask: DownloadTaskProtocol {}
+
+protocol DownloadSessionProtocol {
+    func makeDownloadTask(
+        with url: URL,
+        completionHandler: @escaping @Sendable (URL?, URLResponse?, (any Error)?) -> Void
+    ) -> any DownloadTaskProtocol
+}
+
+extension URLSession: DownloadSessionProtocol {
+    func makeDownloadTask(
+        with url: URL,
+        completionHandler: @escaping @Sendable (URL?, URLResponse?, (any Error)?) -> Void
+    ) -> any DownloadTaskProtocol {
+        downloadTask(with: url, completionHandler: completionHandler)
+    }
+}
+
 class ChatService : ChatServiceProtocol {
     var eventPublisher = PassthroughSubject<ChatEvent, Never>()
     var transcriptItemPublisher = PassthroughSubject<TranscriptItem, Never>()
     var transcriptListPublisher = CurrentValueSubject<(TranscriptData), Never>(TranscriptData(transcriptList:[], previousTranscriptNextToken: nil))
-    var urlSession = URLSession(configuration: .default)
+    var urlSession: any DownloadSessionProtocol = URLSession(configuration: .default)
     var apiClient: APIClientProtocol = APIClient.shared
     var messageReceiptsManager: MessageReceiptsManagerProtocol?
     var websocketManager: WebsocketManagerProtocol?
@@ -280,7 +302,8 @@ class ChatService : ChatServiceProtocol {
             return
         }
         
-        guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
+        guard let connectionToken = connectionDetailsProvider.getConnectionDetails()?.connectionToken,
+              !connectionToken.isEmpty else {
             let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
             completion(false, error)
             return
@@ -288,7 +311,7 @@ class ChatService : ChatServiceProtocol {
         
         messageReceiptsManager?.invalidateTimer()
         
-        awsClient.disconnectParticipantConnection(connectionToken: connectionDetails.connectionToken!) { result in
+        awsClient.disconnectParticipantConnection(connectionToken: connectionToken) { result in
             switch result {
             case .success(_):
                 SDKLogger.logger.logDebug("Participant Disconnected")
@@ -325,7 +348,8 @@ class ChatService : ChatServiceProtocol {
     }
     
     func sendMessage(contentType: ContentType, message: String, completion: @escaping (Bool, Error?) -> Void) {
-        guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
+        guard let connectionToken = connectionDetailsProvider.getConnectionDetails()?.connectionToken,
+              !connectionToken.isEmpty else {
             let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
             completion(false, error)
             return
@@ -335,11 +359,11 @@ class ChatService : ChatServiceProtocol {
         
         self.sendSingleUpdateToClient(for: recentlySentMessage)
         
-        self.awsClient.sendMessage(connectionToken: connectionDetails.connectionToken!, contentType: contentType, message: message) { result in
+        self.awsClient.sendMessage(connectionToken: connectionToken, contentType: contentType, message: message) { result in
             switch result {
             case .success(let response):
                 MetricsClient.shared.triggerCountMetric(metricName: .SendMessage)
-                if let id = response.identifier {
+                if let id = response.id {
                     self.updatePlaceholderMessage(oldId: recentlySentMessage.id, newId: id)
                 }
                 completion(true, nil)
@@ -419,7 +443,8 @@ class ChatService : ChatServiceProtocol {
     }
     
     func sendEvent(event: ContentType, content: String?, completion: @escaping (Bool, Error?) -> Void) {
-        guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
+        guard let connectionToken = connectionDetailsProvider.getConnectionDetails()?.connectionToken,
+              !connectionToken.isEmpty else {
             let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
             completion(false, error)
             return
@@ -440,7 +465,7 @@ class ChatService : ChatServiceProtocol {
             }
         }
         
-        awsClient.sendEvent(connectionToken: connectionDetails.connectionToken!,contentType: event, content: content!) { result in
+        awsClient.sendEvent(connectionToken: connectionToken, contentType: event, content: content ?? "") { result in
             switch result {
             case .success(_):
                 completion(true, nil)
@@ -517,29 +542,22 @@ class ChatService : ChatServiceProtocol {
     }
     
     func sendAttachment(file: URL, completion: @escaping(Bool, Error?) -> Void) {
-        var mimeType: String?
-        var fileSize: Int?
-        
-        if let typeIdentifier = UTType(filenameExtension: file.pathExtension),
-           let mime = typeIdentifier.preferredMIMEType {
-            if AttachmentTypes(rawValue: mime) != nil {
-                mimeType = mime
-            } else {
-                let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "\(mime) is not a supported file type"])
-                completion(false, error)
-                return
-            }
-        } else {
+        guard let typeIdentifier = UTType(filenameExtension: file.pathExtension),
+              let mimeType = typeIdentifier.preferredMIMEType else {
             let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Could not parse MIME type from file URL"])
             completion(false, error)
             return
         }
-        
+
+        guard AttachmentTypes(rawValue: mimeType) != nil else {
+            let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "\(mimeType) is not a supported file type"])
+            completion(false, error)
+            return
+        }
+
         let fileName = file.lastPathComponent
-        
-        if let fileSizeValue = try? file.resourceValues(forKeys: [.fileSizeKey]).fileSize {
-            fileSize = fileSizeValue
-        } else {
+
+        guard let fileSize = try? file.resourceValues(forKeys: [.fileSizeKey]).fileSize else {
             let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Could not get valid file size"])
             completion(false, error)
             return
@@ -563,22 +581,33 @@ class ChatService : ChatServiceProtocol {
                 try FileManager.default.copyItem(at: file, to: tempFilePathUrl)
             } catch let error {
                 completion(false, error)
+                return
             }
         }
         
-        let recentlySentAttachmentMessage = TranscriptItemUtils.createDummyMessage(content: file.lastPathComponent, contentType:mimeType!, status: .Sending, attachmentId: UUID().uuidString, displayName: getRecentDisplayName())
+        let recentlySentAttachmentMessage = TranscriptItemUtils.createDummyMessage(content: file.lastPathComponent, contentType: mimeType, status: .Sending, attachmentId: UUID().uuidString, displayName: getRecentDisplayName())
         
         tempMessageIdToFileUrl[recentlySentAttachmentMessage.id] = tempFilePathUrl
         self.sendSingleUpdateToClient(for: recentlySentAttachmentMessage)
         
-        self.startAttachmentUpload(contentType: mimeType!, attachmentName: fileName, attachmentSizeInBytes: fileSize!) { result in
+        self.startAttachmentUpload(contentType: mimeType, attachmentName: fileName, attachmentSizeInBytes: fileSize) { result in
             switch result {
             case .success(let response):
+                guard let attachmentId = response.attachmentId, !attachmentId.isEmpty else {
+                    let error = NSError(
+                        domain: "ChatService",
+                        code: -1,
+                        userInfo: [NSLocalizedDescriptionKey: "StartAttachmentUpload returned no attachment ID"]
+                    )
+                    self.handleAttachmentUploadFailure(message: recentlySentAttachmentMessage, error: error)
+                    completion(false, error)
+                    return
+                }
                 // Update the dictionary with actual attachmentId
-                self.attachmentIdToTempMessageIdMap[response.attachmentId!] = recentlySentAttachmentMessage.id
-                self.apiClient.uploadAttachment(file: file, response: response) { success, error in
+                self.attachmentIdToTempMessageIdMap[attachmentId] = recentlySentAttachmentMessage.id
+                self.apiClient.uploadAttachment(file: tempFilePathUrl, response: response) { success, error in
                     if success {
-                        self.completeAttachmentUpload(attachmentIds: [response.attachmentId!]) { success, error in
+                        self.completeAttachmentUpload(attachmentIds: [attachmentId]) { success, error in
                             if success {
                                 do {
                                     // Delete the existing file
@@ -592,10 +621,15 @@ class ChatService : ChatServiceProtocol {
                                 completion(false, error)
                             }
                         }
-                    } else if error != nil {
-                        SDKLogger.logger.logError("Attachment upload failed: \(String(describing: error))")
                     } else {
-                        SDKLogger.logger.logError("Attachment upload failed")
+                        let uploadError = error ?? NSError(
+                            domain: "ChatService",
+                            code: -1,
+                            userInfo: [NSLocalizedDescriptionKey: "Attachment upload failed"]
+                        )
+                        SDKLogger.logger.logError("Attachment upload failed: \(uploadError.localizedDescription)")
+                        self.handleAttachmentUploadFailure(message: recentlySentAttachmentMessage, error: uploadError)
+                        completion(false, uploadError)
                     }
                 }
             case .failure(let error):
@@ -617,13 +651,18 @@ class ChatService : ChatServiceProtocol {
         self.sendSingleUpdateToClient(for: message)
     }
     
-    func startAttachmentUpload(contentType: String, attachmentName: String, attachmentSizeInBytes: Int, completion: @escaping (Result<AWSConnectParticipantStartAttachmentUploadResponse, Error>) -> Void) {
-        guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
-            completion(.failure(NSError()))
+    func startAttachmentUpload(contentType: String, attachmentName: String, attachmentSizeInBytes: Int, completion: @escaping (Result<StartAttachmentUploadOutput, Error>) -> Void) {
+        guard let connectionToken = connectionDetailsProvider.getConnectionDetails()?.connectionToken,
+              !connectionToken.isEmpty else {
+            completion(.failure(NSError(
+                domain: "ChatService",
+                code: -1,
+                userInfo: [NSLocalizedDescriptionKey: "No connection details available"]
+            )))
             return
         }
         
-        awsClient.startAttachmentUpload(connectionToken: connectionDetails.connectionToken!, contentType: contentType, attachmentName: attachmentName, attachmentSizeInBytes: attachmentSizeInBytes) { result in
+        awsClient.startAttachmentUpload(connectionToken: connectionToken, contentType: contentType, attachmentName: attachmentName, attachmentSizeInBytes: attachmentSizeInBytes) { result in
             switch result {
             case .success(let response):
                 completion(.success(response))
@@ -634,12 +673,17 @@ class ChatService : ChatServiceProtocol {
     }
     
     func completeAttachmentUpload(attachmentIds: [String], completion: @escaping (Bool, Error?) -> Void) {
-        guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
-            completion(false, NSError())
+        guard let connectionToken = connectionDetailsProvider.getConnectionDetails()?.connectionToken,
+              !connectionToken.isEmpty else {
+            completion(false, NSError(
+                domain: "ChatService",
+                code: -1,
+                userInfo: [NSLocalizedDescriptionKey: "No connection details available"]
+            ))
             return
         }
         
-        awsClient.completeAttachmentUpload(connectionToken: connectionDetails.connectionToken!, attachmentIds: attachmentIds) { result in
+        awsClient.completeAttachmentUpload(connectionToken: connectionToken, attachmentIds: attachmentIds) { result in
             switch result {
             case .success(_):
                 completion(true, nil)
@@ -651,18 +695,27 @@ class ChatService : ChatServiceProtocol {
     }
     
     func getAttachmentDownloadUrl(attachmentId: String, completion: @escaping (Result<URL, Error>) -> Void) {
-        guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
-            completion(.failure(NSError()))
+        guard let connectionToken = connectionDetailsProvider.getConnectionDetails()?.connectionToken,
+              !connectionToken.isEmpty else {
+            completion(.failure(NSError(
+                domain: "ChatService",
+                code: -1,
+                userInfo: [NSLocalizedDescriptionKey: "No connection details available"]
+            )))
             return
         }
         
-        awsClient.getAttachment(connectionToken: connectionDetails.connectionToken!, attachmentId: attachmentId) { result in
+        awsClient.getAttachment(connectionToken: connectionToken, attachmentId: attachmentId) { result in
             switch result {
             case .success(let response):
-                if let url = URL(string: response.url!) {
+                if let responseUrl = response.url, let url = URL(string: responseUrl) {
                     completion(.success(url))
                 } else {
-                    completion(.failure(NSError()))
+                    completion(.failure(NSError(
+                        domain: "ChatService",
+                        code: -1,
+                        userInfo: [NSLocalizedDescriptionKey: "GetAttachment returned an invalid URL"]
+                    )))
                 }
             case .failure(let error):
                 completion(.failure(error))
@@ -690,7 +743,7 @@ class ChatService : ChatServiceProtocol {
         }
     
     func downloadFile(url: URL, filename: String, completion: @escaping (URL?, Error?) -> Void) {
-        let downloadTask = urlSession.downloadTask(with: url) { (tempLocalUrl, response, error) in
+        let downloadTask = urlSession.makeDownloadTask(with: url) { (tempLocalUrl, response, error) in
             if let error = error {
                 SDKLogger.logger.logError("Download error: \(error.localizedDescription)")
                 completion(nil, error)
@@ -737,8 +790,7 @@ class ChatService : ChatServiceProtocol {
         }
 
         // Construct the start position from the last item
-        let startPosition = AWSConnectParticipantStartPosition()
-        startPosition?.identifier = lastItem.id
+        let startPosition = ConnectParticipantClientTypes.StartPosition(id: lastItem.id)
 
         // Fetch the transcript starting from the last item
         fetchTranscriptWith(startPosition: startPosition)
@@ -753,7 +805,7 @@ class ChatService : ChatServiceProtocol {
         return false
     }
 
-    private func fetchTranscriptWith(startPosition: AWSConnectParticipantStartPosition?) {
+    private func fetchTranscriptWith(startPosition: ConnectParticipantClientTypes.StartPosition?) {
         self.getTranscript(scanDirection: .forward, startPosition: startPosition) { [weak self] result in
             switch result {
             case .success(let transcriptResponse):
@@ -761,8 +813,7 @@ class ChatService : ChatServiceProtocol {
                 if let self = self {
                     if let lastItem = transcriptResponse.transcript.last, !(transcriptResponse.nextToken.isEmpty || isItemInInternalTranscript(Id: lastItem.id)) {
                         // Continue fetching if there are more messages to fetch.
-                        var newStartPosition = AWSConnectParticipantStartPosition()
-                        newStartPosition?.identifier = lastItem.id
+                        let newStartPosition = ConnectParticipantClientTypes.StartPosition(id: lastItem.id)
                         self.fetchTranscriptWith(startPosition: newStartPosition)
                     }
                 }
@@ -775,30 +826,30 @@ class ChatService : ChatServiceProtocol {
 
     
     func getTranscript(
-        scanDirection: AWSConnectParticipantScanDirection? = nil,
-        sortOrder: AWSConnectParticipantSortKey? = nil,
+        scanDirection: ScanDirection? = nil,
+        sortOrder: SortKey? = nil,
         maxResults: NSNumber? = nil,
         nextToken: String? = nil,
-        startPosition: AWSConnectParticipantStartPosition? = nil,
+        startPosition: ConnectParticipantClientTypes.StartPosition? = nil,
         completion: @escaping (Result<TranscriptResponse, Error>) -> Void
     ) {
-        guard let connectionDetails = connectionDetailsProvider.getConnectionDetails() else {
+        guard let connectionToken = connectionDetailsProvider.getConnectionDetails()?.connectionToken,
+              !connectionToken.isEmpty else {
             let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
             completion(.failure(error))
             return
         }
         
-        let getTranscriptArgs = AWSConnectParticipantGetTranscriptRequest()
-        getTranscriptArgs?.connectionToken = connectionDetails.connectionToken
-        getTranscriptArgs?.scanDirection = scanDirection ?? .backward
-        getTranscriptArgs?.sortOrder = sortOrder ?? .ascending
-        getTranscriptArgs?.maxResults = maxResults ?? 30
-        getTranscriptArgs?.startPosition = startPosition
-        if ((nextToken?.isEmpty) == false){
-            getTranscriptArgs?.nextToken = nextToken
-        }
+        let getTranscriptArgs = GetTranscriptInput(
+            connectionToken: connectionToken,
+            maxResults: maxResults?.intValue ?? 30,
+            nextToken: (nextToken?.isEmpty == false) ? nextToken : nil,
+            scanDirection: (scanDirection ?? .backward).sdkValue,
+            sortOrder: (sortOrder ?? .ascending).sdkValue,
+            startPosition: startPosition
+        )
         
-        awsClient.getTranscript(getTranscriptArgs: getTranscriptArgs!) { [weak self] result in
+        awsClient.getTranscript(getTranscriptArgs: getTranscriptArgs) { [weak self] result in
             switch result {
             case .success(let response):
                 
@@ -807,21 +858,24 @@ class ChatService : ChatServiceProtocol {
                     return
                 }
                 
-                let isStartPositionDefined = getTranscriptArgs?.startPosition != nil &&
-                    (getTranscriptArgs?.startPosition?.identifier != nil ||
-                     getTranscriptArgs?.startPosition?.absoluteTime != nil ||
-                     getTranscriptArgs?.startPosition?.mostRecent != nil
+                // `mostRecent` is a non-optional Int, so it must be compared against its default
+                // rather than nil-checked, or `isStartPositionDefined` is always true.
+                let requestStartPosition = getTranscriptArgs.startPosition
+                let isStartPositionDefined = requestStartPosition != nil &&
+                    (requestStartPosition?.id != nil ||
+                     requestStartPosition?.absoluteTime != nil ||
+                     (requestStartPosition?.mostRecent ?? 0) != 0
                     )
                 
                 // Ignore setting previousTranscriptNextToken if items aren't going from newest -> oldest.
                 // We also ignore if getTranscript is called with a start position but returns empty transcript
                 // since that is indicative of an invalid StartPosition.
-                if getTranscriptArgs?.scanDirection == .backward && !(isStartPositionDefined && transcriptItems.isEmpty) {
+                if getTranscriptArgs.scanDirection == .backward && !(isStartPositionDefined && transcriptItems.isEmpty) {
                     if let internalTranscript = self?.internalTranscript, internalTranscript.isEmpty || transcriptItems.isEmpty {
                         self?.previousTranscriptNextToken = response.nextToken
                         self?.transcriptListPublisher.send(TranscriptData(transcriptList: internalTranscript, previousTranscriptNextToken: self?.previousTranscriptNextToken))
                     } else {
-                        let oldestTranscriptItem = getTranscriptArgs?.sortOrder == .ascending ? transcriptItems.first : transcriptItems.last
+                        let oldestTranscriptItem = getTranscriptArgs.sortOrder == .ascending ? transcriptItems.first : transcriptItems.last
                         let oldestInternalTranscriptItem = self?.internalTranscript.first
                         
                         if let firstTranscriptItemTime = oldestTranscriptItem?.absoluteTime, let firstInternalTranscriptItemTime = oldestInternalTranscriptItem?.timeStamp, firstTranscriptItemTime <= firstInternalTranscriptItemTime {
@@ -849,8 +903,8 @@ class ChatService : ChatServiceProtocol {
     }
     
     func describeView(viewToken: String, completion: @escaping (Result<ViewResource, Error>) -> Void) {
-        guard let connectionDetails = connectionDetailsProvider.getConnectionDetails(),
-              let connectionToken = connectionDetails.connectionToken else {
+        guard let connectionToken = connectionDetailsProvider.getConnectionDetails()?.connectionToken,
+              !connectionToken.isEmpty else {
             let error = NSError(domain: "ChatService", code: -1, userInfo: [NSLocalizedDescriptionKey: "No connection details available"])
             completion(.failure(error))
             return
@@ -859,7 +913,7 @@ class ChatService : ChatServiceProtocol {
         awsClient.describeView(connectionToken: connectionToken, viewToken: viewToken) { result in
             switch result {
             case .success(let response):
-                // Convert AWSConnectParticipantViewContent to dictionary
+                // Convert the view content into a dictionary
                 var contentDict: [String: Any]?
                 if let content = response.view?.content {
                     var dict: [String: Any] = [:]
@@ -876,10 +930,10 @@ class ChatService : ChatServiceProtocol {
                 }
                 
                 let viewResource = ViewResource(
-                    id: response.view?.identifier,
+                    id: response.view?.id,
                     name: response.view?.name,
                     arn: response.view?.arn,
-                    version: response.view?.version?.intValue,
+                    version: response.view?.version,
                     content: contentDict
                 )
                 completion(.success(viewResource))
@@ -919,7 +973,8 @@ class ChatService : ChatServiceProtocol {
                         }
                     case .failure(let error):
                         let nsError = error as NSError
-                        if nsError.localizedFailureReason == "AccessDeniedException" {
+                        // Custom AWSClient subclasses written for 2.x signal a denied connection with an NSError.
+                        if error is AccessDeniedException || nsError.localizedFailureReason == "AccessDeniedException" {
                             self?.updateTranscriptDict(with: TranscriptItemUtils.createDummyEndedEvent())
                             self?.eventPublisher.send(.chatEnded)
                             ConnectionDetailsProvider.shared.setChatSessionState(isActive: false)

@@ -67,7 +67,7 @@ public protocol ChatSessionProtocol {
     ///   - nextToken: The token for the next set of results.
     ///   - startPosition: The start position for the transcript.
     ///   - completion: The completion handler to call when the transcript retrieval is complete.
-    func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: String?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void)
+    func getTranscript(scanDirection: ScanDirection?, sortOrder: SortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: String?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void)
     
     /// Sends an attachment within the chat session.
     /// - Parameters:
@@ -177,8 +177,6 @@ public class ChatSession: ChatSessionProtocol {
                     self?.onTransferSucceeded?(event)
                 case .transferFailed(let event):
                     self?.onTransferFailed?(event)
-                default:
-                    break
                 }
             }
         }
@@ -228,18 +226,17 @@ public class ChatSession: ChatSessionProtocol {
     
     /// Retrieves the chat transcript.
     public func getTranscript(
-        scanDirection: AWSConnectParticipantScanDirection? = .backward,
-        sortOrder: AWSConnectParticipantSortKey? = .ascending,
+        scanDirection: ScanDirection? = .backward,
+        sortOrder: SortKey? = .ascending,
         maxResults: NSNumber? = 30,
         nextToken: String? = nil,
         startPosition: String? = nil,
         completion: @escaping (Result<TranscriptResponse, Error>) -> Void
     ) {
         // Construct the start position if provided
-        var awsStartPosition: AWSConnectParticipantStartPosition? = nil
+        var awsStartPosition: ConnectParticipantClientTypes.StartPosition? = nil
         if let startPosition = startPosition {
-            awsStartPosition = AWSConnectParticipantStartPosition()
-            awsStartPosition?.identifier = startPosition
+            awsStartPosition = ConnectParticipantClientTypes.StartPosition(id: startPosition)
         }
         chatService.getTranscript(scanDirection: scanDirection, sortOrder: sortOrder, maxResults: maxResults, nextToken: nextToken, startPosition: awsStartPosition) { result in
             DispatchQueue.main.async {

@@ -5,7 +5,7 @@ import Foundation
 import AWSConnectParticipant
 
 protocol APIClientProtocol {
-    func uploadAttachment(file: URL, response: AWSConnectParticipantStartAttachmentUploadResponse, completion: @escaping (Bool, Error?) -> Void)
+    func uploadAttachment(file: URL, response: StartAttachmentUploadOutput, completion: @escaping (Bool, Error?) -> Void)
     func sendMetrics(metricsEndpoint: String, metricList: [Metric], completion: @escaping (Result<PutMetricsResponse, Error>) -> Void)
 }
 
@@ -18,7 +18,7 @@ class APIClient:APIClientProtocol {
         self.httpClient = httpClient
     }
     
-    func uploadAttachment(file: URL, response: AWSConnectParticipantStartAttachmentUploadResponse, completion: @escaping (Bool, Error?) -> Void) {
+    func uploadAttachment(file: URL, response: StartAttachmentUploadOutput, completion: @escaping (Bool, Error?) -> Void) {
         guard let fileData = try? Data(contentsOf: file) else {
             completion(false, NSError(domain: "ChatService", code: 1, userInfo: [NSLocalizedDescriptionKey: "Unable to read file data"]))
             return
@@ -28,6 +28,11 @@ class APIClient:APIClientProtocol {
             completion(false, NSError(domain: "ChatService", code: 1, userInfo: [NSLocalizedDescriptionKey: "Missing upload metadata headers"]))
             return
         }
+
+        guard let uploadUrl = response.uploadMetadata?.url, !uploadUrl.isEmpty else {
+            completion(false, NSError(domain: "ChatService", code: 1, userInfo: [NSLocalizedDescriptionKey: "Missing attachment upload URL"]))
+            return
+        }
         
         let headersToInclude: HttpHeaders = headers.reduce(into: HttpHeaders()) { result, pair in
             if let key = HttpHeader.Key(rawValue: pair.key) {
@@ -35,7 +40,7 @@ class APIClient:APIClientProtocol {
             }
         }
 
-        self.httpClient.putJson((response.uploadMetadata?.url)!, headersToInclude, fileData) {
+        self.httpClient.putJson(uploadUrl, headersToInclude, fileData) {
             completion(true, nil)
         } _: { error in
             completion(false, error)

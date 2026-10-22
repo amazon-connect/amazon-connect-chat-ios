@@ -42,10 +42,10 @@ class MockWebsocketManager: WebsocketManagerProtocol {
         self.mockConnectionStatus = false
     }
     
-    func formatAndProcessTranscriptItems(_ items: [AWSConnectParticipantItem]) -> [TranscriptItem] {
+    func formatAndProcessTranscriptItems(_ items: [ConnectParticipantClientTypes.Item]) -> [TranscriptItem] {
         // Mock implementation of format and process transcript items
         return items.map { item in
-            return TranscriptItem(timeStamp: item.absoluteTime ?? "", contentType: item.contentType ?? "", id: item.identifier, serializedContent: ["content": item.content ?? ""])
+            return TranscriptItem(timeStamp: item.absoluteTime ?? "", contentType: item.contentType ?? "", id: item.id, serializedContent: ["content": item.content ?? ""])
         }
     }
     

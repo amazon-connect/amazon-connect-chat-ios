@@ -7,21 +7,25 @@ import AWSConnectParticipant
 @testable import AmazonConnectChatIOS
 
 
-class MockURLSession: URLSession {
+class MockURLSession: DownloadSessionProtocol {
     var downloadTaskCalled = false
     var mockUrlResult: URL?
     var mockUrlResponse: URLResponse?
     var mockError: (any Error)?
-    
-    override func downloadTask(with url: URL, completionHandler: @escaping @Sendable (URL?, URLResponse?, (any Error)?) -> Void) -> URLSessionDownloadTask {
+
+    func makeDownloadTask(
+        with url: URL,
+        completionHandler: @escaping @Sendable (URL?, URLResponse?, (any Error)?) -> Void
+    ) -> any DownloadTaskProtocol {
+        downloadTaskCalled = true
         completionHandler(mockUrlResult, mockUrlResponse, mockError)
         return MockURLSessionDownloadTask()
     }
 }
 
 
-class MockURLSessionDownloadTask: URLSessionDownloadTask {
-    override func resume() {
+class MockURLSessionDownloadTask: DownloadTaskProtocol {
+    func resume() {
         // No-op: Do nothing
     }
 }

@@ -45,7 +45,7 @@ class MockChatService: ChatService {
     var sendMessageReceiptResult: Result<Void, Error>?
     var sendPendingMessageReceiptsResult: Result<AmazonConnectChatIOS.MessageReceiptType, Error>?
     var sendAttachmentResult: Result<Void, Error>?
-    var startAttachmentUploadResult: Result<AWSConnectParticipantStartAttachmentUploadResponse, Error>?
+    var startAttachmentUploadResult: Result<StartAttachmentUploadOutput, Error>?
     var downloadAttachmentResult: Result<URL, Error>?
     var downloadFileResult: (URL?, Error?)?
     var getAttachmentDownloadUrlResult: Result<URL, Error>?
@@ -215,7 +215,7 @@ class MockChatService: ChatService {
         }
     }
     
-    override func startAttachmentUpload(contentType: String, attachmentName: String, attachmentSizeInBytes: Int, completion: @escaping (Result<AWSConnectParticipantStartAttachmentUploadResponse, Error>) -> Void) {
+    override func startAttachmentUpload(contentType: String, attachmentName: String, attachmentSizeInBytes: Int, completion: @escaping (Result<StartAttachmentUploadOutput, Error>) -> Void) {
 
         numStartAttachmentUploadCalled += 1
         if !mockStartAttachmentUpload {
@@ -322,7 +322,7 @@ class MockChatService: ChatService {
     }
 
 
-    override func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void) {
+    override func getTranscript(scanDirection: ScanDirection?, sortOrder: SortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: ConnectParticipantClientTypes.StartPosition?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void) {
 
         numGetTranscriptCalled += 1
         if !mockGetTranscript {

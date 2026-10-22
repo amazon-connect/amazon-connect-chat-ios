@@ -7,21 +7,19 @@ import AWSConnectParticipant
 
 class MockAPIClient:APIClientProtocol {
     let httpClient: HttpClient
-    var mockUploadAttachment = true
     var mockSendMetrics = true
     
     var uploadAttachmentCalled = false
     var sendMetricsCalled = false
+    var uploadAttachmentResult: (Bool, Error?) = (true, nil)
     
     init(httpClient: HttpClient = DefaultHttpClient()) {
         self.httpClient = httpClient
     }
     
-    func uploadAttachment(file: URL, response: AWSConnectParticipantStartAttachmentUploadResponse, completion: @escaping (Bool, Error?) -> Void) {
-        if mockUploadAttachment {
-            uploadAttachmentCalled = true
-            completion(true, nil)
-        }
+    func uploadAttachment(file: URL, response: StartAttachmentUploadOutput, completion: @escaping (Bool, Error?) -> Void) {
+        uploadAttachmentCalled = true
+        completion(uploadAttachmentResult.0, uploadAttachmentResult.1)
     }
     
     func sendMetrics(metricsEndpoint: String, metricList: [Metric], completion: @escaping (Result<PutMetricsResponse, Error>) -> Void) -> Void {

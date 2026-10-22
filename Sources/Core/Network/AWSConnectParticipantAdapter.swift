@@ -4,100 +4,60 @@
 import Foundation
 import AWSConnectParticipant
 
+/// Injection seam for the generated `ConnectParticipantClient`, which is a `final class` with no
+/// generated protocol and so cannot be mocked directly.
 protocol AWSConnectParticipantProtocol {
-    func createParticipantConnection(_ request: AWSConnectParticipantCreateParticipantConnectionRequest?) -> AWSTask<AWSConnectParticipantCreateParticipantConnectionResponse>
-    func disconnectParticipant(_ request: AWSConnectParticipantDisconnectParticipantRequest?) -> AWSTask<AnyObject>
-    func sendMessage(_ request: AWSConnectParticipantSendMessageRequest?) -> AWSTask<AnyObject>
-    func sendEvent(_ request: AWSConnectParticipantSendEventRequest?) -> AWSTask<AnyObject>
-    func getTranscript(_ request: AWSConnectParticipantGetTranscriptRequest?) -> AWSTask<AWSConnectParticipantGetTranscriptResponse>
-    func startAttachmentUpload(_ request: AWSConnectParticipantStartAttachmentUploadRequest?) -> AWSTask<AWSConnectParticipantStartAttachmentUploadResponse>
-    func completeAttachmentUpload(_ request: AWSConnectParticipantCompleteAttachmentUploadRequest?) -> AWSTask<AWSConnectParticipantCompleteAttachmentUploadResponse>
-    func getAttachment(_ request: AWSConnectParticipantGetAttachmentRequest?) -> AWSTask<AWSConnectParticipantGetAttachmentResponse>
-    func describeView(_ request: AWSConnectParticipantDescribeViewRequest?) -> AWSTask<AWSConnectParticipantDescribeViewResponse>
+    func createParticipantConnection(_ input: CreateParticipantConnectionInput) async throws -> CreateParticipantConnectionOutput
+    func disconnectParticipant(_ input: DisconnectParticipantInput) async throws -> DisconnectParticipantOutput
+    func sendMessage(_ input: SendMessageInput) async throws -> SendMessageOutput
+    func sendEvent(_ input: SendEventInput) async throws -> SendEventOutput
+    func getTranscript(_ input: GetTranscriptInput) async throws -> GetTranscriptOutput
+    func startAttachmentUpload(_ input: StartAttachmentUploadInput) async throws -> StartAttachmentUploadOutput
+    func completeAttachmentUpload(_ input: CompleteAttachmentUploadInput) async throws -> CompleteAttachmentUploadOutput
+    func getAttachment(_ input: GetAttachmentInput) async throws -> GetAttachmentOutput
+    func describeView(_ input: DescribeViewInput) async throws -> DescribeViewOutput
 }
 
-class AWSConnectParticipantAdapter: AWSConnectParticipantProtocol {
-    private let participant: AWSConnectParticipant
+final class AWSConnectParticipantAdapter: AWSConnectParticipantProtocol {
+    private let client: ConnectParticipantClient
 
-    init(participant: AWSConnectParticipant) {
-        self.participant = participant
-    }
-
-    func createParticipantConnection(_ request: AWSConnectParticipantCreateParticipantConnectionRequest?) -> AWSTask<AWSConnectParticipantCreateParticipantConnectionResponse> {
-        guard let request = request else {
-            return AWSTask(error: NSError(domain: "AWSConnectParticipantAdapter", code: 1001, userInfo: [NSLocalizedDescriptionKey: "Invalid request"]))
-        }
-        return participant.createParticipantConnection(request)
+    init(client: ConnectParticipantClient) {
+        self.client = client
     }
 
-    func disconnectParticipant(_ request: AWSConnectParticipantDisconnectParticipantRequest?) -> AWSTask<AnyObject> {
-        guard let request = request else {
-            return AWSTask(error: NSError(domain: "AWSConnectParticipantAdapter", code: 1001, userInfo: [NSLocalizedDescriptionKey: "Invalid request"]))
-        }
-        return participant.disconnectParticipant(request).continueWith { task -> AWSTask<AnyObject> in
-            if let error = task.error {
-                return AWSTask(error: error)
-            }
-            return AWSTask(result: task.result)
-        }
+    func createParticipantConnection(_ input: CreateParticipantConnectionInput) async throws -> CreateParticipantConnectionOutput {
+        try await client.createParticipantConnection(input: input)
     }
 
-    func sendMessage(_ request: AWSConnectParticipantSendMessageRequest?) -> AWSTask<AnyObject> {
-        guard let request = request else {
-            return AWSTask(error: NSError(domain: "AWSConnectParticipantAdapter", code: 1001, userInfo: [NSLocalizedDescriptionKey: "Invalid request"]))
-        }
-        return participant.sendMessage(request).continueWith { task -> AWSTask<AnyObject> in
-            if let error = task.error {
-                return AWSTask(error: error)
-            }
-            return AWSTask(result: task.result)
-        }
+    func disconnectParticipant(_ input: DisconnectParticipantInput) async throws -> DisconnectParticipantOutput {
+        try await client.disconnectParticipant(input: input)
     }
 
-    func sendEvent(_ request: AWSConnectParticipantSendEventRequest?) -> AWSTask<AnyObject> {
-        guard let request = request else {
-            return AWSTask(error: NSError(domain: "AWSConnectParticipantAdapter", code: 1001, userInfo: [NSLocalizedDescriptionKey: "Invalid request"]))
-        }
-        return participant.sendEvent(request).continueWith { task -> AWSTask<AnyObject> in
-            if let error = task.error {
-                return AWSTask(error: error)
-            }
-            return AWSTask(result: task.result)
-        }
+    func sendMessage(_ input: SendMessageInput) async throws -> SendMessageOutput {
+        try await client.sendMessage(input: input)
     }
 
-    func getTranscript(_ request: AWSConnectParticipantGetTranscriptRequest?) -> AWSTask<AWSConnectParticipantGetTranscriptResponse> {
-        guard let request = request else {
-            return AWSTask(error: NSError(domain: "AWSConnectParticipantAdapter", code: 1001, userInfo: [NSLocalizedDescriptionKey: "Invalid request"]))
-        }
-        return participant.getTranscript(request)
+    func sendEvent(_ input: SendEventInput) async throws -> SendEventOutput {
+        try await client.sendEvent(input: input)
     }
 
-    func startAttachmentUpload(_ request: AWSConnectParticipantStartAttachmentUploadRequest?) -> AWSTask<AWSConnectParticipantStartAttachmentUploadResponse> {
-        guard let request = request else {
-            return AWSTask(error: NSError(domain: "AWSConnectParticipantAdapter", code: 1001, userInfo: [NSLocalizedDescriptionKey: "Invalid request"]))
-        }
-        return participant.startAttachmentUpload(request)
+    func getTranscript(_ input: GetTranscriptInput) async throws -> GetTranscriptOutput {
+        try await client.getTranscript(input: input)
     }
-    
-    func completeAttachmentUpload(_ request: AWSConnectParticipantCompleteAttachmentUploadRequest?) -> AWSTask<AWSConnectParticipantCompleteAttachmentUploadResponse> {
-        guard let request = request else {
-            return AWSTask(error: NSError(domain: "AWSConnectParticipantAdapter", code: 1001, userInfo: [NSLocalizedDescriptionKey: "Invalid request"]))
-        }
-        return participant.completeAttachmentUpload(request)
+
+    func startAttachmentUpload(_ input: StartAttachmentUploadInput) async throws -> StartAttachmentUploadOutput {
+        try await client.startAttachmentUpload(input: input)
     }
-    
-    func getAttachment(_ request: AWSConnectParticipantGetAttachmentRequest?) -> AWSTask<AWSConnectParticipantGetAttachmentResponse> {
-        guard let request = request else {
-            return AWSTask(error: NSError(domain: "AWSConnectParticipantAdapter", code: 1001, userInfo: [NSLocalizedDescriptionKey: "Invalid request"]))
-        }
-        return participant.getAttachment(request)
+
+    func completeAttachmentUpload(_ input: CompleteAttachmentUploadInput) async throws -> CompleteAttachmentUploadOutput {
+        try await client.completeAttachmentUpload(input: input)
     }
-    
-    func describeView(_ request: AWSConnectParticipantDescribeViewRequest?) -> AWSTask<AWSConnectParticipantDescribeViewResponse> {
-        guard let request = request else {
-            return AWSTask(error: NSError(domain: "AWSConnectParticipantAdapter", code: 1001, userInfo: [NSLocalizedDescriptionKey: "Invalid request"]))
-        }
-        return participant.describeView(request)
+
+    func getAttachment(_ input: GetAttachmentInput) async throws -> GetAttachmentOutput {
+        try await client.getAttachment(input: input)
+    }
+
+    func describeView(_ input: DescribeViewInput) async throws -> DescribeViewOutput {
+        try await client.describeView(input: input)
     }
 }

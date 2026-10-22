@@ -5,42 +5,50 @@ import Foundation
 import AWSConnectParticipant
 
 struct CommonUtils {
-    
-    func convertParticipantRoleToString(_ roleValue: Int) -> String {
-        switch roleValue {
-        case AWSConnectParticipantParticipantRole.agent.rawValue:
+
+    /// Maps a participant role onto the string used in serialized transcript content.
+    /// Mapped explicitly rather than via `rawValue` so unrecognised roles resolve to `UNKNOWN`.
+    func convertParticipantRoleToString(_ role: ConnectParticipantClientTypes.ParticipantRole?) -> String {
+        switch role {
+        case .some(.agent):
             return Constants.AGENT
-        case AWSConnectParticipantParticipantRole.customer.rawValue:
+        case .some(.customer):
             return Constants.CUSTOMER
-        case AWSConnectParticipantParticipantRole.system.rawValue:
+        case .some(.system):
             return Constants.SYSTEM
-        case AWSConnectParticipantParticipantRole.supervisor.rawValue:
+        case .some(.supervisor):
             return Constants.SUPERVISOR
-        case AWSConnectParticipantParticipantRole.customBot.rawValue:
+        case .some(.customBot):
             return Constants.CUSTOM_BOT
         default:
             return Constants.UNKNOWN
         }
     }
 
-    func convertParticipantTypeToString(_ roleValue: Int) -> String {
-        switch roleValue {
-        case AWSConnectParticipantChatItemType.message.rawValue:
+    /// Maps a chat item type onto the string used in serialized transcript content.
+    ///
+    /// Do not forward `rawValue` here. This string is parsed back by
+    /// `WebsocketManager.processJsonContentAndGetItem` via `WebSocketMessageType(rawValue:)`.
+    /// Transcript API item types other than MESSAGE / EVENT / ATTACHMENT are not supported by that
+    /// parser and must follow the existing UNKNOWN fallback.
+    func convertParticipantTypeToString(_ type: ConnectParticipantClientTypes.ChatItemType?) -> String {
+        switch type {
+        case .some(.message):
             return Constants.MESSAGE
-        case AWSConnectParticipantChatItemType.event.rawValue:
+        case .some(.event):
             return Constants.EVENT
-        case AWSConnectParticipantChatItemType.attachment.rawValue:
+        case .some(.attachment):
             return Constants.ATTACHMENT
         default:
             return Constants.UNKNOWN
         }
     }
-    
-    func convertMessageMetadataToDict(_ messageMetadata: AWSConnectParticipantMessageMetadata?) -> [String: Any] {
+
+    func convertMessageMetadataToDict(_ messageMetadata: ConnectParticipantClientTypes.MessageMetadata?) -> [String: Any] {
         guard let messageId = messageMetadata?.messageId else {
             return [:]
         }
-        
+
         return [
             "MessageId": messageId,
             "Receipts": messageMetadata?.receipts?.compactMap { receipt in
@@ -52,15 +60,15 @@ struct CommonUtils {
             } ?? []
         ]
     }
-    
+
     static func getCurrentISOTime() -> String {
         let currentDate = Date()
         let isoFormatter = ISO8601DateFormatter()
         isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds, .withColonSeparatorInTimeZone]
         return isoFormatter.string(from: currentDate)
     }
-    
+
     static func getLibraryVersion() -> String {
-        return "2.0.13"
+        return "3.0.0"
     }
 }

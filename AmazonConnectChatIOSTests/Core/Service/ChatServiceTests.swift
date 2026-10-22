@@ -3,6 +3,7 @@
 
 import Foundation
 import XCTest
+import Combine
 import AWSConnectParticipant
 @testable import AmazonConnectChatIOS
 
@@ -209,7 +210,7 @@ class ChatServiceTests: XCTestCase {
     
     func testDisconnectChatSession_Success() {
         let expectation = self.expectation(description: "Chat session should be disconnected successfully")
-        mockAWSClient.disconnectParticipantConnectionResult = .success(AWSConnectParticipantDisconnectParticipantResponse())
+        mockAWSClient.disconnectParticipantConnectionResult = .success(DisconnectParticipantOutput())
         
         chatService.disconnectChatSession { success, error in
             XCTAssertTrue(success, "Chat session should be disconnected successfully")
@@ -253,7 +254,7 @@ class ChatServiceTests: XCTestCase {
     func testSendMessage_Success() {
         let message = "Test message"
         let contentType = ContentType.plainText
-        mockAWSClient.sendMessageResult = .success(AWSConnectParticipantSendMessageResponse())
+        mockAWSClient.sendMessageResult = .success(SendMessageOutput())
         
         let expectation = self.expectation(description: "Message should be sent successfully")
         
@@ -301,7 +302,7 @@ class ChatServiceTests: XCTestCase {
     func testSendEvent_Success() {
         let event = ContentType.typing
         let content = "Test event"
-        mockAWSClient.sendEventResult = .success(AWSConnectParticipantSendEventResponse())
+        mockAWSClient.sendEventResult = .success(SendEventOutput())
         
         let expectation = self.expectation(description: "Event should be sent successfully")
         
@@ -349,7 +350,7 @@ class ChatServiceTests: XCTestCase {
     func testSendEvent_TypingEventThrottling() {
         let event = ContentType.typing
         let content = "Test event"
-        mockAWSClient.sendEventResult = .success(AWSConnectParticipantSendEventResponse())
+        mockAWSClient.sendEventResult = .success(SendEventOutput())
         
         let expectation = self.expectation(description: "Typing event should only be sent once if two typing events occur")
         
@@ -375,7 +376,7 @@ class ChatServiceTests: XCTestCase {
         mockChatService.mockSendMessageReceipt = false
         
         let mockMessageReceiptsManager = MockMessageReceiptsManager()
-        var pendingMessageReceipts = PendingMessageReceipts(readReceiptMessageId: "67890", deliveredReceiptMessageId: "12345")
+        let pendingMessageReceipts = PendingMessageReceipts(readReceiptMessageId: "67890", deliveredReceiptMessageId: "12345")
 
         mockMessageReceiptsManager.throttleAndSendMessageReceiptResult = .success(pendingMessageReceipts)
         mockChatService.messageReceiptsManager = mockMessageReceiptsManager
@@ -431,7 +432,7 @@ class ChatServiceTests: XCTestCase {
         mockChatService.mockSendMessageReceipt = false
         
         let mockMessageReceiptsManager = MockMessageReceiptsManager()
-        var pendingMessageReceipts = PendingMessageReceipts(readReceiptMessageId: "67890", deliveredReceiptMessageId: "12345")
+        let pendingMessageReceipts = PendingMessageReceipts(readReceiptMessageId: "67890", deliveredReceiptMessageId: "12345")
 
         mockMessageReceiptsManager.throttleAndSendMessageReceiptResult = .success(pendingMessageReceipts)
         mockChatService.messageReceiptsManager = mockMessageReceiptsManager
@@ -460,7 +461,7 @@ class ChatServiceTests: XCTestCase {
         let mockChatService = MockChatService()
         mockChatService.mockSendPendingMessageReceipts = false
         mockChatService.sendEventResult = (true, nil)
-        var pendingMessageReceipts = PendingMessageReceipts(readReceiptMessageId: "67890")
+        let pendingMessageReceipts = PendingMessageReceipts(readReceiptMessageId: "67890")
         
         mockChatService.sendPendingMessageReceipts(pendingMessageReceipts: pendingMessageReceipts) { result in
             switch result {
@@ -483,7 +484,7 @@ class ChatServiceTests: XCTestCase {
         let mockChatService = MockChatService()
         mockChatService.mockSendPendingMessageReceipts = false
         mockChatService.sendEventResult = (true, nil)
-        var pendingMessageReceipts = PendingMessageReceipts(deliveredReceiptMessageId: "12345")
+        let pendingMessageReceipts = PendingMessageReceipts(deliveredReceiptMessageId: "12345")
         
         mockChatService.sendPendingMessageReceipts(pendingMessageReceipts: pendingMessageReceipts) { result in
             switch result {
@@ -506,7 +507,7 @@ class ChatServiceTests: XCTestCase {
         let mockChatService = MockChatService()
         mockChatService.mockSendPendingMessageReceipts = false
         mockChatService.sendEventResult = (true, nil)
-        var pendingMessageReceipts = PendingMessageReceipts(readReceiptMessageId: "67890", deliveredReceiptMessageId: "12345")
+        let pendingMessageReceipts = PendingMessageReceipts(readReceiptMessageId: "67890", deliveredReceiptMessageId: "12345")
         
         var readReceiptReceived = false
         var deliveredReceiptReceived = false
@@ -543,7 +544,7 @@ class ChatServiceTests: XCTestCase {
         let mockChatService = MockChatService()
         mockChatService.mockSendPendingMessageReceipts = false
         mockChatService.sendEventResult = (false, expectedError)
-        var pendingMessageReceipts = PendingMessageReceipts(deliveredReceiptMessageId: "12345")
+        let pendingMessageReceipts = PendingMessageReceipts(deliveredReceiptMessageId: "12345")
         
         mockChatService.sendPendingMessageReceipts(pendingMessageReceipts: pendingMessageReceipts) { result in
             switch result {
@@ -565,12 +566,9 @@ class ChatServiceTests: XCTestCase {
         
         mockAWSClient.createParticipantConnectionResult = .success(createConnectionDetails())
         
-        let transcriptItem = AWSConnectParticipantItem()
-        transcriptItem!.content = "testContent"
-        
-        let response = AWSConnectParticipantGetTranscriptResponse()!
-        response.transcript = [transcriptItem!]
-        response.nextToken = "testToken"
+        let transcriptItem = ConnectParticipantClientTypes.Item(content: "testContent")
+
+        let response = GetTranscriptOutput(nextToken: "testToken", transcript: [transcriptItem])
         
         mockAWSClient.getTranscriptResult = .success(response)
         
@@ -637,18 +635,34 @@ class ChatServiceTests: XCTestCase {
         waitForExpectations(timeout: 1)
     }
 
+    func testGetTranscript_Failure_MissingConnectionToken() {
+        mockConnectionDetailsProvider.mockConnectionDetails = ConnectionDetails(
+            websocketUrl: "wss://example.com",
+            connectionToken: nil,
+            expiry: nil
+        )
+        let expectation = self.expectation(description: "Transcript retrieval should fail without a connection token")
+
+        chatService.getTranscript { result in
+            guard case .failure(let error) = result else {
+                return XCTFail("Expected failure")
+            }
+            XCTAssertEqual(error.localizedDescription, "No connection details available")
+            XCTAssertEqual(self.mockAWSClient.numGetTranscriptCalled, 0)
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 1)
+    }
+
     func testfetchReconnectedTranscript_Success() {
         let chatDetails = createChatDetails()
         
         mockAWSClient.createParticipantConnectionResult = .success(createConnectionDetails())
         
-        let transcriptItem = AWSConnectParticipantItem()
-        transcriptItem!.identifier = "testId"
-        transcriptItem!.content = "testContent"
-        
-        let response = AWSConnectParticipantGetTranscriptResponse()!
-        response.transcript = [transcriptItem!]
-        response.nextToken = "testNextToken"
+        let transcriptItem = ConnectParticipantClientTypes.Item(content: "testContent", id: "testId")
+
+        let response = GetTranscriptOutput(nextToken: "testNextToken", transcript: [transcriptItem])
         
         mockAWSClient.getTranscriptResult = .success(response)
         
@@ -674,13 +688,9 @@ class ChatServiceTests: XCTestCase {
         
         mockAWSClient.createParticipantConnectionResult = .success(createConnectionDetails())
         
-        let transcriptItem = AWSConnectParticipantItem()
-        transcriptItem?.absoluteTime = "2025-04-01T20:38:15.204Z"
-        transcriptItem!.content = "testContent"
-        
-        let response = AWSConnectParticipantGetTranscriptResponse()!
-        response.transcript = [transcriptItem!]
-        response.nextToken = "testToken"
+        let transcriptItem = ConnectParticipantClientTypes.Item(absoluteTime: "2025-04-01T20:38:15.204Z", content: "testContent")
+
+        let response = GetTranscriptOutput(nextToken: "testToken", transcript: [transcriptItem])
         
         chatService.internalTranscript.append(TranscriptItem(timeStamp: "2024-04-01T20:38:15.204Z", contentType: "text/plain", id: "1234", serializedContent: nil))
         
@@ -715,13 +725,9 @@ class ChatServiceTests: XCTestCase {
         
         mockAWSClient.createParticipantConnectionResult = .success(createConnectionDetails())
         
-        let transcriptItem = AWSConnectParticipantItem()
-        transcriptItem?.absoluteTime = "2024-04-01T20:38:15.204Z"
-        transcriptItem!.content = "testContent"
-        
-        let response = AWSConnectParticipantGetTranscriptResponse()!
-        response.transcript = [transcriptItem!]
-        response.nextToken = "testToken"
+        let transcriptItem = ConnectParticipantClientTypes.Item(absoluteTime: "2024-04-01T20:38:15.204Z", content: "testContent")
+
+        let response = GetTranscriptOutput(nextToken: "testToken", transcript: [transcriptItem])
         
         chatService.internalTranscript.append(TranscriptItem(timeStamp: "2025-04-01T20:38:15.204Z", contentType: "text/plain", id: "1234", serializedContent: nil))
         
@@ -756,13 +762,9 @@ class ChatServiceTests: XCTestCase {
         
         mockAWSClient.createParticipantConnectionResult = .success(createConnectionDetails())
         
-        let transcriptItem = AWSConnectParticipantItem()
-        transcriptItem?.absoluteTime = "2024-04-01T20:38:15.204Z"
-        transcriptItem!.content = "testContent"
-        
-        let response = AWSConnectParticipantGetTranscriptResponse()!
-        response.transcript = [transcriptItem!]
-        response.nextToken = "testToken"
+        let transcriptItem = ConnectParticipantClientTypes.Item(absoluteTime: "2024-04-01T20:38:15.204Z", content: "testContent")
+
+        let response = GetTranscriptOutput(nextToken: "testToken", transcript: [transcriptItem])
         
         chatService.internalTranscript.append(TranscriptItem(timeStamp: "2025-04-01T20:38:15.204Z", contentType: "text/plain", id: "1234", serializedContent: nil))
         
@@ -813,6 +815,40 @@ class ChatServiceTests: XCTestCase {
         waitForExpectations(timeout: 1)
     }
     
+    func testRegisterNotificationListeners_AccessDeniedServiceError_EndsChat() {
+        assertNewWsUrlFailure(AccessDeniedException(message: "Access denied"), endsChat: true)
+    }
+
+    func testRegisterNotificationListeners_LegacyAccessDeniedNSError_EndsChat() {
+        let legacyError = NSError(domain: "CustomAWSClient", code: 403, userInfo: [NSLocalizedFailureReasonErrorKey: "AccessDeniedException"])
+        assertNewWsUrlFailure(legacyError, endsChat: true)
+    }
+
+    func testRegisterNotificationListeners_OtherError_DoesNotEndChat() {
+        assertNewWsUrlFailure(NSError(domain: "CustomAWSClient", code: 500, userInfo: nil), endsChat: false)
+    }
+
+    private func assertNewWsUrlFailure(_ error: Error, endsChat: Bool, file: StaticString = #filePath, line: UInt = #line) {
+        let expectation = self.expectation(description: "CreateParticipantConnection failure is handled")
+        mockConnectionDetailsProvider.updateChatDetails(newDetails: createChatDetails())
+        mockAWSClient.createParticipantConnectionResult = .failure(error)
+
+        var chatEnded = false
+        let cancellable = chatService.eventPublisher.sink { event in
+            if event == .chatEnded { chatEnded = true }
+        }
+
+        NotificationCenter.default.post(name: .requestNewWsUrl, object: nil)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            XCTAssertEqual(chatEnded, endsChat, file: file, line: line)
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 1)
+        cancellable.cancel()
+    }
+
     func testSendAttachment_Success() {
         let expectation = self.expectation(description: "SendAttachment succeeds")
         TestUtils.writeSampleTextToUrl(url: TestConstants.testFileUrl)
@@ -822,9 +858,8 @@ class ChatServiceTests: XCTestCase {
         mockAttachmentManager.apiClient = mockAPIClient
         mockAttachmentManager.mockSendAttachment = false
         
-        let mockResponse = AWSConnectParticipantStartAttachmentUploadResponse()
-        mockResponse!.attachmentId = "mockAttachmentId"
-        mockAttachmentManager.startAttachmentUploadResult = .success(mockResponse!)
+        let mockResponse = StartAttachmentUploadOutput(attachmentId: "mockAttachmentId")
+        mockAttachmentManager.startAttachmentUploadResult = .success(mockResponse)
         mockAttachmentManager.completeAttachmentUploadResult = (true, nil)
         
         mockAttachmentManager.sendAttachment(file: TestConstants.testFileUrl) { success, error in
@@ -833,6 +868,51 @@ class ChatServiceTests: XCTestCase {
             XCTAssertEqual(mockAttachmentManager.numStartAttachmentUploadCalled, 1)
             XCTAssertTrue(mockAPIClient.uploadAttachmentCalled)
             XCTAssertEqual(mockAttachmentManager.numCompleteAttachmentUploadCalled, 1)
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+
+    func testSendAttachment_MissingAttachmentIdFails() {
+        let expectation = self.expectation(description: "SendAttachment fails without attachment ID")
+        TestUtils.writeSampleTextToUrl(url: TestConstants.testFileUrl)
+
+        let mockAttachmentManager = MockChatService()
+        let mockAPIClient = MockAPIClient()
+        mockAttachmentManager.apiClient = mockAPIClient
+        mockAttachmentManager.mockSendAttachment = false
+        mockAttachmentManager.startAttachmentUploadResult = .success(StartAttachmentUploadOutput())
+
+        mockAttachmentManager.sendAttachment(file: TestConstants.testFileUrl) { success, error in
+            XCTAssertFalse(success)
+            XCTAssertEqual(error?.localizedDescription, "StartAttachmentUpload returned no attachment ID")
+            XCTAssertFalse(mockAPIClient.uploadAttachmentCalled)
+            XCTAssertEqual(mockAttachmentManager.numCompleteAttachmentUploadCalled, 0)
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+
+    func testSendAttachment_UploadFailureCompletesWithError() {
+        let expectation = self.expectation(description: "SendAttachment reports S3 upload failure")
+        TestUtils.writeSampleTextToUrl(url: TestConstants.testFileUrl)
+
+        let mockAttachmentManager = MockChatService()
+        let mockAPIClient = MockAPIClient()
+        mockAPIClient.uploadAttachmentResult = (false, expectedError)
+        mockAttachmentManager.apiClient = mockAPIClient
+        mockAttachmentManager.mockSendAttachment = false
+        mockAttachmentManager.startAttachmentUploadResult = .success(
+            StartAttachmentUploadOutput(attachmentId: "mockAttachmentId")
+        )
+
+        mockAttachmentManager.sendAttachment(file: TestConstants.testFileUrl) { success, error in
+            XCTAssertFalse(success)
+            XCTAssertEqual(error as NSError?, self.expectedError)
+            XCTAssertTrue(mockAPIClient.uploadAttachmentCalled)
+            XCTAssertEqual(mockAttachmentManager.numCompleteAttachmentUploadCalled, 0)
             expectation.fulfill()
         }
 
@@ -918,13 +998,15 @@ class ChatServiceTests: XCTestCase {
     
     func testStartAttachmentUpload_Success() {
         let expectation = self.expectation(description: "StartAttachmentUpload succeeds")
-        let response = AWSConnectParticipantStartAttachmentUploadResponse()
-        mockAWSClient.startAttachmentUploadResult = .success(response!)
+        let response = StartAttachmentUploadOutput(attachmentId: "12345")
+        mockAWSClient.startAttachmentUploadResult = .success(response)
         
         chatService.startAttachmentUpload(contentType: "text/plain", attachmentName: "sample.txt", attachmentSizeInBytes: 1000) { result in
             switch result {
             case .success(let startAttachmentResponse):
-                XCTAssertEqual(startAttachmentResponse, response)
+                // `StartAttachmentUploadOutput` is a generated value type with no Equatable
+                // conformance, so assert on the field the SDK actually consumes.
+                XCTAssertEqual(startAttachmentResponse.attachmentId, response.attachmentId)
                 expectation.fulfill()
             case .failure(let error):
                 XCTFail("Expected success, got unexpected failure: \(String(describing: error))")
@@ -950,11 +1032,30 @@ class ChatServiceTests: XCTestCase {
         
         waitForExpectations(timeout: 1.0, handler: nil)
     }
+
+    func testStartAttachmentUpload_MissingConnectionTokenFails() {
+        mockConnectionDetailsProvider.mockConnectionDetails = ConnectionDetails(
+            websocketUrl: "wss://example.com",
+            connectionToken: nil,
+            expiry: nil
+        )
+        let expectation = self.expectation(description: "StartAttachmentUpload fails without connection token")
+
+        chatService.startAttachmentUpload(contentType: "text/plain", attachmentName: "sample.txt", attachmentSizeInBytes: 1000) { result in
+            guard case .failure(let error) = result else {
+                return XCTFail("Expected failure")
+            }
+            XCTAssertEqual(error.localizedDescription, "No connection details available")
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
     
     func testCompleteAttachmentUpload_Success() {
         let expectation = self.expectation(description: "CompleteAttachmentUpload succeeds")
-        let response = AWSConnectParticipantCompleteAttachmentUploadResponse()
-        mockAWSClient.completeAttachmentUploadResult = .success(response!)
+        let response = CompleteAttachmentUploadOutput()
+        mockAWSClient.completeAttachmentUploadResult = .success(response)
         
         chatService.completeAttachmentUpload(attachmentIds: ["12345"]) { success, error in
             if success {
@@ -989,12 +1090,7 @@ class ChatServiceTests: XCTestCase {
     
     func testGetAttachmentDownloadUrl_Success() {
         let expectation = self.expectation(description: "GetAttachmentDownloadUrl succeeds")
-        guard let response = AWSConnectParticipantGetAttachmentResponse() else {
-            XCTFail("AWSConnectParticipantGetAttachmentResponse returned nil")
-            return
-        }
-        
-        response.url = "https://www.test-endpoint.com"
+        let response = GetAttachmentOutput(url: "https://www.test-endpoint.com")
         mockAWSClient.getAttachmentResult = .success(response)
 
         
@@ -1014,12 +1110,6 @@ class ChatServiceTests: XCTestCase {
     func testGetAttachmentDownloadUrl_Failure() {
         let expectation = self.expectation(description: "GetAttachmentDownloadUrl fails")
 
-        guard let response = AWSConnectParticipantGetAttachmentResponse() else {
-            XCTFail("AWSConnectParticipantGetAttachmentResponse returned nil")
-            return
-        }
-        
-        response.url = "https://www.test-endpoint.com"
         mockAWSClient.getAttachmentResult = .failure(expectedError)
 
         
@@ -1038,12 +1128,7 @@ class ChatServiceTests: XCTestCase {
     
     func testDownloadAttachment_Success() {
         let expectation = self.expectation(description: "downloadAttachment succeeds")
-        guard let response = AWSConnectParticipantGetAttachmentResponse() else {
-            XCTFail("AWSConnectParticipantGetAttachmentResponse returned nil")
-            return
-        }
-        
-        response.url = "https://www.test-endpoint.com"
+        let response = GetAttachmentOutput(url: "https://www.test-endpoint.com")
         mockAWSClient.getAttachmentResult = .success(response)
 
         let mockAttachmentManager = MockChatService(
@@ -1071,6 +1156,72 @@ class ChatServiceTests: XCTestCase {
         }
         
         waitForExpectations(timeout: 1.0, handler: nil)
+    }
+
+    func testGetAttachmentDownloadUrl_MissingUrlFails() {
+        let expectation = self.expectation(description: "GetAttachmentDownloadUrl fails without URL")
+        mockAWSClient.getAttachmentResult = .success(GetAttachmentOutput())
+
+        chatService.getAttachmentDownloadUrl(attachmentId: "12345") { result in
+            guard case .failure(let error) = result else {
+                return XCTFail("Expected failure")
+            }
+            XCTAssertEqual(error.localizedDescription, "GetAttachment returned an invalid URL")
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+
+    func testDescribeView_MapsGeneratedView() {
+        let expectation = self.expectation(description: "DescribeView maps the generated response")
+        let content = ConnectParticipantClientTypes.ViewContent(
+            actions: ["action"],
+            inputSchema: "{}",
+            template: "{\"type\":\"View\"}"
+        )
+        let view = ConnectParticipantClientTypes.View(
+            arn: "arn:aws:connect:us-west-2:123456789012:view/view-1",
+            content: content,
+            id: "view-1",
+            name: "TestView",
+            version: 4
+        )
+        mockAWSClient.describeViewResult = .success(DescribeViewOutput(view: view))
+
+        chatService.describeView(viewToken: "view-token") { result in
+            guard case .success(let resource) = result else {
+                return XCTFail("Expected success")
+            }
+            XCTAssertEqual(resource.id, "view-1")
+            XCTAssertEqual(resource.name, "TestView")
+            XCTAssertEqual(resource.version, 4)
+            XCTAssertEqual(resource.content?["Actions"] as? [String], ["action"])
+            XCTAssertEqual(resource.content?["InputSchema"] as? String, "{}")
+            XCTAssertEqual(resource.content?["Template"] as? String, "{\"type\":\"View\"}")
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 1.0)
+    }
+
+    func testDescribeView_MissingConnectionTokenFails() {
+        mockConnectionDetailsProvider.mockConnectionDetails = ConnectionDetails(
+            websocketUrl: "wss://example.com",
+            connectionToken: "",
+            expiry: nil
+        )
+        let expectation = self.expectation(description: "DescribeView fails without a connection token")
+
+        chatService.describeView(viewToken: "view-token") { result in
+            guard case .failure(let error) = result else {
+                return XCTFail("Expected failure")
+            }
+            XCTAssertEqual(error.localizedDescription, "No connection details available")
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 1.0)
     }
     
     func testDownloadAttachment_Failure() {
@@ -1100,9 +1251,9 @@ class ChatServiceTests: XCTestCase {
         mockUrlSession.mockUrlResult = TestConstants.testFileUrl
         chatService.urlSession = mockUrlSession
         
-        var filename = "sample2.txt"
+        let filename = "sample2.txt"
         
-        var expectedLocalUrl = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
+        let expectedLocalUrl = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
 
         chatService.downloadFile(url: TestConstants.testFileUrl, filename: filename) { (localUrl, error) in
             if let localUrl = localUrl {
@@ -1173,7 +1324,7 @@ class ChatServiceTests: XCTestCase {
         // Add message into transcript
         let message = "Test message"
         let contentType = ContentType.plainText
-        mockAWSClient.sendMessageResult = .success(AWSConnectParticipantSendMessageResponse())
+        mockAWSClient.sendMessageResult = .success(SendMessageOutput())
         
         let expectation = self.expectation(description: "Message should be sent successfully")
         

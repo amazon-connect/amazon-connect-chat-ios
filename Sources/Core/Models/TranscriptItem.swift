@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import Foundation
+import Combine
 
 public protocol TranscriptItemProtocol: Identifiable, Equatable, Hashable, ObservableObject {
     var id: String { get }

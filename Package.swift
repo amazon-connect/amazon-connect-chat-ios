@@ -1,4 +1,4 @@
-// swift-tools-version:5.6
+// swift-tools-version:5.9
 import PackageDescription
 
 let package = Package(
@@ -13,20 +13,24 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/aws-amplify/aws-sdk-ios-spm", from: "2.40.0")
+        // Do not raise this floor. `amplify-swift` pins `aws-sdk-swift` with `exact:` and that pin
+        // moves between releases, so a higher floor trades the issue #86 module collision for an
+        // unresolvable graph.
+        .package(url: "https://github.com/awslabs/aws-sdk-swift", from: "1.0.0")
     ],
     targets: [
         .target(
             name: "AmazonConnectChatIOS",
             dependencies: [
-                .product(name: "AWSCore", package: "aws-sdk-ios-spm"),
-                .product(name: "AWSConnectParticipant", package: "aws-sdk-ios-spm")
+                .product(name: "AWSConnectParticipant", package: "aws-sdk-swift"),
+                // Supplies StaticAWSCredentialIdentityResolver / AWSCredentialIdentity.
+                .product(name: "AWSSDKIdentity", package: "aws-sdk-swift")
             ],
-            path: "Sources"
-            ),
-        .binaryTarget(
-            name: "AmazonConnectChatIOSSDK",
-            path: "./Sources/AmazonConnectChatIOS.xcframework"
+            path: "Sources",
+            exclude: ["AmazonConnectChatIOS.xcframework"],
+            resources: [
+                .process("PrivacyInfo.xcprivacy")
+            ]
         )
     ]
 )

@@ -6,169 +6,80 @@ import AWSConnectParticipant
 @testable import AmazonConnectChatIOS
 
 class MockAWSConnectParticipant: AWSConnectParticipantProtocol {
-    var createParticipantConnectionResult: Result<AWSConnectParticipantCreateParticipantConnectionResponse, Error>?
-    var disconnectParticipantResult: Result<AnyObject?, Error>?
-    var sendMessageResult: Result<AnyObject?, Error>?
-    var sendEventResult: Result<AnyObject?, Error>?
-    var getTranscriptResult: Result<AWSConnectParticipantGetTranscriptResponse, Error>?
-    var startAttachmentUploadResult: Result<AWSConnectParticipantStartAttachmentUploadResponse, Error>?
-    var completeAttachmnetUploadResult: Result<AWSConnectParticipantCompleteAttachmentUploadResponse, Error>?
-    var getAttachmentResult: Result<AWSConnectParticipantGetAttachmentResponse, Error>?
-    var describeViewResult: Result<AWSConnectParticipantDescribeViewResponse, Error>?
-    
-    func createParticipantConnection(_ request: AWSConnectParticipantCreateParticipantConnectionRequest?) -> AWSTask<AWSConnectParticipantCreateParticipantConnectionResponse> {
-        let taskCompletionSource = AWSTaskCompletionSource<AWSConnectParticipantCreateParticipantConnectionResponse>()
-        if request == nil {
-            taskCompletionSource.set(error: AWSClient.AWSClientError.requestCreationFailed)
-        } else if let result = createParticipantConnectionResult {
-            switch result {
-            case .success(let response):
-                taskCompletionSource.set(result: response)
-            case .failure(let error):
-                taskCompletionSource.set(error: error)
-            }
-        } else {
-            taskCompletionSource.set(error: MockError.unexpected)
-        }
-        return taskCompletionSource.task
+    var createParticipantConnectionResult: Result<CreateParticipantConnectionOutput, Error>?
+    var disconnectParticipantResult: Result<DisconnectParticipantOutput, Error>?
+    var sendMessageResult: Result<SendMessageOutput, Error>?
+    var sendEventResult: Result<SendEventOutput, Error>?
+    var getTranscriptResult: Result<GetTranscriptOutput, Error>?
+    var startAttachmentUploadResult: Result<StartAttachmentUploadOutput, Error>?
+    var completeAttachmnetUploadResult: Result<CompleteAttachmentUploadOutput, Error>?
+    var getAttachmentResult: Result<GetAttachmentOutput, Error>?
+    var describeViewResult: Result<DescribeViewOutput, Error>?
+
+    // Last input received per operation.
+    var lastCreateParticipantConnectionInput: CreateParticipantConnectionInput?
+    var lastDisconnectParticipantInput: DisconnectParticipantInput?
+    var lastSendMessageInput: SendMessageInput?
+    var lastSendEventInput: SendEventInput?
+    var lastGetTranscriptInput: GetTranscriptInput?
+    var lastStartAttachmentUploadInput: StartAttachmentUploadInput?
+    var lastCompleteAttachmentUploadInput: CompleteAttachmentUploadInput?
+    var lastGetAttachmentInput: GetAttachmentInput?
+    var lastDescribeViewInput: DescribeViewInput?
+
+    func createParticipantConnection(_ input: CreateParticipantConnectionInput) async throws -> CreateParticipantConnectionOutput {
+        lastCreateParticipantConnectionInput = input
+        return try resolve(createParticipantConnectionResult)
     }
-    
-    func disconnectParticipant(_ request: AWSConnectParticipantDisconnectParticipantRequest?) -> AWSTask<AnyObject> {
-        let taskCompletionSource = AWSTaskCompletionSource<AnyObject>()
-        if let result = disconnectParticipantResult {
-            switch result {
-            case .success(let response):
-                taskCompletionSource.set(result: response)
-            case .failure(let error):
-                taskCompletionSource.set(error: error)
-            }
-        } else if request == nil {
-            taskCompletionSource.set(error: AWSClient.AWSClientError.requestCreationFailed)
-        } else {
-            taskCompletionSource.set(error: MockError.unexpected)
-        }
-        return taskCompletionSource.task
+
+    func disconnectParticipant(_ input: DisconnectParticipantInput) async throws -> DisconnectParticipantOutput {
+        lastDisconnectParticipantInput = input
+        return try resolve(disconnectParticipantResult)
     }
-    
-    func sendMessage(_ request: AWSConnectParticipantSendMessageRequest?) -> AWSTask<AnyObject> {
-        let taskCompletionSource = AWSTaskCompletionSource<AnyObject>()
-        if let result = sendMessageResult {
-            switch result {
-            case .success(let response):
-                taskCompletionSource.set(result: response)
-            case .failure(let error):
-                taskCompletionSource.set(error: error)
-            }
-        } else if request == nil {
-            taskCompletionSource.set(error: AWSClient.AWSClientError.requestCreationFailed)
-        } else {
-            taskCompletionSource.set(error: MockError.unexpected)
-        }
-        return taskCompletionSource.task
+
+    func sendMessage(_ input: SendMessageInput) async throws -> SendMessageOutput {
+        lastSendMessageInput = input
+        return try resolve(sendMessageResult)
     }
-    
-    func sendEvent(_ request: AWSConnectParticipantSendEventRequest?) -> AWSTask<AnyObject> {
-        let taskCompletionSource = AWSTaskCompletionSource<AnyObject>()
-        if let result = sendEventResult {
-            switch result {
-            case .success(let response):
-                taskCompletionSource.set(result: response)
-            case .failure(let error):
-                taskCompletionSource.set(error: error)
-            }
-        } else if request == nil {
-            taskCompletionSource.set(error: AWSClient.AWSClientError.requestCreationFailed)
-        } else {
-            taskCompletionSource.set(error: MockError.unexpected)
-        }
-        return taskCompletionSource.task
+
+    func sendEvent(_ input: SendEventInput) async throws -> SendEventOutput {
+        lastSendEventInput = input
+        return try resolve(sendEventResult)
     }
-    
-    func getTranscript(_ request: AWSConnectParticipantGetTranscriptRequest?) -> AWSTask<AWSConnectParticipantGetTranscriptResponse> {
-        let taskCompletionSource = AWSTaskCompletionSource<AWSConnectParticipantGetTranscriptResponse>()
-        if let result = getTranscriptResult {
-            switch result {
-            case .success(let response):
-                taskCompletionSource.set(result: response)
-            case .failure(let error):
-                taskCompletionSource.set(error: error)
-            }
-        } else if request == nil {
-            taskCompletionSource.set(error: AWSClient.AWSClientError.requestCreationFailed)
-        } else {
-            taskCompletionSource.set(error: MockError.unexpected)
-        }
-        return taskCompletionSource.task
+
+    func getTranscript(_ input: GetTranscriptInput) async throws -> GetTranscriptOutput {
+        lastGetTranscriptInput = input
+        return try resolve(getTranscriptResult)
     }
-    
-    func startAttachmentUpload(_ request: AWSConnectParticipantStartAttachmentUploadRequest?) -> AWSTask<AWSConnectParticipantStartAttachmentUploadResponse> {
-        let taskCompletionSource = AWSTaskCompletionSource<AWSConnectParticipantStartAttachmentUploadResponse>()
-        if let result = startAttachmentUploadResult {
-            switch result {
-            case .success(let response):
-                taskCompletionSource.set(result: response)
-            case .failure(let error):
-                taskCompletionSource.set(error: error)
-            }
-        } else if request == nil {
-            taskCompletionSource.set(error: AWSClient.AWSClientError.requestCreationFailed)
-        } else {
-            taskCompletionSource.set(error: MockError.unexpected)
-        }
-        return taskCompletionSource.task
+
+    func startAttachmentUpload(_ input: StartAttachmentUploadInput) async throws -> StartAttachmentUploadOutput {
+        lastStartAttachmentUploadInput = input
+        return try resolve(startAttachmentUploadResult)
     }
-    
-    func completeAttachmentUpload(_ request: AWSConnectParticipantCompleteAttachmentUploadRequest?) -> AWSTask<AWSConnectParticipantCompleteAttachmentUploadResponse> {
-        let taskCompletionSource = AWSTaskCompletionSource<AWSConnectParticipantCompleteAttachmentUploadResponse>()
-        if let result = completeAttachmnetUploadResult {
-            switch result {
-            case .success(let response):
-                taskCompletionSource.set(result: response)
-            case .failure(let error):
-                taskCompletionSource.set(error: error)
-            }
-        } else if request == nil {
-            taskCompletionSource.set(error: AWSClient.AWSClientError.requestCreationFailed)
-        } else {
-            taskCompletionSource.set(error: MockError.unexpected)
-        }
-        return taskCompletionSource.task
+
+    func completeAttachmentUpload(_ input: CompleteAttachmentUploadInput) async throws -> CompleteAttachmentUploadOutput {
+        lastCompleteAttachmentUploadInput = input
+        return try resolve(completeAttachmnetUploadResult)
     }
-    
-    func getAttachment(_ request: AWSConnectParticipantGetAttachmentRequest?) -> AWSTask<AWSConnectParticipantGetAttachmentResponse> {
-        let taskCompletionSource = AWSTaskCompletionSource<AWSConnectParticipantGetAttachmentResponse>()
-        if let result = getAttachmentResult {
-            switch result {
-            case .success(let response):
-                taskCompletionSource.set(result: response)
-            case .failure(let error):
-                taskCompletionSource.set(error: error)
-            }
-        } else if request == nil {
-            taskCompletionSource.set(error: AWSClient.AWSClientError.requestCreationFailed)
-        } else {
-            taskCompletionSource.set(error: MockError.unexpected)
-        }
-        return taskCompletionSource.task
+
+    func getAttachment(_ input: GetAttachmentInput) async throws -> GetAttachmentOutput {
+        lastGetAttachmentInput = input
+        return try resolve(getAttachmentResult)
     }
-    
-    func describeView(_ request: AWSConnectParticipantDescribeViewRequest?) -> AWSTask<AWSConnectParticipantDescribeViewResponse> {
-        let taskCompletionSource = AWSTaskCompletionSource<AWSConnectParticipantDescribeViewResponse>()
-        if let result = describeViewResult {
-            switch result {
-            case .success(let response):
-                taskCompletionSource.set(result: response)
-            case .failure(let error):
-                taskCompletionSource.set(error: error)
-            }
-        } else if request == nil {
-            taskCompletionSource.set(error: AWSClient.AWSClientError.requestCreationFailed)
-        } else {
-            taskCompletionSource.set(error: MockError.unexpected)
-        }
-        return taskCompletionSource.task
+
+    func describeView(_ input: DescribeViewInput) async throws -> DescribeViewOutput {
+        lastDescribeViewInput = input
+        return try resolve(describeViewResult)
     }
-    
+
+    // Throws when a test exercises an operation it did not stub.
+    private func resolve<Output>(_ result: Result<Output, Error>?) throws -> Output {
+        guard let result = result else {
+            throw MockError.unexpected
+        }
+        return try result.get()
+    }
+
     enum MockError: Error {
         case unexpected
     }

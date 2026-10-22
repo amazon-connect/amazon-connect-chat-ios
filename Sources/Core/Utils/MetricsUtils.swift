@@ -3,7 +3,6 @@
 
 
 import Foundation
-import AWSConnectParticipant
 
 struct MetricsUtils {
     

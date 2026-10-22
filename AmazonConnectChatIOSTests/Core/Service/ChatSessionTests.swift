@@ -253,8 +253,8 @@ class ChatSessionTests: XCTestCase {
     
     // Helper method for get transcript tests
     func performGetTranscriptTest(
-        scanDirection: AWSConnectParticipantScanDirection?,
-        sortOrder: AWSConnectParticipantSortKey?,
+        scanDirection: ScanDirection?,
+        sortOrder: SortKey?,
         maxResults: NSNumber?,
         nextToken: String?,
         startPosition: String?,
