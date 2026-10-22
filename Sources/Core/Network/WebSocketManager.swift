@@ -4,7 +4,9 @@
 import Foundation
 import AWSConnectParticipant
 import Combine
+#if canImport(UIKit)
 import UIKit
+#endif
 
 enum EventTypes {
     static let subscribe = "{\"topic\": \"aws/subscribe\", \"content\": {\"topics\": [\"aws/chat\"]}})"
@@ -188,6 +190,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
     }
     
     func addLifecycleObservers() {
+        #if canImport(UIKit)
         backgroundObserver = NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main) {
             [weak self] notification in
             if (ChatSession.shared.isChatSessionActive()) {
@@ -198,6 +201,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
             [weak self] notification in
             self?.reestablishConnectionIfChatActive()
         }
+        #endif
     }
     
     deinit {

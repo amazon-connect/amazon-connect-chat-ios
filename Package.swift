@@ -4,7 +4,8 @@ import PackageDescription
 let package = Package(
     name: "AmazonConnectChatIOS",
     platforms: [
-        .iOS(.v15)
+        .iOS(.v15),
+        .macOS(.v11)
     ],
     products: [
         .library(
