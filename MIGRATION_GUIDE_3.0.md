@@ -167,6 +167,5 @@ User-Agent, and it also appends the exact 2.x product token
 `AmazonConnect-Mobile Chat-iOS SDK/<version>` so existing attribution keyed on the legacy token
 keeps working. Later releases use the same formats with their current library version.
 
-The XCFramework checked into the repository before the 3.0 release is a historical signed 2.x
-artifact. It contains the deprecated dependency and must not be distributed as 3.0. Version 3.0 is
-released through Swift Package Manager only.
+The signed 2.x XCFramework that was checked into `Sources/` has been removed from the repository.
+It contains the deprecated dependency and is not part of 3.0.

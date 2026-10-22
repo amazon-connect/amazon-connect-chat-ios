@@ -27,7 +27,6 @@ let package = Package(
                 .product(name: "AWSSDKIdentity", package: "aws-sdk-swift")
             ],
             path: "Sources",
-            exclude: ["AmazonConnectChatIOS.xcframework"],
             resources: [
                 .process("PrivacyInfo.xcprivacy")
             ]
