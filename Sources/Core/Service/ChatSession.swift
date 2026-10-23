@@ -208,7 +208,9 @@ public class ChatSession: ChatSessionProtocol {
     /// Configures the chat service with global configuration.
     public func configure(config: GlobalConfig) {
         self.globalConfig = config
-        AWSClient.shared.configure(with: config)
+        // ChatService sends requests through the custom client when one is set, so that is the
+        // client to configure; otherwise inherited methods and `super` calls have no participant client.
+        (config.customAWSClient ?? AWSClient.shared).configure(with: config)
         chatService.configure(config: config)
     }
     

@@ -23,8 +23,10 @@ Version 3.0 is not released as a prebuilt XCFramework. The AWS SDK for Swift is 
 Swift package source and its modules are not built with library evolution, so a prebuilt SDK binary
 cannot be imported without that exact package graph and would embed a second copy of it.
 
-The package declares `aws-sdk-swift` from `1.0.0`. Keep this permissive lower bound when composing
-your own package graph because Amplify pins an exact AWS SDK for Swift version.
+The package declares `aws-sdk-swift` from `1.6.47`, the oldest release it builds against. Amplify
+pins an exact AWS SDK for Swift version, so if your application also uses `amplify-swift`, use
+amplify-swift 2.55.0 or later; earlier releases pin an older `aws-sdk-swift` and the package graph
+does not resolve.
 
 The AWS SDK for Swift depends on `smithy-swift`, which includes a Swift package plugin. The first
 time Xcode builds your app, it asks you to trust and enable that plugin. Command-line and CI builds

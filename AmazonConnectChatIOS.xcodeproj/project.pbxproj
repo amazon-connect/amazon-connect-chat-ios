@@ -839,7 +839,7 @@
 			repositoryURL = "https://github.com/awslabs/aws-sdk-swift";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
+				minimumVersion = 1.6.47;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

@@ -5,7 +5,7 @@ let package = Package(
     name: "AmazonConnectChatIOS",
     platforms: [
         .iOS(.v15),
-        .macOS(.v11)
+        .macOS(.v12)
     ],
     products: [
         .library(
@@ -14,10 +14,11 @@ let package = Package(
         ),
     ],
     dependencies: [
-        // Do not raise this floor. `amplify-swift` pins `aws-sdk-swift` with `exact:` and that pin
-        // moves between releases, so a higher floor trades the issue #86 module collision for an
-        // unresolvable graph.
-        .package(url: "https://github.com/awslabs/aws-sdk-swift", from: "1.0.0")
+        // 1.6.47 is the oldest release this code builds against: it introduced
+        // `ConnectParticipantClient.ConnectParticipantClientConfig`, used in AWSClient. Keep the floor
+        // no higher than needed, because `amplify-swift` pins `aws-sdk-swift` with `exact:`;
+        // amplify-swift 2.55.0 (aws-sdk-swift 1.6.71) is the oldest compatible release.
+        .package(url: "https://github.com/awslabs/aws-sdk-swift", from: "1.6.47")
     ],
     targets: [
         .target(
