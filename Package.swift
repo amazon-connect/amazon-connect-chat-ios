@@ -1,10 +1,11 @@
-// swift-tools-version:5.6
+// swift-tools-version:5.9
 import PackageDescription
 
 let package = Package(
     name: "AmazonConnectChatIOS",
     platforms: [
-        .iOS(.v15)
+        .iOS(.v15),
+        .macOS(.v12)
     ],
     products: [
         .library(
@@ -13,20 +14,24 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/aws-amplify/aws-sdk-ios-spm", from: "2.40.0")
+        // 1.6.47 is the oldest release this code builds against: it introduced
+        // `ConnectParticipantClient.ConnectParticipantClientConfig`, used in AWSClient. Keep the floor
+        // no higher than needed, because `amplify-swift` pins `aws-sdk-swift` with `exact:`;
+        // amplify-swift 2.55.0 (aws-sdk-swift 1.6.71) is the oldest compatible release.
+        .package(url: "https://github.com/awslabs/aws-sdk-swift", from: "1.6.47")
     ],
     targets: [
         .target(
             name: "AmazonConnectChatIOS",
             dependencies: [
-                .product(name: "AWSCore", package: "aws-sdk-ios-spm"),
-                .product(name: "AWSConnectParticipant", package: "aws-sdk-ios-spm")
+                .product(name: "AWSConnectParticipant", package: "aws-sdk-swift"),
+                // Supplies StaticAWSCredentialIdentityResolver / AWSCredentialIdentity.
+                .product(name: "AWSSDKIdentity", package: "aws-sdk-swift")
             ],
-            path: "Sources"
-            ),
-        .binaryTarget(
-            name: "AmazonConnectChatIOSSDK",
-            path: "./Sources/AmazonConnectChatIOS.xcframework"
+            path: "Sources",
+            resources: [
+                .process("PrivacyInfo.xcprivacy")
+            ]
         )
     ]
 )

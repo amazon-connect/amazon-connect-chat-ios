@@ -70,6 +70,23 @@ class ChatSessionTests: XCTestCase {
         let chatDetails = ChatDetails(contactId: "testContactId", participantId: "testParticipantId", participantToken: "testParticipantToken")
         performConnectTest(chatDetails: chatDetails, expectedResult: .success(()))
     }
+
+    // A custom client that inherits methods or calls `super` needs its own participant client,
+    // because ChatService sends every request through the custom client.
+    func testConfigure_WithCustomAWSClient_ConfiguresTheCustomClient() {
+        final class SuperCallingClient: AWSClient {
+            override func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<SendMessageOutput, Error>) -> Void) {
+                super.sendMessage(connectionToken: connectionToken, contentType: contentType, message: message, completion: completion)
+            }
+        }
+        let customClient = SuperCallingClient()
+        XCTAssertNil(customClient.connectParticipantClient)
+
+        chatSession.configure(config: GlobalConfig(region: .euWest2, customAWSClient: customClient))
+
+        XCTAssertNotNil(customClient.connectParticipantClient, "Inherited methods and super calls need a configured participant client")
+        XCTAssertEqual(customClient.region, .euWest2)
+    }
     
     // Test the unsuccessful connection scenario
     func testConnect_Failure() {
@@ -253,8 +270,8 @@ class ChatSessionTests: XCTestCase {
     
     // Helper method for get transcript tests
     func performGetTranscriptTest(
-        scanDirection: AWSConnectParticipantScanDirection?,
-        sortOrder: AWSConnectParticipantSortKey?,
+        scanDirection: ScanDirection?,
+        sortOrder: SortKey?,
         maxResults: NSNumber?,
         nextToken: String?,
         startPosition: String?,

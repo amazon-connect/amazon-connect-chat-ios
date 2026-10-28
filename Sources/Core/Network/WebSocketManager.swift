@@ -4,7 +4,9 @@
 import Foundation
 import AWSConnectParticipant
 import Combine
+#if canImport(UIKit)
 import UIKit
+#endif
 
 enum EventTypes {
     static let subscribe = "{\"topic\": \"aws/subscribe\", \"content\": {\"topics\": [\"aws/chat\"]}})"
@@ -13,8 +15,8 @@ enum EventTypes {
 }
 
 protocol WebSocketTask {
-    func send(_ message: URLSessionWebSocketTask.Message, completionHandler: @escaping (Error?) -> Void)
-    func receive(completionHandler: @escaping (Result<URLSessionWebSocketTask.Message, Error>) -> Void)
+    func send(_ message: URLSessionWebSocketTask.Message, completionHandler: @escaping @Sendable (Error?) -> Void)
+    func receive(completionHandler: @escaping @Sendable (Result<URLSessionWebSocketTask.Message, Error>) -> Void)
     func resume()
     func cancel(with closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?)
 }
@@ -24,7 +26,7 @@ protocol WebsocketManagerProtocol {
     var transcriptPublisher: PassthroughSubject<(TranscriptItem, Bool), Never> { get }
     func connect(wsUrl: URL?, isReconnect: Bool?)
     func disconnect(reason: String?)
-    func formatAndProcessTranscriptItems(_ transcriptItems: [AWSConnectParticipantItem]) -> [TranscriptItem]
+    func formatAndProcessTranscriptItems(_ transcriptItems: [ConnectParticipantClientTypes.Item]) -> [TranscriptItem]
     func suspendWebSocketConnection()
     func resumeWebSocketConnection()
 }
@@ -188,6 +190,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
     }
     
     func addLifecycleObservers() {
+        #if canImport(UIKit)
         backgroundObserver = NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main) {
             [weak self] notification in
             if (ChatSession.shared.isChatSessionActive()) {
@@ -198,6 +201,7 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
             [weak self] notification in
             self?.reestablishConnectionIfChatActive()
         }
+        #endif
     }
     
     deinit {
@@ -391,11 +395,11 @@ extension WebsocketManager: URLSessionWebSocketDelegate {
 // MARK: - Formatting extension
 
 extension WebsocketManager {
-    func formatAndProcessTranscriptItems(_ transcriptItems: [AWSConnectParticipantItem]) -> [TranscriptItem] {
+    func formatAndProcessTranscriptItems(_ transcriptItems: [ConnectParticipantClientTypes.Item]) -> [TranscriptItem] {
         let totalTranscriptItems = transcriptItems.count
         return transcriptItems.enumerated().compactMap { (index, item) in
             // Create a dictionary with the necessary fields
-            let participantRole = CommonUtils().convertParticipantRoleToString(item.participantRole.rawValue)
+            let participantRole = CommonUtils().convertParticipantRoleToString(item.participantRole)
 
             // Process attachments
             var attachmentsArray: [[String: Any]] = []
@@ -405,18 +409,18 @@ extension WebsocketManager {
                         "AttachmentId": attachment.attachmentId ?? "",
                         "AttachmentName": attachment.attachmentName ?? "",
                         "ContentType": attachment.contentType ?? "",
-                        "Status": attachment.status.rawValue
+                        "Status": attachment.status?.rawValue ?? ""
                     ]
                 }
             }
 
             let messageContentDict: [String: Any] = [
-                "Id": item.identifier ?? "",
+                "Id": item.id ?? "",
                 "ParticipantRole": "\(participantRole)",
                 "AbsoluteTime": item.absoluteTime ?? "",
                 "ContentType": item.contentType ?? "",
                 "Content": item.content ?? "",
-                "Type": CommonUtils().convertParticipantTypeToString(item.types.rawValue),
+                "Type": CommonUtils().convertParticipantTypeToString(item.type),
                 "DisplayName": item.displayName ?? "",
                 "Attachments": attachmentsArray,
                 "IsFromPastSession": true, // Mark all these items as coming from a past session
@@ -684,4 +688,3 @@ extension WebsocketManager {
         }
     }
 }
-

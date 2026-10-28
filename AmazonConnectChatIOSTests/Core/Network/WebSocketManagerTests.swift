@@ -3,6 +3,7 @@
 
 import XCTest
 import Combine
+import AWSConnectParticipant
 @testable import AmazonConnectChatIOS
 
 class WebsocketManagerTests: XCTestCase {
@@ -187,6 +188,58 @@ class WebsocketManagerTests: XCTestCase {
         }.store(in: &cancellables)
         websocketManager.receiveMessage()
         waitForExpectations(timeout: 1, handler: nil)
+    }
+
+    func testFormatAndProcessTranscriptItems_MapsGeneratedMessage() {
+        let item = ConnectParticipantClientTypes.Item(
+            absoluteTime: "2026-09-03T12:00:00.000Z",
+            content: "Hello",
+            contentType: ContentType.plainText.rawValue,
+            displayName: "Customer",
+            id: "message-1",
+            participantRole: .customer,
+            type: .message
+        )
+
+        let result = websocketManager.formatAndProcessTranscriptItems([item])
+
+        XCTAssertEqual(result.count, 1)
+        guard let message = result.first as? Message else {
+            return XCTFail("Expected a Message")
+        }
+        XCTAssertEqual(message.id, "message-1")
+        XCTAssertEqual(message.text, "Hello")
+        XCTAssertEqual(message.participant, Constants.CUSTOMER)
+        XCTAssertEqual(message.displayName, "Customer")
+        XCTAssertEqual(message.timeStamp, "2026-09-03T12:00:00.000Z")
+    }
+
+    func testFormatAndProcessTranscriptItems_MapsGeneratedAttachment() {
+        let attachment = ConnectParticipantClientTypes.AttachmentItem(
+            attachmentId: "attachment-1",
+            attachmentName: "sample.txt",
+            contentType: "text/plain",
+            status: .approved
+        )
+        let item = ConnectParticipantClientTypes.Item(
+            absoluteTime: "2026-09-03T12:00:00.000Z",
+            attachments: [attachment],
+            displayName: "Agent",
+            id: "item-1",
+            participantRole: .agent,
+            type: .attachment
+        )
+
+        let result = websocketManager.formatAndProcessTranscriptItems([item])
+
+        XCTAssertEqual(result.count, 1)
+        guard let message = result.first as? Message else {
+            return XCTFail("Expected an attachment Message")
+        }
+        XCTAssertEqual(message.attachmentId, "attachment-1")
+        XCTAssertEqual(message.text, "sample.txt")
+        XCTAssertEqual(message.contentType, "text/plain")
+        XCTAssertEqual(message.participant, Constants.AGENT)
     }
     
     func testReceiveEvent_TransferSucceeded() {
@@ -424,12 +477,12 @@ class MockWebSocketTask: WebSocketTask {
     var mockReceiveResult: Result<URLSessionWebSocketTask.Message, Error>?
     var numMessagesToReceive: Int = 1
 
-    func send(_ message: URLSessionWebSocketTask.Message, completionHandler: @escaping (Error?) -> Void) {
+    func send(_ message: URLSessionWebSocketTask.Message, completionHandler: @escaping @Sendable (Error?) -> Void) {
         sentMessage = message
         completionHandler(nil)
     }
 
-    func receive(completionHandler: @escaping (Result<URLSessionWebSocketTask.Message, Error>) -> Void) {
+    func receive(completionHandler: @escaping @Sendable (Result<URLSessionWebSocketTask.Message, Error>) -> Void) {
         if numMessagesToReceive > 0 {
             numMessagesToReceive -= 1
             if let result = mockReceiveResult {

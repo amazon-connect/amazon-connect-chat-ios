@@ -3,6 +3,7 @@
 ## Table of Contents
 * [About](#about)
 * [Installation Steps](#installation-steps)
+* [Migrating from 2.x](#migrating-from-2x)
 * [Getting Started](#getting-started)
   * [How to receive messages](#how-to-receive-messages)
 * [Advanced Configuration](#advanced-configuration)
@@ -22,19 +23,9 @@
 The Amazon Connect Chat SDK for iOS is a Swift library that gives you the power to easily integrate Amazon Connect Chat directly into your native iOS applications. The Amazon Connect Chat SDK helps handle client side chat logic and back-end communications similar to the [Amazon Connect ChatJS Library](https://github.com/amazon-connect/amazon-connect-chatjs). The SDK wraps the [Amazon Connect Participant Service](https://docs.aws.amazon.com/connect/latest/APIReference/API_Operations_Amazon_Connect_Participant_Service.html) APIs and abstracts away the management of the chat session and WebSocket.  This allows you to focus on the user interface and experience while relying on the Amazon Connect Chat SDK to interact with all the back-end services.  This approach still requires using your own chat back end to call the Amazon Connect [StartChatContact](https://docs.aws.amazon.com/connect/latest/APIReference/API_StartChatContact.html) API to initiate contact. You can read instructions on how to quickly set up a StartChatContact Lambda from our [startChatContactAPI](https://github.com/amazon-connect/amazon-connect-chat-ui-examples/tree/master/cloudformationTemplates/startChatContactAPI) example.
 
 ## Installation Steps
-There are three options to install the Amazon Connect Chat SDK for iOS to your xCode project:
+Swift Package Manager is the supported installation method for Amazon Connect Chat SDK 3.0 and later. The SDK supports Xcode 26 or later and iOS 15 or later.
 
-### Install via [Cocoapods](https://cocoapods.org/)
-
-In your `Podfile`:
-```
-    * Reference the AmazonConnectChatIOS pod in your Podfile
-    * target 'YourProject' do
-            pod 'AmazonConnectChatIOS'
-            ...
-        end
-```
-Then run `pod install` in your project's root directory
+> ⚠️ **CocoaPods is no longer supported as of 3.0.** The SDK now depends on [`aws-sdk-swift`](https://github.com/awslabs/aws-sdk-swift), which does not publish podspecs, so it cannot be distributed through CocoaPods. See the [3.0 migration guide](MIGRATION_GUIDE_3.0.md) for how to move to Swift Package Manager.
 
 ### Install via [Swift Package Manager](https://www.swift.org/documentation/package-manager/)
  * Open your project in Xcode
@@ -42,28 +33,13 @@ Then run `pod install` in your project's root directory
  * In the field **Enter package repository URL**, enter “https://github.com/amazon-connect/amazon-connect-chat-ios".
  * Select the desired target project and click **Add Package**
 
-### Download Binaries Directly from GitHub Releases
+> ⚠️ **Prebuilt XCFrameworks are no longer published as of 3.0.** The AWS SDK for Swift is distributed only as Swift package source, so the SDK cannot be shipped as a standalone binary. If you installed the XCFramework from GitHub Releases, switch to Swift Package Manager as described in the [3.0 migration guide](MIGRATION_GUIDE_3.0.md).
 
-1. Go to the [Amazon Connect Chat SDK for iOS GitHub Releases](https://github.com/amazon-connect/amazon-connect-chat-ios/releases) page.
-2. Download the latest release of the `AmazonConnectChatIOS.xcframework`.
-3. Unzip the downloaded file, if necessary.
-4. Drag and drop the `AmazonConnectChatIOS.xcframework` into your Xcode project.
+## Migrating from 2.x
 
->⚠️ Important: Please remember to add 'AWSCore' and 'AWSConnectParticipant' from [AWS IOS SDK](https://github.com/aws-amplify/aws-sdk-ios) while using binaries.
-
->⚠️ **Xcode version compatibility**: Each release binary is compiled with a specific version of Xcode and Swift. Using the binary with a significantly newer Xcode version may cause linker errors such as `Undefined symbol: ... unsafeMutableAddressor` due to Swift ABI changes between toolchain versions. The Xcode version used to build each release is listed in the release notes. If you are on a newer Xcode version than the one listed, use **Swift Package Manager** (above) instead — SPM compiles the SDK from source with your local toolchain and avoids this issue entirely.
-
-
-#### How to Import the XCFramework
-
-Once you have added the `AmazonConnectChatIOS.xcframework` to your project, you need to import it into your code. Here are the steps:
-
-1. **Import the Framework in Your Swift Code**:
-    ```swift
-    import AmazonConnectChatIOS
-    ```
-
-By following these steps, you can integrate the Amazon Connect Chat SDK for iOS into your project using CocoaPods, Swift Package Manager, or by directly adding the XCFramework. Make sure to follow the specific installation instructions for each method to ensure a smooth setup process.
+Version 3.0 replaces the deprecated AWS Mobile SDK for iOS with the AWS SDK for Swift. This changes
+several AWS request, response, transcript, and region types and removes CocoaPods support. Follow the
+[3.0 migration guide](MIGRATION_GUIDE_3.0.md) before upgrading an existing application.
 
 ## Getting Started
 
@@ -88,7 +64,7 @@ Before using the chatSession object, we need to set the config for it via the Gl
 
 ```
 init() {
-    let globalConfig = GlobalConfig(region: .USEast1)
+    let globalConfig = GlobalConfig(region: .usEast1)
     self.chatSession = ChatSession.shared
     chatSession.configure(config: globalConfig)
     ...
@@ -289,7 +265,7 @@ class MyCustomClient: AWSClient {
         super.createParticipantConnection(participantToken: participantToken, completion: completion)
     }
     
-    override func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<AWSConnectParticipantSendMessageResponse, Error>) -> Void) {
+    override func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<SendMessageOutput, Error>) -> Void) {
         // Add custom message filtering or transformation
         let filteredMessage = applyCustomFilters(message)
         
@@ -318,35 +294,35 @@ class MyFullCustomClient: AWSClient {
         }
     }
     
-    override func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<AWSConnectParticipantSendMessageResponse, Error>) -> Void) {
+    override func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<SendMessageOutput, Error>) -> Void) {
         // Completely custom message routing
     }
     
-    override func sendEvent(connectionToken: String, contentType: ContentType, content: String, completion: @escaping (Result<AWSConnectParticipantSendEventResponse, Error>) -> Void) {
+    override func sendEvent(connectionToken: String, contentType: ContentType, content: String, completion: @escaping (Result<SendEventOutput, Error>) -> Void) {
         // Completely custom event routing
     }
     
-    override func getTranscript(getTranscriptArgs: AWSConnectParticipantGetTranscriptRequest, completion: @escaping (Result<AWSConnectParticipantGetTranscriptResponse, Error>) -> Void) {
+    override func getTranscript(getTranscriptArgs: GetTranscriptInput, completion: @escaping (Result<GetTranscriptOutput, Error>) -> Void) {
         // Completely custom transcript retrieval
     }
     
-    override func disconnectParticipantConnection(connectionToken: String, completion: @escaping (Result<AWSConnectParticipantDisconnectParticipantResponse, Error>) -> Void) {
+    override func disconnectParticipantConnection(connectionToken: String, completion: @escaping (Result<DisconnectParticipantOutput, Error>) -> Void) {
         // Completely custom disconnect
     }
     
-    override func startAttachmentUpload(connectionToken: String, contentType: String, attachmentName: String, attachmentSizeInBytes: Int, completion: @escaping (Result<AWSConnectParticipantStartAttachmentUploadResponse, Error>) -> Void) {
+    override func startAttachmentUpload(connectionToken: String, contentType: String, attachmentName: String, attachmentSizeInBytes: Int, completion: @escaping (Result<StartAttachmentUploadOutput, Error>) -> Void) {
         // Completely custom attachment upload start
     }
     
-    override func completeAttachmentUpload(connectionToken: String, attachmentIds: [String], completion: @escaping (Result<AWSConnectParticipantCompleteAttachmentUploadResponse, Error>) -> Void) {
+    override func completeAttachmentUpload(connectionToken: String, attachmentIds: [String], completion: @escaping (Result<CompleteAttachmentUploadOutput, Error>) -> Void) {
         // Completely custom attachment upload completion
     }
     
-    override func getAttachment(connectionToken: String, attachmentId: String, completion: @escaping (Result<AWSConnectParticipantGetAttachmentResponse, Error>) -> Void) {
+    override func getAttachment(connectionToken: String, attachmentId: String, completion: @escaping (Result<GetAttachmentOutput, Error>) -> Void) {
         // Completely custom attachment download
     }
     
-    override func describeView(connectionToken: String, viewToken: String, completion: @escaping (Result<AWSConnectParticipantDescribeViewResponse, Error>) -> Void) {
+    override func describeView(connectionToken: String, viewToken: String, completion: @escaping (Result<DescribeViewOutput, Error>) -> Void) {
         // Completely custom view resource retrieval
     }
 }
@@ -366,7 +342,7 @@ class ChatManager: ObservableObject {
     init() {
         // Configure with custom client
         let globalConfig = GlobalConfig(
-            region: .USEast1,
+            region: .usEast1,
             customAWSClient: customClient
         )
         chatSession.configure(config: globalConfig)
@@ -407,7 +383,7 @@ func createParticipantConnection(participantToken: String, completion: @escaping
 **WAF Token Injection**
 ```swift
 // Add WAF bypass tokens to all requests
-func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<AWSConnectParticipantSendMessageResponse, Error>) -> Void) {
+func sendMessage(connectionToken: String, contentType: ContentType, message: String, completion: @escaping (Result<SendMessageOutput, Error>) -> Void) {
     var request = buildStandardRequest(connectionToken, contentType, message)
     // Inject WAF token
     request.setValue(wafToken, forHTTPHeaderField: "X-WAF-Token")
@@ -454,20 +430,20 @@ class SecureCustomClient: AWSClient, URLSessionDelegate {
 The `GlobalConfig` object is used to configure both the AWS ConnectParticipant client as well as some of the chat behavior.
 
 #### `GlobalConfig.init`
-The initializer for the `GlobalConfig` object takes in the `AWSRegionType`, the enabled `Features` and `disableCSM` flag to disable metrics.
+The initializer for the `GlobalConfig` object takes in the `Region`, the enabled `Features` and `disableCSM` flag to disable metrics.
 
 ```
 public struct GlobalConfig {
-    public var region: AWSRegionType
+    public var region: Region
     public var features: Features
     public var disableCsm: Bool
 
-    public static var defaultRegion: AWSRegionType {
+    public static var defaultRegion: Region {
         return Constants.DEFAULT_REGION
     }
 
     // Initializes a new global configuration with optional custom settings or defaults
-    public init(region: AWSRegionType = defaultRegion, features: Features = .defaultFeatures, disableCsm: Bool = false) {
+    public init(region: Region = defaultRegion, features: Features = .defaultFeatures, disableCsm: Bool = false) {
         self.region = region
         self.features = features
         self.disableCsm = disableCsm
@@ -475,8 +451,9 @@ public struct GlobalConfig {
 }
 ```
 * `region`
-  * This property is used to set the region of the ConnectParticipant client.  This should be set to the region of your Connect instance (e.g. `.USEast1`)
-  * Type: `AWSRegionType`
+  * This property is used to set the region of the ConnectParticipant client.  This should be set to the region of your Connect instance (e.g. `.usEast1`)
+  * Type: `Region`
+  * As of 3.0, `Region` is a string wrapper rather than a closed enum, because `aws-sdk-swift` expresses regions as strings. All of these are valid: `.usEast1` (named constant), `"us-east-1"` (string literal), or `Region("us-east-1")`. The 2.x `AWSRegionType` spellings such as `.USEast1` still compile as deprecated aliases — see the [3.0 migration guide](MIGRATION_GUIDE_3.0.md).
 * `features: Features`
   * The features property dictates the enablement of certain features as well as their configurations. If no value is passed for this property, the chat will be configured with default values. See [Features](#features) for more details.
   * Type: [Features](#features)
@@ -485,7 +462,7 @@ public struct GlobalConfig {
 If you have set the `GlobalConfig` object or want to update the configurations, you can call `ChatSession.configure` to update the config object.
 
 ```
-let globalConfig = GlobalConfig(region: .USEast1)
+let globalConfig = GlobalConfig(region: .usEast1)
 chatSession.configure(config: globalConfig)
 ```
 
@@ -686,16 +663,16 @@ func sendMessageReceipt(event: MessageReceiptType, messageId: String, completion
 Retrieves the chat transcript.
 
 ```
-func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder: AWSConnectParticipantSortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: AWSConnectParticipantStartPosition?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void)
+func getTranscript(scanDirection: ScanDirection?, sortOrder: SortKey?, maxResults: NSNumber?, nextToken: String?, startPosition: String?, completion: @escaping (Result<TranscriptResponse, Error>) -> Void)
 ```
 
 * `scanDirection`
   * The direction to scan the transcript.
-  * Type: `AWSConnectParticipantScanDirection?` (String: `'FORWARD' | 'BACKWARD'`) 
+  * Type: `ScanDirection?` (String: `'FORWARD' | 'BACKWARD'`)
   * Default: `BACKWARD`
 * `sortOrder`
   * The order to sort the transcript.
-  * Type: `AWSConnectParticipantSortKey?` (String: `'DESCENDING | 'ASCENDING'`)
+  * Type: `SortKey?` (String: `'DESCENDING' | 'ASCENDING'`)
   * Default: `ASCENDING`
 * `maxResults`
   * The maximum number of results to retrieve.
@@ -705,8 +682,8 @@ func getTranscript(scanDirection: AWSConnectParticipantScanDirection?, sortOrder
   * Type: `String`
   * The token for the next set of results.
 * `startPosition`
-  * The start position for the transcript.
-  * Type: `AWSConnectParticipantStartPosition?`. See [StartPosition](https://docs.aws.amazon.com/connect/latest/APIReference/API_connect-participant_StartPosition.html)
+  * The ID of the transcript item to start from. The SDK wraps it in a [StartPosition](https://docs.aws.amazon.com/connect/latest/APIReference/API_connect-participant_StartPosition.html).
+  * Type: `String?`
 * `completion`
   * The completion handler to call when the transcript retrieval is complete.
   * Type: (Result<[TranscriptResponse](#transcriptresponse), Error>) -> Void
@@ -1286,4 +1263,3 @@ See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more inform
 ## License
 
 This project is licensed under the Apache-2.0 License.
-

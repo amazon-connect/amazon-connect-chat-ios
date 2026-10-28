@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import Foundation
-import AWSCore
 
 public struct ChatDetails {
     var contactId: String?
@@ -17,5 +16,5 @@ public struct ChatDetails {
 }
 
 public struct ChatSessionOptions {
-    var region: AWSRegionType = Constants.DEFAULT_REGION
+    var region: Region = Constants.DEFAULT_REGION
 }

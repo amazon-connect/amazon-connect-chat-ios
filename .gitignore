@@ -26,3 +26,12 @@ xcshareddata/
 
 # Pods
 Pods/
+
+# Library package: consumers resolve their own dependency graph
+Package.resolved
+
+# Local build and test output
+*.log
+test_output/
+dd-*/
+.kiro/
