@@ -63,6 +63,7 @@
 		F76BB9562C1900480005C3EC /* APIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76BB9552C1900480005C3EC /* APIClientTests.swift */; };
 		F76BB9722C2A48C10005C3EC /* MessageReceiptsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76BB9712C2A48C10005C3EC /* MessageReceiptsManager.swift */; };
 		F76BB9742C2BA73E0005C3EC /* MessageReceiptsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76BB9732C2BA73E0005C3EC /* MessageReceiptsManagerTests.swift */; };
+		00AC300000000000000000C2 /* WebSocketManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00AC300000000000000000C1 /* WebSocketManagerTests.swift */; };
 		F76BB9762C2BFED80005C3EC /* MockMessageReceiptsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76BB9752C2BFED80005C3EC /* MockMessageReceiptsManager.swift */; };
 		F7B0747C2BDB298400E8B805 /* HeartbeatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B0747B2BDB298400E8B805 /* HeartbeatManager.swift */; };
 		F7B0747F2BDB2A0700E8B805 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B0747E2BDB2A0700E8B805 /* Notifications.swift */; };
@@ -140,6 +141,7 @@
 		F76BB9552C1900480005C3EC /* APIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientTests.swift; sourceTree = "<group>"; };
 		F76BB9712C2A48C10005C3EC /* MessageReceiptsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReceiptsManager.swift; sourceTree = "<group>"; };
 		F76BB9732C2BA73E0005C3EC /* MessageReceiptsManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReceiptsManagerTests.swift; sourceTree = "<group>"; };
+		00AC300000000000000000C1 /* WebSocketManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketManagerTests.swift; sourceTree = "<group>"; };
 		F76BB9752C2BFED80005C3EC /* MockMessageReceiptsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMessageReceiptsManager.swift; sourceTree = "<group>"; };
 		F7B0747B2BDB298400E8B805 /* HeartbeatManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatManager.swift; sourceTree = "<group>"; };
 		F7B0747E2BDB2A0700E8B805 /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
@@ -197,6 +199,7 @@
 				00AC300000000000000000A3 /* UserAgentProductTokenHTTPClientTests.swift */,
 				F76BB9552C1900480005C3EC /* APIClientTests.swift */,
 				F76BB9732C2BA73E0005C3EC /* MessageReceiptsManagerTests.swift */,
+				00AC300000000000000000C1 /* WebSocketManagerTests.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -556,6 +559,7 @@
 				7E2336EC2BFE7D7400E6C4B7 /* AWSClientTests.swift in Sources */,
 				00AC300000000000000000A4 /* UserAgentProductTokenHTTPClientTests.swift in Sources */,
 				F76BB9742C2BA73E0005C3EC /* MessageReceiptsManagerTests.swift in Sources */,
+				00AC300000000000000000C2 /* WebSocketManagerTests.swift in Sources */,
 				7E2336F12BFE7D7400E6C4B7 /* ChatSessionTests.swift in Sources */,
 				7E2336F02BFE7D7400E6C4B7 /* MockConnectionDetailsProvider.swift in Sources */,
 				F7B4A1382C15649B005C7921 /* MockHttpClient.swift in Sources */,

@@ -71,6 +71,9 @@ class ChatService : ChatServiceProtocol {
     private var throttleTypingEvent: Bool = false
     private var throttleTypingEventTimer: Timer?
     private var transcriptItemSet = Set<String>()
+    /// IDs of Authenticate Customer events already sent as `.authentication`, so neither a reconnect
+    /// catch-up nor a live frame that overlaps it fires the same event twice. Main thread only.
+    private var deliveredAuthenticationEventIds = Set<String>()
     private var globalConfig: GlobalConfig?
     private var typingIndicatorTimer: Timer?
     // Dictionary to map attachment IDs to temporary message IDs
@@ -131,6 +134,10 @@ class ChatService : ChatServiceProtocol {
                 }
                 if (event == .connectionReEstablished){
                     self?.fetchReconnectedTranscript()
+                }
+                if case .authentication(let authEvent) = event {
+                    self?.publishAuthenticationEventOnce(authEvent)
+                    return
                 }
                 self?.eventPublisher.send(event)
             })
@@ -792,8 +799,30 @@ class ChatService : ChatServiceProtocol {
         // Construct the start position from the last item
         let startPosition = ConnectParticipantClientTypes.StartPosition(id: lastItem.id)
 
+        // Snapshot before fetching: the fetched items are added to internalTranscript asynchronously.
+        let knownItemIds = Set(internalTranscript.map(\.id))
+
         // Fetch the transcript starting from the last item
-        fetchTranscriptWith(startPosition: startPosition)
+        fetchTranscriptWith(startPosition: startPosition, knownItemIds: knownItemIds)
+    }
+
+    /// Authenticate Customer events that arrived while the WebSocket was down (for example, while the
+    /// app was in the background during a browser sign-in) only come back through the catch-up
+    /// transcript, which marks every item as past-session. Deliver the ones the app has not seen, in
+    /// transcript order, so the app does not miss an `initiated` or `succeeded` event.
+    private func publishMissedAuthenticationEvents(in items: [TranscriptItem], knownItemIds: Set<String>) {
+        let missedEvents = items
+            .compactMap { $0 as? Event }
+            .filter { ContentType.isAuthenticationEvent($0.contentType) && !knownItemIds.contains($0.id) }
+        guard !missedEvents.isEmpty else { return }
+        DispatchQueue.main.async { [weak self] in
+            missedEvents.forEach { self?.publishAuthenticationEventOnce($0) }
+        }
+    }
+
+    private func publishAuthenticationEventOnce(_ event: Event) {
+        guard deliveredAuthenticationEventIds.insert(event.id).inserted else { return }
+        eventPublisher.send(.authentication(event))
     }
     
     private func isItemInInternalTranscript(Id: String) -> Bool {
@@ -805,16 +834,17 @@ class ChatService : ChatServiceProtocol {
         return false
     }
 
-    private func fetchTranscriptWith(startPosition: ConnectParticipantClientTypes.StartPosition?) {
+    private func fetchTranscriptWith(startPosition: ConnectParticipantClientTypes.StartPosition?, knownItemIds: Set<String>) {
         self.getTranscript(scanDirection: .forward, startPosition: startPosition) { [weak self] result in
             switch result {
             case .success(let transcriptResponse):
                 // Process the received transcript items
                 if let self = self {
+                    self.publishMissedAuthenticationEvents(in: transcriptResponse.transcript, knownItemIds: knownItemIds)
                     if let lastItem = transcriptResponse.transcript.last, !(transcriptResponse.nextToken.isEmpty || isItemInInternalTranscript(Id: lastItem.id)) {
                         // Continue fetching if there are more messages to fetch.
                         let newStartPosition = ConnectParticipantClientTypes.StartPosition(id: lastItem.id)
-                        self.fetchTranscriptWith(startPosition: newStartPosition)
+                        self.fetchTranscriptWith(startPosition: newStartPosition, knownItemIds: knownItemIds)
                     }
                 }
             case .failure(let error):
@@ -1000,6 +1030,7 @@ class ChatService : ChatServiceProtocol {
         transcriptItemPublisher = PassthroughSubject<TranscriptItem, Never>()
         transcriptListPublisher = CurrentValueSubject<TranscriptData, Never>(TranscriptData(transcriptList:[], previousTranscriptNextToken: nil))
         transcriptItemSet = Set<String>()
+        deliveredAuthenticationEventIds = Set<String>()
         transcriptDict = [:]
         internalTranscript = []
     }

@@ -912,6 +912,31 @@ var onChatRehydrated: ((Event) -> Void)? { get set }
 
 --------------------
 
+#### `ChatSession.onAuthenticationEvent`
+Callback for Authenticate Customer flow block events in the current session. `event.contentType` is one of the `application/vnd.amazonaws.connect.event.authentication.*` types (initiated, succeeded, failed, timeout, expired, cancelled). `event.text` is the event's `Content` JSON string, which holds the `SessionId` for `GetAuthenticationUrl`.
+
+Events that arrive while the WebSocket is disconnected (for example, while the app is in the background during a browser sign-in) are delivered once the connection is re-established and the missed transcript is fetched, in transcript order. Each event is delivered at most once. Events loaded with the transcript when a chat is started or resumed appear in the transcript only and do not trigger this callback.
+
+```
+var onAuthenticationEvent: ((Event?) -> Void)? { get set }
+```
+
+Example: get the sign-in URL when the flow starts authentication.
+
+```swift
+ChatSession.shared.onAuthenticationEvent = { event in
+    guard let event, event.contentType == ContentType.authenticationInitiated.rawValue,
+          let data = event.text?.data(using: .utf8),
+          let content = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+          let sessionId = content["SessionId"] as? String,
+          let connectionToken = ChatSession.shared.getConnectionDetailsProvider().getConnectionDetails()?.getConnectionToken()
+    else { return }
+    // Call GetAuthenticationUrl with sessionId, your redirect URI, and connectionToken.
+}
+```
+
+--------------------
+
 ## Classes and Structs
 
 ### Features

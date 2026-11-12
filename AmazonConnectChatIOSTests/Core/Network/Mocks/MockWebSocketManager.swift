@@ -42,7 +42,11 @@ class MockWebsocketManager: WebsocketManagerProtocol {
         self.mockConnectionStatus = false
     }
     
+    /// When set, returned by `formatAndProcessTranscriptItems` instead of the generic mapping.
+    var mockFormattedTranscriptItems: [TranscriptItem]?
+
     func formatAndProcessTranscriptItems(_ items: [ConnectParticipantClientTypes.Item]) -> [TranscriptItem] {
+        if let mockFormattedTranscriptItems { return mockFormattedTranscriptItems }
         // Mock implementation of format and process transcript items
         return items.map { item in
             return TranscriptItem(timeStamp: item.absoluteTime ?? "", contentType: item.contentType ?? "", id: item.id, serializedContent: ["content": item.content ?? ""])

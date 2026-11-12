@@ -28,29 +28,38 @@ class WebsocketManagerTests: XCTestCase {
         super.tearDown()
     }
 
+    // Connect and disconnect drive the URLSessionWebSocketDelegate callbacks directly, so these
+    // tests don't depend on a live echo server being reachable from CI.
     func testConnect() {
-        let expectation = self.expectation(description: "WebSocket Connected")
-        websocketManager.onConnected = {
-            expectation.fulfill()
-            self.websocketManager.onConnected = nil
-        }
-        websocketManager.connect()
-        waitForExpectations(timeout: 1, handler: nil)
-    }
-    
-    func testDisconnect() {
-        let expectation = self.expectation(description: "WebSocket Disconnected")
-        websocketManager.onDisconnected = {
-            expectation.fulfill()
-            self.websocketManager.onDisconnected = nil
+        var published: [ChatEvent] = []
+        websocketManager.eventPublisher.sink { published.append($0) }.store(in: &cancellables)
+        var connected = false
+        websocketManager.onConnected = { connected = true }
+        let task = URLSession.shared.webSocketTask(with: URL(string: "wss://example.com")!)
 
+        websocketManager.urlSession(URLSession.shared, webSocketTask: task, didOpenWithProtocol: nil)
+
+        XCTAssertTrue(connected)
+        XCTAssertTrue(published.contains(.connectionEstablished))
+        guard case .string(let sent)? = mockWebSocketTask.sentMessage else {
+            return XCTFail("Expected the subscribe message to be sent on open")
         }
-        websocketManager.onConnected = {
-            self.websocketManager.disconnect()
-            self.websocketManager.onConnected = nil
-        }
-        websocketManager.connect()
-        waitForExpectations(timeout: 1, handler: nil)
+        XCTAssertEqual(sent, EventTypes.subscribe)
+    }
+
+    func testDisconnect() {
+        var disconnected = false
+        websocketManager.onDisconnected = { disconnected = true }
+        let task = URLSession.shared.webSocketTask(with: URL(string: "wss://example.com")!)
+
+        websocketManager.disconnect(reason: "Test")
+
+        XCTAssertEqual(mockWebSocketTask.cancelCloseCode, .goingAway)
+        XCTAssertEqual(mockWebSocketTask.cancelReason, "Test".data(using: .utf8))
+        XCTAssertNil(websocketManager.websocketTask)
+
+        websocketManager.urlSession(URLSession.shared, webSocketTask: task, didCloseWith: .goingAway, reason: nil)
+        XCTAssertTrue(disconnected)
     }
     
     func testSendWebSocketMessage() {
@@ -282,6 +291,85 @@ class WebsocketManagerTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
     }
     
+    // MARK: - Authenticate Customer events
+
+    private let authenticationContentTypes: [ContentType] = [
+        .authenticationInitiated, .authenticationSuccessful, .authenticationFailed,
+        .authenticationTimeout, .authenticationExpired, .authenticationCancelled
+    ]
+
+    private func authenticationFrame(_ contentType: ContentType, isFromPastSession: Bool = false) -> [String: Any] {
+        let inner: [String: Any] = [
+            "AbsoluteTime": "2026-11-12T10:00:00.000Z",
+            "Content": "{\"SessionId\":\"session-123\"}",
+            "ContentType": contentType.rawValue,
+            "Id": "auth-event-1",
+            "Type": WebSocketMessageType.event.rawValue,
+            // Real Authenticate Customer frames carry no ParticipantRole or DisplayName.
+            "IsFromPastSession": isFromPastSession
+        ]
+        let innerString = String(data: try! JSONSerialization.data(withJSONObject: inner), encoding: .utf8)!
+        return ["content": innerString, "contentType": "application/json", "topic": "aws/chat"]
+    }
+
+    func testAuthenticationEvents_LiveFrame_ReturnsEventAndPublishesChatEvent() {
+        var published: [ChatEvent] = []
+        websocketManager.eventPublisher.sink { published.append($0) }.store(in: &cancellables)
+
+        for contentType in authenticationContentTypes {
+            let event = websocketManager.processJsonContentAndGetItem(authenticationFrame(contentType)) as? Event
+            XCTAssertEqual(event?.contentType, contentType.rawValue, "\(contentType.rawValue) should produce an Event")
+            XCTAssertEqual(event?.text, "{\"SessionId\":\"session-123\"}", "Content should be exposed as event.text")
+            XCTAssertEqual(event?.participant, "")
+        }
+
+        let publishedTypes: [String] = published.compactMap {
+            if case .authentication(let event) = $0 { return event.contentType }
+            return nil
+        }
+        XCTAssertEqual(publishedTypes, authenticationContentTypes.map(\.rawValue))
+    }
+
+    func testAuthenticationEvent_PastSession_DoesNotPublishChatEvent() {
+        var published: [ChatEvent] = []
+        websocketManager.eventPublisher.sink { published.append($0) }.store(in: &cancellables)
+
+        let item = websocketManager.processJsonContentAndGetItem(authenticationFrame(.authenticationInitiated, isFromPastSession: true))
+
+        XCTAssertNotNil(item as? Event, "Past-session events stay in the transcript")
+        XCTAssertTrue(published.isEmpty, "A past-session event must not look like a live sign-in prompt")
+    }
+
+    func testFormatAndProcessTranscriptItems_KeepsAuthenticationEventsWithoutPublishing() {
+        var published: [ChatEvent] = []
+        websocketManager.eventPublisher.sink { published.append($0) }.store(in: &cancellables)
+        let items = authenticationContentTypes.map {
+            ConnectParticipantClientTypes.Item(
+                absoluteTime: "2026-11-12T10:00:00.000Z",
+                content: "{\"SessionId\":\"session-123\"}",
+                contentType: $0.rawValue,
+                id: "auth-\($0)",
+                type: .event
+            )
+        }
+
+        let result = websocketManager.formatAndProcessTranscriptItems(items)
+
+        XCTAssertEqual(result.map(\.contentType), authenticationContentTypes.map(\.rawValue))
+        XCTAssertEqual(result.map { ($0 as? Event)?.text }, Array(repeating: "{\"SessionId\":\"session-123\"}", count: items.count))
+        XCTAssertTrue(published.isEmpty, "Transcript items are past-session and must not publish ChatEvents")
+    }
+
+    func testNonAuthenticationCommonEvent_LeavesTextNil() {
+        let frame = createSampleWebSocketResultString(contentType: .transferFailed, type: .event, participant: Constants.SYSTEM)
+        let json = try! JSONSerialization.jsonObject(with: Data(frame.utf8)) as! [String: Any]
+
+        let event = websocketManager.processJsonContentAndGetItem(json) as? Event
+
+        XCTAssertNotNil(event)
+        XCTAssertNil(event?.text, "Only Authenticate Customer events expose Content as text")
+    }
+
     private func createSampleWebSocketResultString(textContent:String = "Test", contentType:ContentType = .plainText, type:WebSocketMessageType = .message, participant:String = Constants.CUSTOMER) -> String {
         return "{\"content\":\"{\\\"AbsoluteTime\\\":\\\"2024-07-14T22:18:39.241Z\\\",\\\"Content\\\":\\\"\(textContent)\\\",\\\"ContentType\\\":\\\"\(contentType.rawValue)\\\",\\\"Id\\\":\\\"abcdefgh-abcd-abcd-abcd-abcdefghijkl\\\",\\\"Type\\\":\\\"\(type.rawValue)\\\",\\\"ParticipantId\\\":\\\"abcdefgh-abcd-abcd-abcd-abcdefghijkl\\\",\\\"DisplayName\\\":\\\"Customer\\\",\\\"ParticipantRole\\\":\\\"\(participant)\\\",\\\"InitialContactId\\\":\\\"abcdefgh-abcd-abcd-abcd-abcdefghijkl\\\",\\\"ContactId\\\":\\\"abcdefgh-abcd-abcd-abcd-abcdefghijkl\\\"}\",\"contentType\":\"application/json\",\"topic\":\"aws/chat\"}"
     }
@@ -492,6 +580,12 @@ class MockWebSocketTask: WebSocketTask {
 
     }
     
+    var cancelCloseCode: URLSessionWebSocketTask.CloseCode?
+    var cancelReason: Data?
+
     func resume() {}
-    func cancel(with closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {}
+    func cancel(with closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
+        cancelCloseCode = closeCode
+        cancelReason = reason
+    }
 }

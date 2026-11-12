@@ -134,6 +134,95 @@ class ChatServiceTests: XCTestCase {
         }
     }
     
+    func testSubscribeToEvents_Authentication() {
+        let testEvent = Event(timeStamp: "2026-11-12T10:00:00Z", contentType: ContentType.authenticationInitiated.rawValue, messageId: "auth-1", serializedContent: [:])
+        let receivedEvent = subscribeAndSendEvent(.authentication(testEvent))
+
+        if case .authentication(let event) = receivedEvent {
+            XCTAssertEqual(event.contentType, ContentType.authenticationInitiated.rawValue)
+        } else {
+            XCTFail("Should receive authentication event")
+        }
+    }
+
+    // MARK: - Authenticate Customer events missed while the WebSocket was down
+
+    private func authenticationEvent(_ contentType: ContentType, id: String) -> Event {
+        Event(text: "{\"SessionId\":\"session-123\"}", timeStamp: "2026-11-12T10:00:00Z", contentType: contentType.rawValue, messageId: id, serializedContent: [:])
+    }
+
+    /// Creates a session whose transcript holds `knownItems` and whose reconnect fetch returns `fetchedItems`.
+    private func prepareReconnect(knownItems: [TranscriptItem], fetchedItems: [TranscriptItem]) {
+        mockAWSClient.createParticipantConnectionResult = .success(createConnectionDetails())
+        mockAWSClient.getTranscriptResult = .success(GetTranscriptOutput(nextToken: nil, transcript: []))
+        mockWebsocketManager.mockFormattedTranscriptItems = fetchedItems
+        let created = expectation(description: "Chat session created")
+        chatService.createChatSession(chatDetails: createChatDetails()) { _, _ in created.fulfill() }
+        wait(for: [created], timeout: 1)
+        chatService.internalTranscript = knownItems
+    }
+
+    /// Records the IDs of `.authentication` events the app receives.
+    private func recordAuthenticationEvents(into ids: @escaping (String) -> Void) -> AnyCancellable {
+        chatService.subscribeToEvents { event in
+            if case .authentication(let authEvent) = event { ids(authEvent.id) }
+        }
+    }
+
+    /// Lets queued main-thread deliveries finish so a test can assert nothing extra arrived.
+    private func drainMainQueue() {
+        RunLoop.main.run(until: Date().addingTimeInterval(0.2))
+    }
+
+    func testReconnect_PublishesAuthenticationEventsMissedWhileDisconnected() {
+        let lastKnownMessage = TranscriptItem(timeStamp: "2026-11-12T09:59:00Z", contentType: ContentType.plainText.rawValue, id: "message-1", serializedContent: [:])
+        prepareReconnect(
+            knownItems: [lastKnownMessage],
+            fetchedItems: [
+                lastKnownMessage,
+                authenticationEvent(.authenticationCancelled, id: "auth-cancelled"),
+                authenticationEvent(.authenticationInitiated, id: "auth-initiated-2")
+            ]
+        )
+        var receivedIds: [String] = []
+        let received = expectation(description: "Missed authentication events delivered")
+        received.expectedFulfillmentCount = 2
+        let subscription = recordAuthenticationEvents { receivedIds.append($0); received.fulfill() }
+
+        chatService.fetchReconnectedTranscript()
+
+        wait(for: [received], timeout: 1)
+        drainMainQueue()
+        XCTAssertEqual(receivedIds, ["auth-cancelled", "auth-initiated-2"], "Missed events are delivered once each, in transcript order")
+        subscription.cancel()
+    }
+
+    func testReconnect_DoesNotRepublishKnownOrAlreadyDeliveredAuthenticationEvents() {
+        // Loaded by the initial getTranscript, so the app has already seen it in the transcript.
+        let pastSessionEvent = authenticationEvent(.authenticationInitiated, id: "auth-past")
+        let liveEvent = authenticationEvent(.authenticationSuccessful, id: "auth-live")
+        let missedEvent = authenticationEvent(.authenticationInitiated, id: "auth-missed")
+        prepareReconnect(knownItems: [pastSessionEvent], fetchedItems: [pastSessionEvent, missedEvent, liveEvent])
+        var receivedIds: [String] = []
+        let liveReceived = expectation(description: "Live event delivered")
+        let missedReceived = expectation(description: "Missed event delivered")
+        let subscription = recordAuthenticationEvents { id in
+            receivedIds.append(id)
+            if id == liveEvent.id { liveReceived.fulfill() }
+            if id == missedEvent.id { missedReceived.fulfill() }
+        }
+
+        // A live frame that also appears in the catch-up transcript must only fire once.
+        mockWebsocketManager.eventPublisher.send(.authentication(liveEvent))
+        wait(for: [liveReceived], timeout: 1)
+        chatService.fetchReconnectedTranscript()
+
+        wait(for: [missedReceived], timeout: 1)
+        drainMainQueue()
+        XCTAssertEqual(receivedIds, ["auth-live", "auth-missed"])
+        subscription.cancel()
+    }
+
     func testSubscribeToEvents_TransferFailed() {
         let testEvent = Event(text: "Transfer failed", timeStamp: "2024-01-15T10:30:00Z", contentType: ContentType.transferFailed.rawValue, messageId: "transfer-456", serializedContent: [:])
         let receivedEvent = subscribeAndSendEvent(.transferFailed(testEvent))
