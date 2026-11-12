@@ -286,7 +286,9 @@ class WebsocketManager: NSObject, WebsocketManagerProtocol {
                     case .ended:
                         // Handle chat ended event
                         return handleChatEnded(innerJson, json)
-                    case .participantIdle, .participantReturned, .autoDisconnection, .messageRead, .messageDelivered, .participantInvited, .chatRehydrated, .transferSucceeded, .transferFailed:
+                    case .participantIdle, .participantReturned, .autoDisconnection, .messageRead, .messageDelivered, .participantInvited, .chatRehydrated, .transferSucceeded, .transferFailed,
+                         .authenticationInitiated, .authenticationSuccessful, .authenticationFailed,
+                         .authenticationTimeout, .authenticationExpired, .authenticationCancelled:
                         // Handle all common chat events with unified function
                         return handleCommonChatEvent(innerJson, json)
                     default:
@@ -611,6 +613,10 @@ extension WebsocketManager {
                 eventType = .transferSucceeded(event)
             case ContentType.transferFailed.rawValue:
                 eventType = .transferFailed(event)
+            case ContentType.authenticationInitiated.rawValue, ContentType.authenticationSuccessful.rawValue,
+                 ContentType.authenticationFailed.rawValue, ContentType.authenticationTimeout.rawValue,
+                 ContentType.authenticationExpired.rawValue, ContentType.authenticationCancelled.rawValue:
+                eventType = .authentication(event)
             default:
                 SDKLogger.logger.logError("Unknown chat event type: \(contentType)")
                 return event // Return the event even if we don't recognize the type

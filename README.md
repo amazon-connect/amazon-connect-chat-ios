@@ -912,6 +912,15 @@ var onChatRehydrated: ((Event) -> Void)? { get set }
 
 --------------------
 
+#### `ChatSession.onAuthenticationEvent`
+Callback for Authenticate Customer flow block events in the current session. `event.contentType` is one of the `application/vnd.amazonaws.connect.event.authentication.*` types (initiated, succeeded, failed, timeout, expired, cancelled). The event's `Content`, which holds the `SessionId` for `GetAuthenticationUrl`, is in `event.serializedContent["content"]`. Past-session events appear in the transcript only and do not trigger this callback.
+
+```
+var onAuthenticationEvent: ((Event?) -> Void)? { get set }
+```
+
+--------------------
+
 ## Classes and Structs
 
 ### Features
