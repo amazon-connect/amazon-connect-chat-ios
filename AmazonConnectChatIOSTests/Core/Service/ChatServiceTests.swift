@@ -134,6 +134,17 @@ class ChatServiceTests: XCTestCase {
         }
     }
     
+    func testSubscribeToEvents_Authentication() {
+        let testEvent = Event(timeStamp: "2026-11-12T10:00:00Z", contentType: ContentType.authenticationInitiated.rawValue, messageId: "auth-1", serializedContent: [:])
+        let receivedEvent = subscribeAndSendEvent(.authentication(testEvent))
+
+        if case .authentication(let event) = receivedEvent {
+            XCTAssertEqual(event.contentType, ContentType.authenticationInitiated.rawValue)
+        } else {
+            XCTFail("Should receive authentication event")
+        }
+    }
+
     func testSubscribeToEvents_TransferFailed() {
         let testEvent = Event(text: "Transfer failed", timeStamp: "2024-01-15T10:30:00Z", contentType: ContentType.transferFailed.rawValue, messageId: "transfer-456", serializedContent: [:])
         let receivedEvent = subscribeAndSendEvent(.transferFailed(testEvent))

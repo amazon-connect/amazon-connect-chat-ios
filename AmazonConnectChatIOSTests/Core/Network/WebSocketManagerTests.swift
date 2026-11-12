@@ -282,6 +282,73 @@ class WebsocketManagerTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
     }
     
+    // MARK: - Authenticate Customer events
+
+    private let authenticationContentTypes: [ContentType] = [
+        .authenticationInitiated, .authenticationSuccessful, .authenticationFailed,
+        .authenticationTimeout, .authenticationExpired, .authenticationCancelled
+    ]
+
+    private func authenticationFrame(_ contentType: ContentType, isFromPastSession: Bool = false) -> [String: Any] {
+        let inner: [String: Any] = [
+            "AbsoluteTime": "2026-11-12T10:00:00.000Z",
+            "Content": "{\"SessionId\":\"session-123\"}",
+            "ContentType": contentType.rawValue,
+            "Id": "auth-event-1",
+            "Type": WebSocketMessageType.event.rawValue,
+            "ParticipantRole": Constants.SYSTEM,
+            "IsFromPastSession": isFromPastSession
+        ]
+        let innerString = String(data: try! JSONSerialization.data(withJSONObject: inner), encoding: .utf8)!
+        return ["content": innerString, "contentType": "application/json", "topic": "aws/chat"]
+    }
+
+    func testAuthenticationEvents_LiveFrame_ReturnsEventAndPublishesChatEvent() {
+        var published: [ChatEvent] = []
+        websocketManager.eventPublisher.sink { published.append($0) }.store(in: &cancellables)
+
+        for contentType in authenticationContentTypes {
+            let item = websocketManager.processJsonContentAndGetItem(authenticationFrame(contentType))
+            XCTAssertEqual((item as? Event)?.contentType, contentType.rawValue, "\(contentType.rawValue) should produce an Event")
+        }
+
+        let publishedTypes: [String] = published.compactMap {
+            if case .authentication(let event) = $0 { return event.contentType }
+            return nil
+        }
+        XCTAssertEqual(publishedTypes, authenticationContentTypes.map(\.rawValue))
+    }
+
+    func testAuthenticationEvent_PastSession_DoesNotPublishChatEvent() {
+        var published: [ChatEvent] = []
+        websocketManager.eventPublisher.sink { published.append($0) }.store(in: &cancellables)
+
+        let item = websocketManager.processJsonContentAndGetItem(authenticationFrame(.authenticationInitiated, isFromPastSession: true))
+
+        XCTAssertNotNil(item as? Event, "Past-session events stay in the transcript")
+        XCTAssertTrue(published.isEmpty, "A past-session event must not look like a live sign-in prompt")
+    }
+
+    func testFormatAndProcessTranscriptItems_KeepsAuthenticationEventsWithoutPublishing() {
+        var published: [ChatEvent] = []
+        websocketManager.eventPublisher.sink { published.append($0) }.store(in: &cancellables)
+        let items = authenticationContentTypes.map {
+            ConnectParticipantClientTypes.Item(
+                absoluteTime: "2026-11-12T10:00:00.000Z",
+                content: "{\"SessionId\":\"session-123\"}",
+                contentType: $0.rawValue,
+                id: "auth-\($0)",
+                participantRole: .system,
+                type: .event
+            )
+        }
+
+        let result = websocketManager.formatAndProcessTranscriptItems(items)
+
+        XCTAssertEqual(result.map(\.contentType), authenticationContentTypes.map(\.rawValue))
+        XCTAssertTrue(published.isEmpty, "Transcript items are past-session and must not publish ChatEvents")
+    }
+
     private func createSampleWebSocketResultString(textContent:String = "Test", contentType:ContentType = .plainText, type:WebSocketMessageType = .message, participant:String = Constants.CUSTOMER) -> String {
         return "{\"content\":\"{\\\"AbsoluteTime\\\":\\\"2024-07-14T22:18:39.241Z\\\",\\\"Content\\\":\\\"\(textContent)\\\",\\\"ContentType\\\":\\\"\(contentType.rawValue)\\\",\\\"Id\\\":\\\"abcdefgh-abcd-abcd-abcd-abcdefghijkl\\\",\\\"Type\\\":\\\"\(type.rawValue)\\\",\\\"ParticipantId\\\":\\\"abcdefgh-abcd-abcd-abcd-abcdefghijkl\\\",\\\"DisplayName\\\":\\\"Customer\\\",\\\"ParticipantRole\\\":\\\"\(participant)\\\",\\\"InitialContactId\\\":\\\"abcdefgh-abcd-abcd-abcd-abcdefghijkl\\\",\\\"ContactId\\\":\\\"abcdefgh-abcd-abcd-abcd-abcdefghijkl\\\"}\",\"contentType\":\"application/json\",\"topic\":\"aws/chat\"}"
     }
