@@ -147,7 +147,18 @@ The most common generated-model changes are:
 The AWS SDK for Swift models use Swift initializers and value semantics. Create a mutable value with
 `var` when you need to set fields after initialization.
 
-## 7. Validate your application
+## 7. Update custom `ChatSessionProtocol` conformances
+
+`ChatSessionProtocol` adds a requirement for Authenticate Customer flow block events:
+
+```swift
+var onAuthenticationEvent: ((Event?) -> Void)? { get set }
+```
+
+`ChatSession` already implements it. If your app has its own type that conforms to
+`ChatSessionProtocol`, such as a test mock, add the property or the type no longer compiles.
+
+## 8. Validate your application
 
 Before releasing:
 

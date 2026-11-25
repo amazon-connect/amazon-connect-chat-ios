@@ -108,6 +108,7 @@ public protocol ChatSessionProtocol {
     var onChatRehydrated: ((Event?) -> Void)? { get set }
     var onTransferSucceeded: ((Event?) -> Void)? { get set }
     var onTransferFailed: ((Event?) -> Void)? { get set }
+    var onAuthenticationEvent: ((Event?) -> Void)? { get set }
 }
 
 public class ChatSession: ChatSessionProtocol {
@@ -135,6 +136,8 @@ public class ChatSession: ChatSessionProtocol {
     public var onChatRehydrated: ((Event?) -> Void)?
     public var onTransferSucceeded: ((Event?) -> Void)?
     public var onTransferFailed: ((Event?) -> Void)?
+    /// Authenticate Customer flow events; check `event.contentType` for which one.
+    public var onAuthenticationEvent: ((Event?) -> Void)?
     
     /// Initializes a new chat session with a specified chat service.
     /// - Parameter chatService: The chat service to use for managing chat sessions.
@@ -177,6 +180,8 @@ public class ChatSession: ChatSessionProtocol {
                     self?.onTransferSucceeded?(event)
                 case .transferFailed(let event):
                     self?.onTransferFailed?(event)
+                case .authentication(let event):
+                    self?.onAuthenticationEvent?(event)
                 }
             }
         }

@@ -36,6 +36,18 @@ public enum ContentType: String {
     case chatRehydrated = "application/vnd.amazonaws.connect.event.chat.rehydrated"
 }
 
+extension ContentType {
+    /// Authenticate Customer flow block events, delivered through `ChatSession.onAuthenticationEvent`.
+    static let authenticationEvents: Set<ContentType> = [
+        .authenticationInitiated, .authenticationSuccessful, .authenticationFailed,
+        .authenticationTimeout, .authenticationExpired, .authenticationCancelled
+    ]
+
+    static func isAuthenticationEvent(_ contentType: String) -> Bool {
+        ContentType(rawValue: contentType).map(authenticationEvents.contains) ?? false
+    }
+}
+
 public enum MessageReceiptType: String {
     case messageDelivered = "application/vnd.amazonaws.connect.event.message.delivered"
     case messageRead = "application/vnd.amazonaws.connect.event.message.read"
@@ -73,4 +85,5 @@ enum ChatEvent: Equatable {
     case chatRehydrated(Event)
     case transferSucceeded(Event)
     case transferFailed(Event)
+    case authentication(Event)
 }
